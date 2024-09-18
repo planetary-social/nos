@@ -137,6 +137,8 @@
 		3FFB1D9729A6BBEC002A755D /* Collection+SafeSubscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */; };
 		3FFB1D9C29A7DF9D002A755D /* StackedAvatarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */; };
 		3FFF3BD029A9645F00DD0B72 /* AuthorReference+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */; };
+		500899F32C95C1F900834588 /* PushNotificationRegistrar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502B6C3C2C9462A400446316 /* PushNotificationRegistrar.swift */; };
+		502B6C3D2C9462A400446316 /* PushNotificationRegistrar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502B6C3C2C9462A400446316 /* PushNotificationRegistrar.swift */; };
 		50089A172C98678600834588 /* View+ListRowGradientBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50089A162C98678600834588 /* View+ListRowGradientBackground.swift */; };
 		5044546E2C90726A00251A7E /* Event+Fetching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5044546D2C90726A00251A7E /* Event+Fetching.swift */; };
 		504454702C90728500251A7E /* Event+Hydration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5044546F2C90728500251A7E /* Event+Hydration.swift */; };
@@ -661,6 +663,7 @@
 		3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "EventReference+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3FFB1D9529A6BBEC002A755D /* Collection+SafeSubscript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+SafeSubscript.swift"; sourceTree = "<group>"; };
 		3FFB1D9B29A7DF9D002A755D /* StackedAvatarsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackedAvatarsView.swift; sourceTree = "<group>"; };
+		502B6C3C2C9462A400446316 /* PushNotificationRegistrar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationRegistrar.swift; sourceTree = "<group>"; };
 		50089A162C98678600834588 /* View+ListRowGradientBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ListRowGradientBackground.swift"; sourceTree = "<group>"; };
 		5044546D2C90726A00251A7E /* Event+Fetching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Fetching.swift"; sourceTree = "<group>"; };
 		5044546F2C90728500251A7E /* Event+Hydration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Hydration.swift"; sourceTree = "<group>"; };
@@ -1591,6 +1594,7 @@
 				C9EF84CE2C24D63000182B6F /* MockRelayService.swift */,
 				0320C1142BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift */,
 				5BC0D9CB2B867B9D005D6980 /* NamesAPI.swift */,
+				502B6C3C2C9462A400446316 /* PushNotificationRegistrar.swift */,
 				C936B4612A4CB01C00DF1EB9 /* PushNotificationService.swift */,
 				C9A8015D2BD0177D006E29B2 /* ReportPublisher.swift */,
 				5B8805192A21027C00E21F06 /* SHA256Key.swift */,
@@ -2257,6 +2261,7 @@
 				C9A0DAE429C69F0C00466635 /* HighlightedText.swift in Sources */,
 				C94D855C2991479900749478 /* NoteComposer.swift in Sources */,
 				5B79F6532BA11B08002DA9BE /* WizardSheetDescriptionText.swift in Sources */,
+				502B6C3D2C9462A400446316 /* PushNotificationRegistrar.swift in Sources */,
 				5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */,
 				C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */,
 				03E711812C936DD1000B6F96 /* OpenGraphParser.swift in Sources */,
@@ -2599,6 +2604,7 @@
 				C9F0BB6C29A503D6000547FC /* PublicKey.swift in Sources */,
 				C9DEC06F2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
 				C9ADB13F29929F1F0075E7F8 /* String+Hex.swift in Sources */,
+				500899F32C95C1F900834588 /* PushNotificationRegistrar.swift in Sources */,
 				C973AB622A323167002AED16 /* Author+CoreDataProperties.swift in Sources */,
 				C93EC2F529C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,
 				C9DEC05B298950A90078B43A /* String+Lorem.swift in Sources */,

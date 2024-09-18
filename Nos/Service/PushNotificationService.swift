@@ -10,13 +10,6 @@ import Combine
 /// all new events and creates `NosNotification`s and displays them when appropriate.
 @MainActor class PushNotificationService: 
     NSObject, ObservableObject, NSFetchedResultsControllerDelegate, UNUserNotificationCenterDelegate {
-
-    enum PushNotificationError: LocalizedError {
-        case unexpected
-        var errorDescription: String? {
-            "Something unexpected happened"
-        }
-    }
     
     // MARK: - Public Properties
     
@@ -55,18 +48,14 @@ import Combine
     @Dependency(\.userDefaults) private var userDefaults
     @Dependency(\.currentUser) private var currentUser
     
-    #if DEBUG
-    private let notificationServiceAddress = "wss://dev-notifications.nos.social"
-    #else
-    private let notificationServiceAddress = "wss://notifications.nos.social"
-    #endif
-    
     private var notificationWatcher: NSFetchedResultsController<Event>?
     private var relaySubscription: SubscriptionCancellable?
     private var currentAuthor: Author? 
     private lazy var modelContext: NSManagedObjectContext = {
         persistenceController.newBackgroundContext()
     }()
+    
+    private lazy var registrar = PushNotificationRegistrar()
     
     // MARK: - Setup
     
@@ -112,31 +101,16 @@ import Combine
         )
 
         await updateBadgeCount()
-    }
-    
-    func registerForNotifications(with token: Data, user: CurrentUser) async throws {
-        guard let userKey = user.publicKeyHex, let keyPair = user.keyPair else {
-            // TODO: throw
-            return
-        }
         
         do {
-            let jsonEvent = JSONEvent(
-                pubKey: userKey,
-                kind: EventKind.notificationServiceRegistration,
-                tags: [],
-                content: try await createRegistrationContent(deviceToken: token, user: user)
-            )
-            try await self.relayService.publish(
-                event: jsonEvent, 
-                to: URL(string: self.notificationServiceAddress)!, 
-                signingKey: keyPair, 
-                context: self.modelContext
-            )
+            try await registrar.register(user, context: modelContext)
         } catch {
-            analytics.pushNotificationRegistrationFailed(reason: error.localizedDescription)
-            throw error
+            Log.optional(error, "failed to register for push notifications")
         }
+    }
+    
+    func registerForNotifications(_ user: CurrentUser, with deviceToken: Data) async throws {
+        try await registrar.register(user, with: deviceToken, context: modelContext)
     }
     
     // MARK: - Helpers
@@ -153,8 +127,8 @@ import Combine
         }
     }
     
-    /// Recomputes the number of unread notifications for the `currentAuthor` and published the new new value to 
-    /// `badgeCount` and updates the application badge icon. 
+    /// Recomputes the number of unread notifications for the `currentAuthor`, publishes the new value to
+    /// `badgeCount`, and updates the application badge icon.
     func updateBadgeCount() async {
         var badgeCount = 0
         if currentAuthor != nil {
@@ -168,22 +142,6 @@ import Combine
     }
     
     // MARK: - Internal
-    
-    /// Builds the string needed for the `content` field in the special 
-    private func createRegistrationContent(deviceToken: Data, user: CurrentUser) async throws -> String {
-        guard let publicKeyHex = currentUser.publicKeyHex else {
-            throw PushNotificationError.unexpected
-        }
-        let relays: [RegistrationRelayAddress] = await relayService.relayAddresses(for: user).map {
-            RegistrationRelayAddress(address: $0.absoluteString)
-        }
-        let content = Registration(
-            apnsToken: deviceToken.hexString,
-            publicKey: publicKeyHex,
-            relays: relays
-        )
-        return String(decoding: try JSONEncoder().encode(content), as: UTF8.self) 
-    }
     
     /// Tells the system to display a notification for the given event if it's appropriate. This will create a 
     /// NosNotification record in the database.
@@ -295,16 +253,6 @@ import Combine
 
 class MockPushNotificationService: PushNotificationService {
     override func listen(for user: CurrentUser) async { }
-    override func registerForNotifications(with token: Data, user: CurrentUser) async throws { }
+    override func registerForNotifications(_ user: CurrentUser, with deviceToken: Data) async throws { }
     override func requestNotificationPermissionsFromUser() { }
-}
-
-fileprivate struct Registration: Codable {
-    var apnsToken: String
-    var publicKey: String
-    var relays: [RegistrationRelayAddress]
-}
-
-fileprivate struct RegistrationRelayAddress: Codable {
-    var address: String
 }

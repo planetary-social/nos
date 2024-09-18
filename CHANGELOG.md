@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added routing to profile when tapping on follow notification. [#1447](https://github.com/planetary-social/nos/issues/1447)
 - Localized follows notifications. [#1446](https://github.com/planetary-social/nos/issues/1446)
 - Fixed alert when uploading big files suggesting users pay for nostr.build. [#1321](https://github.com/planetary-social/nos/issues/1321)
+- Fixed issue where push notifications were not re-registered after account change. [#1501](https://github.com/planetary-social/nos/issues/1501)
 
 ### Internal Changes
 - Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag. [#1172](https://github.com/planetary-social/nos/issues/1172)
