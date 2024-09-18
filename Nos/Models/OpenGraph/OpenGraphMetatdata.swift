@@ -66,12 +66,14 @@ enum OpenGraphProperty: String {
     // MARK: - Image
     case image = "og:image"
     case imageURL = "og:image:url"
+    case imageSecureURL = "og:image:secure_url"
     case imageHeight = "og:image:height"
     case imageWidth = "og:image:width"
 
     // MARK: - Video
     case video = "og:video"
     case videoURL = "og:video:url"
+    case videoSecureURL = "og:video:secure_url"
     case videoHeight = "og:video:height"
     case videoWidth = "og:video:width"
 }

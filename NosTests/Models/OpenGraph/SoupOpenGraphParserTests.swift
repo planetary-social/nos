@@ -29,6 +29,21 @@ class SoupOpenGraphParserTests: XCTestCase {
         XCTAssertEqual(metadata.image?.height, 720)
     }
 
+    func test_parse_sample_video_secure_url() throws {
+        // Arrange
+        let parser = SoupOpenGraphParser()
+        let data = try XCTUnwrap(sampleVideoSecureURLHTML.data(using: .utf8))
+
+        // Act
+        let metadata = try XCTUnwrap(parser.metadata(html: data))
+
+        // Assert
+        XCTAssertEqual(metadata.type, .unknown)
+        
+        XCTAssertEqual(metadata.video?.url, "https://example.com/rock.mp4")
+        XCTAssertEqual(metadata.image?.url, "https://example.com/rock.jpg")
+    }
+
     func test_parse_sample_video_missing_metadata() throws {
         // Arrange
         let parser = SoupOpenGraphParser()
@@ -111,6 +126,21 @@ extension SoupOpenGraphParserTests {
             <meta property="og:image" content="https://example.com/rock.jpg">
             <meta property="og:image:width" content="1280">
             <meta property="og:image:height" content="720">
+        </head>
+        <body>
+            <h1>Sample HTML</h1>
+        </body>
+        </html>
+        """
+    }
+
+    var sampleVideoSecureURLHTML: String {
+        """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta property="og:video:secure_url" content="https://example.com/rock.mp4">
+            <meta property="og:image:secure_url" content="https://example.com/rock.jpg">
         </head>
         <body>
             <h1>Sample HTML</h1>

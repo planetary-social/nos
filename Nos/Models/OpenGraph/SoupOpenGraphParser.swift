@@ -90,6 +90,8 @@ extension SoupOpenGraphParser {
             return url
         } else if let url = stringValue(.imageURL, from: document), !url.isEmpty {
             return url
+        } else if let url = stringValue(.imageSecureURL, from: document), !url.isEmpty {
+            return url
         } else {
             return nil
         }
@@ -104,6 +106,8 @@ extension SoupOpenGraphParser {
         if let url = stringValue(.video, from: document), !url.isEmpty {
             return url
         } else if let url = stringValue(.videoURL, from: document), !url.isEmpty {
+            return url
+        } else if let url = stringValue(.videoSecureURL, from: document), !url.isEmpty {
             return url
         } else {
             return nil
