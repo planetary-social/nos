@@ -49,26 +49,26 @@ struct ReportMenuModifier: ViewModifier {
     /// - Returns: A view containing the flag option picker for the current selection.
     private func flagOptionPickerForSelection(_ userSelection: UserSelection?) -> some View {
         var title = String(localized: .localizable.reportContent)
-        var subTitle = String(localized: .localizable.reportContentMessage)
+        var subtitle = String(localized: .localizable.reportContentMessage)
 
         guard let userSelection = userSelection else {
             return ContentFlagView(
                 selectedFlagOptionCategory: $selectedFlagOption,
                 title: title,
-                subTitle: subTitle
+                subtitle: subtitle
             )
         }
 
         switch userSelection {
         default:
             title = String(localized: .localizable.reportContent)
-            subTitle = String(localized: .localizable.reportContentMessage)
+            subtitle = String(localized: .localizable.reportContentMessage)
         }
 
         return ContentFlagView(
             selectedFlagOptionCategory: $selectedFlagOption,
             title: title,
-            subTitle: subTitle
+            subtitle: subtitle
         )
     }
 

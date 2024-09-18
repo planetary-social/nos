@@ -4,21 +4,21 @@ struct FlagOptionPicker: View {
     @Binding private var selectedOption: FlagOption?
     var options: [FlagOption]
     var title: String
-    var subTitle: String?
+    var subtitle: String?
 
-    init(selectedOption: Binding<FlagOption?>, options: [FlagOption], title: String, subTitle: String?) {
+    init(selectedOption: Binding<FlagOption?>, options: [FlagOption], title: String, subtitle: String?) {
         self._selectedOption = selectedOption
         self.options = options
         self.title = title
-        self.subTitle = subTitle
+        self.subtitle = subtitle
     }
 
     var body: some View {
         VStack(alignment: .leading) {
             HeaderView(text: title)
             
-            if let subTitle = subTitle {
-                HeaderView(text: subTitle)
+            if let subtitle = subtitle {
+                HeaderView(text: subtitle)
             }
             flagOptionsListView
         }
@@ -37,7 +37,7 @@ struct FlagOptionPicker: View {
     }
 }
 
-/// A single row  for a single flag option
+/// A single row for a single flag option
 struct FlagPickerRow: View {
     var flag: FlagOption
     @Binding var selection: FlagOption?
@@ -93,7 +93,7 @@ struct FlagOptionPicker_Previews: PreviewProvider {
                 selectedOption: $selectedFlag,
                 options: FlagOption.flagContentCategories,
                 title: "Create a tag for this content that other people in your network can see.",
-                subTitle: "Select a tag for the content"
+                subtitle: "Select a tag for the content"
             )
             .onAppear {
                 selectedFlag = FlagOption.flagContentCategories.first

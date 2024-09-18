@@ -5,7 +5,7 @@ import SwiftUI
 struct ContentFlagView: View {
     @Binding var selectedFlagOptionCategory: FlagOption?
     var title: String
-    var subTitle: String?
+    var subtitle: String?
 
     var body: some View {
         ScrollView {
@@ -14,7 +14,7 @@ struct ContentFlagView: View {
                     selectedOption: $selectedFlagOptionCategory,
                     options: FlagOption.flagContentCategories,
                     title: title,
-                    subTitle: subTitle
+                    subtitle: subtitle
                 )
             }
         }
