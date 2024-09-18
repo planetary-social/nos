@@ -10,8 +10,8 @@ struct ContentFlagView: View {
     var body: some View {
         ScrollView {
             VStack {
-                FlagOptionPickerView(
-                    selectedFlag: $selectedFlagOptionCategory,
+                FlagOptionPicker(
+                    selectedOption: $selectedFlagOptionCategory,
                     options: FlagOption.flagContentCategories,
                     title: title,
                     subTitle: subTitle
