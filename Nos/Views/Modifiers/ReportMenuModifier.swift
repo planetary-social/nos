@@ -37,39 +37,13 @@ struct ReportMenuModifier: ViewModifier {
         case .note:
             content
                 .sheet(isPresented: $isPresented) {
-                    flagOptionPickerForSelection(userSelection)
+                    ContentFlagView(
+                        selectedFlagOptionCategory: $selectedFlagOption
+                    )
                 }
         case .author:
             oldModerationFlow(content: content)
         }
-    }
-    
-    /// Provides the flag option picker based on the user's selection.
-    /// - Parameter userSelection: The optional user selection that determines the flagging options.
-    /// - Returns: A view containing the flag option picker for the current selection.
-    private func flagOptionPickerForSelection(_ userSelection: UserSelection?) -> some View {
-        var title = String(localized: .localizable.reportContent)
-        var subtitle = String(localized: .localizable.reportContentMessage)
-
-        guard let userSelection = userSelection else {
-            return ContentFlagView(
-                selectedFlagOptionCategory: $selectedFlagOption,
-                title: title,
-                subtitle: subtitle
-            )
-        }
-
-        switch userSelection {
-        default:
-            title = String(localized: .localizable.reportContent)
-            subtitle = String(localized: .localizable.reportContentMessage)
-        }
-
-        return ContentFlagView(
-            selectedFlagOptionCategory: $selectedFlagOption,
-            title: title,
-            subtitle: subtitle
-        )
     }
 
     // swiftlint:disable function_body_length

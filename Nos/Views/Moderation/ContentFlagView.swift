@@ -4,8 +4,6 @@ import SwiftUI
 /// based on previous selections.
 struct ContentFlagView: View {
     @Binding var selectedFlagOptionCategory: FlagOption?
-    var title: String
-    var subtitle: String?
 
     var body: some View {
         ScrollView {
@@ -13,8 +11,8 @@ struct ContentFlagView: View {
                 FlagOptionPicker(
                     selectedOption: $selectedFlagOptionCategory,
                     options: FlagOption.flagContentCategories,
-                    title: title,
-                    subtitle: subtitle
+                    title: String(localized: .localizable.reportContent),
+                    subtitle: String(localized: .localizable.reportContentMessage)
                 )
             }
         }
@@ -23,5 +21,5 @@ struct ContentFlagView: View {
 }
 
 #Preview {
-    ContentFlagView(selectedFlagOptionCategory: .constant(nil), title: "Title")
+    ContentFlagView(selectedFlagOptionCategory: .constant(nil))
 }
