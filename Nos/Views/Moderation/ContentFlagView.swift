@@ -8,14 +8,17 @@ struct ContentFlagView: View {
     var subTitle: String?
 
     var body: some View {
-        VStack {
-            FlagOptionPickerView(
-                selectedFlag: $selectedFlagOptionCategory,
-                options: FlagOption.flagContentCategories,
-                title: title,
-                subTitle: subTitle
-            )
+        ScrollView {
+            VStack {
+                FlagOptionPickerView(
+                    selectedFlag: $selectedFlagOptionCategory,
+                    options: FlagOption.flagContentCategories,
+                    title: title,
+                    subTitle: subTitle
+                )
+            }
         }
+        .background(Color.appBg)
     }
 }
 
