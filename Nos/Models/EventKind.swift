@@ -33,6 +33,9 @@ public enum EventKind: Int64, CaseIterable, Hashable {
     /// Channel Message
     case channelMessage = 42
 
+    /// Request to Vanish
+    case requestToVanish = 62
+    
     /// Gift Wrap
     case giftWrap = 1059
 

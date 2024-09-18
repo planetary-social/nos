@@ -97,11 +97,7 @@ struct RelayView: View {
                 }
             }
             .deleteDisabled(!editable)
-            .listRowBackground(LinearGradient(
-                colors: [Color.cardBgTop, Color.cardBgBottom],
-                startPoint: .top,
-                endPoint: .bottom
-            ))
+            .listRowGradientBackground()
             
             let authorRelayUrls = author.relays.compactMap { $0.address }
             let recommendedRelays = Relay.recommended
@@ -131,11 +127,7 @@ struct RelayView: View {
                         .textCase(nil)
                         .listRowInsets(EdgeInsets())
                 }
-                .listRowBackground(LinearGradient(
-                    colors: [Color.cardBgTop, Color.cardBgBottom],
-                    startPoint: .top,
-                    endPoint: .bottom
-                ))
+                .listRowGradientBackground()
             }
             
             if editable {
@@ -164,11 +156,7 @@ struct RelayView: View {
                         .textCase(nil)
                         .listRowInsets(EdgeInsets())
                 }
-                .listRowBackground(LinearGradient(
-                    colors: [Color.cardBgTop, Color.cardBgBottom],
-                    startPoint: .top,
-                    endPoint: .bottom
-                ))
+                .listRowGradientBackground()
             }
         }
         .alert(unwrapping: $alert)
