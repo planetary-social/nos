@@ -8608,17 +8608,6 @@
         }
       }
     },
-    "others" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Others"
-          }
-        }
-      }
-    },
     "outsideNetwork" : {
       "extractionState" : "manual",
       "localizations" : {
