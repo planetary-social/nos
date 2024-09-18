@@ -24,11 +24,7 @@ struct RelayDetailView: View {
                     .foregroundColor(.primaryTxt)
                     .font(.clarity(.bold))
             }
-            .listRowBackground(LinearGradient(
-                colors: [Color.cardBgTop, Color.cardBgBottom],
-                startPoint: .top,
-                endPoint: .bottom
-            ))
+            .listRowGradientBackground()
             Section {
                 if let name = relay.name {
                     row(title: .localizable.name, value: name)
@@ -66,11 +62,7 @@ struct RelayDetailView: View {
                 }
                 #endif
             }
-            .listRowBackground(LinearGradient(
-                colors: [Color.cardBgTop, Color.cardBgBottom],
-                startPoint: .top,
-                endPoint: .bottom
-            ))
+            .listRowGradientBackground()
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)

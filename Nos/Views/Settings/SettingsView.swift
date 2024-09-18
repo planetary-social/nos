@@ -109,11 +109,7 @@ struct SettingsView: View {
                 .padding(.top, 30)
                 .padding(.bottom, 20)
             }
-            .listRowBackground(LinearGradient(
-                colors: [Color.cardBgTop, Color.cardBgBottom],
-                startPoint: .top,
-                endPoint: .bottom
-            ))
+            .listRowGradientBackground()
             
             Section {
                 VStack {
@@ -153,11 +149,7 @@ struct SettingsView: View {
                     .listRowInsets(EdgeInsets())
                     .padding(.vertical, 15)
             }
-            .listRowBackground(LinearGradient(
-                colors: [Color.cardBgTop, Color.cardBgBottom],
-                startPoint: .top,
-                endPoint: .bottom
-            ))
+            .listRowGradientBackground()
             .task {
                 showReportWarnings = userDefaults.object(forKey: showReportWarningsKey) as? Bool ?? true
                 showOutOfNetworkWarning = userDefaults.object(forKey: showOutOfNetworkWarningKey) as? Bool ?? true
@@ -224,11 +216,7 @@ struct SettingsView: View {
                     .listRowInsets(EdgeInsets())
                     .padding(.vertical, 15)
             }
-            .listRowBackground(LinearGradient(
-                colors: [Color.cardBgTop, Color.cardBgBottom],
-                startPoint: .top,
-                endPoint: .bottom
-            ))
+            .listRowGradientBackground()
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
