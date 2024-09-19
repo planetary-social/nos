@@ -4350,6 +4350,28 @@
         }
       }
     },
+    "flagContentFlagPubiclyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This flag will be attributed to your account"
+          }
+        }
+      }
+    },
+    "flagContentFlagPubiclyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flag Publicly"
+          }
+        }
+      }
+    },
     "flagContentHarassmentDescription" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4423,6 +4445,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Other"
+          }
+        }
+      }
+    },
+    "flagContentSendTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to Nos or Flag Publicly"
+          }
+        }
+      }
+    },
+    "flagContentSendToNosDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This flag will be attributed to TAGR bot"
+          }
+        }
+      }
+    },
+    "flagContentSendToNosInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Nos moderation team will analyze the note for tagged content and may publish a report from the Tagr-bot account."
+          }
+        }
+      }
+    },
+    "flagContentSendToNosTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to Nos"
           }
         }
       }
