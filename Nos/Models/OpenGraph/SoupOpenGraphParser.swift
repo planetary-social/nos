@@ -85,13 +85,13 @@ extension SoupOpenGraphParser {
     /// - Returns: The Open Graph image URL, or `nil` if none is found.
     /// - Note: The image URL may be in a variety of properties, including `"og:image"`, `"og:image:url`, or
     ///        `"og:image:secure_url"`.
-    func imageURL(from document: Document) -> String? {
+    func imageURL(from document: Document) -> URL? {
         if let url = stringValue(.image, from: document), !url.isEmpty {
-            return url
+            return URL(string: url)
         } else if let url = stringValue(.imageURL, from: document), !url.isEmpty {
-            return url
+            return URL(string: url)
         } else if let url = stringValue(.imageSecureURL, from: document), !url.isEmpty {
-            return url
+            return URL(string: url)
         } else {
             return nil
         }
@@ -102,13 +102,13 @@ extension SoupOpenGraphParser {
     /// - Returns: The Open Graph video URL, or `nil` if none is found.
     /// - Note: The video URL may be in a variety of properties, including `"og:video"`, `"og:video:url`, or
     ///        `"og:video:secure_url"`.
-    func videoURL(from document: Document) -> String? {
+    func videoURL(from document: Document) -> URL? {
         if let url = stringValue(.video, from: document), !url.isEmpty {
-            return url
+            return URL(string: url)
         } else if let url = stringValue(.videoURL, from: document), !url.isEmpty {
-            return url
+            return URL(string: url)
         } else if let url = stringValue(.videoSecureURL, from: document), !url.isEmpty {
-            return url
+            return URL(string: url)
         } else {
             return nil
         }

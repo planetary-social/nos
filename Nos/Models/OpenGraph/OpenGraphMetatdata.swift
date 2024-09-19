@@ -18,7 +18,7 @@ struct OpenGraphMetadata: Equatable {
 /// Open Graph metadata for media, such as an image or video.
 struct OpenGraphMedia: Equatable {
     /// The URL of the media.
-    let url: String?
+    let url: URL?
 
     /// The width of the media.
     let width: Double?
@@ -31,7 +31,7 @@ struct OpenGraphMedia: Equatable {
     ///   - url: The URL of the media.
     ///   - width: The width of the media.
     ///   - height: The height of the media.
-    init?(url: String?, width: Double?, height: Double?) {
+    init?(url: URL?, width: Double?, height: Double?) {
         if url == nil && width == nil && height == nil {
             return nil
         }
