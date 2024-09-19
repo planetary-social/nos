@@ -283,8 +283,10 @@ extension SettingsView {
 extension SettingsView {
     /// Controls that will appear when the app is built for STAGING.
     @MainActor private var stagingControls: some View {
-        newMediaFeatureToggle
-        newModerationFlowToggle
+        Group {
+            newMediaFeatureToggle
+            newModerationFlowToggle
+        }
     }
 }
 #endif
