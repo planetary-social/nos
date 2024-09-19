@@ -3771,6 +3771,17 @@
         }
       }
     },
+    "enableAccountDeletion" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable account deletion"
+          }
+        }
+      }
+    },
     "enableNewMediaDisplay" : {
       "comment" : "Setting for new media feature flag",
       "extractionState" : "manual",
