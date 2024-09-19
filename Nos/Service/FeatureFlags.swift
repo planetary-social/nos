@@ -1,5 +1,6 @@
 import Foundation
 import Dependencies
+import SwiftUI
 
 /// Feature flags for enabling experimental or beta features.
 enum FeatureFlag {
@@ -27,7 +28,7 @@ protocol FeatureFlags {
 }
 
 /// The default set of feature flag values for the app.
-class DefaultFeatureFlags: FeatureFlags, DependencyKey {
+@Observable class DefaultFeatureFlags: FeatureFlags, DependencyKey {
     /// The one and only instance of `DefaultFeatureFlags`.
     static let liveValue = DefaultFeatureFlags()
 
