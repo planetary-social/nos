@@ -90,6 +90,11 @@ extension DependencyValues {
         set { self[MediaServiceKey.self] = newValue }
     }
 
+    var openGraphService: OpenGraphService {
+        get { self[OpenGraphServiceKey.self] }
+        set { self[OpenGraphServiceKey.self] = newValue }
+    }
+
     var previewEventRepository: PreviewEventRepository {
         get { self[PreviewEventRepositoryKey.self] }
         set { self[PreviewEventRepositoryKey.self] = newValue }
@@ -190,7 +195,13 @@ fileprivate enum KeychainKey: DependencyKey {
 fileprivate enum MediaServiceKey: DependencyKey {
     static let liveValue: any MediaService = DefaultMediaService()
     static let testValue: any MediaService = MockMediaService()
-    static let previewValue: any MediaService = DefaultMediaService() // enables us to manually test with previews
+    static let previewValue: any MediaService = DefaultMediaService() // enables manual testing with previews
+}
+
+fileprivate enum OpenGraphServiceKey: DependencyKey {
+    static let liveValue: any OpenGraphService = DefaultOpenGraphService()
+    static let testValue: any OpenGraphService = MockOpenGraphService()
+    static let previewValue: any OpenGraphService = DefaultOpenGraphService() // enables manual testing with previews
 }
 
 fileprivate enum PreviewEventRepositoryKey: DependencyKey {
