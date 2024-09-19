@@ -5508,9 +5508,6 @@
         }
       }
     },
-    "Key" : {
-      "extractionState" : "manual"
-    },
     "keys" : {
       "extractionState" : "manual",
       "localizations" : {
