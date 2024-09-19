@@ -47,6 +47,15 @@ struct FlagPickerRow: View {
     }
 
     var body: some View {
+        Button(action: {
+            selection = flag
+        }, label: {
+            buttonLabel
+        })
+        .padding(14)
+    }
+
+    private var buttonLabel: some View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 8) {
                 Text(flag.title)
@@ -56,20 +65,15 @@ struct FlagPickerRow: View {
                 if let description = flag.description {
                     Text(description)
                         .foregroundColor(.secondaryTxt)
+                        .multilineTextAlignment(.leading)
                         .font(.clarity(.regular, textStyle: .footnote))
                         .lineSpacing(8)
                 }
             }
-
             Spacer()
 
-            Button {
-                selection = flag
-            } label: {
-                NosRadioButton(isSelected: isSelected)
-            }
+            NosRadioButton(isSelected: isSelected)
         }
-        .padding(12)
     }
 }
 
