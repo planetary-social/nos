@@ -4405,6 +4405,94 @@
         }
       }
     },
+    "flagContentHarassmentDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harmful and unwanted replies or mentions"
+          }
+        }
+      }
+    },
+    "flagContentHarassmentTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harassment & Profanity"
+          }
+        }
+      }
+    },
+    "flagContentIllegalDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Content that violates the law in your country or CSAM"
+          }
+        }
+      }
+    },
+    "flagContentIllegalTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Illegal"
+          }
+        }
+      }
+    },
+    "flagContentNudityDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nudity, porn, or violent content not appropriate for work"
+          }
+        }
+      }
+    },
+    "flagContentOtherDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Items not included above"
+          }
+        }
+      }
+    },
+    "flagContentOtherTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other"
+          }
+        }
+      }
+    },
+    "flagContentSpamTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spam"
+          }
+        }
+      }
+    },
     "flagUser" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5474,6 +5562,9 @@
           }
         }
       }
+    },
+    "Key" : {
+      "extractionState" : "manual"
     },
     "keys" : {
       "extractionState" : "manual",
@@ -11660,6 +11751,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "出錯啦"
+          }
+        }
+      }
+    },
+    "spam" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spam"
           }
         }
       }
