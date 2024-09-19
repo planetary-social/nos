@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed alert when uploading big files suggesting users pay for nostr.build. [#1321](https://github.com/planetary-social/nos/issues/1321)
 
 ### Internal Changes
+- Update Xcode to version 16.0.
 - Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag. [#1172](https://github.com/planetary-social/nos/issues/1172)
 - Added more instructions to the changelog file.
 - Added some logging when a content warning is displayed. [cleanstr#53](https://github.com/planetary-social/cleanstr/issues/53)
