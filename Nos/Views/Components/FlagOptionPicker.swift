@@ -118,7 +118,7 @@ private struct FlagPickerRow: View {
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.purple.opacity(0.1))
+                    .fill(Color.white.opacity(0.6))
             )
             .padding(.top, 12)
     }
