@@ -1,4 +1,5 @@
 {
+  "originHash" : "73986e8614e86bc198acf108f9214c158dd0475e95a9469983fe7e59ac1890a1",
   "pins" : [
     {
       "identity" : "bech32",
@@ -193,8 +194,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nalexn/ViewInspector",
       "state" : {
-        "revision" : "7b1732802ffe30e6a67754bda6c7819e5cb0eb70",
-        "version" : "0.9.11"
+        "revision" : "5acfa0a3c095ac9ad050abe51c60d1831e8321da",
+        "version" : "0.10.0"
       }
     },
     {
@@ -216,5 +217,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
