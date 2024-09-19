@@ -11,8 +11,8 @@ struct ContentFlagView: View {
                 FlagOptionPicker(
                     selectedOption: $selectedFlagOptionCategory,
                     options: FlagOption.flagContentCategories,
-                    title: String(localized: .localizable.reportContent),
-                    subtitle: String(localized: .localizable.reportContentMessage)
+                    title: String(localized: .localizable.flagContentCategoryTitle),
+                    subtitle: String(localized: .localizable.flagContentCategoryDescription)
                 )
             }
         }
