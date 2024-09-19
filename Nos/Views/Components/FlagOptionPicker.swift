@@ -53,18 +53,33 @@ private struct FlagPickerRow: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack(alignment: .center) {
-                flagContent
-                Spacer()
-                radioButton
-            }
+        Button(action: {
+            selection = flag
+        }, label: {
+            buttonLabel
+        })
+        .padding(14)
+    }
 
-            if let info = flag.info, selection?.id == flag.id {
-                infoBox(text: info)
+    private var buttonLabel: some View {
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(flag.title)
+                    .foregroundColor(.primaryTxt)
+                    .font(.clarity(.regular))
+
+                if let description = flag.description {
+                    Text(description)
+                        .foregroundColor(.secondaryTxt)
+                        .multilineTextAlignment(.leading)
+                        .font(.clarity(.regular, textStyle: .footnote))
+                        .lineSpacing(8)
+                }
             }
+            Spacer()
+
+            NosRadioButton(isSelected: isSelected)
         }
-        .padding(12)
     }
 
     private var radioButton: some View {
