@@ -24,18 +24,10 @@ struct DefaultOpenGraphService: OpenGraphService {
         // some websites, like YouTube, only provide metadata for specific User-Agent values
         request.setValue("facebookexternalhit/1.1 Facebot Twitterbot/1.0", forHTTPHeaderField: "User-Agent")
         let (data, response) = try await session.data(for: request)
-        if let httpURLResponse = (response as? HTTPURLResponse) {
-            for headerField in httpURLResponse.allHeaderFields {
-                print("headerField: \(headerField)")
-                if let key = headerField.key as? String,
-                    let value = headerField.value as? String,
-                    key == "Content-Type",
-                    value.contains("text/html") {
-                    // parse
-                    return parser.metadata(html: data)
-                }
-            }
+        if response.mimeType == "text/html" {
+            return parser.metadata(html: data)
+        } else {
+            return nil
         }
-        return nil
     }
 }

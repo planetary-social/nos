@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored feature flag and added a feature flag toggle for “Enable new moderation flow” to Staging builds. [#1496](https://github.com/planetary-social/nos/issues/1496)
 - Refactored list row gradient background.
 - Added SwiftSoup to parse Open Graph metadata. [#1165](https://github.com/planetary-social/nos/issues/1165)
+- Parse Open Graph metadata whenever an event contains a URL, doesn’t have `imeta` tags, and the URL points to an HTML document. [#1425](https://github.com/planetary-social/nos/issues/1425)
 
 ## [0.1.26] - 2024-09-09Z
 
