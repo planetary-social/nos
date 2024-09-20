@@ -63,22 +63,12 @@ private struct FlagPickerRow: View {
 
     private var buttonLabel: some View {
         HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 8) {
-                Text(flag.title)
-                    .foregroundColor(.primaryTxt)
-                    .font(.clarity(.regular))
-
-                if let description = flag.description {
-                    Text(description)
-                        .foregroundColor(.secondaryTxt)
-                        .multilineTextAlignment(.leading)
-                        .font(.clarity(.regular, textStyle: .footnote))
-                        .lineSpacing(8)
+            VStack(alignment: .leading) {
+                flagContent
+                if let info = flag.info, flag.id == selection?.id {
+                    infoBox(text: info)
                 }
             }
-            Spacer()
-
-            NosRadioButton(isSelected: isSelected)
         }
     }
 
@@ -93,34 +83,50 @@ private struct FlagPickerRow: View {
     /// Displays the content of a flag option.
     /// Shows the title of the flag option and its description (if available).
     private var flagContent: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(flag.title)
-                .foregroundColor(.primaryTxt)
-                .font(.clarity(.regular))
+        HStack {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(flag.title)
+                    .foregroundColor(.primaryTxt)
+                    .font(.clarity(.regular))
 
-            if let description = flag.description {
-                Text(description)
-                    .foregroundColor(.secondaryTxt)
-                    .font(.clarity(.regular, textStyle: .footnote))
-                    .lineSpacing(8)
-                    .fixedSize(horizontal: false, vertical: true) // this enables the text view expand as needed
+                if let description = flag.description {
+                    Text(description)
+                        .foregroundColor(.secondaryTxt)
+                        .font(.clarity(.regular, textStyle: .footnote))
+                        .lineSpacing(8)
+                        .fixedSize(horizontal: false, vertical: true) // this enables the text view expand as needed
+                }
             }
+            Spacer()
+
+            NosRadioButton(isSelected: isSelected)
         }
     }
 
     /// Displays additional information about a flag option.
     private func infoBox(text: String) -> some View {
-        Text(text)
-            .foregroundColor(.primaryTxt)
-            .font(.clarity(.regular, textStyle: .subheadline))
-            .multilineTextAlignment(.leading)
-            .lineSpacing(8)
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.white.opacity(0.6))
-            )
-            .padding(.top, 12)
+        ZStack {
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color.white.opacity(0.6))
+                .blendMode(.softLight)
+            VStack {
+                Text(text)
+                    .foregroundColor(.primaryTxt)
+                    .font(.clarity(.regular, textStyle: .subheadline))
+                    .multilineTextAlignment(.leading)
+                    .padding(EdgeInsets(
+                        top: 13,
+                        leading: 13,
+                        bottom: 18,
+                        trailing: 13
+                    ))
+                .lineSpacing(8)
+
+                Spacer()
+            }
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.top, 12)
     }
 }
 
