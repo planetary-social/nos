@@ -116,7 +116,7 @@ private struct FlagPickerRow: View {
                     .multilineTextAlignment(.leading)
                     .padding(EdgeInsets(
                         top: 13,
-                        leading: 13,
+                        leading: 12,
                         bottom: 18,
                         trailing: 13
                     ))
