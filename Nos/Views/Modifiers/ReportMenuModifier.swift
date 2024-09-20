@@ -17,6 +17,7 @@ struct ReportMenuModifier: ViewModifier {
     @State private var confirmationDialogState: ConfirmationDialogState<UserSelection>?
     @State private var selectedFlagOption: FlagOption?
     @State private var selectedFlagSendOption: FlagOption?
+    @State private var showFlagSuccessView = false
 
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.featureFlags) private var featureFlags
@@ -38,10 +39,19 @@ struct ReportMenuModifier: ViewModifier {
         case .note:
             content
                 .sheet(isPresented: $isPresented) {
-                    ContentFlagView(
-                        selectedFlagOptionCategory: $selectedFlagOption,
-                        selectedSendOptionCategory: $selectedFlagSendOption
-                    )
+                    NavigationStack {
+                        ContentFlagView(
+                            selectedFlagOptionCategory: $selectedFlagOption,
+                            selectedSendOptionCategory: $selectedFlagSendOption,
+                            showSuccessView: $showFlagSuccessView,
+                            sendAction: {
+                                if let selectCategory = selectedFlagOption?.category as? ReportCategory {
+                                    publishReportForNewModerationFlow(selectCategory)
+                                    showFlagSuccessView = true
+                                }
+                            }
+                        )
+                    }
                 }
         case .author:
             oldModerationFlow(content: content)
@@ -221,8 +231,17 @@ struct ReportMenuModifier: ViewModifier {
             }
         }
     }
-    
-    /// Publishes a report based on user input
+
+    /// Publishes a report based on the categories the user selected for the new moderation flow.
+    func publishReportForNewModerationFlow(_ selectedCategory: ReportCategory) {
+        if selectedFlagSendOption?.category as? SendFlagPrivacy == .sendToNos {
+            sendToNos(selectedCategory)
+        } else {
+            flagPublicly(selectedCategory)
+        }
+    }
+
+    /// Publishes a report based on user input for the old moderation flow.
     func publishReport(_ userSelection: UserSelection?) {
         switch userSelection {
         case .sendToNos(let selectedCategory):
