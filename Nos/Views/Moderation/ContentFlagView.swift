@@ -26,6 +26,7 @@ struct ContentFlagView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         dismiss()
+                        resetSelections()
                     }, label: {
                         Text(.localizable.cancel)
                             .foregroundColor(.primaryTxt)
@@ -49,6 +50,11 @@ struct ContentFlagView: View {
                 }
             }
         }
+    }
+
+    private func resetSelections() {
+        selectedFlagOptionCategory = nil
+        selectedSendOptionCategory = nil
     }
 
     private var categoryView: some View {
