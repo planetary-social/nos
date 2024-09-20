@@ -29,7 +29,7 @@ struct FlagOptionPicker: View {
     }
 
     private var flagOptionsListView: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0) {
             ForEach(options) { flag in
                 FlagPickerRow(
                     flag: flag,
