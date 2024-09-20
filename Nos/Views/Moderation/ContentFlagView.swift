@@ -23,11 +23,13 @@ struct ContentFlagView: View {
                         title: String(localized: .localizable.flagContentSendTitle),
                         subtitle: nil
                     )
+                    .transition(.move(edge: .leading).combined(with: .opacity))
                 }
             }
         }
         .padding()
         .background(Color.appBg)
+        .animation(.easeInOut, value: selectedFlagOptionCategory)
     }
 }
 
