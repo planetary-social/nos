@@ -7,7 +7,6 @@ let showReportWarningsKey = "com.verse.nos.settings.showReportWarnings"
 let showOutOfNetworkWarningKey = "com.verse.nos.settings.showOutOfNetworkWarning"
     
 struct SettingsView: View {
-    @Dependency(\.unsAPI) var unsAPI
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.persistenceController) private var persistenceController
@@ -263,23 +262,14 @@ struct SettingsView: View {
     fileprivate func alertButtonTapped(_ action: AlertAction) async {
         switch action {
         case .logout:
-            await logout()
+            await currentUser.logout(appController: appController)
         case .deleteAccount:
             do {
-                try await currentUser.publishRequestToVanish()
-                await logout()
+                try await currentUser.deleteAccount(appController: appController)
             } catch {
                 Log.error(error)
             }
         }
-    }
-    
-    func logout() async {
-        await currentUser.setKeyPair(nil)
-        analytics.logout()
-        crashReporting.logout()
-        unsAPI.logout()
-        appController.configureCurrentState() 
     }
 }
 

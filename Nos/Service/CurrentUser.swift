@@ -12,6 +12,7 @@ import Dependencies
     @ObservationIgnored @Dependency(\.pushNotificationService) private var pushNotificationService
     @ObservationIgnored @Dependency(\.relayService) var relayService
     @ObservationIgnored @Dependency(\.keychain) private var keychain
+    @ObservationIgnored @Dependency(\.unsAPI) var unsAPI
     
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
@@ -291,3 +292,19 @@ import Dependencies
     }
 }
 // swiftlint:enable type_body_length
+
+extension CurrentUser {
+    func logout(appController: AppController) async {
+        await setKeyPair(nil)
+        analytics.logout()
+        crashReporting.logout()
+        unsAPI.logout()
+        appController.configureCurrentState()
+        try? await persistenceController.deleteAll()
+    }
+    
+    func deleteAccount(appController: AppController) async throws {
+        try await publishRequestToVanish()
+        await logout(appController: appController)
+    }
+}

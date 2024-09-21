@@ -93,6 +93,10 @@ final class PersistenceController {
         }
     }
     
+    func deleteAll() async throws {
+        await container.deleteAllEntities()
+    }
+    
     private static func clearCoreData(store storeURL: URL, in container: NSPersistentContainer) {
         Log.info("Dropping Core Data...")
         do {
