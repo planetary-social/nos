@@ -1,10 +1,3 @@
-//
-//  ParseQueue.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 6/13/23.
-//
-
 import Foundation
 import Starscream
 import DequeModule
@@ -21,5 +14,9 @@ actor ParseQueue {
         let poppedEvents = Array(events.prefix(count))
         events.removeFirst(min(events.count, count))
         return poppedEvents
+    }
+    
+    var count: Int {
+        events.count
     }
 }

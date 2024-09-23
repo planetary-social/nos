@@ -1,10 +1,3 @@
-//
-//  Bech32.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/7/23.
-//
-
 import Foundation
 
 // swiftlint:disable all
@@ -13,7 +6,7 @@ import Foundation
 /// Modified from https://github.com/0xDEADP00L/Bech32
 /// https://medium.com/@meshcollider/some-of-the-math-behind-bech32-addresses-cf03c7496285 could help understanding
 /// how Bech32 works
-public enum Bech32 {
+enum Bech32 {
     private static let gen: [UInt32] = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3]
     /// Bech32 checksum delimiter
     private static let checksumMarker: String = "1"
@@ -77,7 +70,7 @@ public enum Bech32 {
     }
     
     /// Encode Bech32 string
-    public static func encode(_ hrp: String, baseFiveData values: Data) -> String {
+    static func encode(_ hrp: String, baseFiveData values: Data) -> String {
         let checksum = createChecksum(hrp: hrp, values: values)
         var combined = values
         combined.append(checksum)
@@ -87,14 +80,14 @@ public enum Bech32 {
         for i in combined {
             ret.append(encCharset[Int(i)])
         }
-        return String(data: ret, encoding: .utf8) ?? ""
+        return String(decoding: ret, as: UTF8.self) 
     }
     
-    public static func encode(_ hrp: String, baseEightData: Data) -> String {
+    static func encode(_ hrp: String, baseEightData: Data) -> String {
         encode(hrp, baseFiveData: baseEightData.base5)
     }
     
-    public static func encode(_ hrp: String, hex: String) -> String? {
+    static func encode(_ hrp: String, hex: String) -> String? {
         guard let decoded = hex.hexDecoded else {
             return nil
         }
@@ -102,7 +95,7 @@ public enum Bech32 {
     }
     
     /// Decode Bech32 string
-    public static func decode(_ str: String) throws -> (hrp: String, checksum: Data) {
+    static func decode(_ str: String) throws -> (hrp: String, checksum: Data) {
         guard let strBytes = str.data(using: .utf8) else {
             throw DecodingError.nonUTF8String
         }
@@ -154,7 +147,7 @@ public enum Bech32 {
 }
 
 extension Bech32 {
-    public enum DecodingError: LocalizedError {
+    enum DecodingError: LocalizedError {
         case nonUTF8String
         case nonPrintableCharacter
         case invalidCase
@@ -166,7 +159,7 @@ extension Bech32 {
         case invalidCharacter
         case checksumMismatch
         
-        public var errorDescription: String? {
+        var errorDescription: String? {
             switch self {
             case .checksumMismatch:
                 return "Checksum doesn't match"

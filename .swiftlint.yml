@@ -8,10 +8,9 @@ disabled_rules: # rule identifiers turned on by default to exclude from running
   - function_parameter_count
   - attributes
   - force_unwrapping
-  - force_try
-  - force_cast
   - todo
   - legacy_objc_type
+  - type_body_length
 opt_in_rules: # some rules are turned off by default, so you need to opt-in
   - attributes
   - closure_end_indentation
@@ -30,6 +29,7 @@ opt_in_rules: # some rules are turned off by default, so you need to opt-in
   - empty_string
   - enum_case_associated_values_count
   - fatal_error_message
+  - file_header
   - first_where
   - flatmap_over_map_reduce
   - force_unwrapping
@@ -78,7 +78,9 @@ opt_in_rules: # some rules are turned off by default, so you need to opt-in
 included: # paths to include during linting. `--path` is ignored if present.
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Architecture/
+  - StarscreamOld/
   - "**/.build"
+  - .git
 analyzer_rules: # Rules run by `swiftlint analyze` (experimental)
   - explicit_self
   - unused_import
@@ -90,9 +92,9 @@ analyzer_rules: # Rules run by `swiftlint analyze` (experimental)
 # implicitly
 line_length: 120
 # they can set both implicitly with an array
-type_body_length:
-  - 300 # warning
-  - 400 # error
+#type_body_length:
+#  - 300 # warning
+#  - 400 # error
 # or they can set both explicitly
 file_length:
   warning: 500
@@ -107,6 +109,7 @@ type_name:
   excluded: 
     - Tag
     - TLV
+    - Wei
   allowed_symbols: ["_"] # these are allowed in type names
 identifier_name:
   min_length: # only min_length
@@ -148,8 +151,12 @@ identifier_name:
     - uns
     - idx
     - dsn
+    - wei
+    - gas
 number_separator:
   minimum_length: 5
 cyclomatic_complexity:
   ignores_case_statements: true
+file_header:
+  forbidden_pattern: ".?"
 reporter: "xcode" # reporter type (xcode, json, csv, checkstyle, codeclimate, junit, html, emoji, sonarqube, markdown, github-actions-logging)

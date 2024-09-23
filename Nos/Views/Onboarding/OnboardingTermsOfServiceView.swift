@@ -1,39 +1,26 @@
-//
-//  OnboardingTermsOfServiceView.swift
-//  Nos
-//
-//  Created by Shane Bielefeld on 3/16/23.
-//
-
+import Dependencies
 import SwiftUI
 
 struct OnboardingTermsOfServiceView: View {
     @EnvironmentObject var state: OnboardingState
-    @EnvironmentObject var currentUser: CurrentUser
+    @Environment(CurrentUser.self) var currentUser
+
+    @Dependency(\.crashReporting) private var crashReporting
     
     /// Completion to be called when all onboarding steps are complete
     let completion: @MainActor () -> Void
     
     var body: some View {
         VStack {
-            PlainText(Localized.termsOfServiceTitle.string)
-                .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [
-                            Color(hex: "#F08508"),
-                            Color(hex: "#F43F75")
-                        ],
-                        startPoint: .bottomLeading,
-                        endPoint: .topTrailing
-                    )
-                    .blendMode(.normal)
-                )
+            Text(.localizable.termsOfServiceTitle)
+                .font(.clarity(.bold, textStyle: .largeTitle))
+                .foregroundStyle(LinearGradient.diagonalAccent2.blendMode(.normal))
                 .padding(.top, 92)
                 .padding(.bottom, 60)
             ScrollView {
                 Text(termsOfService)
-                    .foregroundColor(.secondaryText)
+                    .font(.clarity(.regular))
+                    .foregroundColor(.secondaryTxt)
                 Rectangle().fill(Color.clear)
                     .frame(height: 100)
             }
@@ -49,15 +36,19 @@ struct OnboardingTermsOfServiceView: View {
             )
             .padding(.horizontal, 44.5)
             HStack {
-                BigActionButton(title: Localized.reject) {
+                BigActionButton(title: .localizable.reject) {
                     state.step = .onboardingStart
                 }
                 Spacer(minLength: 15)
-                BigActionButton(title: Localized.accept) {
+                BigActionButton(title: .localizable.accept) {
                     switch state.flow {
                     case .createAccount:
-                        await currentUser.createAccount()
-                        completion()
+                        do {
+                            try await currentUser.createAccount()
+                            completion()
+                        } catch {
+                            crashReporting.report(error)
+                        }
                     case .loginToExistingAccount:
                         state.step = .login
                     }

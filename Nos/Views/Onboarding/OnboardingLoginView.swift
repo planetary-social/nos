@@ -1,10 +1,3 @@
-//
-//  OnboardingLoginView.swift
-//  Nos
-//
-//  Created by Shane Bielefeld on 3/16/23.
-//
-
 import SwiftUI
 import Dependencies
 import Logger
@@ -13,24 +6,20 @@ struct OnboardingLoginView: View {
     let completion: @MainActor () -> Void
     
     @Dependency(\.analytics) private var analytics
-    @EnvironmentObject var currentUser: CurrentUser
+    @Environment(CurrentUser.self) var currentUser
     
     @Environment(\.managedObjectContext) private var viewContext
     
     @State var privateKeyString = ""
     @State var showError = false
     
-    func importKey(_ keyPair: KeyPair) async {
+    @MainActor func importKey(_ keyPair: KeyPair) async {
         await currentUser.setKeyPair(keyPair)
         analytics.importedKey()
 
         for address in Relay.allKnown {
             do {
-                let relay = try Relay(
-                    context: viewContext,
-                    address: address,
-                    author: currentUser.author
-                )
+                let relay = try Relay.findOrCreate(by: address, context: viewContext)
                 currentUser.onboardingRelays.append(relay)
             } catch {
                 Log.error(error.localizedDescription)
@@ -45,21 +34,17 @@ struct OnboardingLoginView: View {
         VStack {
             Form {
                 Section {
-                    SecureField(Localized.privateKeyPlaceholder.string, text: $privateKeyString)
-                        .foregroundColor(.textColor)
+                    SecureField(String(localized: .localizable.privateKeyPlaceholder), text: $privateKeyString)
+                        .foregroundColor(.primaryTxt)
                 } header: {
-                    Localized.pasteYourSecretKey.view
-                        .foregroundColor(.textColor)
+                    Text(.localizable.pasteYourSecretKey)
+                        .foregroundColor(.primaryTxt)
                         .fontWeight(.heavy)
                 }
-                .listRowBackground(LinearGradient(
-                    colors: [Color.cardBgTop, Color.cardBgBottom],
-                    startPoint: .top,
-                    endPoint: .bottom
-                ))
+                .listRowGradientBackground()
             }
             if !privateKeyString.isEmpty {
-                BigActionButton(title: .login) {
+                BigActionButton(title: .localizable.login) {
                     if let keyPair = KeyPair(nsec: privateKeyString) {
                         await importKey(keyPair)
                     } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
@@ -74,11 +59,11 @@ struct OnboardingLoginView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
-        .nosNavigationBar(title: Localized.login)
+        .nosNavigationBar(title: .localizable.login)
         .alert(isPresented: $showError) {
             Alert(
-                title: Localized.invalidKey.view,
-                message: Localized.couldNotReadPrivateKeyMessage.view
+                title: Text(.localizable.invalidKey),
+                message: Text(.localizable.couldNotReadPrivateKeyMessage)
             )
         }
     }

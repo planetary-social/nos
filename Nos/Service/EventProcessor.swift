@@ -1,26 +1,10 @@
-//
-//  EventProcessor.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/10/23.
-//
-
 import Foundation
 import CoreData
 import Logger
 
 /// The event processor consumes raw event data from the relays and writes it to Core Data.
 enum EventProcessor {
-    static func parse(
-        jsonObject: [String: Any],
-        from relay: Relay?,
-        in context: NSManagedObjectContext
-    ) throws -> Event? {
-        let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
-        let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
-        return try parse(jsonEvent: jsonEvent, from: relay, in: context)
-    }
-    
+    @discardableResult
     static func parse(
         jsonEvent: JSONEvent,
         from relay: Relay?,
@@ -28,22 +12,36 @@ enum EventProcessor {
         skipVerification: Bool = false
     ) throws -> Event? {
         if let event = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
-            relay.unwrap { event.trackDelete(on: $0, context: parseContext) }
+            relay.unwrap {
+                do {
+                    try event.trackDelete(on: $0, context: parseContext)
+                } catch {
+                    Log.error(error.localizedDescription)
+                }
+            }
         
             guard let publicKey = event.author?.publicKey else {
                 throw EventError.missingAuthor
             }
             
             if skipVerification == false {
-                guard try publicKey.verifySignature(on: event) else {
+                guard try event.verifySignature(for: publicKey) else {
                     parseContext.delete(event)
-                    Log.info("Invalid signature on event: \(jsonEvent)")
+                    Log.info("Invalid signature on event: \(jsonEvent) from \(relay?.address ?? "error")")
                     throw EventError.invalidSignature(event)
                 }
                 event.isVerified = true
             }
             
-            Log.debug("EventProcessor: parsed a new event")
+            // if this is a zap receipt, pull the zap request out of the description tag and parse it as well
+            if event.kind == EventKind.zapReceipt.rawValue,
+                let tags = event.allTags as? [[String]],
+                let descriptionTag = tags.first(where: { $0.first == "description" }),
+                let zapRequestJSONData = descriptionTag.last?.data(using: .utf8) {
+                let zapRequest = try JSONDecoder().decode(JSONEvent.self, from: zapRequestJSONData)
+                try parse(jsonEvent: zapRequest, from: relay, in: parseContext, skipVerification: skipVerification)
+            }
+            
             return event
             
         // Verify that this event has been marked seen on the given relay.
@@ -51,12 +49,10 @@ enum EventProcessor {
             try parseContext.count(for: Event.event(by: jsonEvent.id, seenOn: relay)) == 0, 
             let event = Event.find(by: jsonEvent.id, context: parseContext) {
             event.markSeen(on: relay)
-            event.trackDelete(on: relay, context: parseContext)
-            Log.debug("EventProcessor: marked an existing event seen")
-            return event
+            try event.trackDelete(on: relay, context: parseContext)
+            return nil
         }
         
-        Log.debug("EventProcessor: skipping a duplicate event")
         return nil
     }
     
@@ -65,11 +61,13 @@ enum EventProcessor {
         var events = [Event]()
         for jsonEvent in jsonEvents {
             do {
-                if let event = try parse(jsonEvent: jsonEvent, from: relay, in: context) {
+                // don't parse this event if we don't support the kind
+                if EventKind(rawValue: jsonEvent.kind) != nil,
+                    let event = try parse(jsonEvent: jsonEvent, from: relay, in: context) {
                     events.append(event)
                 }
             } catch {
-                print("Error parsing eventJSON: \(jsonEvent): \(error.localizedDescription)")
+                Log.error("Error parsing eventJSON: \(jsonEvent): \(error.localizedDescription)")
             }
         }
         
@@ -81,7 +79,7 @@ enum EventProcessor {
         from relay: Relay?,
         in persistenceController: PersistenceController
     ) throws -> [Event] {
-        let parseContext = persistenceController.container.viewContext
+        let parseContext = persistenceController.viewContext
         return try parse(jsonData: jsonData, from: relay, in: parseContext)
     }
 }

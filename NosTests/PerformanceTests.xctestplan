@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "4E57AACC-256D-40F7-A368-FB716B0C177E",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Nos.xcodeproj",
+        "identifier" : "C90862BA29E9804B00C35A71",
+        "name" : "NosPerformanceTests"
+      }
+    }
+  ],
+  "version" : 1
+}

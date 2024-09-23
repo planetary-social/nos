@@ -1,10 +1,4 @@
-//
-//  Analytics.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 3/7/23.
-//
-
+import Foundation
 import PostHog
 import Dependencies
 import Logger
@@ -14,19 +8,19 @@ import Starscream
 /// dependency using the Dependencies library.
 class Analytics {
 
-    private let postHog: PHGPostHog?
+    private let postHog: PostHogSDK?
 
     required init(mock: Bool = false) {
         let apiKey = Bundle.main.infoDictionary?["POSTHOG_API_KEY"] as? String ?? ""
         if !mock && !apiKey.isEmpty {
-            let configuration = PHGPostHogConfiguration(apiKey: apiKey, host: "https://posthog.planetary.tools")
-            
+            let configuration = PostHogConfig(apiKey: apiKey, host: "https://posthog.planetary.tools")
+
             configuration.captureApplicationLifecycleEvents = true
-            configuration.recordScreenViews = true
+            configuration.captureScreenViews = false
             // TODO: write screen views to log
 
-            PHGPostHog.setup(with: configuration)
-            postHog = PHGPostHog.shared()!
+            PostHogSDK.shared.setup(configuration)
+            postHog = PostHogSDK.shared
         } else {
             postHog = nil
         }
@@ -35,7 +29,11 @@ class Analytics {
     func published(note: JSONEvent) {
         track("Published Note", properties: ["length": note.content.count])
     }
-    
+
+    func published(reply: JSONEvent) {
+        track("Published Reply", properties: ["length": reply.content.count])
+    }
+
     // MARK: - Screens
     
     func startedOnboarding() {
@@ -54,7 +52,7 @@ class Analytics {
         track("Discover Tab Tapped")
     }
     
-    func showedNewNote() {
+    func showedNoteComposer() {
         track("New Note Tapped")
     }
     
@@ -85,7 +83,7 @@ class Analytics {
     func showedSupport() {
         track("Contact Support Tapped")
     }
-    
+
     // MARK: - Actions
     
     func generatedKey() {
@@ -94,10 +92,6 @@ class Analytics {
     
     func importedKey() {
         track("Imported Private Key")
-    }
-    
-    func changedKey() {
-        track("Changed Private Key")
     }
     
     func added(_ relay: Relay) {
@@ -117,20 +111,26 @@ class Analytics {
     }
     
     func reported(_ reportedObject: ReportTarget) {
-        track("Reported", properties: ["type": reportedObject.displayString])
+        track("Reported", properties: ["type": reportedObject.analyticsString])
     }
     
-    func identify(with keyPair: KeyPair) {
-        Log.info("Analytics: Identified \(keyPair.npub)")
-        postHog?.identify(keyPair.npub)
+    func identify(with keyPair: KeyPair, nip05: String? = nil) {
+        let npub = keyPair.npub
+        Log.info("Analytics: Identified \(npub)")
+        var userProperties: [String: Any] = ["npub": npub]
+        if let nip05 {
+            userProperties["NIP-05"] = nip05
+        }
+        postHog?.identify(keyPair.npub, userProperties: userProperties)
     }
     
-    func databaseStatistics(_ statistics: [String: Any]) {
-        track("Database Statistics", properties: statistics)
+    func databaseStatistics(_ statistics: [(String, Int)]) {
+        let properties = Dictionary(uniqueKeysWithValues: statistics)
+        track("Database Statistics", properties: properties)
     }
     
     func logout() {
-        Log.info("Analytics: User logged out")
+        track("Logged out")
         postHog?.reset()
     }
     
@@ -142,11 +142,47 @@ class Analytics {
         }
         postHog?.capture(eventName, properties: properties)
     }
-    
+
+    /// Tracks when the user submits a search on the Discover screen.
+    func searchedDiscover() {
+        track("Discover Search Started")
+    }
+
+    /// Tracks when the user taps on a search result on the Discover screen.
+    func displayedAuthorFromDiscoverSearch(resultsCount: Int) {
+        track(
+            "Discover Search Displayed Author",
+            properties: ["Number of results": resultsCount]
+        )
+    }
+
+    /// Tracks when the user navigates to a note from the Discover search screen.
+    func displayedNoteFromDiscoverSearch() {
+        track(
+            "Discover Search Displayed Note"
+        )
+    }
+
     // MARK: - Relays
     
-    func rateLimited(by socket: WebSocket) {
-        track("Rate Limited", properties: ["relay": socket.request.url?.absoluteString ?? "null"])
+    func rateLimited(by socket: WebSocket, requestCount: Int) {
+        track(
+            "Rate Limited", 
+            properties: [
+                "relay": socket.request.url?.absoluteString ?? "null",
+                "count": requestCount,
+            ]
+        )
+    }
+    
+    func badRequest(from socket: WebSocket, message: String) {
+        track(
+            "Bad Request to Relay", 
+            properties: [
+                "relay": socket.request.url?.absoluteString ?? "null",
+                "details": message
+            ]
+        )
     }
     
     // MARK: - Notifications
@@ -167,6 +203,24 @@ class Analytics {
         track("Push Notification Registration Failed", properties: ["reason": reason])
     }
     
+    // MARK: NIP-05 Usernames
+
+    func showedNIP05Wizard() {
+        track("Showed NIP-05 Wizard")
+    }
+
+    func registeredNIP05Username() {
+        track("Registered NIP-05 Username")
+    }
+
+    func linkedNIP05Username() {
+        track("Linked NIP-05 Username")
+    }
+
+    func deletedNIP05Username() {
+        track("Deleted NIP-05 Username")
+    }
+
     // MARK: UNS
     
     func showedUNSWizard() {
@@ -189,16 +243,20 @@ class Analytics {
         track("UNS Entered Code")
     }
     
-    func choseUNSName() {
-        track("UNS Chose Name")
+    func registeredUNSName() {
+        track("UNS Registered Name")
+    }
+    
+    func linkedUNSName() {
+        track("UNS Linked Name")
     }
     
     func choseInvalidUNSName() {
         track("UNS Invalid Name")
     }
     
-    func encounteredUNSError() {
-        track("UNS Error")
+    func encounteredUNSError(_ error: Error?) {
+        track("UNS Error", properties: ["errorDescription": error?.localizedDescription ?? "null"])
     }
     
     // MARK: Message Actions
@@ -207,8 +265,8 @@ class Analytics {
         track("Copied Note Identifier")
     }
     
-    func copiedNoteLink() {
-        track("Copied Note Link")
+    func sharedNoteLink() {
+        track("Shared Note Link")
     }
     
     func copiedNoteText() {
@@ -222,7 +280,11 @@ class Analytics {
     func deletedNote() {
         track("Deleted Note")
     }
-    
+
+    func likedNote() {
+        track("Liked Note")
+    }
+
     // MARK: Uploads
     func selectedUploadFromCamera() {
         track("Selected Upload From Camera")

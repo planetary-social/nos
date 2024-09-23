@@ -1,13 +1,8 @@
-//
-//  Data+Encoding.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/3/23.
-//
-
 import Foundation
 
-typealias HexadecimalString = String
+enum DataError: Error {
+    case generic
+}
 
 extension Data {
     var hexString: String {
@@ -47,7 +42,7 @@ extension Data {
         return Data(outputArray)
     }
     
-    var base8FromBase5: Data? {
+    func base8FromBase5() throws -> Data {
         let destinationBase = 8
         let startingBase = 5
         let maxValueMask: UInt32 = ((UInt32(1)) << 8) - 1
@@ -65,7 +60,7 @@ extension Data {
         }
         
         if ((value << (destinationBase - bits)) & maxValueMask) != 0 || bits >= startingBase {
-            return nil
+            throw DataError.generic
         }
         
         return output

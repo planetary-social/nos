@@ -1,0 +1,10 @@
+xcassets:
+  - inputs: Nos/Assets/Assets.xcassets
+    outputs:
+      - templatePath: Nos/Assets/SwiftGen Stencils/custom-xcassets.stencil
+        output: ${DERIVED_SOURCES_DIR}/AssetsGenerated.swift
+  - inputs: Nos/Assets/Colors.xcassets
+    outputs:
+      - templatePath: Nos/Assets/SwiftGen Stencils/custom-xcassets.stencil
+        output: ${DERIVED_SOURCES_DIR}/ColorsGenerated.swift
+        

@@ -1,11 +1,5 @@
-//
-//  KeyPair.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/3/23.
-//
-
 import Foundation
+import Logger
 import secp256k1
 
 /// A model for Ed25519 public/private key pairs. In Nostr one KeyPair identifies a single author (although one author
@@ -13,15 +7,15 @@ import secp256k1
 struct KeyPair {
     
     var privateKeyHex: String {
-        underlyingKey.rawRepresentation.hexString
+        underlyingKey.dataRepresentation.hexString
     }
     
-    var publicKeyHex: String {
+    var publicKeyHex: RawAuthorID {
         publicKey.hex
     }
     
     var nsec: String {
-        Bech32.encode(Nostr.privateKeyPrefix, baseEightData: underlyingKey.rawRepresentation)
+        Bech32.encode(NostrIdentifierPrefix.privateKey, baseEightData: underlyingKey.dataRepresentation)
     }
     
     var npub: String {
@@ -32,8 +26,13 @@ struct KeyPair {
     private let underlyingKey: secp256k1.Signing.PrivateKey
     
     init?() {
-        let key = try! secp256k1.Signing.PrivateKey()
-        self.init(privateKeyHex: key.rawRepresentation.hexString)
+        do {
+            let key = try secp256k1.Signing.PrivateKey()
+            self.init(privateKeyHex: key.dataRepresentation.hexString)
+        } catch {
+            Log.debug("Could not create a secp254k1 key")
+            return nil
+        }
     }
     
     init?(privateKeyHex: String) {
@@ -43,7 +42,7 @@ struct KeyPair {
         }
         
         do {
-            self.underlyingKey = try .init(rawRepresentation: decoded)
+            self.underlyingKey = try .init(dataRepresentation: decoded)
         } catch {
             print("error creating KeyPair \(error.localizedDescription)")
             return nil
@@ -54,27 +53,22 @@ struct KeyPair {
     
     init?(nsec: String) {
         do {
-            let (humanReadablePart, checksum) = try Bech32.decode(nsec)
-            guard humanReadablePart == Nostr.privateKeyPrefix else {
-                print("error creating KeyPair from nsec: invalid human readable part")
+            let identifier = try NostrIdentifier.decode(bech32String: nsec)
+            guard case let .nsec(privateKeyHex) = identifier else {
+                print("Error decoding nsec")
                 return nil
             }
-            
-            guard let converted = checksum.base8FromBase5 else {
-                return nil
-            }
-            
-            self.underlyingKey = try .init(rawRepresentation: converted)
+            self.underlyingKey = try .init(dataRepresentation: privateKeyHex.bytes)
             publicKey = PublicKey(underlyingKey: underlyingKey.publicKey.xonly)
         } catch {
-            print("error creating KeyPair \(error.localizedDescription)")
+            print("Error creating KeyPair: \(error.localizedDescription)")
             return nil
         }
     }
     
     func sign(bytes: inout [UInt8]) throws -> String {
         let privateKeyBytes = try privateKeyHex.bytes
-        let privateKey = try secp256k1.Signing.PrivateKey(rawRepresentation: privateKeyBytes)
+        let privateKey = try secp256k1.Schnorr.PrivateKey(dataRepresentation: privateKeyBytes)
         
         var randomBytes = [Int8](repeating: 0, count: 64)
         guard
@@ -83,8 +77,8 @@ struct KeyPair {
             fatalError("can't copy secure random data")
         }
         
-        let rawSignature = try privateKey.schnorr.signature(message: &bytes, auxiliaryRand: &randomBytes)
-        return rawSignature.rawRepresentation.hexString
+        let rawSignature = try privateKey.signature(message: &bytes, auxiliaryRand: &randomBytes)
+        return rawSignature.dataRepresentation.hexString
     }
 }
 
@@ -122,10 +116,9 @@ extension KeyPair: RawRepresentable {
     }
     
     public var rawValue: String {
-        guard let data = try? JSONEncoder().encode(self),
-            let result = String(data: data, encoding: .utf8) else {
+        guard let data = try? JSONEncoder().encode(self) else {
             return "{}"
         }
-        return result
+        return String(decoding: data, as: UTF8.self)
     }
 }

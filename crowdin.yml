@@ -1,3 +1,4 @@
 files:
-  - source: /Nos/Assets/Localization/en.lproj/Generated.strings
-    translation: /Nos/Assets/Localization/%osx_code%/%original_file_name%
+  - source: /Nos/Assets/Localization/Localizable.xcstrings
+    translation: /Nos/Assets/Localization/Localizable.xcstrings
+    multilingual: 1

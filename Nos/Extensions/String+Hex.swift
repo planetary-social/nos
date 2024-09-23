@@ -1,10 +1,3 @@
-//
-//  String+Hex.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/7/23.
-//
-
 import Foundation
 import CryptoKit
 
@@ -26,5 +19,10 @@ extension String {
             }
         }
         return data
+    }
+    
+    var isValidHexadecimal: Bool {
+        let regex = "^[0-9a-fA-F]+$"
+        return range(of: regex, options: .regularExpression) != nil
     }
 }

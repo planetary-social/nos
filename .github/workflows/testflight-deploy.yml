@@ -1,0 +1,37 @@
+name: TestFlight Release Deployment
+on:
+  push:
+    branches:
+      - 'release/**'
+  # Enable manual run
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  fastlane-deploy:
+    runs-on: macOS-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+      - uses: nomasystems/action-xcode-select@v0.1
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ Secrets.SSH_KEY }}
+          known_hosts: ${{ Secrets.KNOWN_HOSTS }}
+      - name: Deploy with fastlane
+        run: |
+          bundle install
+          bundle exec fastlane release
+        env:
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ Secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ Secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ Secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          MATCH_PASSWORD: ${{ Secrets.MATCH_PASSWORD }}
+          KEYCHAIN_PASS: ${{ Secrets.KEYCHAIN_PASS }}
+          SENTRY_AUTH: ${{ Secrets.SENTRY_AUTH }}
+          APP_SECRETS: ${{ Secrets.APP_SECRETS }}
+          CI: true

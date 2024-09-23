@@ -1,0 +1,7 @@
+project: Nos.xcodeproj
+schemes:
+- Nos
+targets:
+- Nos
+- NosPerformanceTests
+- NosTests

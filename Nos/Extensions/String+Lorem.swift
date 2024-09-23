@@ -1,15 +1,6 @@
-//
-//  String+LoremIpsum.swift
-//  Planetary
-//
-//  Created by Martin Dutra on 7/10/22.
-//  Copyright © 2022 Verse Communications Inc. All rights reserved.
-//
-
 import Foundation
 
 extension String {
-
     static func loremIpsum(_ numberOfLines: Int) -> String {
         let lines = [
             """
@@ -29,30 +20,5 @@ extension String {
             """
         ]
         return lines.prefix(numberOfLines).joined(separator: " ")
-    }
-
-    static func loremIpsum(words: Int) -> String {
-        let sample = [
-            "Lorem",
-            "ipsum",
-            "dolor",
-            "sit",
-            "amet",
-            "consectetur",
-            "adipiscing",
-            "elit",
-            "sed",
-            "do",
-            "eiusmod",
-            "tempor",
-            "incididunt",
-            "ut",
-            "labore",
-            "et",
-            "dolore",
-            "magna",
-            "aliqua"
-        ]
-        return sample.prefix(words).joined(separator: " ")
     }
 }

@@ -1,61 +1,98 @@
-//
-//  Date+Elapsed.swift
-//  FBTT
-//
-//  Created by Christoph on 8/6/19.
-//  Copyright © 2019 Verse Communications Inc. All rights reserved.
-//
-
 import Foundation
 
 extension Date {
 
-    func elapsedTimeFromNowString() -> String {
+    /// Formats the date into a localized human-readable string, relative to a given end date and calendar.
+    ///
+    /// If the distance between the dates is one year or more, a long date format is returned.
+    ///
+    /// If the distance between the dates is one week or more and less than one year,
+    /// a date with a fully spelled out month and day is returned.
+    ///
+    /// If the distance between the dates is one day or more and less than one week,
+    /// an abbreviated representation of number of days between the dates is returned.
+    ///
+    /// If the distance between the dates is one hour or more and less than one day,
+    /// an abbreviated representation of number of hours between the dates is returned.
+    ///
+    /// If none of the above cases apply, an abbreviated representation of
+    /// number of minutes between the dates is returned.
+    ///
+    /// If there is less than 1 minute in distance between the dates, the abbreviated representation
+    /// is pinned to 1 minute.
+    ///
+    /// If there are any unexpected issues formatting the distance between dates in the above cases,
+    /// a long date format is returned as a fallback.
+    ///
+    /// The default value of `endDate` is `Date.now` and the default value of `calendar` is `Calendar.current`.
+    /// Normally, these values should not need to be provided. They are exposed for unit testing.
+    ///
+    /// - Parameters:
+    ///   - endDate: The end date to use to calculate distance from this date.
+    ///   - calendar: The calendar to use when formatting the human-readable string
+    /// - Returns:.The localized human-readable string of this date relative to the end date.
+    func distanceString(_ endDate: Date = Date.now, calendar: Calendar = Calendar.current) -> String {
+        let unitFlags: NSCalendar.Unit = [.minute, .hour, .day, .weekOfMonth, .year]
 
-        // from and to dates
-        var calendar = Calendar.current
-        calendar.timeZone = TimeZone.current
-        let from = calendar.dateComponents([.timeZone, .minute, .hour, .day, .month, .year], from: self)
-        let to = calendar.dateComponents([.timeZone, .minute, .hour, .day, .month, .year], from: Date())
+        let components = (calendar as NSCalendar).components(unitFlags, from: self, to: endDate, options: [])
 
-        // TODO https://app.asana.com/0/914798787098068/1148032440727609/f
-        // TODO this is off by one hour during the daylight savings switch (for 24 hours only)
-        // compute delta
-        let delta = calendar.dateComponents([.timeZone, .minute, .hour, .day], from: from, to: to)
-        let minutes = delta.minute ?? -1
-        let hours = delta.hour ?? -1
-        let day = delta.day ?? -1
-
-        // catch any future dates
-        if minutes < 0 || hours < 0 || day < 0 {
-            return "In the future"
+        if let year = components.year, year >= 1 {
+            return formatLongDate(calendar)
         }
 
-        switch day {
-        case 0:
-            // at least 1 minute ago
-            if hours == 0 { return "\(max(1, minutes))m" }
-
-            // at least 1 hour ago
-            else { return "\(hours)h" }
-
-        // 1 to 7 days ago
-        case 1..<7:
-            return "\(day)d"
-
-        // more than a week, less than a year
-        case 7..<365:
-            let formatter = DateFormatter()
-            formatter.timeStyle = .none
-            formatter.dateFormat = "MMMM dd"
-            return formatter.string(from: self)
-            
-        // at least 1 year ago
-        default:
-            let formatter = DateFormatter()
-            formatter.timeStyle = .none
-            formatter.dateFormat = "MMMM dd, YYYY"
-            return formatter.string(from: self)
+        if let week = components.weekOfMonth, week >= 1 {
+            let dateFormatter = DateFormatter()
+            dateFormatter.timeStyle = .none
+            dateFormatter.dateFormat = DateFormatter.dateFormat(
+                fromTemplate: "MMMMd",
+                options: 0,
+                locale: calendar.locale
+            )
+            dateFormatter.calendar = calendar
+            dateFormatter.locale = calendar.locale
+            dateFormatter.timeZone = calendar.timeZone
+            return dateFormatter.string(from: self)
         }
+
+        let dateComponentsFormatter = DateComponentsFormatter()
+        dateComponentsFormatter.unitsStyle = .abbreviated
+        dateComponentsFormatter.maximumUnitCount = 1
+        dateComponentsFormatter.allowedUnits = unitFlags
+
+        if let day = components.day, day >= 1, let formattedDate =
+            dateComponentsFormatter.string(from: DateComponents(calendar: calendar, day: day)) {
+            return formattedDate
+        }
+
+        if let hour = components.hour, hour >= 1, let formattedDate =
+            dateComponentsFormatter.string(from: DateComponents(calendar: calendar, hour: hour)) {
+            return formattedDate
+        }
+
+        if let minute = components.minute {
+            if minute >= 1 {
+                let dateComponents = DateComponents(calendar: calendar, minute: max(1, minute))
+                if let formattedDate = dateComponentsFormatter.string(from: dateComponents) {
+                    return formattedDate
+                }
+            } else {
+                return String(localized: .localizable.now)
+            }
+        }
+
+        return formatLongDate(calendar)
+    }
+
+    /// Formats the date in a long date format with the given calendar and with time omitted.
+    /// - Parameters:
+    ///   - calendar: The calendar to use when formatting the date.
+    private func formatLongDate(_ calendar: Calendar) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .none
+        dateFormatter.dateStyle = .long
+        dateFormatter.calendar = calendar
+        dateFormatter.locale = calendar.locale
+        dateFormatter.timeZone = calendar.timeZone
+        return dateFormatter.string(from: self)
     }
 }

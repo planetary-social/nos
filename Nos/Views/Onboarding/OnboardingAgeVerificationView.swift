@@ -1,10 +1,3 @@
-//
-//  OnboardingAgeVerificationView.swift
-//  Nos
-//
-//  Created by Shane Bielefeld on 3/15/23.
-//
-
 import SwiftUI
 
 struct OnboardingAgeVerificationView: View {
@@ -12,34 +5,24 @@ struct OnboardingAgeVerificationView: View {
     
     var body: some View {
         VStack {
-            PlainText(Localized.ageVerificationTitle.string)
+            Text(.localizable.ageVerificationTitle)
                 .multilineTextAlignment(.center)
                 .padding(.top, 92)
                 .padding(.bottom, 20)
                 .padding(.horizontal, 77.5)
                 .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [
-                            Color(hex: "#F08508"),
-                            Color(hex: "#F43F75")
-                        ],
-                        startPoint: .bottomLeading,
-                        endPoint: .topTrailing
-                    )
-                    .blendMode(.normal)
-                )
-            Text(Localized.ageVerificationSubtitle.string)
-                .foregroundColor(.secondaryText)
+                .foregroundStyle(LinearGradient.diagonalAccent2.blendMode(.normal))
+            Text(.localizable.ageVerificationSubtitle)
+                .foregroundColor(.secondaryTxt)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 44.5)
             Spacer()
             HStack {
-                BigActionButton(title: .no) {
+                BigActionButton(title: .localizable.no) {
                     state.step = .notOldEnough
                 }
                 Spacer(minLength: 15)
-                BigActionButton(title: .yes) {
+                BigActionButton(title: .localizable.yes) {
                     state.step = .termsOfService
                 }
             }

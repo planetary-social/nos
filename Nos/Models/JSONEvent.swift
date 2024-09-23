@@ -1,13 +1,8 @@
-//
-//  JSONEvent.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/28/23.
-//
-
+import secp256k1
 import Foundation
+import Logger
 
-struct JSONEvent: Codable, Hashable {
+struct JSONEvent: Codable, Hashable, VerifiableEvent {
     
     var id: String
     var pubKey: String
@@ -15,8 +10,9 @@ struct JSONEvent: Codable, Hashable {
     var kind: Int64
     var tags: [[String]]
     var content: String
-    var signature: String
-    
+    var signature: String?
+    var identifier: String? { self.id }
+
     enum CodingKeys: String, CodingKey {
         case id
         case pubKey = "pubkey"
@@ -46,10 +42,10 @@ struct JSONEvent: Codable, Hashable {
     }
     
     internal init(
-        pubKey: HexadecimalString, 
-        createdAt: Date = .now, 
-        kind: EventKind, 
-        tags: [[String]], 
+        pubKey: RawAuthorID,
+        createdAt: Date = .now,
+        kind: EventKind,
+        tags: [[String]],
         content: String
     ) {
         self.id = ""
@@ -59,6 +55,60 @@ struct JSONEvent: Codable, Hashable {
         self.tags = tags
         self.content = content
         self.signature = ""
+    }
+
+    /// Initializes a JSONEvent object for a given text and key pair.
+    /// - Parameters:
+    ///   - attributedText: The text the user wrote.
+    ///   - noteParser: The algorithm that parses the text.
+    ///   - expirationTime: The expiration time for the note, if any. Defaults to `nil`.
+    ///   - replyToNote: The note that the user is replying to, if any. Defaults to `nil`.
+    ///   - keyPair: Key pair of the logged in user.
+    init(
+        attributedText: AttributedString,
+        noteParser: NoteParser,
+        expirationTime: TimeInterval? = nil,
+        replyToNote: Event? = nil,
+        keyPair: KeyPair
+    ) {
+        var (content, tags) = noteParser.parse(attributedText: attributedText)
+
+        if let expirationTime {
+            tags.append(["expiration", String(Date.now.timeIntervalSince1970 + expirationTime)])
+        }
+
+        // Attach the new note to the one it is replying to, if any.
+        if let replyToNote = replyToNote, let replyToNoteID = replyToNote.identifier {
+            // TODO: Append ptags for all authors involved in the thread
+            if let replyToAuthor = replyToNote.author?.publicKey?.hex {
+                tags.append(["p", replyToAuthor])
+            }
+
+            // If `note` is a reply to another root, tag that root
+            if let rootNoteIdentifier = replyToNote.rootNote()?.identifier, rootNoteIdentifier != replyToNoteID {
+                tags.append(["e", rootNoteIdentifier, "", EventReferenceMarker.root.rawValue])
+                tags.append(["e", replyToNoteID, "", EventReferenceMarker.reply.rawValue])
+            } else {
+                tags.append(["e", replyToNoteID, "", EventReferenceMarker.root.rawValue])
+            }
+        }
+
+        self.init(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
+    }
+
+    static func from(json: String) -> JSONEvent? {
+        guard let jsonData = json.data(using: .utf8) else {
+            return nil
+        }
+        
+        let decoder = JSONDecoder()
+        return try? decoder.decode(JSONEvent.self, from: jsonData)
+    }
+    
+    func toJSON() throws -> String? {
+        let encoder = JSONEncoder()
+        let data = try encoder.encode(self)
+        return String(decoding: data, as: UTF8.self)
     }
     
     mutating func sign(withKey privateKey: KeyPair) throws {
@@ -94,15 +144,27 @@ struct JSONEvent: Codable, Hashable {
             "kind": kind,
             "tags": tags,
             "content": content,
-            "sig": signature,
+            "sig": signature ?? "",
         ]
     }
     
+    var createdDate: Date {
+        Date(timeIntervalSince1970: TimeInterval(createdAt))
+    }
+
+    /// The replaceable identifier, or `"d"` tag, of the event.
+    var replaceableID: String? {
+        for tag in tags where tag[safe: 0] == "d" {
+            return tag[safe: 1]
+        }
+        return nil
+    }
+
     /// Formats this event as a string that can be sent to a relay over a websocket to publish this event.
-    var publishRequest: String {
+    func buildPublishRequest() throws -> String {
         let request: [Any] = ["EVENT", dictionary]
-        let requestData = try! JSONSerialization.data(withJSONObject: request)
-        return String(data: requestData, encoding: .utf8)!
+        let requestData = try JSONSerialization.data(withJSONObject: request)
+        return String(decoding: requestData, as: UTF8.self) 
     }
 }
 
@@ -112,14 +174,15 @@ struct MetadataEventJSON: Codable {
     var nip05: String?
     var uns: String?
     var about: String?
+    var website: String?
     var picture: String?
     
     var profilePhotoURL: URL? {
         URL(string: picture ?? "")
     }
-
+    
     private enum CodingKeys: String, CodingKey {
-        case displayName = "display_name", name, nip05, uns, about, picture
+        case displayName = "display_name", name, nip05, uns = "uns_name", about, website, picture
     }
     
     var dictionary: [String: String] {
@@ -127,18 +190,10 @@ struct MetadataEventJSON: Codable {
             "display_name": displayName ?? "",
             "name": name ?? "",
             "nip05": nip05 ?? "",
-            "uns": uns ?? "",
+            "uns_name": uns ?? "",
             "about": about ?? "",
+            "website": website ?? "",
             "picture": picture ?? "",
         ]
-    }
-    
-    init (displayName: String?, name: String?, nip05: String?, uns: String?, about: String?, picture: String?) {
-        self.displayName = displayName
-        self.name = name
-        self.nip05 = nip05
-        self.uns = uns
-        self.about = about
-        self.picture = picture
     }
 }

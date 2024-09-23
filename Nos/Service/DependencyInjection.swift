@@ -1,10 +1,3 @@
-//
-//  DependencyInjection.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 4/18/23.
-//
-
 import Dependencies
 import Foundation
 
@@ -21,7 +14,12 @@ extension DependencyValues {
         get { self[CurrentUserKey.self] }
         set { self[CurrentUserKey.self] = newValue }
     }
-    
+
+    var fileStorageAPIClient: FileStorageAPIClient {
+        get { self[FileStorageAPIClientKey.self] }
+        set { self[FileStorageAPIClientKey.self] = newValue }
+    }
+
     var router: Router {
         get { self[RouterKey.self] }
         set { self[RouterKey.self] = newValue }
@@ -51,6 +49,51 @@ extension DependencyValues {
         get { self[CrashReportingKey.self] }
         set { self[CrashReportingKey.self] = newValue }
     }
+    
+    var unsAPI: UNSAPI {
+        get { self[UNSAPIKey.self] }
+        set { self[UNSAPIKey.self] = newValue }
+    }
+
+    var namesAPI: NamesAPI {
+        get { self[NamesAPIKey.self] }
+        set { self[NamesAPIKey.self] = newValue }
+    }
+
+    var urlParser: URLParser {
+        get { self[URLParserKey.self] }
+        set { self[URLParserKey.self] = newValue }
+    }
+
+    var urlSession: URLSessionProtocol {
+        get { self[URLSessionProtocolKey.self] }
+        set { self[URLSessionProtocolKey.self] = newValue }
+    }
+
+    var noteParser: NoteParser {
+        get { self[NoteParserKey.self] }
+        set { self[NoteParserKey.self] = newValue }
+    }
+
+    var featureFlags: FeatureFlags {
+        get { self[FeatureFlagsKey.self] }
+        set { self[FeatureFlagsKey.self] = newValue }
+    }
+        
+    var keychain: Keychain {
+        get { self[KeychainKey.self] }
+        set { self[KeychainKey.self] = newValue }
+    }
+
+    var mediaService: MediaService {
+        get { self[MediaServiceKey.self] }
+        set { self[MediaServiceKey.self] = newValue }
+    }
+
+    var previewEventRepository: PreviewEventRepository {
+        get { self[PreviewEventRepositoryKey.self] }
+        set { self[PreviewEventRepositoryKey.self] = newValue }
+    }
 }
 
 fileprivate enum AnalyticsKey: DependencyKey {
@@ -59,30 +102,32 @@ fileprivate enum AnalyticsKey: DependencyKey {
     static let previewValue = Analytics(mock: true)
 }
 
-@MainActor private enum CurrentUserKey: DependencyKey {
-    static let liveValue = CurrentUser()
-    static let testValue = CurrentUser()
-    static let previewValue = CurrentUser()
+fileprivate enum CurrentUserKey: DependencyKey {
+    @MainActor static let liveValue = CurrentUser()
+    @MainActor static let testValue = CurrentUser()
+    @MainActor static let previewValue = CurrentUser()
 }
 
-@MainActor fileprivate enum RouterKey: DependencyKey {
-    static let liveValue = Router()
-    static let testValue = Router()
-    static let previewValue = Router()
+fileprivate enum FileStorageAPIClientKey: DependencyKey {
+    static var liveValue: any FileStorageAPIClient = NostrBuildAPIClient()
+}
+
+fileprivate enum RouterKey: DependencyKey {
+    @MainActor static let liveValue = Router()
+    @MainActor static let testValue = Router()
+    @MainActor static let previewValue = Router()
 }
 
 private enum RelayServiceKey: DependencyKey {
     static let liveValue = RelayService()
-    static let testValue = RelayService(mock: true)
-    static let previewValue = RelayService(mock: true)
+    static let testValue: RelayService = MockRelayService()
+    static let previewValue: RelayService = MockRelayService()
 }
 
-@MainActor
 fileprivate enum PushNotificationServiceKey: DependencyKey {
-    typealias Value = PushNotificationService
-    static let liveValue = PushNotificationService()
-    static let testValue = MockPushNotificationService()
-    static let previewValue = MockPushNotificationService()
+    @MainActor static let liveValue = PushNotificationService()
+    @MainActor static let testValue: PushNotificationService = MockPushNotificationService()
+    @MainActor static let previewValue: PushNotificationService = MockPushNotificationService()
 }
 
 fileprivate enum PersistenceControllerKey: DependencyKey {
@@ -101,4 +146,53 @@ fileprivate enum CrashReportingKey: DependencyKey {
     static let liveValue = CrashReporting()
     static let testValue = CrashReporting(mock: true)
     static let previewValue = CrashReporting(mock: true)
+}
+
+fileprivate enum UNSAPIKey: DependencyKey {
+    static let liveValue = UNSAPI()!
+}
+
+fileprivate enum NamesAPIKey: DependencyKey {
+    static let liveValue = NamesAPI()!
+    static let previewValue = NamesAPI(host: "localhost")!
+}
+
+fileprivate enum URLParserKey: DependencyKey {
+    static let liveValue = URLParser()
+    static let testValue = URLParser()
+    static let previewValue = URLParser()
+}
+
+fileprivate enum URLSessionProtocolKey: DependencyKey {
+    static let liveValue: any URLSessionProtocol = URLSession.shared
+    static let testValue: any URLSessionProtocol = MockURLSession()
+    static let previewValue: any URLSessionProtocol = MockURLSession()
+}
+
+fileprivate enum NoteParserKey: DependencyKey {
+    static let liveValue = NoteParser()
+    static let testValue = NoteParser()
+    static let previewValue = NoteParser()
+}
+
+fileprivate enum FeatureFlagsKey: DependencyKey {
+    static let liveValue: any FeatureFlags = DefaultFeatureFlags.liveValue
+    static let testValue: any FeatureFlags = MockFeatureFlags()
+    static let previewValue: any FeatureFlags = MockFeatureFlags()
+}
+
+fileprivate enum KeychainKey: DependencyKey {
+    @MainActor static let liveValue: Keychain = SystemKeychain()
+    @MainActor static let testValue: Keychain = InMemoryKeychain()
+    @MainActor static let previewValue: Keychain = InMemoryKeychain()
+}
+
+fileprivate enum MediaServiceKey: DependencyKey {
+    static let liveValue: any MediaService = DefaultMediaService()
+    static let testValue: any MediaService = MockMediaService()
+    static let previewValue: any MediaService = DefaultMediaService() // enables us to manually test with previews
+}
+
+fileprivate enum PreviewEventRepositoryKey: DependencyKey {
+    static let liveValue: any PreviewEventRepository = DefaultPreviewEventRepository()
 }

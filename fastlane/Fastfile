@@ -16,36 +16,161 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Push a new beta build to TestFlight"
-  lane :beta do
-    xcodes # ensure correct version of xcode is installed and selected
-    api_key = app_store_connect_api_key(
-      key_id: "4L8Z9W89TJ",
-      issuer_id: "8985ca52-aba6-4f7a-91bb-d052a5b030fa",
-      key_filepath: "~/.fastlane/AuthKey_4L8Z9W89TJ.p8"
+  asc_key_content = ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]
+  asc_issuer_id = ENV["APP_STORE_CONNECT_ISSUER_ID"]
+  asc_key_id = ENV["APP_STORE_CONNECT_API_KEY_ID"]
+  keychain_pass = ENV["KEYCHAIN_PASS"]
+  sentry_auth = ENV["SENTRY_AUTH"]
+  is_ci = ENV["CI"]
+  app_secrets = ENV["APP_SECRETS"]
+  app_production_secrets_path = "../Nos/Assets/ProductionSecrets.xcconfig"
+  app_staging_secrets_path = "../Nos/Assets/StagingSecrets.xcconfig"
+  app_dev_secrets_path = "../Nos/Assets/DevSecrets.xcconfig"
+
+  desc "Push a new build to TestFlight using the provided scheme and identifier"
+  private_lane :push_build do |options|
+    app_store_connect_api_key(
+      key_id: asc_key_id,
+      issuer_id: asc_issuer_id,
+      key_content: asc_key_content
     )
-    increment_build_number(xcodeproj: "Nos.xcodeproj")
-    version_number = get_version_number
-    build_number = get_build_number
-    gym(scheme: "Nos", clean: true)
+    if is_ci 
+      # Create a keychain because Github Action machines don't come with one
+      create_keychain(
+          name: "keychain",
+          password: keychain_pass,
+          default_keychain: true,
+          unlock: true,
+          timeout: 3600,
+          lock_when_sleeps: false
+      )
+      match(
+          type: "appstore",  
+          readonly: true,
+          app_identifier: options[:appidentifier],
+          keychain_name: "keychain",
+          keychain_password: keychain_pass
+        )
+      File.open(options[:appsecretspath], 'w') do |file|
+        file.puts app_secrets
+      end
+    else
+      match(
+        type: "appstore", 
+        readonly: false,
+        app_identifier: options[:appidentifier]
+      )
+    end
+    version_number = get_version_number(
+      xcodeproj: "Nos.xcodeproj",
+      target: "Nos"
+    )
+    build_number = latest_testflight_build_number(app_identifier: options[:appidentifier]) + 1
+    increment_build_number(build_number: build_number)
+    gym(
+      scheme: options[:scheme], 
+      clean: true,
+      xcargs: "-skipPackagePluginValidation -skipMacroValidation"
+    )
+    if is_ci
+      sh("rm", options[:appsecretspath])
+    end
     changelog = read_changelog
-    upload_to_testflight(changelog: changelog)
-    stamp_changelog(section_identifier: "#{version_number} (#{build_number})")
-    git_commit(message: "TestFlight deployment", path: "*")
-    add_git_tag(tag: "v#{version_number}-#{build_number}")
-    push_to_git_remote
+
+    testflight_groups = options[:distribution_groups] || []
+    upload_to_testflight(
+      changelog: changelog,
+      app_identifier: options[:app_identifier],
+      skip_waiting_for_build_processing: is_ci,
+      distribute_external: !testflight_groups.empty?,
+      groups: testflight_groups
+    )
+    
+    add_git_tag(tag: "v#{options[:tagprefix]}#{version_number}-#{build_number}")
+    push_git_tags
     sentry_upload_dif(
       org_slug: 'verse',
       project_slug: 'nos-ios',
       include_sources: true, 
-      url: 'https://sentry.nos.social'
+      url: 'https://sentry.nos.social',
+      auth_token: sentry_auth
     )
     notification(
       subtitle: "Build uploaded", 
       message: "tap to open App Store Connect", 
       sound: "Pebble", 
-      open: "https://appstoreconnect.apple.com/apps/1670125746/testflight/ios"
+      open: options[:appstoreconnect]
     )
+  end
+
+  desc "Push a new Nos Dev build to TestFlight"
+  lane :dev do
+    push_build(
+      scheme: "Nos",
+      appidentifier: "com.verse.Nos-dev",
+      tagprefix: "dev-",
+      appsecretspath: app_dev_secrets_path,
+      appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583778/testflight/ios"
+    )
+  end
+
+  desc "Push a new Nos Staging build to TestFlight"
+  lane :staging do
+    push_build(
+      scheme: "NosStaging",
+      appidentifier: "com.verse.Nos-staging",
+      tagprefix: "staging-",
+      appsecretspath: app_staging_secrets_path,
+      appstoreconnect: "https://appstoreconnect.apple.com/apps/6479681443/testflight/ios"
+    )
+  end
+
+  desc "Push a new Nos Release build to TestFlight"
+  lane :release do
+    push_build(
+      scheme: "NosProduction",
+      appidentifier: "com.verse.Nos",
+      tagprefix: "",
+      appsecretspath: app_production_secrets_path,
+      appstoreconnect: "https://appstoreconnect.apple.com/apps/6479583869/testflight/ios",
+      distribution_groups: ["Keep this empty"]
+    )
+  end
+
+  desc "Mark a deployed commit as having been deployed to our public beta testers"
+  lane :stamp_release do
+    changelog = read_changelog
+    version_number = get_version_number(
+      xcodeproj: "Nos.xcodeproj",
+      target: "Nos"
+    )
+    build_number = get_build_number(
+      xcodeproj: "Nos.xcodeproj"
+    )
+    stamp_changelog(section_identifier: "#{version_number}")
+    git_commit(message: "Stamping beta deployment", path: "*")
+    push_to_git_remote
+  end
+
+  desc "Refresh certificates in the match repo"
+  lane :certs do
+    app_store_connect_api_key(
+      key_id: asc_key_id,
+      issuer_id: asc_issuer_id,
+      key_content: asc_key_content
+    )
+    match(type: "appstore", app_identifier: ["com.verse.Nos", "com.verse.Nos-dev", "com.verse.Nos-staging"])
+    match(type: "development", app_identifier: ["com.verse.Nos", "com.verse.Nos-dev", "com.verse.Nos-staging"])
+  end
+
+  desc "Clean App Store Connect of certificates"
+  lane :nuke_certs do
+    app_store_connect_api_key(
+      key_id: asc_key_id,
+      issuer_id: asc_issuer_id,
+      key_content: asc_key_content
+    )
+    match_nuke(type: "appstore")
   end
 end
 
@@ -59,4 +184,9 @@ end
     increment_version_number_in_xcodeproj(bump_type: part, target: "Nos")
   end
 end
+
+lane :bump_version do
+  increment_build_number(xcodeproj: "Nos.xcodeproj")
+end
+
 

@@ -1,0 +1,43 @@
+name: Test & Lint
+on:
+  pull_request:
+    # The specific activity types are listed here to include "labeled" and "unlabeled"
+    # (which are not included by default for the "pull_request" trigger).
+    # This is needed to allow skipping enforcement of the changelog in PRs with specific labels,
+    # as defined in the (optional) "skipLabels" property.
+    types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
+  merge_group:
+    types: [checks_requested]
+  push:
+    branches: main
+env:
+  SIMULATOR: platform=iOS Simulator,name=iPhone 15,OS=17.4
+    
+jobs:
+  unit_test:
+    name : Unit Tests
+    runs-on: macOS-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+      - uses: nomasystems/action-xcode-select@v0.1
+      - name: Build Nos
+        run: set -o pipefail && xcodebuild build-for-testing -skipPackagePluginValidation -skipMacroValidation -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR" | xcpretty
+      - name: Run Tests
+        run: set -o pipefail && xcodebuild test-without-building -project Nos.xcodeproj -scheme NosTests -destination "$SIMULATOR"
+  changelog:
+    name: Check CHANGELOG
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dangoslen/changelog-enforcer@v3
+        with:
+          skipLabels: 'Skip-Changelog'
+          missingUpdateErrorMessage: 'You have not updated CHANGELOG.md. If an entry is not applicable add the Skip-Changelog label to your PR. See the top of the CHANGELOG.md for more details.'
+  swift_lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: SwiftLint
+        uses: docker://norionomura/swiftlint:0.55.1
+        with:
+          args: swiftlint --strict --reporter github-actions-logging

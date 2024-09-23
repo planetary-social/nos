@@ -1,10 +1,3 @@
-//
-//  NosApp.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 1/31/23.
-//
-
 import SwiftUI
 import Logger
 import Dependencies
@@ -24,30 +17,39 @@ struct NosApp: App {
     
     init() {
         _ = crashReporting // force crash reporting init as early as possible
+        
+        // hack to fix confirmationDialog color issue
+        // https://github.com/planetary-social/nos/issues/1064
+        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .systemBlue
     }
     
     var body: some Scene {
         WindowGroup {
             AppView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environment(\.managedObjectContext, persistenceController.viewContext)
                 .environmentObject(relayService)
                 .environmentObject(router)
-                .environmentObject(appController)
-                .environmentObject(currentUser)
+                .environment(appController)
+                .environment(currentUser)
                 .environmentObject(pushNotificationService)
+                .onOpenURL { DeepLinkService.handle($0, router: router) }
                 .task {
-                    persistenceController.cleanupEntities()
+                    await persistenceController.cleanupEntities()
                 }
-                .onChange(of: scenePhase) { newPhase in
-                    // TODO: save all contexts, not just the view and background.
-                    if newPhase == .inactive {
+                .onChange(of: scenePhase) { _, newPhase in
+                    switch newPhase {
+                    case .inactive:
                         Log.info("Scene change: inactive")
-                        try? persistenceController.saveAll()
-                    } else if newPhase == .active {
+                    case .active:
                         Log.info("Scene change: active")
-                    } else if newPhase == .background {
+                    case .background:
                         Log.info("Scene change: background")
-                        try? persistenceController.saveAll()
+                        Task {
+                            // TODO: save all contexts, not just the view and background.
+                            try await persistenceController.saveAll()
+                        }
+                    @unknown default:
+                        Log.info("Scene change: unknown type")
                     }
                 }
         }

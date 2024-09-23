@@ -1,176 +1,142 @@
-//
-//  AppView.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 2/3/23.
-//
-
 import SwiftUI
 import Dependencies
 
 struct AppView: View {
 
-    @State var isCreatingNewPost = false
-    
     @State var showNewPost = false
+    @State var newPostContents: String? 
 
-    @EnvironmentObject private var appController: AppController
-    @EnvironmentObject var router: Router
+    @Environment(AppController.self) var appController
+    @EnvironmentObject private var router: Router
     @EnvironmentObject var pushNotificationService: PushNotificationService
-    @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
-    @EnvironmentObject var currentUser: CurrentUser
+    @Dependency(\.userDefaults) private var userDefaults
+    @Environment(CurrentUser.self) var currentUser
     
-    @State private var showingOptions = false
-    @State private var lastSelectedTab = Destination.home
-    
-    /// An enumeration of the destinations for AppView.
-    enum Destination: String, Hashable, Equatable {
-        case home
-        case discover
-        case notifications
-        case newNote
-        case profile
-        
-        var label: some View {
-            switch self {
-            case .home:
-                return Text(Localized.homeFeed.string)
-            case .discover:
-                return Localized.discover.view
-            case .notifications:
-                return Localized.notifications.view
-            case .newNote:
-                return Localized.newNote.view
-            case .profile:
-                return Localized.profileTitle.view
-            }
-        }
-        
-        var destinationString: String {
-            switch self {
-            case .home:
-                return Localized.homeFeed.string
-            case .discover:
-                return Localized.discover.string
-            case .notifications:
-                return Localized.notifications.string
-            case .newNote:
-                return Localized.newNote.string
-            case .profile:
-                return Localized.profileTitle.string
-            }
-        }
-    }
-    
+    @State private var lastSelectedTab = AppDestination.home
+    @State private var showNIP05Wizard = false
+
     var body: some View {
-        
         ZStack {
             if appController.currentState == .onboarding {
                 OnboardingView(completion: appController.completeOnboarding)
             } else {
                 TabView(selection: $router.selectedTab) {
                     if let author = currentUser.author {
-                        HomeFeedView(user: author)
+                        HomeTab(user: author)
                             .tabItem {
                                 VStack {
-                                    let text = Localized.homeFeed.view
+                                    let text = Text(.localizable.homeFeed)
                                     if $router.selectedTab.wrappedValue == .home {
                                         Image.tabIconHomeSelected
                                         text
                                     } else {
                                         Image.tabIconHome
-                                        text.foregroundColor(.secondaryText)
+                                        text.foregroundColor(.secondaryTxt)
                                     }
                                 }
                             }
                             .toolbarBackground(.visible, for: .tabBar)
                             .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                            .tag(Destination.home)
+                            .tag(AppDestination.home)
                             .onAppear {
                                 // TODO: Move this somewhere better like CurrentUser when it becomes the source of truth
                                 // for who is logged in
                                 if let keyPair = currentUser.keyPair {
-                                    analytics.identify(with: keyPair)
+                                    analytics.identify(
+                                        with: keyPair,
+                                        nip05: currentUser.author?.nip05
+                                    )
                                     crashReporting.identify(with: keyPair)
                                 }
                             }
                     }
                     
-                    DiscoverView()
+                    DiscoverTab()
                         .tabItem {
                             VStack {
-                                let text = Localized.discover.view
+                                let text = Text(.localizable.discover)
                                 if $router.selectedTab.wrappedValue == .discover {
                                     Image.tabIconEveryoneSelected
-                                    text.foregroundColor(.textColor)
+                                    text.foregroundColor(.primaryTxt)
                                 } else {
                                     Image.tabIconEveryone
-                                    text.foregroundColor(.secondaryText)
+                                    text.foregroundColor(.secondaryTxt)
                                 }
                             }
                         }
                         .toolbarBackground(.visible, for: .tabBar)
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                        .tag(Destination.discover)
+                        .tag(AppDestination.discover)
                     
                     VStack {}
                         .tabItem {
                             VStack {
                                 Image.newPostButton
-                                Localized.post.view
+                                Text(.localizable.post)
                             }
                         }
-                    .tag(Destination.newNote)
+                    .tag(AppDestination.noteComposer(nil))
                     
                     NotificationsView(user: currentUser.author)
                         .tabItem {
                             VStack {
-                                let text = Localized.notifications.view
+                                let text = Text(.localizable.notifications)
                                 if $router.selectedTab.wrappedValue == .notifications {
                                     Image.tabIconNotificationsSelected
-                                    text.foregroundColor(.textColor)
+                                    text.foregroundColor(.primaryTxt)
                                 } else {
                                     Image.tabIconNotifications
-                                    text.foregroundColor(.secondaryText)
+                                    text.foregroundColor(.secondaryTxt)
                                 }
                             }
                         }
                         .toolbarBackground(.visible, for: .tabBar)
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                        .tag(Destination.notifications)
+                        .tag(AppDestination.notifications)
                         .badge(pushNotificationService.badgeCount)
                     
                     if let author = currentUser.author {
                         ProfileTab(author: author, path: $router.profilePath)
                             .tabItem {
                                 VStack {
-                                    let text = Localized.profileTitle.view
+                                    let text = Text(.localizable.profileTitle)
                                     if $router.selectedTab.wrappedValue == .profile {
                                         Image.tabProfileSelected
-                                        text.foregroundColor(.textColor)
+                                        text.foregroundColor(.primaryTxt)
                                     } else {
                                         Image.tabProfile
-                                        text.foregroundColor(.secondaryText)
+                                        text.foregroundColor(.secondaryTxt)
                                     }
                                 }
                             }
                             .toolbarBackground(.visible, for: .tabBar)
                             .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                            .tag(Destination.profile)
+                            .tag(AppDestination.profile)
                     }
                 }
-                .onChange(of: router.selectedTab) { newTab in
-                    if newTab == Destination.newNote {
+                .onChange(of: router.selectedTab) { _, newTab in
+                    if case let AppDestination.noteComposer(contents) = newTab {
+                        newPostContents = contents
                         showNewPost = true
                         router.selectedTab = lastSelectedTab
                     } else if !showNewPost {
                         lastSelectedTab = newTab
                     }
                 }
+                .overlay {
+                    if router.isLoading {
+                        ZStack {
+                            Rectangle().fill(.black.opacity(0.4))
+                            ProgressView()
+                        }
+                    }
+                }
                 .sheet(isPresented: $showNewPost, content: {
-                    NewNoteView(isPresented: $showNewPost)
+                    NoteComposer(initialContents: newPostContents, isPresented: $showNewPost)
+                        .environment(currentUser)
+                        .interactiveDismissDisabled()
                 })
                 
                 SideMenu(
@@ -183,10 +149,44 @@ struct AppView: View {
         }
         .onAppear(perform: appController.configureCurrentState)
         .task {
-            UITabBar.appearance().unselectedItemTintColor = .secondaryText
+            UITabBar.appearance().unselectedItemTintColor = .secondaryTxt
             UITabBar.appearance().tintColor = .primaryTxt
         }
-        .accentColor(.primaryTxt)
+        .sheet(isPresented: $showNIP05Wizard) {
+            CreateUsernameWizard(isPresented: $showNIP05Wizard)
+        }
+        .task { await presentNIP05SheetIfNeeded() }
+        .tint(.primaryTxt)
+    }
+
+    private func presentNIP05SheetIfNeeded() async {
+        guard let author = currentUser.author, let npub = author.npubString else {
+            return
+        }
+
+        // Sleep for half a second to allow the app to initialize
+        try? await Task.sleep(nanoseconds: 500_000_000)
+
+        guard currentUser.author?.needsMetadata == false else {
+            // We don't have metadata for this author, the app is still probably fetching .metaData events from the
+            // relays. Let's wait for next time.
+            return
+        }
+
+        // We store the npub for the user we last presented the sheet for so that
+        // the behavior resets if the user creates a new account
+        let key = "didPresentNIP05SheetForNpub"
+        let didPresentSheetForNpub = userDefaults.string(forKey: key)
+        let shouldShowSheet: Bool
+        if let didPresentSheetForNpub {
+            shouldShowSheet = didPresentSheetForNpub != npub && author.nip05 == nil
+        } else {
+            shouldShowSheet = author.nip05 == nil
+        }
+        if shouldShowSheet {
+            showNIP05Wizard = true
+            userDefaults.setValue(npub, forKey: key)
+        }
     }
 }
 
@@ -194,11 +194,12 @@ struct AppView_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
-    static var previewContext = persistenceController.container.viewContext
+    static var previewContext = persistenceController.viewContext
     static var relayService = previewData.relayService
     static var router = Router()
     static var currentUser = previewData.currentUser 
-    
+    static var pushNotificationService = DependencyValues().pushNotificationService
+
     static var loggedInAppController: AppController = {
         let appController = AppController()
         appController.completeOnboarding()
@@ -216,18 +217,24 @@ struct AppView_Previews: PreviewProvider {
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
-            .environmentObject(loggedInAppController)
-        
+            .environment(loggedInAppController)
+            .environment(currentUser)
+            .environmentObject(pushNotificationService)
+
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(router)
-            .environmentObject(AppController())
-        
+            .environment(AppController())
+            .environment(currentUser)
+            .environmentObject(pushNotificationService)
+
         AppView()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(relayService)
             .environmentObject(routerWithSideMenuOpened)
-            .environmentObject(AppController())
+            .environment(AppController())
+            .environment(currentUser)
+            .environmentObject(pushNotificationService)
     }
 }

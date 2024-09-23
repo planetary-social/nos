@@ -1,11 +1,5 @@
-//
-//  CrashReporting.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 8/18/23.
-//
-
 import Foundation
+import Logger
 import Sentry
 
 /// An abstraction of an external crash reporting service, like Sentry.io
@@ -16,6 +10,7 @@ class CrashReporting {
     init(mock: Bool = false) {
         sentry = SentrySDK.self
         let dsn = Bundle.main.infoDictionary?["SENTRY_DSN"] as? String ?? ""
+
         #if DEBUG
         let debug = true
         #else
@@ -28,11 +23,14 @@ class CrashReporting {
         
         sentry.start { options in
             options.dsn = dsn
-            
+            #if STAGING
+            options.environment = "staging"
+            #elseif DEV
+            options.environment = "debug"
+            #endif
             options.enableTracing = true
             options.tracesSampleRate = 0.3 // tracing must be enabled for profiling
             options.profilesSampleRate = 0.3 // see also `profilesSampler` if you need custom sampling logic
-            
             // Enable all experimental features
             options.attachViewHierarchy = true
             options.enablePreWarmedAppStartTracing = true
@@ -45,6 +43,16 @@ class CrashReporting {
     func identify(with keyPair: KeyPair) {
         let user = User(userId: keyPair.npub)
         sentry.setUser(user)
+    }
+
+    func report(_ error: Error) {
+        Log.error("Reporting error to Crash Reporting service: \(error.localizedDescription)")
+        sentry.capture(error: error)
+    }
+    
+    func report(_ errorMessage: String) {
+        Log.error("Reporting error to Crash Reporting service: \(errorMessage)")
+        sentry.capture(message: errorMessage)
     }
     
     func logout() {

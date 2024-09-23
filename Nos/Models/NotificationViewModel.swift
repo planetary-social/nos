@@ -1,10 +1,3 @@
-//
-//  NotificationViewModel.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 7/5/23.
-//
-
 import Foundation
 import CoreData
 import UIKit
@@ -16,13 +9,13 @@ import UIKit
 /// `loadContent()` to populate the `content` variable because it relies on some
 ///  database queries.
 class NotificationViewModel: ObservableObject, Identifiable {
-    let noteID: HexadecimalString
+    let noteID: RawEventID
     let authorProfilePhotoURL: URL?
     let actionText: AttributedString
     @Published var content: AttributedString?
     let date: Date
     
-    var id: HexadecimalString {
+    var id: RawEventID {
         noteID
     }
     
@@ -60,14 +53,24 @@ class NotificationViewModel: ObservableObject, Identifiable {
 
         // Compute action text
         var actionText: AttributedString
-        var authorName = AttributedString("\(note.author?.safeName ?? Localized.someone.string) ")
+        var authorName = AttributedString("\(note.author?.safeName ?? String(localized: .localizable.someone)) ")
         var range = Range(uncheckedBounds: (authorName.startIndex, authorName.endIndex))
         authorName[range].font = .boldSystemFont(ofSize: 17)
         
-        if note.isReply(to: user) {
-            actionText = authorName + AttributedString(Localized.Reply.repliedToYourNote.string)
+        if note.isProfileZap(to: user) {
+            if let tags = note.allTags as? [[String]],
+                let amountTag = tags.first(where: { $0.first == "amount" }),
+                let amountInMillisatsAsString = amountTag[safe: 1],
+                let amountInMillisats = Int(amountInMillisatsAsString) {
+                let zapText = String(localized: .reply.zappedYouSats(amountInMillisats / 1000))
+                actionText = authorName + AttributedString(zapText)
+            } else {
+                actionText = authorName + AttributedString(String(localized: .reply.zappedYou))
+            }
+        } else if note.isReply(to: user) {
+            actionText = authorName + AttributedString(String(localized: .reply.repliedToYourNote))
         } else if note.references(author: user) {
-            actionText = authorName + AttributedString(Localized.Reply.mentionedYou.string)
+            actionText = authorName + AttributedString(String(localized: .reply.mentionedYou))
         } else {
             actionText = AttributedString()
         }

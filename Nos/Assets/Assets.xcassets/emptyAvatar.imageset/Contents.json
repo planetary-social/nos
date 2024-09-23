@@ -1,19 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "Empty avatar.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "Empty avatar@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "Empty avatar@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "placeholder.pdf",
+      "idiom" : "universal"
     }
   ],
   "info" : {
