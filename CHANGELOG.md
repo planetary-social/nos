@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed alert when uploading big files suggesting users pay for nostr.build. [#1321](https://github.com/planetary-social/nos/issues/1321)
 - Fixed issue where push notifications were not re-registered after account change. [#1501](https://github.com/planetary-social/nos/issues/1501)
 - Added support for NIP-62 Request to Vanish events. [#80](https://github.com/planetary-social/nos/issues/80)
+- Added Delete Account UI. [#80](https://github.com/planetary-social/nos/issues/80)
 - Fixed issue where search results weren't sorted properly. [#1485](https://github.com/planetary-social/nos/issues/1485)
 
 ### Internal Changes
