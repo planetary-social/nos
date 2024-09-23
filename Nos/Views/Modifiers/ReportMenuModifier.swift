@@ -45,7 +45,7 @@ struct ReportMenuModifier: ViewModifier {
                             selectedSendOptionCategory: $selectedFlagSendOption,
                             showSuccessView: $showFlagSuccessView,
                             sendAction: {
-                                if let selectCategory = selectedFlagOption?.category as? ReportCategory {
+                                if let selectCategory = selectedFlagOption?.category {
                                     publishReportForNewModerationFlow(selectCategory)
                                     showFlagSuccessView = true
                                 }
@@ -233,11 +233,32 @@ struct ReportMenuModifier: ViewModifier {
     }
 
     /// Publishes a report based on the categories the user selected for the new moderation flow.
-    func publishReportForNewModerationFlow(_ selectedCategory: ReportCategory) {
-        if selectedFlagSendOption?.category as? SendFlagPrivacy == .sendToNos {
-            sendToNos(selectedCategory)
+    private func publishReportForNewModerationFlow(_ selectedCategory: FlagCategory) {
+        if case .privacy(let privacyCategory) = selectedFlagSendOption?.category, privacyCategory == .sendToNos {
+            sendToNosForNewModerationFlow(selectedCategory)
         } else {
-            flagPublicly(selectedCategory)
+            flagPubliclyForNewModerationFlow(selectedCategory)
+        }
+    }
+
+    private func sendToNosForNewModerationFlow(_ selectedCategory: FlagCategory) {
+        if case .report(let reportCategory) = selectedCategory {
+            // Call the publisher with the extracted ReportCategory
+            ReportPublisher().publishPrivateReport(
+                for: reportedObject,
+                category: reportCategory,
+                context: viewContext
+            )
+        }
+    }
+
+    private func flagPubliclyForNewModerationFlow(_ selectedCategory: FlagCategory) {
+        if case .report(let reportCategory) = selectedCategory {
+            ReportPublisher().publishPublicReport(
+                for: reportedObject,
+                category: reportCategory,
+                context: viewContext
+            )
         }
     }
 

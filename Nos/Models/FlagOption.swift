@@ -12,7 +12,7 @@ struct FlagOption: Identifiable, Equatable {
     let description: String?
     let info: String?
     var id: String { title }
-    var category: Any
+    var category: FlagCategory
 
     /// `FlagOption` instances representing different categories of content that can be flagged.
     static let flagContentCategories: [FlagOption] = [
@@ -20,31 +20,31 @@ struct FlagOption: Identifiable, Equatable {
             title: String(localized: .localizable.flagContentSpamTitle),
             description: nil, 
             info: nil,
-            category: ReportCategoryType.spam
+            category: .report(ReportCategoryType.spam)
         ),
         FlagOption(
             title: String(localized: .localizable.flagContentHarassmentTitle),
             description: String(localized: .localizable.flagContentHarassmentDescription),
             info: nil,
-            category: ReportCategoryType.harassment
+            category: .report(ReportCategoryType.harassment)
         ),
         FlagOption(
             title: "NSFW",
             description: String(localized: .localizable.flagContentNudityDescription),
             info: nil,
-            category: ReportCategoryType.nsfw
+            category: .report(ReportCategoryType.nsfw)
         ),
         FlagOption(
             title: String(localized: .localizable.flagContentIllegalTitle),
             description: String(localized: .localizable.flagContentIllegalDescription),
             info: nil,
-            category: ReportCategoryType.illegal
+            category: .report(ReportCategoryType.illegal)
         ),
         FlagOption(
             title: String(localized: .localizable.flagContentOtherTitle),
             description: String(localized: .localizable.flagContentOtherDescription),
             info: nil,
-            category: ReportCategoryType.other
+            category: .report(ReportCategoryType.other)
         )
     ]
 
@@ -54,19 +54,25 @@ struct FlagOption: Identifiable, Equatable {
             title: String(localized: .localizable.flagContentSendToNosTitle),
             description: String(localized: .localizable.flagContentSendToNosDescription),
             info: String(localized: .localizable.flagContentSendToNosInfo),
-            category: SendFlagPrivacy.sendToNos
+            category: .privacy(.sendToNos)
         ),
         FlagOption(
             title: String(localized: .localizable.flagContentFlagPubiclyTitle),
             description: String(localized: .localizable.flagContentFlagPubiclyDescription),
             info: nil,
-            category: SendFlagPrivacy.publicly
+            category: .privacy(.publicly)
         )
     ]
 
     static func == (lhs: FlagOption, rhs: FlagOption) -> Bool {
         lhs.id == rhs.id
     }
+}
+
+/// Specifies the category associated with a specific flag.
+enum FlagCategory {
+    case report(ReportCategory)
+    case privacy(SendFlagPrivacy)
 }
 
 /// Specifies whether a flag should be sent privately to Nos or made public.
