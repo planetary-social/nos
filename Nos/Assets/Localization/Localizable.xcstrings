@@ -4350,6 +4350,72 @@
         }
       }
     },
+    "flagAccountDontMuteDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You will continue seeing notes from this user."
+          }
+        }
+      }
+    },
+    "flagAccountDontMuteTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Don't Mute"
+          }
+        }
+      }
+    },
+    "flagAccountMuteCategoryTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mute This User?"
+          }
+        }
+      }
+    },
+    "flagAccountMuteDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You won't see notes by this user anymore."
+          }
+        }
+      }
+    },
+    "flagAccountMuteTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mute"
+          }
+        }
+      }
+    },
+    "flagAccountSendToNosInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Nos moderation team will analyze the note for Other content and may publish a report from our own account, concealing your identity."
+          }
+        }
+      }
+    },
     "flagContent" : {
       "extractionState" : "manual",
       "localizations" : {
