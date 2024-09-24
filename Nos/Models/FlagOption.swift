@@ -1,16 +1,20 @@
 import Foundation
 
 /// A model representing a flagging option used in content moderation.
-/// - `title`: The title of the flagging option.
-/// - `description`: An optional description that provides more detail about the flagging option.
-/// - `info`: An optional message that will be displayed when the user has selected a particular flag.
-/// - `id`: A unique identifier for the flagging option, based on the `title`.
-/// - `category`: The specific category thet the selected flagging option falls in.
 struct FlagOption: Identifiable, Equatable {
+    /// The title of the flagging option.
     let title: String
+
+    /// An optional description that provides more detail about the flagging option.
     let description: String?
+
+    /// An optional message that will be displayed when the user has selected a particular flag.
     let info: String?
+
+    /// A unique identifier for the flagging option, based on the `title`.
     var id: String { title }
+
+    /// The specific category thet the selected flagging option falls in.
     var category: FlagCategory
 
     /// `FlagOption` instances representing different categories of content that can be flagged.
