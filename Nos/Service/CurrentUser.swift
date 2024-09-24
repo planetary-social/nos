@@ -294,6 +294,9 @@ import Dependencies
 // swiftlint:enable type_body_length
 
 extension CurrentUser {
+    
+    /// Logs the user out, deletes all their locally stored data, and updates the app state.
+    /// - Parameter appController: The ``AppController`` for updating the app state.
     func logout(appController: AppController) async {
         await setKeyPair(nil)
         analytics.logout()
@@ -303,6 +306,12 @@ extension CurrentUser {
         try? await persistenceController.deleteAll()
     }
     
+    /// Deletes the user's account by publishing a request to vanish and deleting all their
+    /// locally stored data.
+    /// - Parameter appController: The ``AppController`` for updating the app state.
+    ///
+    /// > Warning: This is a destructive action, so be sure that it is actually what the
+    ///            user wants.
     func deleteAccount(appController: AppController) async throws {
         try await publishRequestToVanish()
         await logout(appController: appController)

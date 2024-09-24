@@ -93,6 +93,7 @@ final class PersistenceController {
         }
     }
     
+    /// Deletes all entities in this object's container.
     func deleteAll() async throws {
         await container.deleteAllEntities()
     }
