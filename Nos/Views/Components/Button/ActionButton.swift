@@ -12,6 +12,7 @@ struct ActionButton: View {
     var font: Font = .clarity(.bold)
     var image: Image?
     var imageAlignment: ImageAlignment = .left
+    var padding = EdgeInsets(top: 8, leading: 13, bottom: 8, trailing: 13)
     var textColor = Color.white
     var depthEffectColor = Color.actionPrimaryDepthEffect
     var backgroundGradient = LinearGradient(
@@ -67,6 +68,7 @@ struct ActionButton: View {
         .buttonStyle(ActionButtonStyle(
             depthEffectColor: depthEffectColor,
             backgroundGradient: backgroundGradient,
+            padding: padding,
             textShadow: textShadow,
             shouldFillHorizontalSpace: shouldFillHorizontalSpace
         ))
@@ -107,6 +109,7 @@ struct ActionButtonStyle: ButtonStyle {
     let cornerRadius: CGFloat = 17
     let depthEffectColor: Color
     let backgroundGradient: LinearGradient
+    let padding: EdgeInsets
     var textShadow: Bool
     /// A flag used to fill the available horizontal space (centering the
     /// contents) or to fit the horizontal space to the contents of the action
@@ -125,8 +128,7 @@ struct ActionButtonStyle: ButtonStyle {
             configuration.label
                 .foregroundColor(.white)
                 .font(.body)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 13)
+                .padding(padding)
                 .shadow(
                     color: textShadow ? Color.actionButtonTextShadow : .clear,
                     radius: 2,
