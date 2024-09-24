@@ -6,10 +6,10 @@ struct ContentFlagView: View {
     @Binding var selectedFlagOptionCategory: FlagOption?
     @Binding var selectedSendOptionCategory: FlagOption?
     @Binding var showSuccessView: Bool
-    var sendAction: () -> Void
 
     /// The target of the report.
     let flagTarget: ReportTarget
+    var sendAction: () -> Void
 
     @Environment(\.dismiss) private var dismiss
 
