@@ -12,6 +12,7 @@ import Dependencies
     @ObservationIgnored @Dependency(\.pushNotificationService) private var pushNotificationService
     @ObservationIgnored @Dependency(\.relayService) var relayService
     @ObservationIgnored @Dependency(\.keychain) private var keychain
+    @ObservationIgnored @Dependency(\.unsAPI) var unsAPI
     
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
@@ -291,3 +292,28 @@ import Dependencies
     }
 }
 // swiftlint:enable type_body_length
+
+extension CurrentUser {
+    
+    /// Logs the user out, deletes all their locally stored data, and updates the app state.
+    /// - Parameter appController: The ``AppController`` for updating the app state.
+    func logout(appController: AppController) async {
+        await setKeyPair(nil)
+        analytics.logout()
+        crashReporting.logout()
+        unsAPI.logout()
+        appController.configureCurrentState()
+        try? await persistenceController.deleteAll()
+    }
+    
+    /// Deletes the user's account by publishing a request to vanish and deleting all their
+    /// locally stored data.
+    /// - Parameter appController: The ``AppController`` for updating the app state.
+    ///
+    /// > Warning: This is a destructive action, so be sure that it is actually what the
+    ///            user wants.
+    func deleteAccount(appController: AppController) async throws {
+        try await publishRequestToVanish()
+        await logout(appController: appController)
+    }
+}
