@@ -40,6 +40,7 @@ struct FlagOptionPicker: View {
         }
         .background(LinearGradient.cardBackground)
         .clipShape(RoundedRectangle(cornerRadius: 15))
+        .mimicCardButtonStyle()
     }
 }
 
