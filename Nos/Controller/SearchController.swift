@@ -128,7 +128,7 @@ class SearchController: ObservableObject {
         guard let authors = try? Author.find(named: name, context: context) else {
             return []
         }
-        return authors
+        return authors.sorted(by: { $0.followers.count > $1.followers.count })
     }
     
     func clear() {
