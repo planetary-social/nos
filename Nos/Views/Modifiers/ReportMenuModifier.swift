@@ -17,6 +17,7 @@ struct ReportMenuModifier: ViewModifier {
     @State private var confirmationDialogState: ConfirmationDialogState<UserSelection>?
     @State private var selectedFlagOption: FlagOption?
     @State private var selectedFlagSendOption: FlagOption?
+    @State private var selectedVisibilityOptionCategory: FlagOption?
     @State private var showFlagSuccessView = false
 
     @Environment(\.managedObjectContext) private var viewContext
@@ -54,7 +55,25 @@ struct ReportMenuModifier: ViewModifier {
                     }
                 }
         case .author:
-            oldModerationFlow(content: content)
+            content
+                .sheet(isPresented: $isPresented) {
+                    NavigationStack {
+                        AccountFlagView(
+                            selectedFlagOptionCategory: $selectedFlagOption,
+                            selectedSendOptionCategory: $selectedFlagSendOption,
+                            selectedVisibilityOptionCategory: $selectedVisibilityOptionCategory,
+                            showSuccessView: $showFlagSuccessView,
+                            sendAction: {
+                                if let selectCategory = selectedVisibilityOptionCategory?.category {
+                                    publishReportForNewModerationFlow(selectCategory)
+                                    determineFlaggedAccoutVisibility {
+                                        showFlagSuccessView = true
+                                    }
+                                }
+                            }
+                        )
+                    }
+                }
         }
     }
 
@@ -182,6 +201,19 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
     
+    /// Determines the visibility status for a flagged account and applies the appropriate action, such as muting the account.
+    /// If the selected visibility category is `.mute`, the author of the `reportedObject` will be muted.
+    /// - Parameter completion: A closure that is executed once the visibility determination and actions (if any) are complete.
+    private func determineFlaggedAccoutVisibility(completion: () -> Void) {
+        if let author = reportedObject.author {
+            if case .visibility(let visibilityCategory) = selectedVisibilityOptionCategory?.category,
+                visibilityCategory == .mute {
+                mute(author: author)
+            }
+            completion()
+        }
+    }
+
     /// An enum to simplify the user selection through the sequence of connected
     /// dialogs
     enum UserSelection: Equatable {
