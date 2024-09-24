@@ -15,7 +15,7 @@ struct AccountFlagView: View {
             Color.appBg.ignoresSafeArea()
             Group {
                 if showSuccessView {
-                    successView
+                    flagSuccessView
                 } else {
                     categoryView
                 }
@@ -91,27 +91,6 @@ struct AccountFlagView: View {
         }
         .animation(.easeInOut, value: selectedFlagOptionCategory)
         .animation(.easeInOut, value: selectedSendOptionCategory)
-    }
-
-    private var successView: some View {
-        VStack(spacing: 30) {
-            Image.circularCheckmark
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 116)
-
-            Text(String(localized: .localizable.thanksForTag))
-                .foregroundColor(.primaryTxt)
-                .font(.clarity(.regular, textStyle: .title2))
-                .padding(.horizontal, 62)
-
-            Text(String(localized: .localizable.keepOnHelpingUs))
-                .padding(.horizontal, 68)
-                .foregroundColor(.secondaryTxt)
-                .multilineTextAlignment(.center)
-                .lineSpacing(6)
-                .font(.clarity(.regular, textStyle: .subheadline))
-        }
     }
 }
 

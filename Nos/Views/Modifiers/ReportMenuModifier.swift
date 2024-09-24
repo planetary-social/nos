@@ -201,9 +201,8 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
     
-    /// Determines the visibility status for a flagged account and applies the appropriate action, such as muting the account.
-    /// If the selected visibility category is `.mute`, the author of the `reportedObject` will be muted.
-    /// - Parameter completion: A closure that is executed once the visibility determination and actions (if any) are complete.
+    /// Determines the visibility status for a flagged account and applies the appropriate action.
+    /// - Parameter completion: A closure that is executed once the necessary actions are complete.
     private func determineFlaggedAccoutVisibility(completion: () -> Void) {
         if let author = reportedObject.author {
             if case .visibility(let visibilityCategory) = selectedVisibilityOptionCategory?.category,
