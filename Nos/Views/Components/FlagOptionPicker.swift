@@ -94,6 +94,7 @@ private struct FlagPickerRow: View {
                         .foregroundColor(.secondaryTxt)
                         .font(.clarity(.regular, textStyle: .footnote))
                         .lineSpacing(8)
+                        .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true) // this enables the text view expand as needed
                 }
             }

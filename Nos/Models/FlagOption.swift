@@ -6,7 +6,6 @@ import Foundation
 /// - `info`: An optional message that will be displayed when the user has selected a particular flag.
 /// - `id`: A unique identifier for the flagging option, based on the `title`.
 /// - `category`: The specific category thet the selected flagging option falls in.
-
 struct FlagOption: Identifiable, Equatable {
     let title: String
     let description: String?
@@ -18,7 +17,7 @@ struct FlagOption: Identifiable, Equatable {
     static let flagContentCategories: [FlagOption] = [
         FlagOption(
             title: String(localized: .localizable.flagContentSpamTitle),
-            description: nil, 
+            description: nil,
             info: nil,
             category: .report(ReportCategoryType.spam)
         ),

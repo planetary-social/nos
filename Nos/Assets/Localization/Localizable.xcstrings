@@ -3056,6 +3056,50 @@
         }
       }
     },
+    "delete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
+    "deleteAccount" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Account"
+          }
+        }
+      }
+    },
+    "deleteAccountDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting your account will delete all your data from Nos servers and ask all your relays to do the same."
+          }
+        }
+      }
+    },
+    "deleteMyAccount" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete my Account"
+          }
+        }
+      }
+    },
     "deleteNote" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3723,6 +3767,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "編輯個人檔案"
+          }
+        }
+      }
+    },
+    "enableAccountDeletion" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable account deletion"
           }
         }
       }
