@@ -40,6 +40,8 @@ struct ContentFlagView: View {
                         action: {
                             if showSuccessView {
                                 dismiss()
+                                resetSelections()
+                                showSuccessView = false
                             } else {
                                 sendAction()
                             }
@@ -63,8 +65,8 @@ struct ContentFlagView: View {
                 FlagOptionPicker(
                     selectedOption: $selectedFlagOptionCategory,
                     options: FlagOption.flagContentCategories,
-                    title: String(localized: .localizable.reportContent),
-                    subtitle: String(localized: .localizable.reportContentMessage)
+                    title: String(localized: .localizable.flagContentCategoryTitle),
+                    subtitle: String(localized: .localizable.flagContentCategoryDescription)
                 )
 
                 if selectedFlagOptionCategory != nil {
