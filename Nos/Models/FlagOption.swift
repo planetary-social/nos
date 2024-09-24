@@ -5,7 +5,7 @@ import Foundation
 /// - `description`: An optional description that provides more detail about the flagging option.
 /// - `info`: An optional message that will be displayed when the user has selected a particular flag.
 /// - `id`: A unique identifier for the flagging option, based on the `title`.
-struct FlagOption: Identifiable {
+struct FlagOption: Identifiable, Equatable {
     let title: String
     let description: String?
     let info: String?
