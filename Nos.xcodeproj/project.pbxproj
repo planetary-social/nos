@@ -12,7 +12,10 @@
 		030036AB2C5D872B002C71F5 /* NewNotesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030036AA2C5D872B002C71F5 /* NewNotesButton.swift */; };
 		0304D0A72C9B4BF2001D16C7 /* OpenGraphMetatdata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */; };
 		0304D0A82C9B4BF2001D16C7 /* OpenGraphMetatdata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */; };
+		0304D0B22C9B731F001D16C7 /* MockOpenGraphService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */; };
+		0304D0B32C9B731F001D16C7 /* MockOpenGraphService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */; };
 		030AE4292BE3D63C004DEE02 /* FeaturedAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */; };
+		0314CF742C9C7DD00001A53B /* youTube_fortnight_short.html in Resources */ = {isa = PBXBuildFile; fileRef = 0314CF732C9C7DD00001A53B /* youTube_fortnight_short.html */; };
 		0314D5AC2C7D31060002E7F4 /* MediaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0314D5AB2C7D31060002E7F4 /* MediaService.swift */; };
 		0314D5AD2C7D31060002E7F4 /* MediaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0314D5AB2C7D31060002E7F4 /* MediaService.swift */; };
 		0315B5EF2C7E451C0020E707 /* MockMediaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0315B5EE2C7E451C0020E707 /* MockMediaService.swift */; };
@@ -584,7 +587,9 @@
 		030036842C5D39DD002C71F5 /* RefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshController.swift; sourceTree = "<group>"; };
 		030036AA2C5D872B002C71F5 /* NewNotesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNotesButton.swift; sourceTree = "<group>"; };
 		0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGraphMetatdata.swift; sourceTree = "<group>"; };
+		0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOpenGraphService.swift; sourceTree = "<group>"; };
 		030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedAuthor.swift; sourceTree = "<group>"; };
+		0314CF732C9C7DD00001A53B /* youTube_fortnight_short.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = youTube_fortnight_short.html; sourceTree = "<group>"; };
 		0314D5AB2C7D31060002E7F4 /* MediaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaService.swift; sourceTree = "<group>"; };
 		0315B5EE2C7E451C0020E707 /* MockMediaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMediaService.swift; sourceTree = "<group>"; };
 		0317263B2C7935220030EDCA /* AspectRatioContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioContainer.swift; sourceTree = "<group>"; };
@@ -1054,6 +1059,7 @@
 				0314D5AB2C7D31060002E7F4 /* MediaService.swift */,
 				0315B5EE2C7E451C0020E707 /* MockMediaService.swift */,
 				037071262C90C5FA00BEAEC4 /* OpenGraphService.swift */,
+				0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */,
 			);
 			path = Media;
 			sourceTree = "<group>";
@@ -1103,6 +1109,7 @@
 			children = (
 				034834292C9A02FC0050CF51 /* MockOpenGraphParser.swift */,
 				03E711662C935114000B6F96 /* SoupOpenGraphParserTests.swift */,
+				037071342C90D3DF00BEAEC4 /* Fixtures */,
 			);
 			path = OpenGraph;
 			sourceTree = "<group>";
@@ -1339,7 +1346,6 @@
 			isa = PBXGroup;
 			children = (
 				0370712A2C90C76900BEAEC4 /* DefaultOpenGraphServiceTests.swift */,
-				037071342C90D3DF00BEAEC4 /* Fixtures */,
 			);
 			path = Media;
 			sourceTree = "<group>";
@@ -1347,6 +1353,7 @@
 		037071342C90D3DF00BEAEC4 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				0314CF732C9C7DD00001A53B /* youTube_fortnight_short.html */,
 				037071352C90D3F200BEAEC4 /* youtube_video_toxic.html */,
 			);
 			path = Fixtures;
@@ -2173,6 +2180,7 @@
 				C987F85129BA951E00B44E7A /* ClarityCity-ExtraLightItalic.otf in Resources */,
 				C987F84D29BA951E00B44E7A /* ClarityCity-ThinItalic.otf in Resources */,
 				03B4E6A22C125CA1006E5F59 /* nostr_build_nip96_upload_response.json in Resources */,
+				0314CF742C9C7DD00001A53B /* youTube_fortnight_short.html in Resources */,
 				5095330C2C625B5D00E0BACA /* zap_request_no_amount.json in Resources */,
 				C987F84F29BA951E00B44E7A /* ClarityCity-RegularItalic.otf in Resources */,
 				CD27177629A7C8B200AE8888 /* sample_replies.json in Resources */,
@@ -2512,6 +2520,7 @@
 				C9DEC04D29894BED0078B43A /* Author+CoreDataClass.swift in Sources */,
 				C905B0772A619E99009B8A78 /* LinkPreview.swift in Sources */,
 				C95D68A7299E6FF000429F86 /* KeyFixture.swift in Sources */,
+				0304D0B22C9B731F001D16C7 /* MockOpenGraphService.swift in Sources */,
 				C94437E629B0DB83004D8C86 /* NotificationsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2536,6 +2545,7 @@
 				C9B71DC32A9003670031ED9F /* CrashReporting.swift in Sources */,
 				C9C2B78329E0735400548B4A /* RelaySubscriptionManager.swift in Sources */,
 				C9C2B78029E0731600548B4A /* AsyncTimer.swift in Sources */,
+				0304D0B32C9B731F001D16C7 /* MockOpenGraphService.swift in Sources */,
 				C96D39282B61B6D200D3D0A1 /* RawNostrID.swift in Sources */,
 				C9B678E229EEC41000303F33 /* SocialGraphCache.swift in Sources */,
 				C9A8015F2BD0177D006E29B2 /* ReportPublisher.swift in Sources */,
