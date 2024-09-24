@@ -118,33 +118,24 @@ extension CurrentUser {
     }
     
     @MainActor func publishContactList(tags: [[String]]) async {
-        guard let pubKey = publicKeyHex else {
-            Log.debug("Error: no pubKey")
+        guard let keyPair else {
+            Log.debug("Error: no key pair")
             return
         }
         
-        guard let relays = author?.relays else {
+        let pubKey = keyPair.publicKey.hex
+        
+        guard let relays = author?.relays.compactMap({ $0.address }) else {
             Log.debug("Error: No relay service")
             return
         }
-
-        var relayString = "{"
-        for relay in relays {
-            if let address = relay.address {
-                relayString += "\"\(address)\":{\"write\":true,\"read\":true},"
-            }
-        }
-        relayString.removeLast()
-        relayString += "}"
         
-        let jsonEvent = JSONEvent(pubKey: pubKey, kind: .contactList, tags: tags, content: relayString)
+        let jsonEvent = JSONEvent.contactList(pubKey: pubKey, tags: tags, relayAddresses: relays)
         
-        if let pair = keyPair {
-            do {
-                try await relayService.publishToAll(event: jsonEvent, signingKey: pair, context: viewContext)
-            } catch {
-                Log.debug("failed to update Follows \(error.localizedDescription)")
-            }
+        do {
+            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
+        } catch {
+            Log.debug("failed to update Follows \(error.localizedDescription)")
         }
     }
     
@@ -203,20 +194,61 @@ extension CurrentUser {
         await publishContactList(tags: stillFollowingKeys.pTags)
     }
     
-    @MainActor func publishRequestToVanish(to relays: [URL]? = nil, reason: String? = nil) async throws {
+    @MainActor func publishAccountDeletedMetadata() async throws {
+        guard let author else {
+            Log.error("Error: no author")
+            return
+        }
+        
+        author.about = nil
+        author.displayName = "Account deleted"
+        author.name = "Account deleted"
+        author.website = nil
+        author.nip05 = nil
+        author.profilePhotoURL = nil
+        author.uns = nil
+        author.rawMetadata = nil
+        
+        try viewContext.save()
+        try await publishMetadata()
+    }
+    
+    @MainActor func publishEmptyFollowList() async throws {
+        guard let author else {
+            Log.error("Error: no author")
+            return
+        }
+        
+        author.relays = Set()
+        
+        try viewContext.save()
+        await publishContactList(tags: [])
+    }
+    
+    @MainActor func publishRequestToVanish(reason: String? = nil) async throws {
         guard let keyPair else {
             Log.debug("Error: no key pair")
             return
         }
         
         let pubKey = keyPair.publicKey.hex
-        let jsonEvent = JSONEvent.requestToVanish(pubKey: pubKey, relays: relays, reason: reason)
+        let jsonEvent = JSONEvent.requestToVanish(pubKey: pubKey, reason: reason)
         
         do {
-            if let relays, !relays.isEmpty {
-                try await relayService.publish(event: jsonEvent, to: relays, signingKey: keyPair, context: viewContext)
-            } else {
-                try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
+            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
+            
+            if let authorRelays = author?.relays.compactMap({ $0.addressURL }),
+                !authorRelays.contains(Relay.nosAddress) {
+                // Make sure the NIP-62 event is always published to relay.nos.social - even if it isn't in
+                // the user's relay list. This will ensure that our servers see the request and can delete their
+                // data across all our web services: the relay, our push notification database, the follow
+                // database, etc.
+                try await relayService.publish(
+                    event: jsonEvent,
+                    to: Relay.nosAddress,
+                    signingKey: keyPair,
+                    context: viewContext
+                )
             }
         } catch {
             Log.debug("Failed to publish request to vanish \(error.localizedDescription)")
