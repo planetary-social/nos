@@ -4416,6 +4416,17 @@
         }
       }
     },
+    "flagContentFlagPubiclyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This flag will be attributed to your account"
+          }
+        }
+      }
+    },
     "flagContentCategoryTitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4423,6 +4434,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create a content flag for this post that other users in the network can see."
+          }
+        }
+      }
+    },
+    "flagContentFlagPubiclyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flag Publicly"
           }
         }
       }
@@ -4500,6 +4522,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Other"
+          }
+        }
+      }
+    },
+    "flagContentSendTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to Nos or Flag Publicly"
+          }
+        }
+      }
+    },
+    "flagContentSendToNosDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This flag will be attributed to TAGR bot"
+          }
+        }
+      }
+    },
+    "flagContentSendToNosInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Nos moderation team will analyze the note for tagged content and may publish a report from the Tagr-bot account."
+          }
+        }
+      }
+    },
+    "flagContentSendToNosTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to Nos"
           }
         }
       }

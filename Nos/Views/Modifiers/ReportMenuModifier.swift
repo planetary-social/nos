@@ -16,6 +16,7 @@ struct ReportMenuModifier: ViewModifier {
     @State private var showMuteDialog = false
     @State private var confirmationDialogState: ConfirmationDialogState<UserSelection>?
     @State private var selectedFlagOption: FlagOption?
+    @State private var selectedFlagSendOption: FlagOption?
 
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.featureFlags) private var featureFlags
@@ -38,7 +39,8 @@ struct ReportMenuModifier: ViewModifier {
             content
                 .sheet(isPresented: $isPresented) {
                     ContentFlagView(
-                        selectedFlagOptionCategory: $selectedFlagOption
+                        selectedFlagOptionCategory: $selectedFlagOption,
+                        selectedSendOptionCategory: $selectedFlagSendOption
                     )
                 }
         case .author:
