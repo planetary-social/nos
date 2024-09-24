@@ -1,14 +1,18 @@
 import Foundation
 
+/// A protocol for fetching data with a `URLRequest`.
 protocol URLSessionProtocol {
     func data(for request: URLRequest) async throws -> (Data, URLResponse)
 }
 
 extension URLSession: URLSessionProtocol {}
 
-class MockURLSession: URLSessionProtocol {
+/// A mock URL session that conforms to `URLSessionProtocol` and does not send network requests.
+final class MockURLSession: URLSessionProtocol {
     private let responseData: Data
     private let urlResponse: URLResponse
+
+    var receivedRequest: URLRequest?
 
     init(responseData: Data = Data(), urlResponse: URLResponse = URLResponse()) {
         self.responseData = responseData
@@ -16,6 +20,7 @@ class MockURLSession: URLSessionProtocol {
     }
 
     func data(for request: URLRequest) async throws -> (Data, URLResponse) {
-        (responseData, urlResponse)
+        receivedRequest = request
+        return (responseData, urlResponse)
     }
 }

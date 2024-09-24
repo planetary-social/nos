@@ -37,6 +37,29 @@ class DefaultOpenGraphServiceTests: XCTestCase {
         // Assert
         XCTAssertEqual(mockParser.metadataCallCount, 0)
     }
+    
+    /// Make sure we have the right User-Agent since some websites only provide Open Graph metadata for specific values.
+    func test_fetchMetadata_request_has_correct_user_agent() async throws {
+        // Arrange
+        let url = try XCTUnwrap(URL(string: "https://example.com/rocks.mp4"))
+        let mockSession = MockURLSession(responseData: Data(), urlResponse: URLResponse())
+        let subject = withDependencies {
+            $0.urlSession = mockSession
+        } operation: {
+            DefaultOpenGraphService()
+        }
+
+        // Act
+        _ = try await subject.fetchMetadata(for: url)
+
+        // Assert
+        let receivedRequest = try XCTUnwrap(mockSession.receivedRequest)
+        let userAgent = try XCTUnwrap(receivedRequest.value(forHTTPHeaderField: "User-Agent"))
+        let userAgentComponents = userAgent.split(separator: " ")
+        XCTAssertTrue(userAgentComponents.contains("facebookexternalhit/1.1"))
+        XCTAssertTrue(userAgentComponents.contains("Facebot"))
+        XCTAssertTrue(userAgentComponents.contains("Twitterbot/1.0"))
+    }
 }
 
 extension DefaultOpenGraphServiceTests {
