@@ -15,11 +15,42 @@ struct ReportMenuModifier: ViewModifier {
     @State private var confirmReport = false
     @State private var showMuteDialog = false
     @State private var confirmationDialogState: ConfirmationDialogState<UserSelection>?
-    
+    @State private var selectedFlagOption: FlagOption?
+    @State private var selectedFlagSendOption: FlagOption?
+
     @Environment(\.managedObjectContext) private var viewContext
-    
-    // swiftlint:disable function_body_length
+    @Dependency(\.featureFlags) private var featureFlags
+
     func body(content: Content) -> some View {
+        Group {
+            if featureFlags.isEnabled(.newModerationFlow) {
+                newModerationFlow(content: content)
+            } else {
+                oldModerationFlow(content: content)
+            }
+        }
+    }
+
+    /// Displays the moderation flow based on the reported object type. The old flow is still displayed for the author.
+    @ViewBuilder
+    private func newModerationFlow(content: Content) -> some View {
+        switch reportedObject {
+        case .note:
+            content
+                .sheet(isPresented: $isPresented) {
+                    ContentFlagView(
+                        selectedFlagOptionCategory: $selectedFlagOption,
+                        selectedSendOptionCategory: $selectedFlagSendOption
+                    )
+                }
+        case .author:
+            oldModerationFlow(content: content)
+        }
+    }
+
+    // swiftlint:disable function_body_length
+    @ViewBuilder
+    func oldModerationFlow(content: Content) -> some View {
         content
         // ReportCategory menu
             .confirmationDialog(unwrapping: $confirmationDialogState, action: processUserSelection)
@@ -85,7 +116,7 @@ struct ReportMenuModifier: ViewModifier {
             }
     }
     // swiftlint:enable function_body_length
-    
+
     func processUserSelection(_ userSelection: UserSelection?) {
         self.userSelection = userSelection
         

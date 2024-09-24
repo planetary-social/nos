@@ -3056,6 +3056,50 @@
         }
       }
     },
+    "delete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
+    "deleteAccount" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Account"
+          }
+        }
+      }
+    },
+    "deleteAccountDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting your account will delete all your data from Nos servers and ask all your relays to do the same."
+          }
+        }
+      }
+    },
+    "deleteMyAccount" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete my Account"
+          }
+        }
+      }
+    },
     "deleteNote" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3727,6 +3771,17 @@
         }
       }
     },
+    "enableAccountDeletion" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable account deletion"
+          }
+        }
+      }
+    },
     "enableNewMediaDisplay" : {
       "comment" : "Setting for new media feature flag",
       "extractionState" : "manual",
@@ -4346,6 +4401,182 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "filter"
+          }
+        }
+      }
+    },
+    "flagContentCategoryDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a tag for the content"
+          }
+        }
+      }
+    },
+    "flagContentFlagPubiclyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This flag will be attributed to your account"
+          }
+        }
+      }
+    },
+    "flagContentCategoryTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a content flag for this post that other users in the network can see."
+          }
+        }
+      }
+    },
+    "flagContentFlagPubiclyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flag Publicly"
+          }
+        }
+      }
+    },
+    "flagContentHarassmentDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harmful and unwanted replies or mentions"
+          }
+        }
+      }
+    },
+    "flagContentHarassmentTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harassment & Profanity"
+          }
+        }
+      }
+    },
+    "flagContentIllegalDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Content that violates the law in your country or CSAM"
+          }
+        }
+      }
+    },
+    "flagContentIllegalTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Illegal"
+          }
+        }
+      }
+    },
+    "flagContentNudityDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nudity, porn, or violent content not appropriate for work"
+          }
+        }
+      }
+    },
+    "flagContentOtherDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Items not included above"
+          }
+        }
+      }
+    },
+    "flagContentOtherTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other"
+          }
+        }
+      }
+    },
+    "flagContentSendTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to Nos or Flag Publicly"
+          }
+        }
+      }
+    },
+    "flagContentSendToNosDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This flag will be attributed to TAGR bot"
+          }
+        }
+      }
+    },
+    "flagContentSendToNosInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Nos moderation team will analyze the note for tagged content and may publish a report from the Tagr-bot account."
+          }
+        }
+      }
+    },
+    "flagContentSendToNosTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to Nos"
+          }
+        }
+      }
+    },
+    "flagContentSpamTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spam"
           }
         }
       }
@@ -11605,6 +11836,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "出錯啦"
+          }
+        }
+      }
+    },
+    "spam" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spam"
           }
         }
       }
