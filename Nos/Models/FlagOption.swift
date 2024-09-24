@@ -117,7 +117,7 @@ enum SendFlagPrivacy {
     case publicly
 }
 
-/// Specifies whether a flagged account should be muted or not..
+/// Specifies whether a flagged account should be muted or not.
 enum FlagAccountVisibility {
     case mute
     case unmute
