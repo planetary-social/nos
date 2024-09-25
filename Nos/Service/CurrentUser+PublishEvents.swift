@@ -119,7 +119,7 @@ extension CurrentUser {
     
     @MainActor func publishContactList(tags: [[String]]) async {
         guard let keyPair else {
-            Log.debug("Error: no key pair")
+            Log.error("Error: Failed to publish contact list because there was no key pair")
             return
         }
         
@@ -196,7 +196,7 @@ extension CurrentUser {
     
     @MainActor func publishAccountDeletedMetadata() async throws {
         guard let author else {
-            Log.error("Error: no author")
+            Log.error("Error: Failed to publish account deleted metadata because there was no Author")
             return
         }
         
@@ -215,7 +215,7 @@ extension CurrentUser {
     
     @MainActor func publishEmptyFollowList() async throws {
         guard let author else {
-            Log.error("Error: no author")
+            Log.error("Error: Failed to publish empty follow list because there was no Author")
             return
         }
         
