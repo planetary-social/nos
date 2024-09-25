@@ -89,42 +89,42 @@ extension FlagOption {
         title: String(localized: .localizable.flagContentSpamTitle),
         description: nil,
         info: nil,
-        category: .report(ReportCategoryType.spam)
+        category: .report(ReportCategory.spam)
     )
     
     static let harassmentCategory = FlagOption(
         title: String(localized: .localizable.flagContentHarassmentTitle),
         description: String(localized: .localizable.flagContentHarassmentDescription),
         info: nil,
-        category: .report(ReportCategoryType.harassment)
+        category: .report(ReportCategory.harassment)
     )
 
     static let nsfwCategory = FlagOption(
         title: "NSFW",
         description: String(localized: .localizable.flagContentNudityDescription),
         info: nil,
-        category: .report(ReportCategoryType.nsfw)
+        category: .report(ReportCategory.nsfw)
     )
 
     static let illegalCategory = FlagOption(
         title: String(localized: .localizable.flagContentIllegalTitle),
         description: String(localized: .localizable.flagContentIllegalDescription),
         info: nil,
-        category: .report(ReportCategoryType.illegal)
+        category: .report(ReportCategory.illegal)
     )
 
     static let impersonationCategory = FlagOption(
         title: String(localized: .localizable.flagAccountImpersonationTitle),
         description: String(localized: .localizable.flagAccountImpersonationDescription),
         info: nil,
-        category: .report(ReportCategoryType.other)
+        category: .report(ReportCategory.other)
     )
 
     static let otherCategory = FlagOption(
         title: String(localized: .localizable.flagContentOtherTitle),
         description: String(localized: .localizable.flagContentOtherDescription),
         info: nil,
-        category: .report(ReportCategoryType.other)
+        category: .report(ReportCategory.other)
     )
 }
 

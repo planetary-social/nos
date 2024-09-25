@@ -215,7 +215,7 @@ struct ReportMenuModifier: ViewModifier {
     func topLevelButtons() -> [ButtonState<UserSelection>] {
         switch reportedObject {
         case .note:
-            ReportCategoryType.noteCategories.map { category in
+            ReportCategory.noteCategories.map { category in
                 let userSelection = UserSelection.noteCategorySelected(category)
                 
                 return ButtonState(action: .send(userSelection)) {
@@ -223,7 +223,7 @@ struct ReportMenuModifier: ViewModifier {
                 }
             }
         case .author:
-            ReportCategoryType.authorCategories.map { category in
+            ReportCategory.authorCategories.map { category in
                 let userSelection = UserSelection.authorCategorySelected(category)
                 
                 return ButtonState(action: .send(userSelection)) {
