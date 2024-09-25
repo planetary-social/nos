@@ -6,8 +6,14 @@ struct ContentFlagView: View {
     @Binding var selectedFlagOptionCategory: FlagOption?
     @Binding var selectedSendOptionCategory: FlagOption?
     @Binding var showSuccessView: Bool
+
+    /// The target of the report.
+    let flagTarget: ReportTarget
     var sendAction: () -> Void
+
     @Environment(\.dismiss) private var dismiss
+
+    @State private var flagCategories: [FlagOption] = []
 
     var body: some View {
         ZStack {
@@ -52,6 +58,9 @@ struct ContentFlagView: View {
                 }
             }
         }
+        .onAppear {
+            flagCategories = FlagOption.createFlagCategories(for: flagTarget)
+        }
     }
 
     private func resetSelections() {
@@ -64,7 +73,7 @@ struct ContentFlagView: View {
             VStack(spacing: 30) {
                 FlagOptionPicker(
                     selectedOption: $selectedFlagOptionCategory,
-                    options: FlagOption.flagContentCategories,
+                    options: flagCategories,
                     title: String(localized: .localizable.flagContentCategoryTitle),
                     subtitle: String(localized: .localizable.flagContentCategoryDescription)
                 )
@@ -108,14 +117,16 @@ var flagSuccessView: some View {
     struct PreviewWrapper: View {
         @State private var selectedFlagOptionCategory: FlagOption?
         @State private var selectedSendOptionCategory: FlagOption?
-        @State private var showSuccessView = true
+        @State private var showSuccessView = false
+        let event = Event()
 
         var body: some View {
             NavigationStack {
                 ContentFlagView(
                     selectedFlagOptionCategory: $selectedFlagOptionCategory,
                     selectedSendOptionCategory: $selectedSendOptionCategory,
-                    showSuccessView: $showSuccessView,
+                    showSuccessView: $showSuccessView, 
+                    flagTarget: .note(event),
                     sendAction: {}
                 )
             }

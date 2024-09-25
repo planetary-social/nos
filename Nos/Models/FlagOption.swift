@@ -17,39 +17,19 @@ struct FlagOption: Identifiable, Equatable {
     /// The specific category thet the selected flagging option falls in.
     var category: FlagCategory
 
-    /// `FlagOption` instances representing different categories of content and accounts that can be flagged.
-    static let flagContentCategories: [FlagOption] = [
-        FlagOption(
-            title: String(localized: .localizable.flagContentSpamTitle),
-            description: nil,
-            info: nil,
-            category: .report(ReportCategoryType.spam)
-        ),
-        FlagOption(
-            title: String(localized: .localizable.flagContentHarassmentTitle),
-            description: String(localized: .localizable.flagContentHarassmentDescription),
-            info: nil,
-            category: .report(ReportCategoryType.harassment)
-        ),
-        FlagOption(
-            title: "NSFW",
-            description: String(localized: .localizable.flagContentNudityDescription),
-            info: nil,
-            category: .report(ReportCategoryType.nsfw)
-        ),
-        FlagOption(
-            title: String(localized: .localizable.flagContentIllegalTitle),
-            description: String(localized: .localizable.flagContentIllegalDescription),
-            info: nil,
-            category: .report(ReportCategoryType.illegal)
-        ),
-        FlagOption(
-            title: String(localized: .localizable.flagContentOtherTitle),
-            description: String(localized: .localizable.flagContentOtherDescription),
-            info: nil,
-            category: .report(ReportCategoryType.other)
-        )
-    ]
+    /// Creates a list of `FlagOption` categories based on the provided flag target.
+    /// - Parameter flagTarget: The target of the report.
+    /// - Returns: An array of `FlagOption` categories,  modified based on the `flagTarget`.
+    static func createFlagCategories(for flagTarget: ReportTarget) -> [FlagOption] {
+        var categories = [spamCategory, harassmentCategory, nsfwCategory, illegalCategory, otherCategory]
+
+        if case .author = flagTarget {
+            let insertionIndex = max(categories.count - 1, 0)
+            categories.insert(impersonationCategory, at: insertionIndex)
+        }
+
+        return categories
+    }
 
     /// `FlagOption` instances representing different categories of how a content can can be flagged.
     static let flagContentSendCategories: [FlagOption] = [
@@ -102,6 +82,50 @@ struct FlagOption: Identifiable, Equatable {
     static func == (lhs: FlagOption, rhs: FlagOption) -> Bool {
         lhs.id == rhs.id
     }
+}
+
+extension FlagOption {
+    static let spamCategory = FlagOption(
+        title: String(localized: .localizable.flagContentSpamTitle),
+        description: nil,
+        info: nil,
+        category: .report(ReportCategoryType.spam)
+    )
+    
+    static let harassmentCategory = FlagOption(
+        title: String(localized: .localizable.flagContentHarassmentTitle),
+        description: String(localized: .localizable.flagContentHarassmentDescription),
+        info: nil,
+        category: .report(ReportCategoryType.harassment)
+    )
+
+    static let nsfwCategory = FlagOption(
+        title: "NSFW",
+        description: String(localized: .localizable.flagContentNudityDescription),
+        info: nil,
+        category: .report(ReportCategoryType.nsfw)
+    )
+
+    static let illegalCategory = FlagOption(
+        title: String(localized: .localizable.flagContentIllegalTitle),
+        description: String(localized: .localizable.flagContentIllegalDescription),
+        info: nil,
+        category: .report(ReportCategoryType.illegal)
+    )
+
+    static let impersonationCategory = FlagOption(
+        title: String(localized: .localizable.flagAccountImpersonationTitle),
+        description: String(localized: .localizable.flagAccountImpersonationDescription),
+        info: nil,
+        category: .report(ReportCategoryType.other)
+    )
+
+    static let otherCategory = FlagOption(
+        title: String(localized: .localizable.flagContentOtherTitle),
+        description: String(localized: .localizable.flagContentOtherDescription),
+        info: nil,
+        category: .report(ReportCategoryType.other)
+    )
 }
 
 /// Specifies the category associated with a specific flag.

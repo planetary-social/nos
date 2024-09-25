@@ -145,17 +145,20 @@ private struct HeaderView: View {
 
 #Preview("Category Selection") {
     struct PreviewWrapper: View {
+        @State private var flagCategories: [FlagOption] = []
         @State private var selectedFlag: FlagOption?
+        let event = Event()
 
         var body: some View {
             FlagOptionPicker(
                 selectedOption: $selectedFlag,
-                options: FlagOption.flagContentCategories,
+                options: flagCategories,
                 title: "Create a tag for this content that other people in your network can see.",
                 subtitle: "Select a tag for the content"
             )
             .onAppear {
-                selectedFlag = FlagOption.flagContentCategories.first
+                flagCategories = FlagOption.createFlagCategories(for: .note(event))
+                selectedFlag = flagCategories.first
             }
             .background(Color.appBg)
         }

@@ -4405,6 +4405,28 @@
         }
       }
     },
+    "flagAccountCategoryDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a tag for the user"
+          }
+        }
+      }
+    },
+    "flagAccountCategoryTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a tag for this user that other people in your network can see."
+          }
+        }
+      }
+    },
     "flagAccountDontMuteDescription" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4423,6 +4445,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Don't Mute"
+          }
+        }
+      }
+    },
+    "flagAccountImpersonationDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User is stealing someone else's identity"
+          }
+        }
+      }
+    },
+    "flagAccountImpersonationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impersonation"
           }
         }
       }
@@ -4718,6 +4762,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create a flag for this user that other users in the network can see."
+          }
+        }
+      }
+    },
+    "flagUserTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flag User"
           }
         }
       }
