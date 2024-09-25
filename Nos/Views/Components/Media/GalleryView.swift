@@ -91,11 +91,11 @@ struct GalleryView: View {
 
             // if we can determine the orientation from the metadata we have, great!
             // if not, download the data from the first URL to determine the orientation
-            if let metadataOrientation {
-                orientation = metadataOrientation
-            } else {
+//            if let metadataOrientation {
+//                orientation = metadataOrientation
+//            } else {
                 orientation = await mediaService.orientation(for: firstURL)
-            }
+//            }
         }
     }
 }

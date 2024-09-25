@@ -2,6 +2,8 @@ import Foundation
 import UIKit
 import Logger
 import Dependencies
+import SDWebImage
+import SDWebImageWebPCoder
 
 class AppDelegate: NSObject, UIApplicationDelegate {
 
@@ -13,6 +15,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        let webPCoder = SDImageWebPCoder.shared
+        SDImageCodersManager.shared.addCoder(webPCoder)
+
         application.registerForRemoteNotifications()
         UNUserNotificationCenter.current().delegate = pushNotificationService
         return true

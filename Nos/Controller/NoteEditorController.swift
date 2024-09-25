@@ -18,7 +18,7 @@ import UIKit
     /// by typing an '@' symbol and allows the user to search for another user to mention in their note.
     var showMentionsAutocomplete = false
     
-    /// The view the user will use for editing. Should only be set by ``NoteUITextViewRepresentable``.
+    /// The view the user will use for editing. Should only be set by ``NoteTextEditor/NoteUITextViewRepresentable``.
     var textView: UITextView? {
         didSet {
             textView?.delegate = self

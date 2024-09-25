@@ -24,7 +24,7 @@ struct DefaultOpenGraphService: OpenGraphService {
         // some websites, like YouTube, only provide metadata for specific User-Agent values
         request.setValue("facebookexternalhit/1.1 Facebot Twitterbot/1.0", forHTTPHeaderField: "User-Agent")
         let (data, response) = try await session.data(for: request)
-        if response.mimeType == "text/html" {
+        if let mimeType = response.mimeType, mimeType == "text/html" || mimeType.starts(with: "image") {
             return parser.metadata(html: data)
         } else {
             return nil
