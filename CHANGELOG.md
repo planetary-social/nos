@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.27] - 2024-09-25Z
+
 ### Release Notes
 - Added the option to preview a note before posting it. [#1399](https://github.com/planetary-social/nos/issues/1399)
 - Fixed side menu accessibility issues. [#1444](https://github.com/planetary-social/nos/issues/1444)
