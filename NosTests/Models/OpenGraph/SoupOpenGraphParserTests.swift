@@ -111,6 +111,29 @@ class SoupOpenGraphParserTests: XCTestCase {
         XCTAssertEqual(metadata.image?.width, 1280)
         XCTAssertEqual(metadata.image?.height, 720)
     }
+
+    func test_parse_youTube_fornight_short() throws {
+        // Arrange
+        let parser = SoupOpenGraphParser()
+        let data = try XCTUnwrap(try htmlData(filename: "youTube_fortnight_short"))
+
+        // Act
+        let metadata = try XCTUnwrap(parser.metadata(html: data))
+
+        // Assert
+        XCTAssertEqual(
+            metadata.title, 
+            "A fortnight since TTPD 🤍 brought to you by YouTube Shorts #ForAFortnightChallenge"
+        )
+
+        XCTAssertEqual(metadata.type, .video)
+
+        XCTAssertEqual(metadata.video?.width, 405)
+        XCTAssertEqual(metadata.video?.height, 720)
+
+        let sample = OpenGraphMetadata(title: "", type: .unknown, image: nil, video: nil)
+        XCTAssertNotNil(sample)
+    }
 }
 
 extension SoupOpenGraphParserTests {

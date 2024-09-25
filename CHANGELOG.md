@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for NIP-62 Request to Vanish events. [#80](https://github.com/planetary-social/nos/issues/80)
 - Added Delete Account UI. [#80](https://github.com/planetary-social/nos/issues/80)
 - Fixed issue where search results weren't sorted properly. [#1485](https://github.com/planetary-social/nos/issues/1485)
+- Delete all user data when logging out. [#1534](https://github.com/planetary-social/nos/issues/1534)
+- Publish empty metadata event and empty contact list on delete account. [#1530](https://github.com/planetary-social/nos/issues/1530)
 
 ### Internal Changes
 - Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag. [#1172](https://github.com/planetary-social/nos/issues/1172)
@@ -35,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored feature flag and added a feature flag toggle for “Enable new moderation flow” to Staging builds. [#1496](https://github.com/planetary-social/nos/issues/1496)
 - Refactored list row gradient background.
 - Added SwiftSoup to parse Open Graph metadata. [#1165](https://github.com/planetary-social/nos/issues/1165)
+- Parse Open Graph metadata whenever an event contains a URL, doesn’t have `imeta` tags, and the URL points to an HTML document. [#1425](https://github.com/planetary-social/nos/issues/1425)
 - Added a new flow to flag notes. Currently behind the “Enable new moderation flow” feature flag. [#1489](https://github.com/planetary-social/nos/issues/1489)
 
 ## [0.1.26] - 2024-09-09Z
