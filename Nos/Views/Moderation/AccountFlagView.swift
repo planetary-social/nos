@@ -7,8 +7,14 @@ struct AccountFlagView: View {
     @Binding var selectedSendOptionCategory: FlagOption?
     @Binding var selectedVisibilityOptionCategory: FlagOption?
     @Binding var showSuccessView: Bool
+
+    /// The target of the report.
+    let flagTarget: ReportTarget
     var sendAction: () -> Void
+
     @Environment(\.dismiss) private var dismiss
+
+    @State private var flagCategories: [FlagOption] = []
 
     var body: some View {
         ZStack {
@@ -21,7 +27,7 @@ struct AccountFlagView: View {
                 }
             }
             .padding()
-            .nosNavigationBar(title: .localizable.flagContent)
+            .nosNavigationBar(title: .localizable.flagUserTitle)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
@@ -40,6 +46,8 @@ struct AccountFlagView: View {
                         action: {
                             if showSuccessView {
                                 dismiss()
+                                resetSelections()
+                                showSuccessView = false
                             } else {
                                 sendAction()
                             }
@@ -50,6 +58,9 @@ struct AccountFlagView: View {
                 }
             }
         }
+        .onAppear {
+            flagCategories = FlagOption.createFlagCategories(for: flagTarget)
+        }
     }
 
     private func resetSelections() {
@@ -59,13 +70,13 @@ struct AccountFlagView: View {
     }
 
     private var categoryView: some View {
-        ScrollView(showsIndicators: false) {
+        ScrollView {
             VStack(spacing: 30) {
                 FlagOptionPicker(
                     selectedOption: $selectedFlagOptionCategory,
-                    options: FlagOption.flagContentCategories,
-                    title: String(localized: .localizable.reportContent),
-                    subtitle: String(localized: .localizable.reportContentMessage)
+                    options: flagCategories,
+                    title: String(localized: .localizable.flagAccountCategoryTitle),
+                    subtitle: String(localized: .localizable.flagAccountCategoryDescription)
                 )
 
                 if selectedFlagOptionCategory != nil {
@@ -100,6 +111,7 @@ struct AccountFlagView: View {
         @State private var selectedSendOptionCategory: FlagOption?
         @State private var selectedVisibilityOptionCategory: FlagOption?
         @State private var showSuccessView = false
+        let author = Author()
 
         var body: some View {
             NavigationStack {
@@ -108,6 +120,7 @@ struct AccountFlagView: View {
                     selectedSendOptionCategory: $selectedSendOptionCategory,
                     selectedVisibilityOptionCategory: $selectedVisibilityOptionCategory,
                     showSuccessView: $showSuccessView,
+                    flagTarget: .author(author),
                     sendAction: {}
                 )
             }

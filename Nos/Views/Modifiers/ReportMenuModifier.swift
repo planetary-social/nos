@@ -63,7 +63,8 @@ struct ReportMenuModifier: ViewModifier {
                             selectedFlagOptionCategory: $selectedFlagOption,
                             selectedSendOptionCategory: $selectedFlagSendOption,
                             selectedVisibilityOptionCategory: $selectedVisibilityOptionCategory,
-                            showSuccessView: $showFlagSuccessView,
+                            showSuccessView: $showFlagSuccessView, 
+                            flagTarget: reportedObject,
                             sendAction: {
                                 if let selectCategory = selectedVisibilityOptionCategory?.category {
                                     publishReportForNewModerationFlow(selectCategory)
