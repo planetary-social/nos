@@ -4405,6 +4405,17 @@
         }
       }
     },
+    "flagContent" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flag Content"
+          }
+        }
+      }
+    },
     "flagContentCategoryDescription" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4416,17 +4427,6 @@
         }
       }
     },
-    "flagContentFlagPubiclyDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This flag will be attributed to your account"
-          }
-        }
-      }
-    },
     "flagContentCategoryTitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4434,6 +4434,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create a content flag for this post that other users in the network can see."
+          }
+        }
+      }
+    },
+    "flagContentFlagPubiclyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This flag will be attributed to your account"
           }
         }
       }
@@ -4532,7 +4543,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Send to Nos or Flag Publicly"
+            "value" : "Send to Nos or Flag Publicly?"
           }
         }
       }
@@ -5647,6 +5658,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "請輸入有效的 websocket 網址。"
+          }
+        }
+      }
+    },
+    "keepOnHelpingUs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep on helping us make Nostr a better place for everyone!"
           }
         }
       }
@@ -12307,6 +12329,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "服務條款"
+          }
+        }
+      }
+    },
+    "thanksForTag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thanks for your tag."
           }
         }
       }
