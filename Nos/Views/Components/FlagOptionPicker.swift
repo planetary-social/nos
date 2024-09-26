@@ -1,18 +1,31 @@
 import SwiftUI
 /// Displays a list of selectable flag options
 struct FlagOptionPicker: View {
-    @Binding private var selectedOption: FlagOption?
+    /// The previous selection made by the user, used for displaying information related to changes in selection.
+    /// A picker can have a previous selection or not.
+    @Binding var previousSelection: FlagOption?
+
+    /// The currently selected flag option.
+    @Binding private var currentSelection: FlagOption?
+
+    /// The list of available flag options to choose from.
     var options: [FlagOption]
+
+    /// The title displayed at the top of the picker.
     var title: String
+
+    /// An optional subtitle that provides additional context for the picker.
     var subtitle: String?
 
     init(
-        selectedOption: Binding<FlagOption?>,
+        previousSelection: Binding<FlagOption?>,
+        currentSelection: Binding<FlagOption?>,
         options: [FlagOption],
         title: String,
         subtitle: String?
     ) {
-        self._selectedOption = selectedOption
+        self._previousSelection = previousSelection
+        self._currentSelection = currentSelection
         self.options = options
         self.title = title
         self.subtitle = subtitle
@@ -28,12 +41,15 @@ struct FlagOptionPicker: View {
         }
     }
 
+    /// Represents the list of flag options.
+    /// Each option is displayed as a row, and when an option is selected, the current selection is updated.
     private var flagOptionsListView: some View {
         VStack(alignment: .leading, spacing: 0) {
             ForEach(options) { flag in
                 FlagPickerRow(
                     flag: flag,
-                    selection: $selectedOption
+                    selection: $currentSelection, 
+                    previousSelection: $previousSelection
                 )
                 BeveledSeparator()
             }
@@ -44,11 +60,20 @@ struct FlagOptionPicker: View {
     }
 }
 
-/// A single row for a single flag option
+/// A single row view displaying a flag option in the flag picker.
+/// Displays a flag option with its title and optional description.
+///  It highlights the selected option and allows the user to tap and select a new option.
 private struct FlagPickerRow: View {
+    /// The flag option associated with this row.
     var flag: FlagOption
+
+    /// The current flag selection.
     @Binding var selection: FlagOption?
 
+    /// The previous flag selection.
+    @Binding var previousSelection: FlagOption?
+
+    /// A Boolean value that indicates whether the flag is currently selected.
     var isSelected: Bool {
         selection?.id == flag.id
     }
@@ -67,7 +92,8 @@ private struct FlagPickerRow: View {
             VStack(alignment: .leading) {
                 flagContent
                 if let info = flag.info, flag.id == selection?.id {
-                    infoBox(text: info)
+                    let infoText = info(previousSelection?.title)
+                    infoBox(text: infoText ?? "")
                 }
             }
         }
@@ -105,7 +131,8 @@ private struct FlagPickerRow: View {
         }
     }
 
-    /// Displays additional information about a flag option.
+    /// Displays additional information about the selected flag option.
+    /// - Parameter text: The informational text to be displayed inside the box.
     private func infoBox(text: String) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
@@ -143,22 +170,47 @@ private struct HeaderView: View {
     }
 }
 
-#Preview("Category Selection") {
+#Preview("Flag Content Selection") {
     struct PreviewWrapper: View {
         @State private var flagCategories: [FlagOption] = []
         @State private var selectedFlag: FlagOption?
-        let event = Event()
+        let author = Author()
 
         var body: some View {
             FlagOptionPicker(
-                selectedOption: $selectedFlag,
+                previousSelection: $selectedFlag, 
+                currentSelection: $selectedFlag,
                 options: flagCategories,
                 title: "Create a tag for this content that other people in your network can see.",
                 subtitle: "Select a tag for the content"
             )
             .onAppear {
-                flagCategories = FlagOption.createFlagCategories(for: .note(event))
+                flagCategories = FlagOption.createFlagCategories(for: .author(author))
                 selectedFlag = flagCategories.first
+            }
+            .background(Color.appBg)
+        }
+    }
+    return PreviewWrapper()
+}
+
+#Preview("Flag User Selection") {
+    struct PreviewWrapper: View {
+        @State private var flagCategories: [FlagOption] = []
+        @State private var selectedOption: FlagOption?
+        let event = Event()
+
+        var body: some View {
+            FlagOptionPicker(
+                previousSelection: $selectedOption,
+                currentSelection: $selectedOption,
+                options: flagCategories,
+                title: "Create a tag for this user that other people in your network can see.",
+                subtitle: "Select a tag for the user"
+            )
+            .onAppear {
+                flagCategories = FlagOption.createFlagCategories(for: .note(event))
+                selectedOption = flagCategories.first
             }
             .background(Color.appBg)
         }
@@ -168,17 +220,18 @@ private struct HeaderView: View {
 
 #Preview("Send Selection") {
     struct PreviewWrapper: View {
-        @State private var selectedFlag: FlagOption?
+        @State private var selectedOption: FlagOption?
 
         var body: some View {
             FlagOptionPicker(
-                selectedOption: $selectedFlag,
-                options: FlagOption.flagContentSendCategories,
+                previousSelection: $selectedOption,
+                currentSelection: $selectedOption,
+                options: FlagOption.flagContentSendOptions,
                 title: "Send to Nos or Flag Publicly",
                 subtitle: nil
             )
             .onAppear {
-                selectedFlag = FlagOption.flagContentSendCategories.first
+                selectedOption = FlagOption.flagContentSendOptions.first
             }
             .background(Color.appBg)
         }
