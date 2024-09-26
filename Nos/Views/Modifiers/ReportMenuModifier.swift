@@ -59,7 +59,7 @@ struct ReportMenuModifier: ViewModifier {
             content
                 .sheet(isPresented: $isPresented) {
                     NavigationStack {
-                        AccountFlagView(
+                        UserFlagView(
                             selectedFlagOptionCategory: $selectedFlagOption,
                             selectedSendOptionCategory: $selectedFlagSendOption,
                             selectedVisibilityOptionCategory: $selectedVisibilityOptionCategory,
@@ -202,14 +202,29 @@ struct ReportMenuModifier: ViewModifier {
             }
         }
     }
-    
+
+    func unmute(author: Author) {
+        Task {
+            do {
+                try await author.unmute(viewContext: viewContext)
+            } catch {
+                Log.error(error.localizedDescription)
+            }
+        }
+    }
+
     /// Determines the visibility status for a flagged account and applies the appropriate action.
     /// - Parameter completion: A closure that is executed once the necessary actions are complete.
     private func determineFlaggedAccoutVisibility(completion: () -> Void) {
         if let author = reportedObject.author {
-            if case .visibility(let visibilityCategory) = selectedVisibilityOptionCategory?.category,
-                visibilityCategory == .mute {
+            guard case .visibility(let visibilityCategory) = selectedVisibilityOptionCategory?.category else { return }
+
+            if visibilityCategory == .mute {
+                guard !author.muted else { return }
                 mute(author: author)
+            } else {
+                guard author.muted else { return }
+                unmute(author: author)
             }
             completion()
         }
