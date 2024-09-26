@@ -114,7 +114,7 @@
 		03FE3F7C2C87AC9900D25810 /* Event+InlineMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FE3F7B2C87AC9900D25810 /* Event+InlineMetadata.swift */; };
 		03FE3F7D2C87AC9900D25810 /* Event+InlineMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FE3F7B2C87AC9900D25810 /* Event+InlineMetadata.swift */; };
 		03FE3F8C2C87BC9500D25810 /* text_note_multiple_media.json in Resources */ = {isa = PBXBuildFile; fileRef = 03FE3F8A2C87BC9500D25810 /* text_note_multiple_media.json */; };
-		041C56C42CA1B48E007D3BB2 /* AccountFlagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041C56C32CA1B48E007D3BB2 /* AccountFlagView.swift */; };
+		041C56C42CA1B48E007D3BB2 /* UserFlagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041C56C32CA1B48E007D3BB2 /* UserFlagView.swift */; };
 		042406F32C907A15008F2A21 /* NosToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042406F22C907A15008F2A21 /* NosToggle.swift */; };
 		04368D2B2C99A2C400DEAA2E /* FlagOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04368D2A2C99A2C400DEAA2E /* FlagOption.swift */; };
 		04368D312C99A78800DEAA2E /* NosRadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04368D302C99A78800DEAA2E /* NosRadioButton.swift */; };
@@ -661,7 +661,7 @@
 		03FE3F782C87A9D900D25810 /* EventError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventError.swift; sourceTree = "<group>"; };
 		03FE3F7B2C87AC9900D25810 /* Event+InlineMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+InlineMetadata.swift"; sourceTree = "<group>"; };
 		03FE3F8A2C87BC9500D25810 /* text_note_multiple_media.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = text_note_multiple_media.json; sourceTree = "<group>"; };
-		041C56C32CA1B48E007D3BB2 /* AccountFlagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountFlagView.swift; sourceTree = "<group>"; };
+		041C56C32CA1B48E007D3BB2 /* UserFlagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFlagView.swift; sourceTree = "<group>"; };
 		042406F22C907A15008F2A21 /* NosToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosToggle.swift; sourceTree = "<group>"; };
 		04368D2A2C99A2C400DEAA2E /* FlagOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagOption.swift; sourceTree = "<group>"; };
 		04368D302C99A78800DEAA2E /* NosRadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosRadioButton.swift; sourceTree = "<group>"; };
@@ -1423,7 +1423,7 @@
 			isa = PBXGroup;
 			children = (
 				04368D4A2C99CFC700DEAA2E /* ContentFlagView.swift */,
-				041C56C32CA1B48E007D3BB2 /* AccountFlagView.swift */,
+				041C56C32CA1B48E007D3BB2 /* UserFlagView.swift */,
 			);
 			path = Moderation;
 			sourceTree = "<group>";
@@ -2358,7 +2358,7 @@
 				C9F75AD22A02D41E005BBE45 /* ComposerActionBar.swift in Sources */,
 				2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */,
 				C9DEBFD2298941000078B43A /* NosApp.swift in Sources */,
-				041C56C42CA1B48E007D3BB2 /* AccountFlagView.swift in Sources */,
+				041C56C42CA1B48E007D3BB2 /* UserFlagView.swift in Sources */,
 				5BFBB28B2BD9D79F002E909F /* URLParser.swift in Sources */,
 				C930055F2A6AF8320098CA9E /* LoadingContent.swift in Sources */,
 				5B79F6462BA11725002DA9BE /* WizardSheetVStack.swift in Sources */,

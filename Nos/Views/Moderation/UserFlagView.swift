@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// Displays pickers for selecting account flag option category, with additional stages shown
+/// Displays pickers for selecting user flag options, with additional stages shown
 /// based on previous selections.
-struct AccountFlagView: View {
+struct UserFlagView: View {
     @Binding var selectedFlagOptionCategory: FlagOption?
     @Binding var selectedSendOptionCategory: FlagOption?
     @Binding var selectedVisibilityOptionCategory: FlagOption?
@@ -73,17 +73,19 @@ struct AccountFlagView: View {
         ScrollView {
             VStack(spacing: 30) {
                 FlagOptionPicker(
-                    selectedOption: $selectedFlagOptionCategory,
+                    previousSelection: .constant(nil),
+                    currentSelection: $selectedFlagOptionCategory,
                     options: flagCategories,
-                    title: String(localized: .localizable.flagAccountCategoryTitle),
-                    subtitle: String(localized: .localizable.flagAccountCategoryDescription)
+                    title: String(localized: .localizable.flagUserCategoryTitle),
+                    subtitle: String(localized: .localizable.flagUserCategoryDescription)
                 )
 
                 if selectedFlagOptionCategory != nil {
                     FlagOptionPicker(
-                        selectedOption: $selectedSendOptionCategory,
-                        options: FlagOption.flagAccountSendCategories,
-                        title: String(localized: .localizable.flagContentSendTitle),
+                        previousSelection: $selectedFlagOptionCategory,
+                        currentSelection: $selectedSendOptionCategory,
+                        options: FlagOption.flagUserSendOptions,
+                        title: String(localized: .localizable.flagSendTitle),
                         subtitle: nil
                     )
                     .transition(.move(edge: .leading).combined(with: .opacity))
@@ -91,9 +93,10 @@ struct AccountFlagView: View {
 
                 if selectedSendOptionCategory != nil {
                     FlagOptionPicker(
-                        selectedOption: $selectedVisibilityOptionCategory,
-                        options: FlagOption.flagAccountVisibilityCategories,
-                        title: String(localized: .localizable.flagAccountMuteCategoryTitle),
+                        previousSelection: .constant(nil),
+                        currentSelection: $selectedVisibilityOptionCategory,
+                        options: FlagOption.flagUserVisibilityOptions,
+                        title: String(localized: .localizable.flagUserMuteCategoryTitle),
                         subtitle: nil
                     )
                     .transition(.move(edge: .leading).combined(with: .opacity))
@@ -115,7 +118,7 @@ struct AccountFlagView: View {
 
         var body: some View {
             NavigationStack {
-                AccountFlagView(
+                UserFlagView(
                     selectedFlagOptionCategory: $selectedFlagOptionCategory,
                     selectedSendOptionCategory: $selectedSendOptionCategory,
                     selectedVisibilityOptionCategory: $selectedVisibilityOptionCategory,
