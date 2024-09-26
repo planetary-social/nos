@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disable autocorrect on NoteComposer when running on macOS. [#1460](https://github.com/planetary-social/nos/issues/1460)
 
 ### Internal Changes
+- Show WebP images without link preview overlay. Currently behind the “Enable new media display” feature flag. [#1488](https://github.com/planetary-social/nos/issues/1488)
+- Show GIF overlay for animated WebP images. Currently behind the “Enable new media display” feature flag. [#1488](https://github.com/planetary-social/nos/issues/1488)
 - Temporarily remove Martin from the list of CODEOWNERS.
 
 ## [0.1.27] - 2024-09-25Z

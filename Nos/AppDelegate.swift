@@ -15,9 +15,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
-        let webPCoder = SDImageWebPCoder.shared
-        SDImageCodersManager.shared.addCoder(webPCoder)
-
+        setUpWebPCoder()
         application.registerForRemoteNotifications()
         UNUserNotificationCenter.current().delegate = pushNotificationService
         return true
@@ -54,5 +52,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         } catch {
             return .failed
         }
+    }
+}
+
+extension AppDelegate {
+    /// Sets up the WebP coder for SDWebImage so we can determine whether WebP images are static or animated.
+    func setUpWebPCoder() {
+        let webPCoder = SDImageWebPCoder.shared
+        SDImageCodersManager.shared.addCoder(webPCoder)
     }
 }
