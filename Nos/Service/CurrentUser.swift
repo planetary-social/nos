@@ -313,7 +313,13 @@ extension CurrentUser {
     /// > Warning: This is a destructive action, so be sure that it is actually what the
     ///            user wants.
     func deleteAccount(appController: AppController) async throws {
+        try await publishAccountDeletedMetadata()
         try await publishRequestToVanish()
+        
+        // Note: Publishing the empty follow list must be last before logout because
+        //       it will remove the user's relays.
+        try await publishEmptyFollowList()
+        
         await logout(appController: appController)
     }
 }
