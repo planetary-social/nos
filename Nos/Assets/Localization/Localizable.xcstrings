@@ -4444,7 +4444,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Harmful and unwanted replies or mentions"
+            "value" : "Harmful and unwanted replies or mentions."
           }
         }
       }
@@ -4466,7 +4466,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Content that violates the law in your country or CSAM"
+            "value" : "Content that violates the law in your country or CSAM."
           }
         }
       }
@@ -4488,7 +4488,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nudity, porn, or violent content not appropriate for work"
+            "value" : "Nudity, porn, or violent content not appropriate for work."
           }
         }
       }
@@ -4499,7 +4499,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Items not included above"
+            "value" : "Items not included above."
           }
         }
       }
@@ -4543,7 +4543,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This flag will be attributed to your account"
+            "value" : "This flag will be attributed to your account."
           }
         }
       }
@@ -4576,7 +4576,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This flag will be attributed to TAGR bot"
+            "value" : "This flag will be attributed to TAGR bot."
           }
         }
       }
@@ -4695,7 +4695,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "User is stealing someone else's identity"
+            "value" : "User is stealing someone else's identity."
           }
         }
       }
