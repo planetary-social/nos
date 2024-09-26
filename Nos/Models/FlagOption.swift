@@ -1,9 +1,9 @@
-import SwiftUI
+import Foundation
 
 /// A model representing a flagging option used in content moderation.
 struct FlagOption: Identifiable, Equatable {
     /// The title of the flagging option.
-    var title: String
+    let title: String
 
     /// An optional description that provides more detail about the flagging option.
     let description: String?
@@ -14,13 +14,13 @@ struct FlagOption: Identifiable, Equatable {
     /// - Parameter String?: The title of the previously selected flag, if available.
     /// - Returns: A message related to the current flag based on the previous selection, 
     /// or `nil` if no message is provided.
-    var info: ((String?) -> String?)?
+    let info: ((String?) -> String?)?
 
     /// A unique identifier for the flagging option, based on the `title`.
     var id: String { title }
 
     /// The specific category thet the selected flagging option falls in.
-    var category: FlagCategory
+    let category: FlagCategory
 
     /// Creates a list of `FlagOption` categories based on the provided flag target.
     /// - Parameter flagTarget: The target of the report.
