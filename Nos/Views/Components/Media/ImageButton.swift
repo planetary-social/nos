@@ -17,8 +17,6 @@ struct ImageButton: View {
     /// Whether the image is animating or not.
     @State private var isAnimating = false
 
-    @Dependency(\.mediaService) var mediaService
-
     var body: some View {
         Button {
             isViewerPresented = true
