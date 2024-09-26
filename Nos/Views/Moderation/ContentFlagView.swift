@@ -72,7 +72,8 @@ struct ContentFlagView: View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 30) {
                 FlagOptionPicker(
-                    selectedOption: $selectedFlagOptionCategory,
+                    previousSelection: .constant(nil),
+                    currentSelection: $selectedFlagOptionCategory,
                     options: flagCategories,
                     title: String(localized: .localizable.flagContentCategoryTitle),
                     subtitle: String(localized: .localizable.flagContentCategoryDescription)
@@ -80,9 +81,10 @@ struct ContentFlagView: View {
 
                 if selectedFlagOptionCategory != nil {
                     FlagOptionPicker(
-                        selectedOption: $selectedSendOptionCategory,
-                        options: FlagOption.flagContentSendCategories,
-                        title: String(localized: .localizable.flagContentSendTitle),
+                        previousSelection: $selectedFlagOptionCategory,
+                        currentSelection: $selectedSendOptionCategory,
+                        options: FlagOption.flagContentSendOptions,
+                        title: String(localized: .localizable.flagSendTitle),
                         subtitle: nil
                     )
                     .transition(.move(edge: .leading).combined(with: .opacity))
