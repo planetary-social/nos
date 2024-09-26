@@ -257,4 +257,38 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         let events = try testContext.fetch(Event.allEventsRequest())
         XCTAssertEqual(events.count, 0)
     }
+    
+    @MainActor func test_deleteAllEntities() async throws {
+        _ = try EventFixture.build(in: testContext, identifier: "1", publicKey: "1", content: "test 1")
+        _ = try EventFixture.build(in: testContext, identifier: "2", publicKey: "2", content: "test 2")
+        _ = try EventFixture.build(in: testContext, identifier: "3", publicKey: "3", content: "test 3")
+        
+        _ = try Relay.findOrCreate(by: "wss://cool-relay.io", context: testContext)
+        
+        try testContext.save()
+        
+        var events = try testContext.fetch(Event.allEventsRequest())
+        XCTAssertEqual(events.count, 3)
+        events.removeAll()
+
+        var authors = try testContext.fetch(Author.allAuthorsRequest())
+        XCTAssertEqual(authors.count, 3)
+        authors.removeAll()
+        
+        let allRelaysRequest = NSFetchRequest<Event>(entityName: "Relay")
+        var relays = try testContext.fetch(allRelaysRequest)
+        XCTAssertEqual(relays.count, 1)
+        relays.removeAll()
+        
+        await persistenceController.container.deleteAllEntities()
+        
+        events = try testContext.fetch(Event.allEventsRequest())
+        XCTAssertTrue(events.isEmpty)
+        
+        authors = try testContext.fetch(Author.allAuthorsRequest())
+        XCTAssertTrue(authors.isEmpty)
+        
+        relays = try testContext.fetch(allRelaysRequest)
+        XCTAssertTrue(relays.isEmpty)
+    }
 }

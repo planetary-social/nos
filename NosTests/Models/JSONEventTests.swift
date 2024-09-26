@@ -15,6 +15,52 @@ class JSONEventTests: XCTestCase {
         XCTAssertEqual(subject.replaceableID, replaceableID)
     }
     
+    func test_contactList_withRelays() {
+        let pTags = [
+            ["p", "91cf94e5ca", "wss://alicerelay.com/", "alice"],
+            ["p", "14aeb8dad4", "wss://bobrelay.com/nostr", "bob"],
+            ["p", "612aee610f", "ws://carolrelay.com/ws", "carol"]
+        ]
+        let relayAddresses = [
+            "wss://relay1.lol",
+            "wss://relay2.lol"
+        ]
+        
+        let event = JSONEvent.contactList(
+            pubKey: "",
+            tags: pTags,
+            relayAddresses: relayAddresses
+        )
+        
+        let expectedContent = """
+        {"wss://relay1.lol":{"write":true,"read":true},"wss://relay2.lol":{"write":true,"read":true}}
+        """
+        
+        XCTAssertEqual(event.kind, 3)
+        XCTAssertEqual(event.tags, pTags)
+        XCTAssertEqual(event.content, expectedContent)
+    }
+    
+    func test_contactList_withNoRelays() {
+        let pTags = [
+            ["p", "91cf94e5ca", "wss://alicerelay.com/", "alice"],
+            ["p", "14aeb8dad4", "wss://bobrelay.com/nostr", "bob"],
+            ["p", "612aee610f", "ws://carolrelay.com/ws", "carol"]
+        ]
+        
+        let event = JSONEvent.contactList(
+            pubKey: "",
+            tags: pTags,
+            relayAddresses: []
+        )
+        
+        let expectedContent = "{}"
+        
+        XCTAssertEqual(event.kind, 3)
+        XCTAssertEqual(event.tags, pTags)
+        XCTAssertEqual(event.content, expectedContent)
+    }
+    
     func test_requestToVanish_fromSpecificRelays() {
         let event = JSONEvent.requestToVanish(
             pubKey: "",
