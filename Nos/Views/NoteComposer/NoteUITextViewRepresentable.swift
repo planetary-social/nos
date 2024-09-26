@@ -47,6 +47,10 @@ extension NoteTextEditor {
                 .foregroundColor: UIColor.primaryTxt
             ]
             
+            if ProcessInfo.processInfo.isiOSAppOnMac {
+                view.autocorrectionType = .no
+            }
+            
             if showKeyboard {
                 Task {
                     try await Task.sleep(for: .milliseconds(200))
