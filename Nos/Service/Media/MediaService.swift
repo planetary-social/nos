@@ -40,14 +40,6 @@ struct DefaultMediaService: MediaService {
     private func imageOrientation(url: URL) async -> MediaOrientation {
         await withCheckedContinuation { continuation in
             SDWebImageDownloader().downloadImage(with: url) { image, _, _, _ in
-                if let image {
-                    if image.sd_isAnimated {
-                        print("it's animated!")
-                    } else {
-                        print("it's static!")
-                    }
-                }
-
                 if let image, image.size.height > image.size.width {
                     continuation.resume(returning: .portrait)
                 } else {

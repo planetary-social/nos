@@ -35,21 +35,6 @@ final class URLExtensionTests: XCTestCase {
         XCTAssertEqual(result, subject)
     }
 
-    func test_isGIF_returns_false_for_jpg() throws {
-        let jpgURL = try XCTUnwrap(URL(string: "https://example.com/one.jpg"))
-        XCTAssertFalse(jpgURL.isGIF)
-    }
-
-    func test_isGIF_returns_true_for_gif() throws {
-        let gifURL = try XCTUnwrap(URL(string: "https://example.com/two.gif"))
-        XCTAssertTrue(gifURL.isGIF)
-    }
-
-    func test_isGIF_returns_true_for_GIF() throws {
-        let capitalizedGIFURL = try XCTUnwrap(URL(string: "https://example.com/three.GIF"))
-        XCTAssertTrue(capitalizedGIFURL.isGIF)
-    }
-
     func test_isImage_returns_false_for_mp4() throws {
         let url = try XCTUnwrap(URL(string: "http://example.com/test.mp4"))
         XCTAssertFalse(url.isImage)
@@ -67,6 +52,9 @@ final class URLExtensionTests: XCTestCase {
 
         let gifURL = try XCTUnwrap(URL(string: "http://example.com/test.gif"))
         XCTAssertTrue(gifURL.isImage)
+
+        let webpURL = try XCTUnwrap(URL(string: "http://example.com/test.webp"))
+        XCTAssertTrue(webpURL.isImage)
     }
 
     func test_isImage_returns_true_for_capitalized_path_extension() throws {
