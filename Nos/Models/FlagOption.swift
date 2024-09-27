@@ -9,8 +9,9 @@ struct FlagOption: Identifiable, Equatable {
     let description: String?
 
     /// An optional closure that returns a message to display when the user selects a particular flag.
-    /// The closure takes the title of the previously selected flag as an optional `String` 
-    /// and returns an optional message to provide additional context or details for the current flag.
+    /// The closure takes the title of the previously selected flag as an optional `String`
+    /// and inserts it into a localizable string to provide additional context or details for the current flag.
+    /// This message is shown in the info box based on the current selection.
     /// - Parameter String?: The title of the previously selected flag, if available.
     /// - Returns: A message related to the current flag based on the previous selection, 
     /// or `nil` if no message is provided.
@@ -45,8 +46,8 @@ struct FlagOption: Identifiable, Equatable {
             category: .privacy(.sendToNos)
         ),
         FlagOption(
-            title: String(localized: .localizable.flagPubiclyTitle),
-            description: String(localized: .localizable.flagPubiclyDescription),
+            title: String(localized: .localizable.flagPubliclyTitle),
+            description: String(localized: .localizable.flagPubliclyDescription),
             info: nil,
             category: .privacy(.publicly)
         )
@@ -64,8 +65,8 @@ struct FlagOption: Identifiable, Equatable {
             category: .privacy(.sendToNos)
         ),
         FlagOption(
-            title: String(localized: .localizable.flagPubiclyTitle),
-            description: String(localized: .localizable.flagPubiclyDescription),
+            title: String(localized: .localizable.flagPubliclyTitle),
+            description: String(localized: .localizable.flagPubliclyDescription),
             info: nil,
             category: .privacy(.publicly)
         )
