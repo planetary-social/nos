@@ -4537,7 +4537,7 @@
         }
       }
     },
-    "flagPubiclyDescription" : {
+    "flagPubliclyDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -4548,7 +4548,7 @@
         }
       }
     },
-    "flagPubiclyTitle" : {
+    "flagPubliclyTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
