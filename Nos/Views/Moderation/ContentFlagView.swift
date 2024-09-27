@@ -15,6 +15,12 @@ struct ContentFlagView: View {
 
     @State private var flagCategories: [FlagOption] = []
 
+    /// Controls whether the "Send Section" should slide in from the left.
+    @State private var slideInSendSection = false
+
+    /// Used to identify the "Send Section" section to autoscroll to the when it appears.
+    @Namespace var sendSectionID
+
     var body: some View {
         ZStack {
             Color.appBg.ignoresSafeArea()
@@ -25,8 +31,6 @@ struct ContentFlagView: View {
                     categoryView
                 }
             }
-            .animation(.easeInOut, value: selectedFlagOptionCategory)
-            .padding()
             .nosNavigationBar(title: .localizable.flagContent)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -66,28 +70,39 @@ struct ContentFlagView: View {
     private func resetSelections() {
         selectedFlagOptionCategory = nil
         selectedSendOptionCategory = nil
+        slideInSendSection = false
     }
 
     private var categoryView: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 30) {
-                FlagOptionPicker(
-                    previousSelection: .constant(nil),
-                    currentSelection: $selectedFlagOptionCategory,
-                    options: flagCategories,
-                    title: String(localized: .localizable.flagContentCategoryTitle),
-                    subtitle: String(localized: .localizable.flagContentCategoryDescription)
-                )
-
-                if selectedFlagOptionCategory != nil {
+        ScrollViewReader { proxy in
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 30) {
                     FlagOptionPicker(
-                        previousSelection: $selectedFlagOptionCategory,
-                        currentSelection: $selectedSendOptionCategory,
-                        options: FlagOption.flagContentSendOptions,
-                        title: String(localized: .localizable.flagSendTitle),
-                        subtitle: nil
+                        previousSelection: .constant(nil),
+                        currentSelection: $selectedFlagOptionCategory,
+                        options: flagCategories,
+                        title: String(localized: .localizable.flagContentCategoryTitle),
+                        subtitle: String(localized: .localizable.flagContentCategoryDescription)
                     )
-                    .transition(.move(edge: .leading).combined(with: .opacity))
+
+                    if selectedFlagOptionCategory != nil {
+                        FlagOptionPicker(
+                            previousSelection: $selectedFlagOptionCategory,
+                            currentSelection: $selectedSendOptionCategory,
+                            options: FlagOption.flagContentSendOptions,
+                            title: String(localized: .localizable.flagSendTitle),
+                            subtitle: nil
+                        )
+                        .offset(x: slideInSendSection ? 0 : -UIScreen.main.bounds.width)
+                    }
+                }
+                .padding()
+                .onChange(of: selectedFlagOptionCategory) {
+                    animateAndScrollTo(
+                        targetSectionID: sendSectionID,
+                        shouldSlideIn: $slideInSendSection,
+                        proxy: proxy
+                    )
                 }
             }
         }
@@ -112,6 +127,25 @@ var flagSuccessView: some View {
             .multilineTextAlignment(.center)
             .lineSpacing(6)
             .font(.clarity(.regular, textStyle: .subheadline))
+    }
+}
+
+/// Animates the sliding effect and scrolls to the bottom of the specified section.
+/// - Parameters:
+///   - targetSectionID: The namespace ID of the section to scroll to when it appears.
+///   - shouldSlideIn: Controls the slide-in animation.
+///   - proxy: The `ScrollViewProxy` used to perform the scrolling action.
+func animateAndScrollTo(
+    targetSectionID: Namespace.ID,
+    shouldSlideIn: Binding<Bool>,
+    proxy: ScrollViewProxy
+) {
+    withAnimation(.easeInOut(duration: 0.5)) {
+        shouldSlideIn.wrappedValue = true
+    }
+
+    withAnimation(.easeInOut(duration: 0.5)) {
+        proxy.scrollTo(targetSectionID, anchor: .bottom)
     }
 }
 

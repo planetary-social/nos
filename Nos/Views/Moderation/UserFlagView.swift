@@ -16,6 +16,18 @@ struct UserFlagView: View {
 
     @State private var flagCategories: [FlagOption] = []
 
+    /// Controls whether the "Send Section" should slide in from the left.
+    @State private var slideInSendSection = false
+
+    /// Controls whether the "Visibility Section" should slide in from the left.
+    @State private var slideInVisibilitySection = false
+
+    /// Used to identify the "Send Section" section to autoscroll to the when it appears.
+    @Namespace var sendSectionID
+
+    /// Used to identify the "Visibility Section" section to autoscroll to the when it appears.
+    @Namespace var visibilitySectionID
+
     var body: some View {
         ZStack {
             Color.appBg.ignoresSafeArea()
@@ -26,7 +38,6 @@ struct UserFlagView: View {
                     categoryView
                 }
             }
-            .padding()
             .nosNavigationBar(title: .localizable.flagUserTitle)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -67,44 +78,63 @@ struct UserFlagView: View {
         selectedFlagOptionCategory = nil
         selectedSendOptionCategory = nil
         selectedVisibilityOptionCategory = nil
+        slideInSendSection = false
+        slideInVisibilitySection = false
     }
 
     private var categoryView: some View {
-        ScrollView {
-            VStack(spacing: 30) {
-                FlagOptionPicker(
-                    previousSelection: .constant(nil),
-                    currentSelection: $selectedFlagOptionCategory,
-                    options: flagCategories,
-                    title: String(localized: .localizable.flagUserCategoryTitle),
-                    subtitle: String(localized: .localizable.flagUserCategoryDescription)
-                )
-
-                if selectedFlagOptionCategory != nil {
-                    FlagOptionPicker(
-                        previousSelection: $selectedFlagOptionCategory,
-                        currentSelection: $selectedSendOptionCategory,
-                        options: FlagOption.flagUserSendOptions,
-                        title: String(localized: .localizable.flagSendTitle),
-                        subtitle: nil
-                    )
-                    .transition(.move(edge: .leading).combined(with: .opacity))
-                }
-
-                if selectedSendOptionCategory != nil {
+        ScrollViewReader { proxy in
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 30) {
                     FlagOptionPicker(
                         previousSelection: .constant(nil),
-                        currentSelection: $selectedVisibilityOptionCategory,
-                        options: FlagOption.flagUserVisibilityOptions,
-                        title: String(localized: .localizable.flagUserMuteCategoryTitle),
-                        subtitle: nil
+                        currentSelection: $selectedFlagOptionCategory,
+                        options: flagCategories,
+                        title: String(localized: .localizable.flagUserCategoryTitle),
+                        subtitle: String(localized: .localizable.flagUserCategoryDescription)
                     )
-                    .transition(.move(edge: .leading).combined(with: .opacity))
+
+                    if selectedFlagOptionCategory != nil {
+                        FlagOptionPicker(
+                            previousSelection: $selectedFlagOptionCategory,
+                            currentSelection: $selectedSendOptionCategory,
+                            options: FlagOption.flagUserSendOptions,
+                            title: String(localized: .localizable.flagSendTitle),
+                            subtitle: nil
+                        )
+                        .id(sendSectionID)
+                        .offset(x: slideInSendSection ? 0 : -UIScreen.main.bounds.width)
+                    }
+
+                    if selectedSendOptionCategory != nil {
+                        FlagOptionPicker(
+                            previousSelection: .constant(nil),
+                            currentSelection: $selectedVisibilityOptionCategory,
+                            options: FlagOption.flagUserVisibilityOptions,
+                            title: String(localized: .localizable.flagUserMuteCategoryTitle),
+                            subtitle: nil
+                        )
+                        .id(visibilitySectionID)
+                        .offset(x: slideInVisibilitySection ? 0 : -UIScreen.main.bounds.width)
+                    }
+                }
+                .padding()
+                .onChange(of: selectedFlagOptionCategory) {
+                    animateAndScrollTo(
+                        targetSectionID: sendSectionID,
+                        shouldSlideIn: $slideInSendSection,
+                        proxy: proxy
+                    )
+                }
+                .onChange(of: selectedSendOptionCategory) {
+                    animateAndScrollTo(
+                        targetSectionID: visibilitySectionID,
+                        shouldSlideIn: $slideInVisibilitySection,
+                        proxy: proxy
+                    )
                 }
             }
         }
-        .animation(.easeInOut, value: selectedFlagOptionCategory)
-        .animation(.easeInOut, value: selectedSendOptionCategory)
     }
 }
 
