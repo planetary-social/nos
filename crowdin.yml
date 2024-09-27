@@ -1,13 +1,4 @@
 files:
-  - source: /Nos/Assets/Localization/ImagePicker.xcstrings
-    translation: /Nos/Assets/Localization/ImagePicker.xcstrings
-    multilingual: 1
-  - source: /Nos/Assets/Localization/Localizable.xcstrings
-    translation: /Nos/Assets/Localization/Localizable.xcstrings
-    multilingual: 1
-  - source: /Nos/Assets/Localization/Moderation.xcstrings
-    translation: /Nos/Assets/Localization/Moderation.xcstrings
-    multilingual: 1
-  - source: /Nos/Assets/Localization/Reply.xcstrings
-    translation: /Nos/Assets/Localization/Reply.xcstrings
+  - source: /Nos/Assets/Localization/*.xcstrings
+    translation: /Nos/Assets/Localization/%original_file_name%
     multilingual: 1
