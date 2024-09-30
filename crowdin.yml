@@ -1,5 +1,5 @@
-files:
-  - source: /Nos/Assets/Localization/Localizable.xcstrings
-    dest: /Nos/Assets/Localization/Localizable.xcstrings
-    translation: '%original_path%/%original_file_name%'
-    multilingual: true
+"files": [{
+    "source": "/Nos/Assets/Localization/Localizable.xcstrings", 
+    "translation": "/Nos/Assets/Localization/Localizable.xcstrings", 
+    "multilingual": true 
+}]
