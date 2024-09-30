@@ -77,12 +77,17 @@
 		037975C72C0E26FC00ADDF37 /* Font+Clarity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F85729BA981800B44E7A /* Font+Clarity.swift */; };
 		037975D12C0E341500ADDF37 /* MockFeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037975D02C0E341500ADDF37 /* MockFeatureFlags.swift */; };
 		037975EA2C0E695A00ADDF37 /* MockFeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037975D02C0E341500ADDF37 /* MockFeatureFlags.swift */; };
+		038196F72CA36797002A94E3 /* elmo-animated.webp in Resources */ = {isa = PBXBuildFile; fileRef = 038196F62CA36797002A94E3 /* elmo-animated.webp */; };
+		038196F92CA367C4002A94E3 /* ImageAnimatedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038196F82CA367C4002A94E3 /* ImageAnimatedTests.swift */; };
 		0383CD712C76793E007DB0E4 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E181382C75467C00886CC6 /* GalleryView.swift */; };
 		0383CD722C767966007DB0E4 /* LinearGradient+Planetary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D68A8299E709800429F86 /* LinearGradient+Planetary.swift */; };
 		0383CD7B2C76798C007DB0E4 /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E1812E2C753C9B00886CC6 /* ImageButton.swift */; };
 		0383CD842C76799D007DB0E4 /* LinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E181462C754BA300886CC6 /* LinkView.swift */; };
 		038863DE2C6FF51500B09797 /* ZoomableContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038863DD2C6FF51500B09797 /* ZoomableContainer.swift */; };
 		038863DF2C6FF51500B09797 /* ZoomableContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038863DD2C6FF51500B09797 /* ZoomableContainer.swift */; };
+		039389232CA4985C00698978 /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 039389222CA4985C00698978 /* SDWebImageWebPCoder */; };
+		0393892D2CA4987000698978 /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 0393892C2CA4987000698978 /* SDWebImageWebPCoder */; };
+		0393893D2CA49CE000698978 /* fonts-animated.gif in Resources */ = {isa = PBXBuildFile; fileRef = 0393893C2CA49CE000698978 /* fonts-animated.gif */; };
 		039C961F2C480F4100A8EB39 /* unsupported_kinds.json in Resources */ = {isa = PBXBuildFile; fileRef = 039C961E2C480F4100A8EB39 /* unsupported_kinds.json */; };
 		039C96292C48321E00A8EB39 /* long_form_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 039C96282C48321E00A8EB39 /* long_form_data.json */; };
 		03A3AA3B2C5028FF008FE153 /* PublicKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A3AA3A2C5028FF008FE153 /* PublicKeyTests.swift */; };
@@ -638,7 +643,10 @@
 		0378409C2BB4A2B600E5E901 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		037975BA2C0E24D200ADDF37 /* CompactNoteViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactNoteViewTests.swift; sourceTree = "<group>"; };
 		037975D02C0E341500ADDF37 /* MockFeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFeatureFlags.swift; sourceTree = "<group>"; };
+		038196F62CA36797002A94E3 /* elmo-animated.webp */ = {isa = PBXFileReference; lastKnownFileType = file; path = "elmo-animated.webp"; sourceTree = "<group>"; };
+		038196F82CA367C4002A94E3 /* ImageAnimatedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAnimatedTests.swift; sourceTree = "<group>"; };
 		038863DD2C6FF51500B09797 /* ZoomableContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableContainer.swift; sourceTree = "<group>"; };
+		0393893C2CA49CE000698978 /* fonts-animated.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "fonts-animated.gif"; sourceTree = "<group>"; };
 		039C961E2C480F4100A8EB39 /* unsupported_kinds.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = unsupported_kinds.json; sourceTree = "<group>"; };
 		039C96282C48321E00A8EB39 /* long_form_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = long_form_data.json; sourceTree = "<group>"; };
 		03A3AA3A2C5028FF008FE153 /* PublicKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeyTests.swift; sourceTree = "<group>"; };
@@ -1007,6 +1015,7 @@
 				C9646EA729B7A3DD007239A4 /* Dependencies in Frameworks */,
 				C96CB98C2A6040C500498C4E /* DequeModule in Frameworks */,
 				C99DBF7E2A9E81CF00F7068F /* SDWebImageSwiftUI in Frameworks */,
+				039389232CA4985C00698978 /* SDWebImageWebPCoder in Frameworks */,
 				C9646EA429B7A24A007239A4 /* PostHog in Frameworks */,
 				C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */,
 			);
@@ -1026,6 +1035,7 @@
 				C9646EAC29B7A520007239A4 /* Dependencies in Frameworks */,
 				C905B0752A619367009B8A78 /* DequeModule in Frameworks */,
 				C91565C12B2368FA0068EECA /* ViewInspector in Frameworks */,
+				0393892D2CA4987000698978 /* SDWebImageWebPCoder in Frameworks */,
 				C9646E9C29B79E4D007239A4 /* Logger in Frameworks */,
 				CDDA1F7D29A527650047ACD8 /* SwiftUINavigation in Frameworks */,
 			);
@@ -1177,6 +1187,7 @@
 			isa = PBXGroup;
 			children = (
 				035729BB2BE416BD005FEE85 /* EventObservationTests.swift */,
+				038196F32CA36773002A94E3 /* Components */,
 				03618C8C2C826A6E00BCBC55 /* Note */,
 			);
 			path = Views;
@@ -1380,6 +1391,32 @@
 				C973AB592A323167002AED16 /* Relay+CoreDataProperties.swift */,
 			);
 			path = Generated;
+			sourceTree = "<group>";
+		};
+		038196F32CA36773002A94E3 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				038196F42CA3677D002A94E3 /* Media */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		038196F42CA3677D002A94E3 /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				038196F82CA367C4002A94E3 /* ImageAnimatedTests.swift */,
+				038196F52CA36788002A94E3 /* Fixtures */,
+			);
+			path = Media;
+			sourceTree = "<group>";
+		};
+		038196F52CA36788002A94E3 /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				038196F62CA36797002A94E3 /* elmo-animated.webp */,
+				0393893C2CA49CE000698978 /* fonts-animated.gif */,
+			);
+			path = Fixtures;
 			sourceTree = "<group>";
 		};
 		03C8B4902C6D061900A07CCD /* Media */ = {
@@ -2004,6 +2041,7 @@
 				C9FD34F52BCEC89C008F8D95 /* secp256k1 */,
 				C9FD35122BCED5A6008F8D95 /* NostrSDK */,
 				03C49ABF2C938A9C00502321 /* SwiftSoup */,
+				039389222CA4985C00698978 /* SDWebImageWebPCoder */,
 			);
 			productName = Nos;
 			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
@@ -2038,6 +2076,7 @@
 				C9FD34F72BCEC8B5008F8D95 /* secp256k1 */,
 				C959DB802BD02460008F3627 /* NostrSDK */,
 				03C68C512C94D8400037DC59 /* SwiftSoup */,
+				0393892C2CA4987000698978 /* SDWebImageWebPCoder */,
 			);
 			productName = NosTests;
 			productReference = C9DEBFE4298941020078B43A /* NosTests.xctest */;
@@ -2098,6 +2137,7 @@
 				C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
 				C9FD35112BCED5A6008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
 				03C49ABE2C938A9C00502321 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+				039389212CA4985C00698978 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -2169,12 +2209,14 @@
 				C987F83329BA951E00B44E7A /* ClarityCity-ExtraLight.otf in Resources */,
 				C987F83D29BA951E00B44E7A /* ClarityCity-Bold.otf in Resources */,
 				C987F84529BA951E00B44E7A /* ClarityCity-ExtraBoldItalic.otf in Resources */,
+				038196F72CA36797002A94E3 /* elmo-animated.webp in Resources */,
 				9DB106002C650DDE00F98A30 /* Colors.xcassets in Resources */,
 				C987F84329BA951E00B44E7A /* ClarityCity-Black.otf in Resources */,
 				C9BD91892B61BBEF00FDA083 /* bad_contact_list.json in Resources */,
 				50F695072C6392C4000E4C74 /* zap_receipt.json in Resources */,
 				039C96292C48321E00A8EB39 /* long_form_data.json in Resources */,
 				C987F85329BA951E00B44E7A /* ClarityCity-Regular.otf in Resources */,
+				0393893D2CA49CE000698978 /* fonts-animated.gif in Resources */,
 				C987F84729BA951E00B44E7A /* ClarityCity-Light.otf in Resources */,
 				C987F83929BA951E00B44E7A /* ClarityCity-MediumItalic.otf in Resources */,
 				C987F85129BA951E00B44E7A /* ClarityCity-ExtraLightItalic.otf in Resources */,
@@ -2685,6 +2727,7 @@
 				509532DF2C62360500E0BACA /* NotificationViewModelTests.swift in Sources */,
 				C9DEC04E29894BED0078B43A /* Author+CoreDataClass.swift in Sources */,
 				034EBDC72C2489B4006BA35A /* CurrentUserError.swift in Sources */,
+				038196F92CA367C4002A94E3 /* ImageAnimatedTests.swift in Sources */,
 				C9ADB14229951CB10075E7F8 /* NSManagedObject+Nos.swift in Sources */,
 				035729AB2BE4167E005FEE85 /* AuthorTests.swift in Sources */,
 				038863DF2C6FF51500B09797 /* ZoomableContainer.swift in Sources */,
@@ -3463,6 +3506,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		039389212CA4985C00698978 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageWebPCoder.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.6;
+			};
+		};
 		03C49ABE2C938A9C00502321 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/scinfu/SwiftSoup";
@@ -3594,6 +3645,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		039389222CA4985C00698978 /* SDWebImageWebPCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 039389212CA4985C00698978 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */;
+			productName = SDWebImageWebPCoder;
+		};
+		0393892C2CA4987000698978 /* SDWebImageWebPCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 039389212CA4985C00698978 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */;
+			productName = SDWebImageWebPCoder;
+		};
 		03C49ABF2C938A9C00502321 /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 03C49ABE2C938A9C00502321 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
