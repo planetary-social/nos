@@ -4438,35 +4438,13 @@
         }
       }
     },
-    "flagContentFlagPubiclyDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This flag will be attributed to your account"
-          }
-        }
-      }
-    },
-    "flagContentFlagPubiclyTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Flag Publicly"
-          }
-        }
-      }
-    },
     "flagContentHarassmentDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Harmful and unwanted replies or mentions"
+            "value" : "Harmful and unwanted replies or mentions."
           }
         }
       }
@@ -4488,7 +4466,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Content that violates the law in your country or CSAM"
+            "value" : "Content that violates the law in your country or CSAM."
           }
         }
       }
@@ -4510,7 +4488,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nudity, porn, or violent content not appropriate for work"
+            "value" : "Nudity, porn, or violent content not appropriate for work."
           }
         }
       }
@@ -4521,7 +4499,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Items not included above"
+            "value" : "Items not included above."
           }
         }
       }
@@ -4537,46 +4515,13 @@
         }
       }
     },
-    "flagContentSendTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Send to Nos or Flag Publicly?"
-          }
-        }
-      }
-    },
-    "flagContentSendToNosDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This flag will be attributed to TAGR bot"
-          }
-        }
-      }
-    },
     "flagContentSendToNosInfo" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The Nos moderation team will analyze the note for tagged content and may publish a report from the Tagr-bot account."
-          }
-        }
-      }
-    },
-    "flagContentSendToNosTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Send to Nos"
+            "value" : "The Nos moderation team will analyze the note for %@ and may publish a report from our Tagr-bot account, concealing your identity."
           }
         }
       }
@@ -4588,6 +4533,61 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spam"
+          }
+        }
+      }
+    },
+    "flagPubliclyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This flag will be attributed to your account."
+          }
+        }
+      }
+    },
+    "flagPubliclyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flag Publicly"
+          }
+        }
+      }
+    },
+    "flagSendTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to Nos or Flag Publicly?"
+          }
+        }
+      }
+    },
+    "flagSendToNosDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This flag will be attributed to TAGR bot."
+          }
+        }
+      }
+    },
+    "flagSendToNosTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to Nos"
           }
         }
       }
@@ -4645,6 +4645,72 @@
         }
       }
     },
+    "flagUserCategoryDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a tag for the user"
+          }
+        }
+      }
+    },
+    "flagUserCategoryTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a tag for this user that other people in your network can see."
+          }
+        }
+      }
+    },
+    "flagUserDontMuteDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You will continue seeing notes from this user."
+          }
+        }
+      }
+    },
+    "flagUserDontMuteTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Don't Mute"
+          }
+        }
+      }
+    },
+    "flagUserImpersonationDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User is stealing someone else's identity."
+          }
+        }
+      }
+    },
+    "flagUserImpersonationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impersonation"
+          }
+        }
+      }
+    },
     "flagUserMessage" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4652,6 +4718,61 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create a flag for this user that other users in the network can see."
+          }
+        }
+      }
+    },
+    "flagUserMuteCategoryTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mute This User?"
+          }
+        }
+      }
+    },
+    "flagUserMuteDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You won't see notes by this user anymore."
+          }
+        }
+      }
+    },
+    "flagUserMuteTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mute"
+          }
+        }
+      }
+    },
+    "flagUserSendToNosInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Nos moderation team will analyze the user for %@ and may publish a report from our Tagr-bot account, concealing your identity."
+          }
+        }
+      }
+    },
+    "flagUserTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flag User"
           }
         }
       }
