@@ -12,10 +12,10 @@ struct FlagSuccessView: View {
             Text(String(localized: .localizable.thanksForTag))
                 .foregroundColor(.primaryTxt)
                 .font(.clarity(.regular, textStyle: .title2))
-                .padding(.horizontal, 62)
+                .padding(.horizontal, 25)
 
             Text(String(localized: .localizable.keepOnHelpingUs))
-                .padding(.horizontal, 68)
+                .padding(.horizontal, 25)
                 .foregroundColor(.secondaryTxt)
                 .multilineTextAlignment(.center)
                 .lineSpacing(6)

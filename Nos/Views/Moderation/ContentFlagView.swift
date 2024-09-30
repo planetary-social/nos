@@ -9,6 +9,9 @@ struct ContentFlagView: View {
 
     /// The target of the report.
     let flagTarget: ReportTarget
+
+    /// Defines the action to be performed when the user sends a flag report.
+    /// It is called when the user taps the "Send" button after selecting all required options.
     var sendAction: () -> Void
 
     @Environment(\.dismiss) private var dismiss
@@ -30,13 +33,13 @@ struct ContentFlagView: View {
             .nosNavigationBar(title: .localizable.flagContent)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
+                    Button {
                         dismiss()
                         resetSelections()
-                    }, label: {
+                    } label: {
                         Text(.localizable.cancel)
                             .foregroundColor(.primaryTxt)
-                    })
+                    }
                     .opacity(showSuccessView ? 0 : 1)
                     .disabled(showSuccessView)
                 }
