@@ -17,6 +17,7 @@ jobs:
         with:
           source: /Nos/Assets/Localization/*.xcstrings
           translation: /Nos/Assets/Localization/%original_file_name%
+          multilingual: 1
           upload_sources: true
           upload_translations: false
           download_translations: true
