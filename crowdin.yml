@@ -2,6 +2,6 @@
 "files": [{
     "source": "Nos/Assets/Localization/Localizable.xcstrings", 
     "translation": "main/Nos/Assets/Localization/Localizable.xcstrings", 
-    "dest" : "main/Nos/Assets/Localization/Localizable.xcstrings",
+    "dest" : "Nos/Assets/Localization/Localizable.xcstrings",
     "multilingual": true 
 }]
