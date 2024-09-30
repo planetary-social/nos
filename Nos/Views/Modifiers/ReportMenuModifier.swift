@@ -17,7 +17,7 @@ struct ReportMenuModifier: ViewModifier {
     @State private var confirmationDialogState: ConfirmationDialogState<UserSelection>?
     @State private var selectedFlagOption: FlagOption?
     @State private var selectedFlagSendOption: FlagOption?
-    @State private var selectedVisibilityOptionCategory: FlagOption?
+    @State private var selectedVisibilityOption: FlagOption?
     @State private var showFlagSuccessView = false
 
     @Environment(\.managedObjectContext) private var viewContext
@@ -60,13 +60,13 @@ struct ReportMenuModifier: ViewModifier {
                 .sheet(isPresented: $isPresented) {
                     NavigationStack {
                         UserFlagView(
-                            selectedFlagOptionCategory: $selectedFlagOption,
-                            selectedSendOptionCategory: $selectedFlagSendOption,
-                            selectedVisibilityOptionCategory: $selectedVisibilityOptionCategory,
+                            selectedFlagOption: $selectedFlagOption,
+                            selectedSendOption: $selectedFlagSendOption,
+                            selectedVisibilityOption: $selectedVisibilityOption,
                             showSuccessView: $showFlagSuccessView, 
                             flagTarget: reportedObject,
                             sendAction: {
-                                if let selectCategory = selectedVisibilityOptionCategory?.category {
+                                if let selectCategory = selectedVisibilityOption?.category {
                                     publishReportForNewModerationFlow(selectCategory)
                                     determineFlaggedAccoutVisibility {
                                         showFlagSuccessView = true
@@ -217,7 +217,7 @@ struct ReportMenuModifier: ViewModifier {
     /// - Parameter completion: A closure that is executed once the necessary actions are complete.
     private func determineFlaggedAccoutVisibility(completion: () -> Void) {
         if let author = reportedObject.author {
-            guard case .visibility(let visibilityCategory) = selectedVisibilityOptionCategory?.category else { return }
+            guard case .visibility(let visibilityCategory) = selectedVisibilityOption?.category else { return }
 
             if visibilityCategory == .mute {
                 guard !author.muted else { return }

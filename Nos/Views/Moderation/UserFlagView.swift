@@ -3,9 +3,9 @@ import SwiftUI
 /// Displays pickers for selecting user flag options, with additional stages shown
 /// based on previous selections.
 struct UserFlagView: View {
-    @Binding var selectedFlagOptionCategory: FlagOption?
-    @Binding var selectedSendOptionCategory: FlagOption?
-    @Binding var selectedVisibilityOptionCategory: FlagOption?
+    @Binding var selectedFlagOption: FlagOption?
+    @Binding var selectedSendOption: FlagOption?
+    @Binding var selectedVisibilityOption: FlagOption?
     @Binding var showSuccessView: Bool
 
     /// The target of the report.
@@ -21,7 +21,7 @@ struct UserFlagView: View {
             Color.appBg.ignoresSafeArea()
             Group {
                 if showSuccessView {
-                    flagSuccessView
+                    FlagSuccessView()
                 } else {
                     categoryView
                 }
@@ -53,8 +53,8 @@ struct UserFlagView: View {
                             }
                         }
                     )
-                    .opacity(selectedVisibilityOptionCategory == nil ? 0.5 : 1)
-                    .disabled(selectedVisibilityOptionCategory == nil)
+                    .opacity(selectedVisibilityOption == nil ? 0.5 : 1)
+                    .disabled(selectedVisibilityOption == nil)
                 }
             }
         }
@@ -64,9 +64,9 @@ struct UserFlagView: View {
     }
 
     private func resetSelections() {
-        selectedFlagOptionCategory = nil
-        selectedSendOptionCategory = nil
-        selectedVisibilityOptionCategory = nil
+        selectedFlagOption = nil
+        selectedSendOption = nil
+        selectedVisibilityOption = nil
     }
 
     private var categoryView: some View {
@@ -74,16 +74,16 @@ struct UserFlagView: View {
             VStack(spacing: 30) {
                 FlagOptionPicker(
                     previousSelection: .constant(nil),
-                    currentSelection: $selectedFlagOptionCategory,
+                    currentSelection: $selectedFlagOption,
                     options: flagCategories,
                     title: String(localized: .localizable.flagUserCategoryTitle),
                     subtitle: String(localized: .localizable.flagUserCategoryDescription)
                 )
 
-                if selectedFlagOptionCategory != nil {
+                if selectedFlagOption != nil {
                     FlagOptionPicker(
-                        previousSelection: $selectedFlagOptionCategory,
-                        currentSelection: $selectedSendOptionCategory,
+                        previousSelection: $selectedFlagOption,
+                        currentSelection: $selectedSendOption,
                         options: FlagOption.flagUserSendOptions,
                         title: String(localized: .localizable.flagSendTitle),
                         subtitle: nil
@@ -91,10 +91,10 @@ struct UserFlagView: View {
                     .transition(.move(edge: .leading).combined(with: .opacity))
                 }
 
-                if selectedSendOptionCategory != nil {
+                if selectedSendOption != nil {
                     FlagOptionPicker(
                         previousSelection: .constant(nil),
-                        currentSelection: $selectedVisibilityOptionCategory,
+                        currentSelection: $selectedVisibilityOption,
                         options: FlagOption.flagUserVisibilityOptions,
                         title: String(localized: .localizable.flagUserMuteCategoryTitle),
                         subtitle: nil
@@ -103,32 +103,32 @@ struct UserFlagView: View {
                 }
             }
         }
-        .animation(.easeInOut, value: selectedFlagOptionCategory)
-        .animation(.easeInOut, value: selectedSendOptionCategory)
+        .animation(.easeInOut, value: selectedFlagOption)
+        .animation(.easeInOut, value: selectedSendOption)
     }
 }
 
 #Preview {
     struct PreviewWrapper: View {
-        @State private var selectedFlagOptionCategory: FlagOption?
-        @State private var selectedSendOptionCategory: FlagOption?
-        @State private var selectedVisibilityOptionCategory: FlagOption?
+        @State private var selectedFlagOption: FlagOption?
+        @State private var selectedSendOption: FlagOption?
+        @State private var selectedVisibilityOption: FlagOption?
         @State private var showSuccessView = false
         let author = Author()
 
         var body: some View {
             NavigationStack {
                 UserFlagView(
-                    selectedFlagOptionCategory: $selectedFlagOptionCategory,
-                    selectedSendOptionCategory: $selectedSendOptionCategory,
-                    selectedVisibilityOptionCategory: $selectedVisibilityOptionCategory,
+                    selectedFlagOption: $selectedFlagOption,
+                    selectedSendOption: $selectedSendOption,
+                    selectedVisibilityOption: $selectedVisibilityOption,
                     showSuccessView: $showSuccessView,
                     flagTarget: .author(author),
                     sendAction: {}
                 )
             }
             .onAppear {
-                selectedFlagOptionCategory = nil
+                selectedFlagOption = nil
             }
             .background(Color.appBg)
         }
