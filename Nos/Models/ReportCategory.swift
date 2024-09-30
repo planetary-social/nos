@@ -37,7 +37,7 @@ struct ReportCategory: Identifiable, Equatable {
             return nil
         }
         
-        return searchForCategoryByCode?(code, ReportCategoryType.allCategories)
+        return searchForCategoryByCode?(code, ReportCategory.allCategories)
     }
 }
 
@@ -45,7 +45,7 @@ enum NIP56Code: String {
     case nudity, malware, profanity, illegal, spam, impersonation, other
 }
 
-enum ReportCategoryType {
+extension ReportCategory {
     static let coarseLanguage = ReportCategory(
         name: .moderation.coarseLanguage,
         code: "CL",
@@ -138,37 +138,37 @@ enum ReportCategoryType {
     static let other = ReportCategory(name: .moderation.other, code: "NA", nip56Code: .other)
 }
 
-extension ReportCategoryType {
-    static let allCategories = [
-        ReportCategoryType.coarseLanguage,
-        ReportCategoryType.likelyToCauseHarm,
-        ReportCategoryType.harassment,
-        ReportCategoryType.intoleranceAndHate,
-        ReportCategoryType.impersonation,
-        ReportCategoryType.illegal,
-        ReportCategoryType.nsfw,
-        ReportCategoryType.nudity,
-        ReportCategoryType.pornography,
-        ReportCategoryType.spam,
-        ReportCategoryType.violence,
-        ReportCategoryType.other,
+extension ReportCategory {
+    static let allCategories: [ReportCategory] = [
+        .coarseLanguage,
+        .likelyToCauseHarm,
+        .harassment,
+        .intoleranceAndHate,
+        .impersonation,
+        .illegal,
+        .nsfw,
+        .nudity,
+        .pornography,
+        .spam,
+        .violence,
+        .other,
     ]
 
-    static let authorCategories = [
-        ReportCategoryType.spam,
-        ReportCategoryType.harassment,
-        ReportCategoryType.nudity,
-        ReportCategoryType.illegal,
-        ReportCategoryType.impersonation,
-        ReportCategoryType.other,
+    static let authorCategories: [ReportCategory] = [
+        .spam,
+        .harassment,
+        .nudity,
+        .illegal,
+        .impersonation,
+        .other,
     ]
 
-    static let noteCategories = [
-        ReportCategoryType.spam,
-        ReportCategoryType.nudity,
-        ReportCategoryType.coarseLanguage,
-        ReportCategoryType.illegal,
-        ReportCategoryType.other,
+    static let noteCategories: [ReportCategory] = [
+        .spam,
+        .nudity,
+        .coarseLanguage,
+        .illegal,
+        .other,
     ]
 }
 
