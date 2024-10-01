@@ -1,6 +1,23 @@
 "preserve_hierarchy": true
-"files": [{
-    "source": "Nos/Assets/Localization/*.xcstrings", 
-    "translation": "%original_path%/%file_name%", 
-    "multilingual": true 
-}]
+"files": [
+    {
+        "source": "Nos/Assets/Localization/ImagePicker.xcstrings", 
+        "translation": "Nos/Assets/Localization/ImagePicker.xcstrings", 
+        "multilingual": true 
+    },
+    {
+        "source": "Nos/Assets/Localization/Localizable.xcstrings", 
+        "translation": "Nos/Assets/Localization/Localizable.xcstrings", 
+        "multilingual": true 
+    },
+    {
+        "source": "Nos/Assets/Localization/Moderation.xcstrings", 
+        "translation": "Nos/Assets/Localization/Moderation.xcstrings", 
+        "multilingual": true 
+    },
+    {
+        "source": "Nos/Assets/Localization/Reply.xcstrings", 
+        "translation": "Nos/Assets/Localization/Reply.xcstrings", 
+        "multilingual": true 
+    }
+]
