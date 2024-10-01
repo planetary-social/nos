@@ -26,8 +26,8 @@ import UIKit
     }
     
     /// Whether the user has entered any text.
-    var isEmpty: Bool = true
-    
+    var isEmpty = true
+
     /// The attributed text the user has entered.
     var text: AttributedString? {
         if let textView {
