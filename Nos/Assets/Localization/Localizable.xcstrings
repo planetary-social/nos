@@ -3056,6 +3056,50 @@
         }
       }
     },
+    "delete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
+    "deleteAccount" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Account"
+          }
+        }
+      }
+    },
+    "deleteAccountDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting your account will delete all your data from Nos servers and ask all your relays to do the same."
+          }
+        }
+      }
+    },
+    "deleteMyAccount" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete my Account"
+          }
+        }
+      }
+    },
     "deleteNote" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3727,6 +3771,17 @@
         }
       }
     },
+    "enableAccountDeletion" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable account deletion"
+          }
+        }
+      }
+    },
     "enableNewMediaDisplay" : {
       "comment" : "Setting for new media feature flag",
       "extractionState" : "manual",
@@ -4350,6 +4405,193 @@
         }
       }
     },
+    "flagContent" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flag Content"
+          }
+        }
+      }
+    },
+    "flagContentCategoryDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a tag for the content"
+          }
+        }
+      }
+    },
+    "flagContentCategoryTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a content flag for this post that other users in the network can see."
+          }
+        }
+      }
+    },
+    "flagContentHarassmentDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harmful and unwanted replies or mentions."
+          }
+        }
+      }
+    },
+    "flagContentHarassmentTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harassment & Profanity"
+          }
+        }
+      }
+    },
+    "flagContentIllegalDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Content that violates the law in your country or CSAM."
+          }
+        }
+      }
+    },
+    "flagContentIllegalTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Illegal"
+          }
+        }
+      }
+    },
+    "flagContentNudityDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nudity, porn, or violent content not appropriate for work."
+          }
+        }
+      }
+    },
+    "flagContentOtherDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Items not included above."
+          }
+        }
+      }
+    },
+    "flagContentOtherTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other"
+          }
+        }
+      }
+    },
+    "flagContentSendToNosInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Nos moderation team will analyze the note for %@ and may publish a report from our Tagr-bot account, concealing your identity."
+          }
+        }
+      }
+    },
+    "flagContentSpamTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spam"
+          }
+        }
+      }
+    },
+    "flagPubliclyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This flag will be attributed to your account."
+          }
+        }
+      }
+    },
+    "flagPubliclyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flag Publicly"
+          }
+        }
+      }
+    },
+    "flagSendTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to Nos or Flag Publicly?"
+          }
+        }
+      }
+    },
+    "flagSendToNosDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This flag will be attributed to TAGR bot."
+          }
+        }
+      }
+    },
+    "flagSendToNosTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to Nos"
+          }
+        }
+      }
+    },
     "flagUser" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4403,6 +4645,72 @@
         }
       }
     },
+    "flagUserCategoryDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a tag for the user"
+          }
+        }
+      }
+    },
+    "flagUserCategoryTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a tag for this user that other people in your network can see."
+          }
+        }
+      }
+    },
+    "flagUserDontMuteDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You will continue seeing notes from this user."
+          }
+        }
+      }
+    },
+    "flagUserDontMuteTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Don't Mute"
+          }
+        }
+      }
+    },
+    "flagUserImpersonationDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User is stealing someone else's identity."
+          }
+        }
+      }
+    },
+    "flagUserImpersonationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impersonation"
+          }
+        }
+      }
+    },
     "flagUserMessage" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4410,6 +4718,61 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create a flag for this user that other users in the network can see."
+          }
+        }
+      }
+    },
+    "flagUserMuteCategoryTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mute This User?"
+          }
+        }
+      }
+    },
+    "flagUserMuteDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You won't see notes by this user anymore."
+          }
+        }
+      }
+    },
+    "flagUserMuteTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mute"
+          }
+        }
+      }
+    },
+    "flagUserSendToNosInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Nos moderation team will analyze the user for %@ and may publish a report from our Tagr-bot account, concealing your identity."
+          }
+        }
+      }
+    },
+    "flagUserTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flag User"
           }
         }
       }
@@ -5416,6 +5779,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "請輸入有效的 websocket 網址。"
+          }
+        }
+      }
+    },
+    "keepOnHelpingUs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep on helping us make Nostr a better place for everyone!"
           }
         }
       }
@@ -11609,6 +11983,17 @@
         }
       }
     },
+    "spam" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spam"
+          }
+        }
+      }
+    },
     "start" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -12065,6 +12450,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "服務條款"
+          }
+        }
+      }
+    },
+    "thanksForTag" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thanks for your tag."
           }
         }
       }

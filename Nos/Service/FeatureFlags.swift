@@ -1,5 +1,6 @@
 import Foundation
 import Dependencies
+import SwiftUI
 
 /// Feature flags for enabling experimental or beta features.
 enum FeatureFlag {
@@ -9,6 +10,9 @@ enum FeatureFlag {
     /// Whether the new moderation flow should be enabled or not.
     /// - Note: See [#1489](https://github.com/planetary-social/nos/issues/1489) for details on the new moderation flow.
     case newModerationFlow
+    /// Whether delete account UI is enabled or not.
+    /// - Note: See [#80](https://github.com/planetary-social/nos/issues/80) for details on deleting accounts.
+    case deleteAccount
 }
 
 /// The set of feature flags used by the app.
@@ -24,7 +28,7 @@ protocol FeatureFlags {
 }
 
 /// The default set of feature flag values for the app.
-class DefaultFeatureFlags: FeatureFlags, DependencyKey {
+@Observable class DefaultFeatureFlags: FeatureFlags, DependencyKey {
     /// The one and only instance of `DefaultFeatureFlags`.
     static let liveValue = DefaultFeatureFlags()
 
@@ -33,7 +37,8 @@ class DefaultFeatureFlags: FeatureFlags, DependencyKey {
     /// Feature flags and their values.
     private var featureFlags: [FeatureFlag: Bool] = [
         .newMediaDisplay: false,
-        .newModerationFlow: false
+        .newModerationFlow: false,
+        .deleteAccount: false
     ]
 
     /// Returns true if the feature is enabled.

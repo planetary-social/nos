@@ -1,6 +1,6 @@
 import AVFoundation
+import Dependencies
 import Foundation
-import LinkPresentation
 import SDWebImage
 
 /// Determines the preferred ``MediaOrientation`` for a given `URL`.
@@ -17,6 +17,8 @@ protocol MediaService {
 
 /// Loads media to determine its preferred ``MediaOrientation``.
 struct DefaultMediaService: MediaService {
+
+    @Dependency(\.openGraphService) var openGraphService
 
     // MARK: - MediaService protocol
 
@@ -47,22 +49,28 @@ struct DefaultMediaService: MediaService {
         }
     }
 
-    /// Loads the content at the given URL and returns its orientation.
+    /// Fetches metadata for the given URL and returns its orientation.
     /// - Parameter url: The URL of the data to download.
     /// - Returns: The orientation of the content.
     /// - Note: For web pages, `landscape` is returned. For videos, we're returning `portrait` until we implement
     ///         [#1425](https://github.com/planetary-social/nos/issues/1425)
     private func videoOrWebPageOrientation(url: URL) async -> MediaOrientation {
-        let provider = LPMetadataProvider()
-        let metadata = try? await provider.startFetchingMetadata(for: url)
+        let metadata = try? await openGraphService.fetchMetadata(for: url)
 
-        guard let metadata else {
+        guard let metadata, let type = metadata.type else {
             return .landscape
         }
 
-        if metadata.videoProvider != nil || metadata.remoteVideoURL != nil {
-            return .portrait
-        } else {
+        switch type {
+        case .video:
+            if let width = metadata.video?.width, 
+                let height = metadata.video?.height,
+                height > width {
+                return .portrait
+            } else {
+                return .landscape
+            }
+        default:
             return .landscape
         }
     }

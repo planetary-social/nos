@@ -14,15 +14,10 @@ extension URL {
     }
     
     /// Returns `true` if the URL is an image, as determined by the path extension.
-    /// Currently supports `png`, `jpg`, `jpeg`, and `gif`. For all other path extensions, returns `false`.
+    /// Currently supports `png`, `jpg`, `jpeg`, `gif`, and `webp`. For all other path extensions, returns `false`.
     var isImage: Bool {
-        let imageExtensions = ["png", "jpg", "jpeg", "gif"]
+        let imageExtensions = ["png", "jpg", "jpeg", "gif", "webp"]
         return imageExtensions.contains(pathExtension.lowercased())
-    }
-    
-    /// Returns `true` if the URL is a GIF, as determined by the path extension.
-    var isGIF: Bool {
-        pathExtension.lowercased() == "gif"
     }
     
     /// Returns `absoluteString` but without a trailing slash if one exists. If no trailing slash exists, returns
