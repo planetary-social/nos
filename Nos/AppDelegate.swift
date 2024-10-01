@@ -10,6 +10,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     @Dependency(\.currentUser) private var currentUser
     @Dependency(\.pushNotificationService) private var pushNotificationService
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.persistenceController) private var persistenceController
 
     func application(
         _ application: UIApplication,
@@ -51,6 +52,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             return .newData
         } catch {
             return .failed
+        }
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        Log.info("Application Will Terminate")
+        Task {
+            analytics.databaseCleanupStarted(inBackground: false)
+            await persistenceController.cleanupEntities()
         }
     }
 }

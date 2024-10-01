@@ -129,6 +129,18 @@ class Analytics {
         track("Database Statistics", properties: properties)
     }
     
+    func databaseCleanupStarted(inBackground: Bool) {
+        track("Database Cleanup Started", properties: ["in_background": inBackground])
+    }
+    
+    func databaseCleanupTaskExpired() {
+        track("Database Cleanup Task Expired")
+    }
+    
+    func databaseCleanupCompleted() {
+        track("Database Cleanup Completed")
+    }
+    
     func logout() {
         track("Logged out")
         postHog?.reset()
