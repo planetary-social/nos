@@ -68,7 +68,8 @@ struct ReportMenuModifier: ViewModifier {
                             sendAction: {
                                 if let selectCategory = selectedVisibilityOption?.category {
                                     publishReportForNewModerationFlow(selectCategory)
-                                    determineFlaggedAccoutVisibility {
+                                    Task {
+                                        await determineFlaggedAccoutVisibility()
                                         showFlagSuccessView = true
                                     }
                                 }
@@ -112,7 +113,9 @@ struct ReportMenuModifier: ViewModifier {
                 actions: {
                     if let author = reportedObject.author {
                         Button(String(localized: .localizable.yes)) {
-                            mute(author: author)
+                            Task {
+                                try? await mute(author: author)
+                            }
                         }
                         Button(String(localized: .localizable.no)) {}
                     }
@@ -193,40 +196,36 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
     
-    func mute(author: Author) {
-        Task {
-            do {
-                try await author.mute(viewContext: viewContext)
-            } catch {
-                Log.error(error.localizedDescription)
-            }
+    func mute(author: Author) async throws {
+        do {
+            try await author.mute(viewContext: viewContext)
+        } catch {
+            Log.error(error.localizedDescription)
+            throw error
         }
     }
 
-    func unmute(author: Author) {
-        Task {
-            do {
-                try await author.unmute(viewContext: viewContext)
-            } catch {
-                Log.error(error.localizedDescription)
-            }
+    func unmute(author: Author) async throws {
+        do {
+            try await author.unmute(viewContext: viewContext)
+        } catch {
+            Log.error(error.localizedDescription)
+            throw error
         }
     }
 
     /// Determines the visibility status for a flagged account and applies the appropriate action.
-    /// - Parameter completion: A closure that is executed once the necessary actions are complete.
-    private func determineFlaggedAccoutVisibility(completion: () -> Void) {
+    private func determineFlaggedAccoutVisibility() async {
         if let author = reportedObject.author {
             guard case .visibility(let visibilityCategory) = selectedVisibilityOption?.category else { return }
 
             if visibilityCategory == .mute {
                 guard !author.muted else { return }
-                mute(author: author)
+                try? await mute(author: author)
             } else {
                 guard author.muted else { return }
-                unmute(author: author)
+                try? await unmute(author: author)
             }
-            completion()
         }
     }
 
