@@ -86,55 +86,51 @@ struct UserFlagView: View {
     }
 
     private var categoryView: some View {
-        ScrollViewReader { proxy in
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 30) {
-                    FlagOptionPicker(
-                        previousSelection: .constant(nil),
-                        currentSelection: $selectedFlagOption,
-                        options: flagCategories,
-                        title: String(localized: .localizable.flagUserCategoryTitle),
-                        subtitle: String(localized: .localizable.flagUserCategoryDescription)
-                    )
-
-                    if selectedFlagOption != nil {
-                        FlagOptionPicker(
-                            previousSelection: $selectedFlagOption,
-                            currentSelection: $selectedSendOption,
-                            options: FlagOption.flagUserSendOptions,
-                            title: String(localized: .localizable.flagSendTitle),
-                            subtitle: nil
-                        )
-                        .id(sendSectionID)
-                        .offset(x: animateSendSection ? 0 : -UIScreen.main.bounds.width)
-                    }
-
-                    if selectedSendOption != nil {
+        GeometryReader { geometry in
+            ScrollViewReader { proxy in
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 30) {
                         FlagOptionPicker(
                             previousSelection: .constant(nil),
-                            currentSelection: $selectedVisibilityOption,
-                            options: FlagOption.flagUserVisibilityOptions,
-                            title: String(localized: .localizable.flagUserMuteCategoryTitle),
-                            subtitle: nil
+                            currentSelection: $selectedFlagOption,
+                            options: flagCategories,
+                            title: String(localized: .localizable.flagUserCategoryTitle),
+                            subtitle: String(localized: .localizable.flagUserCategoryDescription)
                         )
-                        .id(visibilitySectionID)
-                        .offset(x: animateVisibilitySection ? 0 : -UIScreen.main.bounds.width)
+                        
+                        if selectedFlagOption != nil {
+                            FlagOptionPicker(
+                                previousSelection: $selectedFlagOption,
+                                currentSelection: $selectedSendOption,
+                                options: FlagOption.flagUserSendOptions,
+                                title: String(localized: .localizable.flagSendTitle),
+                                subtitle: nil
+                            )
+                            .id(sendSectionID)
+                            .offset(x: animateSendSection ? 0 : -geometry.size.width)
+                        }
+                        
+                        if selectedSendOption != nil {
+                            FlagOptionPicker(
+                                previousSelection: .constant(nil),
+                                currentSelection: $selectedVisibilityOption,
+                                options: FlagOption.flagUserVisibilityOptions,
+                                title: String(localized: .localizable.flagUserMuteCategoryTitle),
+                                subtitle: nil
+                            )
+                            .id(visibilitySectionID)
+                            .offset(x: animateVisibilitySection ? 0 : -UIScreen.main.bounds.width)
+                        }
                     }
-                }
-                .padding()
-                .onChange(of: selectedFlagOption) {
-                    animateAndScrollTo(
-                        targetSectionID: sendSectionID,
-                        shouldSlideIn: $animateSendSection,
-                        proxy: proxy
-                    )
-                }
-                .onChange(of: selectedSendOption) {
-                    animateAndScrollTo(
-                        targetSectionID: visibilitySectionID,
-                        shouldSlideIn: $animateVisibilitySection,
-                        proxy: proxy
-                    )
+                    .padding()
+                    .onChange(of: selectedFlagOption) {
+                        /// Animates the sliding effect and scrolls to the bottom of the specified section.
+                        proxy.animateAndScrollTo(sendSectionID, animating: $animateSendSection)
+                    }
+                    .onChange(of: selectedSendOption) {
+                        /// Animates the sliding effect and scrolls to the bottom of the specified section.
+                        proxy.animateAndScrollTo(visibilitySectionID, animating: $animateVisibilitySection)
+                    }
                 }
             }
         }

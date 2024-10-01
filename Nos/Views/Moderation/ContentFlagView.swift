@@ -77,57 +77,37 @@ struct ContentFlagView: View {
     }
 
     private var categoryView: some View {
-        ScrollViewReader { proxy in
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 30) {
-                    FlagOptionPicker(
-                        previousSelection: .constant(nil),
-                        currentSelection: $selectedFlagOptionCategory,
-                        options: flagCategories,
-                        title: String(localized: .localizable.flagContentCategoryTitle),
-                        subtitle: String(localized: .localizable.flagContentCategoryDescription)
-                    )
-
-                    if selectedFlagOptionCategory != nil {
+        GeometryReader { geometry in
+            ScrollViewReader { proxy in
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 30) {
                         FlagOptionPicker(
-                            previousSelection: $selectedFlagOptionCategory,
-                            currentSelection: $selectedSendOptionCategory,
-                            options: FlagOption.flagContentSendOptions,
-                            title: String(localized: .localizable.flagSendTitle),
-                            subtitle: nil
+                            previousSelection: .constant(nil),
+                            currentSelection: $selectedFlagOptionCategory,
+                            options: flagCategories,
+                            title: String(localized: .localizable.flagContentCategoryTitle),
+                            subtitle: String(localized: .localizable.flagContentCategoryDescription)
                         )
-                        .offset(x: animateSendSection ? 0 : -UIScreen.main.bounds.width)
+
+                        if selectedFlagOptionCategory != nil {
+                            FlagOptionPicker(
+                                previousSelection: $selectedFlagOptionCategory,
+                                currentSelection: $selectedSendOptionCategory,
+                                options: FlagOption.flagContentSendOptions,
+                                title: String(localized: .localizable.flagSendTitle),
+                                subtitle: nil
+                            )
+                            .offset(x: animateSendSection ? 0 : -geometry.size.width)
+                        }
                     }
-                }
-                .padding()
-                .onChange(of: selectedFlagOptionCategory) {
-                    animateAndScrollTo(
-                        targetSectionID: sendSectionID,
-                        shouldSlideIn: $animateSendSection,
-                        proxy: proxy
-                    )
+                    .padding()
+                    .onChange(of: selectedFlagOptionCategory) {
+                        /// Animates the sliding effect and scrolls to the bottom of the specified section.
+                        proxy.animateAndScrollTo(sendSectionID, animating: $animateSendSection)
+                    }
                 }
             }
         }
-    }
-}
-
-/// Animates the sliding effect and scrolls to the bottom of the specified section.
-/// - Parameters:
-///   - targetSectionID: The namespace ID of the section to scroll to when it appears.
-///   - shouldSlideIn: Controls the slide-in animation.
-///   - proxy: The `ScrollViewProxy` used to perform the scrolling action.
-func animateAndScrollTo(
-    targetSectionID: Namespace.ID,
-    shouldSlideIn: Binding<Bool>,
-    proxy: ScrollViewProxy
-) {
-    withAnimation(.easeInOut(duration: 0.5)) {
-        shouldSlideIn.wrappedValue = true
-    }
-
-    withAnimation(.easeInOut(duration: 0.5)) {
-        proxy.scrollTo(targetSectionID, anchor: .bottom)
     }
 }
 
