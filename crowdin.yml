@@ -1,6 +1,6 @@
 "preserve_hierarchy": true
 "files": [{
-    "source": "Nos/Assets/Localization/*.xcstrings", 
-    "translation": "Nos/Assets/Localization/%original_file_name%", 
+    "source": "Nos/Assets/Localization/*", 
+    "translation": "%original_path%/%original_file_name%", 
     "multilingual": true 
 }]
