@@ -91,11 +91,7 @@ extension Event {
         }
         
         var newFollows = Set<Follow>()
-        for jsonTag in jsonEvent.tags {
-            guard jsonTag[safe: 0] == "p" else {
-                continue
-            }
-            
+        for jsonTag in jsonEvent.tags where jsonTag[safe: 0] == "p" {
             if let followedKey = jsonTag[safe: 1],
                 let existingFollow = originalFollows[followedKey] {
                 // We already have a Core Data Follow model for this user
