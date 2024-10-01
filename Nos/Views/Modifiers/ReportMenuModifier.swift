@@ -17,6 +17,7 @@ struct ReportMenuModifier: ViewModifier {
     @State private var confirmationDialogState: ConfirmationDialogState<UserSelection>?
     @State private var selectedFlagOption: FlagOption?
     @State private var selectedFlagSendOption: FlagOption?
+    @State private var showFlagSuccessView = false
 
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.featureFlags) private var featureFlags
@@ -38,10 +39,20 @@ struct ReportMenuModifier: ViewModifier {
         case .note:
             content
                 .sheet(isPresented: $isPresented) {
-                    ContentFlagView(
-                        selectedFlagOptionCategory: $selectedFlagOption,
-                        selectedSendOptionCategory: $selectedFlagSendOption
-                    )
+                    NavigationStack {
+                        ContentFlagView(
+                            selectedFlagOptionCategory: $selectedFlagOption,
+                            selectedSendOptionCategory: $selectedFlagSendOption,
+                            showSuccessView: $showFlagSuccessView, 
+                            flagTarget: reportedObject,
+                            sendAction: {
+                                if let selectCategory = selectedFlagOption?.category {
+                                    publishReportForNewModerationFlow(selectCategory)
+                                    showFlagSuccessView = true
+                                }
+                            }
+                        )
+                    }
                 }
         case .author:
             oldModerationFlow(content: content)
@@ -204,7 +215,7 @@ struct ReportMenuModifier: ViewModifier {
     func topLevelButtons() -> [ButtonState<UserSelection>] {
         switch reportedObject {
         case .note:
-            ReportCategoryType.noteCategories.map { category in
+            ReportCategory.noteCategories.map { category in
                 let userSelection = UserSelection.noteCategorySelected(category)
                 
                 return ButtonState(action: .send(userSelection)) {
@@ -212,7 +223,7 @@ struct ReportMenuModifier: ViewModifier {
                 }
             }
         case .author:
-            ReportCategoryType.authorCategories.map { category in
+            ReportCategory.authorCategories.map { category in
                 let userSelection = UserSelection.authorCategorySelected(category)
                 
                 return ButtonState(action: .send(userSelection)) {
@@ -221,8 +232,38 @@ struct ReportMenuModifier: ViewModifier {
             }
         }
     }
-    
-    /// Publishes a report based on user input
+
+    /// Publishes a report based on the categories the user selected for the new moderation flow.
+    private func publishReportForNewModerationFlow(_ selectedCategory: FlagCategory) {
+        if case .privacy(let privacyCategory) = selectedFlagSendOption?.category, privacyCategory == .sendToNos {
+            sendToNosForNewModerationFlow(selectedCategory)
+        } else {
+            flagPubliclyForNewModerationFlow(selectedCategory)
+        }
+    }
+
+    private func sendToNosForNewModerationFlow(_ selectedCategory: FlagCategory) {
+        if case .report(let reportCategory) = selectedCategory {
+            // Call the publisher with the extracted ReportCategory
+            ReportPublisher().publishPrivateReport(
+                for: reportedObject,
+                category: reportCategory,
+                context: viewContext
+            )
+        }
+    }
+
+    private func flagPubliclyForNewModerationFlow(_ selectedCategory: FlagCategory) {
+        if case .report(let reportCategory) = selectedCategory {
+            ReportPublisher().publishPublicReport(
+                for: reportedObject,
+                category: reportCategory,
+                context: viewContext
+            )
+        }
+    }
+
+    /// Publishes a report based on user input for the old moderation flow.
     func publishReport(_ userSelection: UserSelection?) {
         switch userSelection {
         case .sendToNos(let selectedCategory):
