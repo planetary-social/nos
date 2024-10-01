@@ -100,6 +100,7 @@ struct ComposerActionBar: View {
             if !showPreview {
                 attachMediaView
                 expirationTimeView
+                mentionView
             }
             Spacer()
             previewToggle
@@ -157,6 +158,17 @@ struct ComposerActionBar: View {
             NosToggle(isOn: $showPreview)
                 .labelsHidden()
                 .disabled(editingController.isEmpty)
+        }
+    }
+
+    /// Inserts a mention (`@`) symbol into the text editor.
+    private var mentionView: some View {
+        Button {
+            editingController.append(text: "@")
+        } label: {
+            Image.mention
+                .foregroundColor(.secondaryTxt)
+                .frame(minWidth: 44, minHeight: 44)
         }
     }
 
