@@ -120,6 +120,7 @@
 		04368D312C99A78800DEAA2E /* NosRadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04368D302C99A78800DEAA2E /* NosRadioButton.swift */; };
 		04368D4B2C99CFC700DEAA2E /* ContentFlagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04368D4A2C99CFC700DEAA2E /* ContentFlagView.swift */; };
 		045EDCF32CAAF47600B67964 /* FlagSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045EDCF22CAAF47600B67964 /* FlagSuccessView.swift */; };
+		045EDD052CAC025700B67964 /* ScrollViewProxy+Animate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045EDD042CAC025700B67964 /* ScrollViewProxy+Animate.swift */; };
 		0496D6312C975E6900D29375 /* FlagOptionPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0496D6302C975E6900D29375 /* FlagOptionPicker.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
@@ -668,6 +669,7 @@
 		04368D302C99A78800DEAA2E /* NosRadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosRadioButton.swift; sourceTree = "<group>"; };
 		04368D4A2C99CFC700DEAA2E /* ContentFlagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentFlagView.swift; sourceTree = "<group>"; };
 		045EDCF22CAAF47600B67964 /* FlagSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagSuccessView.swift; sourceTree = "<group>"; };
+		045EDD042CAC025700B67964 /* ScrollViewProxy+Animate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScrollViewProxy+Animate.swift"; sourceTree = "<group>"; };
 		0496D6302C975E6900D29375 /* FlagOptionPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagOptionPicker.swift; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
@@ -1826,6 +1828,7 @@
 				DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */,
 				C92DF80429C25DE900400561 /* URL+Extensions.swift */,
 				C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */,
+				045EDD042CAC025700B67964 /* ScrollViewProxy+Animate.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2489,6 +2492,7 @@
 				C9E37E152A1E8143003D4B0A /* ReportTarget.swift in Sources */,
 				C9DEBFD4298941000078B43A /* PersistenceController.swift in Sources */,
 				5B834F692A83FC7F000C1432 /* ProfileSocialStatsView.swift in Sources */,
+				045EDD052CAC025700B67964 /* ScrollViewProxy+Animate.swift in Sources */,
 				CD09A74629A50F750063464F /* SideMenuContent.swift in Sources */,
 				C9DFA971299BF8CD006929C1 /* NoteView.swift in Sources */,
 				037071272C90C5FA00BEAEC4 /* OpenGraphService.swift in Sources */,
