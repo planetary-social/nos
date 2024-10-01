@@ -3,24 +3,27 @@ import SwiftUI
 /// Displays pickers for selecting user flag options, with additional stages shown
 /// based on previous selections.
 struct UserFlagView: View {
-    @Binding var selectedFlagOptionCategory: FlagOption?
-    @Binding var selectedSendOptionCategory: FlagOption?
-    @Binding var selectedVisibilityOptionCategory: FlagOption?
+    @Binding var selectedFlagOption: FlagOption?
+    @Binding var selectedSendOption: FlagOption?
+    @Binding var selectedVisibilityOption: FlagOption?
     @Binding var showSuccessView: Bool
 
     /// The target of the report.
     let flagTarget: ReportTarget
+
+    /// Defines the action to be performed when the user sends a flag report.
+    /// It is called when the user taps the "Send" button after selecting all required options.
     var sendAction: () -> Void
 
     @Environment(\.dismiss) private var dismiss
 
     @State private var flagCategories: [FlagOption] = []
 
-    /// Controls whether the "Send Section" should slide in from the left.
-    @State private var slideInSendSection = false
+    /// Controls when the "Send Section" should slide in from the left.
+    @State private var animateSendSection = false
 
-    /// Controls whether the "Visibility Section" should slide in from the left.
-    @State private var slideInVisibilitySection = false
+    /// Controls when the "Visibility Section" should slide in from the left.
+    @State private var animateVisibilitySection = false
 
     /// Used to identify the "Send Section" section to autoscroll to the when it appears.
     @Namespace var sendSectionID
@@ -33,7 +36,7 @@ struct UserFlagView: View {
             Color.appBg.ignoresSafeArea()
             Group {
                 if showSuccessView {
-                    flagSuccessView
+                    FlagSuccessView()
                 } else {
                     categoryView
                 }
@@ -41,13 +44,13 @@ struct UserFlagView: View {
             .nosNavigationBar(title: .localizable.flagUserTitle)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
+                    Button {
                         dismiss()
                         resetSelections()
-                    }, label: {
+                    } label: {
                         Text(.localizable.cancel)
                             .foregroundColor(.primaryTxt)
-                    })
+                    }
                     .opacity(showSuccessView ? 0 : 1)
                     .disabled(showSuccessView)
                 }
@@ -64,8 +67,8 @@ struct UserFlagView: View {
                             }
                         }
                     )
-                    .opacity(selectedVisibilityOptionCategory == nil ? 0.5 : 1)
-                    .disabled(selectedVisibilityOptionCategory == nil)
+                    .opacity(selectedVisibilityOption == nil ? 0.5 : 1)
+                    .disabled(selectedVisibilityOption == nil)
                 }
             }
         }
@@ -75,11 +78,11 @@ struct UserFlagView: View {
     }
 
     private func resetSelections() {
-        selectedFlagOptionCategory = nil
-        selectedSendOptionCategory = nil
-        selectedVisibilityOptionCategory = nil
-        slideInSendSection = false
-        slideInVisibilitySection = false
+        selectedFlagOption = nil
+        selectedSendOption = nil
+        selectedVisibilityOption = nil
+        animateSendSection = false
+        animateVisibilitySection = false
     }
 
     private var categoryView: some View {
@@ -88,48 +91,48 @@ struct UserFlagView: View {
                 VStack(spacing: 30) {
                     FlagOptionPicker(
                         previousSelection: .constant(nil),
-                        currentSelection: $selectedFlagOptionCategory,
+                        currentSelection: $selectedFlagOption,
                         options: flagCategories,
                         title: String(localized: .localizable.flagUserCategoryTitle),
                         subtitle: String(localized: .localizable.flagUserCategoryDescription)
                     )
 
-                    if selectedFlagOptionCategory != nil {
+                    if selectedFlagOption != nil {
                         FlagOptionPicker(
-                            previousSelection: $selectedFlagOptionCategory,
-                            currentSelection: $selectedSendOptionCategory,
+                            previousSelection: $selectedFlagOption,
+                            currentSelection: $selectedSendOption,
                             options: FlagOption.flagUserSendOptions,
                             title: String(localized: .localizable.flagSendTitle),
                             subtitle: nil
                         )
                         .id(sendSectionID)
-                        .offset(x: slideInSendSection ? 0 : -UIScreen.main.bounds.width)
+                        .offset(x: animateSendSection ? 0 : -UIScreen.main.bounds.width)
                     }
 
-                    if selectedSendOptionCategory != nil {
+                    if selectedSendOption != nil {
                         FlagOptionPicker(
                             previousSelection: .constant(nil),
-                            currentSelection: $selectedVisibilityOptionCategory,
+                            currentSelection: $selectedVisibilityOption,
                             options: FlagOption.flagUserVisibilityOptions,
                             title: String(localized: .localizable.flagUserMuteCategoryTitle),
                             subtitle: nil
                         )
                         .id(visibilitySectionID)
-                        .offset(x: slideInVisibilitySection ? 0 : -UIScreen.main.bounds.width)
+                        .offset(x: animateVisibilitySection ? 0 : -UIScreen.main.bounds.width)
                     }
                 }
                 .padding()
-                .onChange(of: selectedFlagOptionCategory) {
+                .onChange(of: selectedFlagOption) {
                     animateAndScrollTo(
                         targetSectionID: sendSectionID,
-                        shouldSlideIn: $slideInSendSection,
+                        shouldSlideIn: $animateSendSection,
                         proxy: proxy
                     )
                 }
-                .onChange(of: selectedSendOptionCategory) {
+                .onChange(of: selectedSendOption) {
                     animateAndScrollTo(
                         targetSectionID: visibilitySectionID,
-                        shouldSlideIn: $slideInVisibilitySection,
+                        shouldSlideIn: $animateVisibilitySection,
                         proxy: proxy
                     )
                 }
@@ -140,25 +143,25 @@ struct UserFlagView: View {
 
 #Preview {
     struct PreviewWrapper: View {
-        @State private var selectedFlagOptionCategory: FlagOption?
-        @State private var selectedSendOptionCategory: FlagOption?
-        @State private var selectedVisibilityOptionCategory: FlagOption?
+        @State private var selectedFlagOption: FlagOption?
+        @State private var selectedSendOption: FlagOption?
+        @State private var selectedVisibilityOption: FlagOption?
         @State private var showSuccessView = false
         let author = Author()
 
         var body: some View {
             NavigationStack {
                 UserFlagView(
-                    selectedFlagOptionCategory: $selectedFlagOptionCategory,
-                    selectedSendOptionCategory: $selectedSendOptionCategory,
-                    selectedVisibilityOptionCategory: $selectedVisibilityOptionCategory,
+                    selectedFlagOption: $selectedFlagOption,
+                    selectedSendOption: $selectedSendOption,
+                    selectedVisibilityOption: $selectedVisibilityOption,
                     showSuccessView: $showSuccessView,
                     flagTarget: .author(author),
                     sendAction: {}
                 )
             }
             .onAppear {
-                selectedFlagOptionCategory = nil
+                selectedFlagOption = nil
             }
             .background(Color.appBg)
         }
