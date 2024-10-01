@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2024-10-01Z
+
 ### Release Notes
 - Disable autocorrect on NoteComposer when running on macOS. [#1460](https://github.com/planetary-social/nos/issues/1460)
 
