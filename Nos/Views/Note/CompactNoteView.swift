@@ -155,11 +155,7 @@ struct CompactNoteView: View {
                 .allowsHitTesting(!note.isPreview)
             }
             if note.kind == EventKind.text.rawValue, showLinkPreviews, !note.contentLinks.isEmpty {
-                if featureFlags.isEnabled(.newMediaDisplay) {
-                    GalleryView(urls: note.contentLinks, metadata: note.inlineMetadata)
-                } else {
-                    LinkPreviewCarousel(links: note.contentLinks)
-                }
+                GalleryView(urls: note.contentLinks, metadata: note.inlineMetadata)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
