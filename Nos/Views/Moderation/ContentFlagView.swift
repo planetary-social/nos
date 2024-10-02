@@ -97,6 +97,7 @@ struct ContentFlagView: View {
                                 title: String(localized: .localizable.flagSendTitle),
                                 subtitle: nil
                             )
+                            .id(sendSectionID)
                             .offset(x: animateSendSection ? 0 : -geometry.size.width)
                         }
                     }

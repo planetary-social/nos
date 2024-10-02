@@ -119,7 +119,7 @@ struct UserFlagView: View {
                                 subtitle: nil
                             )
                             .id(visibilitySectionID)
-                            .offset(x: animateVisibilitySection ? 0 : -UIScreen.main.bounds.width)
+                            .offset(x: animateVisibilitySection ? 0 : -geometry.size.width)
                         }
                     }
                     .padding()
