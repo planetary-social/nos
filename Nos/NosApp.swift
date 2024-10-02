@@ -21,7 +21,7 @@ struct NosApp: App {
         // hack to fix confirmationDialog color issue
         // https://github.com/planetary-social/nos/issues/1064
         UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .systemBlue
-        DatabaseCleaner.registerBackgroundTask()
+        persistenceController.scheduleBackgroundCleanupTask()
     }
     
     var body: some Scene {

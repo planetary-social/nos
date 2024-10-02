@@ -54,14 +54,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             return .failed
         }
     }
-    
-    func applicationWillTerminate(_ application: UIApplication) {
-        Log.info("Application Will Terminate")
-        Task {
-            analytics.databaseCleanupStarted(inBackground: false)
-            await persistenceController.cleanupEntities()
-        }
-    }
 }
 
 extension AppDelegate {

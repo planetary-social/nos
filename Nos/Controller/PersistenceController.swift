@@ -1,6 +1,7 @@
 import CoreData
 import Logger
 import Dependencies
+import BackgroundTasks
 
 final class PersistenceController {
     
@@ -121,6 +122,14 @@ final class PersistenceController {
     private static func saveVersionToDisk(_ newVersion: Int) {
         UserDefaults.standard.set(newVersion, forKey: Self.versionKey)
     }
+}
+
+// MARK: - Maintenance & Cleanup
+
+extension PersistenceController {
+    
+    /// The ID of the background task that runs the `DatabaseCleaner`. Needs to match the value in Info.plist.
+    static let cleanupBackgroundTaskID = "com.verse.nos.database-cleaner"
     
     /// Cleans up unneeded entities from the database. Our local database is really just a cache, and we need to
     /// invalidate old items to keep it from growing indefinitely.
@@ -137,6 +146,36 @@ final class PersistenceController {
         } catch {
             Log.optional(error)
             crashReporting.report("Error in database cleanup: \(error.localizedDescription)")
+        }
+    }
+    
+    /// Tells iOS to wake our app up in the background to run `cleanupEntities()` periodically. This tends to run 
+    /// once a day when the device is connected to power.
+    func scheduleBackgroundCleanupTask() {
+        @Dependency(\.analytics) var analytics
+        @Dependency(\.crashReporting) var crashReporting
+        let scheduler = BGTaskScheduler.shared
+        
+        scheduler.register(forTaskWithIdentifier: Self.cleanupBackgroundTaskID, using: nil) { task in
+            
+            task.expirationHandler = {
+                analytics.databaseCleanupTaskExpired()
+            }
+            
+            Task {
+                await self.cleanupEntities()
+                task.setTaskCompleted(success: true)
+            }
+        } 
+        
+        let request = BGProcessingTaskRequest(identifier: Self.cleanupBackgroundTaskID)
+        request.requiresNetworkConnectivity = false  
+        request.requiresExternalPower = false
+        
+        do {
+            try scheduler.submit(request)
+        } catch {
+            crashReporting.report("Unable to schedule background task: \(error)")
         }
     }
     
@@ -159,6 +198,8 @@ final class PersistenceController {
         }
     }
 }
+
+// MARK: - Testing & Debug
 
 #if DEBUG
 extension PersistenceController {

@@ -2,40 +2,8 @@ import Foundation
 import Logger
 import CoreData
 import Dependencies
-import BackgroundTasks
 
 enum DatabaseCleaner {
-    
-    static let backgroundTaskID = "com.verse.nos.database-cleaner"
-    
-    static func registerBackgroundTask() {
-        @Dependency(\.persistenceController) var persistenceController
-        @Dependency(\.analytics) var analytics
-        @Dependency(\.crashReporting) var crashReporting
-        
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: backgroundTaskID, using: nil) { task in
-            
-            task.expirationHandler = {
-                analytics.databaseCleanupTaskExpired()
-            }
-            
-            Task {
-                analytics.databaseCleanupStarted(inBackground: true)
-                await persistenceController.cleanupEntities()
-                task.setTaskCompleted(success: true)
-            }
-        } 
-        
-        let request = BGProcessingTaskRequest(identifier: backgroundTaskID)
-        request.requiresNetworkConnectivity = false  
-        request.requiresExternalPower = false
-        
-        do {
-            try BGTaskScheduler.shared.submit(request)
-        } catch {
-            crashReporting.report("Unable to schedule background task: \(error)")
-        }
-    }
     
     /// Deletes unneeded entities from Core Data.
     ///
@@ -55,6 +23,7 @@ enum DatabaseCleaner {
         @Dependency(\.analytics) var analytics
         
         let startTime = Date.now
+        analytics.databaseCleanupStarted()
         Log.info("Starting Core Data cleanup...")
         
         Log.info("Database statistics: \(try await PersistenceController.databaseStatistics(from: context))")
@@ -107,10 +76,10 @@ enum DatabaseCleaner {
         let newStatistics = try await PersistenceController.databaseStatistics(from: context)
         Log.info("Database statistics: \(newStatistics)")
         analytics.databaseStatistics(newStatistics)
-        analytics.databaseCleanupCompleted()
         
         let elapsedTime = Date.now.timeIntervalSince1970 - startTime.timeIntervalSince1970 
         Log.info("Finished Core Data cleanup in \(elapsedTime) seconds.")
+        analytics.databaseCleanupCompleted(duration: elapsedTime)
     }
     
     /// This converts old hydrated events back to stubs. We do this because EventReferences can form long chains
