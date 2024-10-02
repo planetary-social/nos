@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Release Notes
+
+### Internal Changes
+- Fix the Crowdin GitHub integration by using the official GitHub action. [#1520](https://github.com/planetary-social/nos/issues/1520)
+- Reduced spammy "Failed to parse Follow" log messages.
+
 ## [0.2.1] - 2024-10-01Z
 
 ### Release Notes
@@ -18,7 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Internal Changes
 - Show WebP images without link preview overlay. Currently behind the “Enable new media display” feature flag. [#1488](https://github.com/planetary-social/nos/issues/1488)
 - Show GIF overlay for animated WebP images. Currently behind the “Enable new media display” feature flag. [#1488](https://github.com/planetary-social/nos/issues/1488)
-- Fix the Crowdin GitHub integration by using the official GitHub action. [#1520](https://github.com/planetary-social/nos/issues/1520)
 - Temporarily remove Martin from the list of CODEOWNERS.
 
 ## [0.1.27] - 2024-09-25Z
