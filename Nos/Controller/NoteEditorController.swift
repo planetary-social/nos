@@ -71,6 +71,10 @@ import UIKit
         attributedString.replaceCharacters(in: range, with: appendedAttributedString)
         textView.attributedText = attributedString
         textView.selectedRange.location += appendedAttributedString.length
+
+        ///  Check if `@` was appended and show the mentionsAutoComplete list.
+        guard text == "@" else { return }
+        showMentionsAutocomplete = true
     }
     
     /// Appends the given URL and adds the default link styling attributes. Will append a space before the link 
