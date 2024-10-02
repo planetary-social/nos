@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Release Notes
+- Updated the media viewer that displays images, videos, and web pages inside of notes. [#1538](https://github.com/planetary-social/nos/issues/1538)
 
 ### Internal Changes
 - Fix the Crowdin GitHub integration by using the official GitHub action. [#1520](https://github.com/planetary-social/nos/issues/1520)
