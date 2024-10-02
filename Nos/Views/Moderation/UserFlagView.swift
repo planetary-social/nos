@@ -56,7 +56,6 @@ struct UserFlagView: View {
                             }
                         }
                     )
-                    .opacity(selectedVisibilityOption == nil ? 0.5 : 1)
                     .disabled(selectedVisibilityOption == nil)
                 }
             }
