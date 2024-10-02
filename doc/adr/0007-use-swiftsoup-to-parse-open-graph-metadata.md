@@ -10,7 +10,7 @@ Accepted
 
 ## Context & Problem Statement
 
-In order to display a video in portrait or landscape orientation based on its [Open Graph](https://ogp.me/) metadata, we need to parse the HTML document containing the video. The Open Graph metadata contains properties that specify the width and height of the video, and similar properties for an image that may be used as a cover image
+In order to display a video in portrait or landscape orientation based on its [Open Graph](https://ogp.me/) metadata, we need to parse the HTML document containing the video. The Open Graph metadata contains properties that specify the width and height of the video, and similar properties for an image that may be used as a cover image for the video.
 
 ## Considered Options
 
