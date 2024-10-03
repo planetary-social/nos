@@ -170,7 +170,7 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Grobe Sprache"
           }
         },
@@ -182,25 +182,25 @@
         },
         "fa" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "بدزبانی"
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Grovt språk"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "粗鲁语言"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "粗魯語言"
           }
         }
@@ -589,12 +589,6 @@
     "illegal" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Illegal"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -730,12 +724,6 @@
             "value" : "پورن زنان"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lesbian porn"
-          }
-        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -848,7 +836,7 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Nacktheit & Sex"
           }
         },
@@ -860,25 +848,25 @@
         },
         "fa" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "عریانی و جنسی"
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Nakenhet och sex"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "裸体和性行为"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "裸體和性行為"
           }
         }
@@ -969,12 +957,6 @@
     "prostitution" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prostitution"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -985,12 +967,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "تن فروشی"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prostitution"
           }
         },
         "zh-Hans" : {
@@ -1010,12 +986,6 @@
     "sex" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sex"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1026,12 +996,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "سکس"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sex"
           }
         },
         "zh-Hans" : {
@@ -1051,12 +1015,6 @@
     "spam" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spam"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
