@@ -204,14 +204,6 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
 
-    func unmute(author: Author) async {
-        do {
-            try await author.unmute(viewContext: viewContext)
-        } catch {
-            Log.error(error.localizedDescription)
-        }
-    }
-
     /// Determines the visibility status for a flagged account and applies the appropriate action.
     private func determineFlaggedAccoutVisibility() async {
         if let author = reportedObject.author {
@@ -220,9 +212,6 @@ struct ReportMenuModifier: ViewModifier {
             if visibilityCategory == .mute {
                 guard !author.muted else { return }
                 await mute(author: author)
-            } else {
-                guard author.muted else { return }
-                await unmute(author: author)
             }
         }
     }
