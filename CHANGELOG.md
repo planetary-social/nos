@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Internal Changes
 - Fix the Crowdin GitHub integration by using the official GitHub action. [#1520](https://github.com/planetary-social/nos/issues/1520)
+- Update Xcode to version 15.4, adding compatibility for Xcode 16.
 - Reduced spammy "Failed to parse Follow" log messages.
 - Upgraded fastlane to version 2.223.1.
 
