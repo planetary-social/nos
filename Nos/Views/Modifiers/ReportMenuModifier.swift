@@ -66,12 +66,11 @@ struct ReportMenuModifier: ViewModifier {
                             showSuccessView: $showFlagSuccessView, 
                             flagTarget: reportedObject,
                             sendAction: {
-                                if let selectCategory = selectedVisibilityOption?.category {
-                                    publishReportForNewModerationFlow(selectCategory)
-                                    Task {
-                                        await determineFlaggedAccoutVisibility()
-                                        showFlagSuccessView = true
-                                    }
+                                let selectCategory = selectedVisibilityOption?.category ?? .visibility(.dontMute)
+                                publishReportForNewModerationFlow(selectCategory)
+                                Task {
+                                    await determineFlaggedAccoutVisibility()
+                                    showFlagSuccessView = true
                                 }
                             }
                         )
