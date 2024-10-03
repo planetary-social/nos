@@ -66,7 +66,7 @@ struct ReportMenuModifier: ViewModifier {
                             showSuccessView: $showFlagSuccessView, 
                             flagTarget: reportedObject,
                             sendAction: {
-                                let selectCategory = selectedVisibilityOption?.category ?? .visibility(.unmute)
+                                let selectCategory = selectedVisibilityOption?.category ?? .visibility(.dontMute)
                                 publishReportForNewModerationFlow(selectCategory)
                                 Task {
                                     await determineFlaggedAccoutVisibility()
