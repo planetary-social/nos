@@ -8,6 +8,10 @@ struct UserFlagView: View {
     @Binding var selectedVisibilityOption: FlagOption?
     @Binding var showSuccessView: Bool
 
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var flagCategories: [FlagOption] = []
+
     /// The target of the report.
     let flagTarget: ReportTarget
 
@@ -15,9 +19,22 @@ struct UserFlagView: View {
     /// It is called when the user taps the "Send" button after selecting all required options.
     var sendAction: () -> Void
 
-    @Environment(\.dismiss) private var dismiss
+    /// Indicates whether the target of the report is muted.
+    var isUserMuted: Bool {
+        flagTarget.author?.muted ?? false
+    }
 
-    @State private var flagCategories: [FlagOption] = []
+    /// Determines if the send button should be disabled.
+    ///
+    /// The button's disabled state depends on two factors:
+    /// - For muted users: disabled when no send option is selected.
+    /// - For non-muted users: disabled when no visibility option is selected.
+    var isSendButtonDisabled: Bool {
+        if isUserMuted {
+            return selectedSendOption == nil
+        }
+        return selectedVisibilityOption == nil
+    }
 
     var body: some View {
         ZStack {
@@ -56,7 +73,7 @@ struct UserFlagView: View {
                             }
                         }
                     )
-                    .disabled(selectedVisibilityOption == nil)
+                    .disabled(isSendButtonDisabled)
                 }
             }
         }
@@ -93,7 +110,7 @@ struct UserFlagView: View {
                     .transition(.move(edge: .leading).combined(with: .opacity))
                 }
 
-                if selectedSendOption != nil {
+                if selectedSendOption != nil && !isUserMuted {
                     FlagOptionPicker(
                         previousSelection: .constant(nil),
                         currentSelection: $selectedVisibilityOption,
