@@ -62,6 +62,38 @@ final class URLExtensionTests: XCTestCase {
         XCTAssertTrue(url.isImage)
     }
 
+    func test_isMedia_returns_false_for_non_media() throws {
+        let youTubeURL = try XCTUnwrap(URL(string: "https://www.youtube.com/watch?v=sB6HY8r983c"))
+        XCTAssertFalse(youTubeURL.isMedia)
+
+        let pdfURL = try XCTUnwrap(URL(string: "http://example.com/test.pdf"))
+        XCTAssertFalse(pdfURL.isMedia)
+
+        let webURL = try XCTUnwrap(URL(string: "https://nos.social"))
+        XCTAssertFalse(webURL.isMedia)
+    }
+
+    func test_isMedia_returns_true_for_media() throws {
+        let pngURL = try XCTUnwrap(URL(string: "http://example.com/test.png"))
+        XCTAssertTrue(pngURL.isMedia)
+
+        let webpURL = try XCTUnwrap(URL(string: "http://example.com/test.webp"))
+        XCTAssertTrue(webpURL.isMedia)
+
+        let mp4URL = try XCTUnwrap(URL(string: "http://example.com/test.mp4"))
+        XCTAssertTrue(mp4URL.isMedia)
+    }
+
+    func test_isVideo_returns_false_for_mp3() throws {
+        let url = try XCTUnwrap(URL(string: "http://example.com/test.mp3"))
+        XCTAssertFalse(url.isVideo)
+    }
+
+    func test_isVideo_returns_true_for_mp4() throws {
+        let url = try XCTUnwrap(URL(string: "http://example.com/test.mp4"))
+        XCTAssertTrue(url.isVideo)
+    }
+
     func test_strippingTrailingSlash_when_no_trailing_slash() throws {
         let url = try XCTUnwrap(URL(string: "wss://relay.nos.social"))
         XCTAssertEqual(url.strippingTrailingSlash(), "wss://relay.nos.social")
