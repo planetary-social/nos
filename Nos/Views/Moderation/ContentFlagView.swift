@@ -60,7 +60,6 @@ struct ContentFlagView: View {
                             }
                         }
                     )
-                    .opacity(selectedSendOptionCategory == nil ? 0.5 : 1)
                     .disabled(selectedSendOptionCategory == nil)
                 }
             }

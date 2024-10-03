@@ -114,7 +114,7 @@ struct ReportMenuModifier: ViewModifier {
                     if let author = reportedObject.author {
                         Button(String(localized: .localizable.yes)) {
                             Task {
-                                try? await mute(author: author)
+                                await mute(author: author)
                             }
                         }
                         Button(String(localized: .localizable.no)) {}
@@ -196,21 +196,11 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
     
-    func mute(author: Author) async throws {
+    func mute(author: Author) async {
         do {
             try await author.mute(viewContext: viewContext)
         } catch {
             Log.error(error.localizedDescription)
-            throw error
-        }
-    }
-
-    func unmute(author: Author) async throws {
-        do {
-            try await author.unmute(viewContext: viewContext)
-        } catch {
-            Log.error(error.localizedDescription)
-            throw error
         }
     }
 
@@ -221,10 +211,7 @@ struct ReportMenuModifier: ViewModifier {
 
             if visibilityCategory == .mute {
                 guard !author.muted else { return }
-                try? await mute(author: author)
-            } else {
-                guard author.muted else { return }
-                try? await unmute(author: author)
+                await mute(author: author)
             }
         }
     }
