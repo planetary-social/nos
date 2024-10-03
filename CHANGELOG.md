@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Internal Changes
 - Fix the Crowdin GitHub integration by using the official GitHub action. [#1520](https://github.com/planetary-social/nos/issues/1520)
+- Update Xcode to version 15.4, adding compatibility for Xcode 16.
 - Reduced spammy "Failed to parse Follow" log messages.
 
 ## [0.2.1] - 2024-10-01Z
@@ -48,7 +49,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Publish empty metadata event and empty contact list on delete account. [#1530](https://github.com/planetary-social/nos/issues/1530)
 
 ### Internal Changes
-- Update Xcode to version 16.0.
 - Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag. [#1172](https://github.com/planetary-social/nos/issues/1172)
 - Added more instructions to the changelog file.
 - Added some logging when a content warning is displayed. [cleanstr#53](https://github.com/planetary-social/cleanstr/issues/53)
