@@ -4,9 +4,6 @@ import SwiftUI
 
 /// Feature flags for enabling experimental or beta features.
 enum FeatureFlag {
-    /// Whether the new media display should be enabled or not.
-    /// - Note: See [#1177](https://github.com/planetary-social/nos/issues/1177) for details on the new media display.
-    case newMediaDisplay
     /// Whether the new moderation flow should be enabled or not.
     /// - Note: See [#1489](https://github.com/planetary-social/nos/issues/1489) for details on the new moderation flow.
     case newModerationFlow
@@ -36,7 +33,6 @@ protocol FeatureFlags {
 
     /// Feature flags and their values.
     private var featureFlags: [FeatureFlag: Bool] = [
-        .newMediaDisplay: false,
         .newModerationFlow: false,
         .deleteAccount: false
     ]
