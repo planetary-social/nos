@@ -3,6 +3,13 @@ import Logger
 
 /// Parses unformatted urls in a string and replace them with markdown links
 struct URLParser {
+    // swiftlint:disable line_length
+    /// A regular expression pattern for matching URLs.
+    /// - Note: Uses rules from the [Domain Name System](https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax,_internationalization)
+    ///         page on Wikipedia.
+    static let urlRegex = "(\\s*)(?<url>((https?://){1}|(?<![\\w@.]))([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*(?<![.,!?\\)\\]]))"
+    // swiftlint:enable line_length
+
     /// Returns an array with all unformatted urls
     func findUnformattedURLs(in content: String) throws -> [URL] {
         // swiftlint:disable line_length
@@ -21,9 +28,9 @@ struct URLParser {
         return links
     }
 
-    /// Creates a new string with all URLs and any preceding and trailing
-    /// whitespace removed and removed duplicate newlines, and returns the new
-    /// string and an array of all the URLs.
+    /// Creates a new string with all URLs and any preceding and trailing whitespace removed and duplicate newlines
+    /// removed, and returns the new string and an array of all the URLs. The new string will not contain URLs that
+    /// link to media (image or video).
     func replaceUnformattedURLs(
         in content: String
     ) -> (String, [URL]) {
@@ -45,21 +52,18 @@ struct URLParser {
 
         return (mutableString as String, urls)
     }
-
+    
+    /// Replaces raw URLs with Markdown links in the given `mutableString`. Removes media URLs (image and video) from
+    /// `mutableString` and converts all other URLs to pretty Markdown links for display.
+    /// - Parameter mutableString: The mutable string that may contain URLs and will be modified for display.
+    /// - Returns: All URLs found in the given `mutableString`.
     private func replaceRawDomainsWithMarkdownLinks(
         in mutableString: NSMutableString
     ) -> [URL] {
-        // The following pattern uses rules from the Domain Name System page on
-        // Wikipedia:
-        // https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax,_internationalization
-
-        // swiftlint:disable:next line_length
-        let regexPattern = "(\\s*)(?<url>((https?://){1}|(?<![\\w@.]))([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*(?<![.,!?\\)\\]]))"
-
         var urls: [URL] = []
         do {
             let string = String(mutableString)
-            let regex = try NSRegularExpression(pattern: regexPattern)
+            let regex = try NSRegularExpression(pattern: Self.urlRegex)
             let range = NSRange(location: 0, length: mutableString.length)
 
             let matches = regex.matches(in: string, range: range).reversed()
@@ -70,12 +74,21 @@ struct URLParser {
                     // maintain original order of links by inserting at index 0
                     // (we're looping in reverse)
                     urls.insert(url.addingSchemeIfNeeded(), at: 0)
-                    let prettyURL = url.truncatedMarkdownLink
-                    regex.replaceMatches(
-                        in: mutableString,
-                        range: match.range,
-                        withTemplate: "$1\(prettyURL)"
-                    )
+
+                    if url.isMedia {
+                        regex.replaceMatches(
+                            in: mutableString,
+                            range: match.range,
+                            withTemplate: ""
+                        )
+                    } else {
+                        let prettyURL = url.truncatedMarkdownLink
+                        regex.replaceMatches(
+                            in: mutableString,
+                            range: match.range,
+                            withTemplate: "$1\(prettyURL)"
+                        )
+                    }
                 }
             }
         } catch {

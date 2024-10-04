@@ -12,14 +12,26 @@ extension URL {
 
         return URL(string: "https://\(absoluteString)") ?? self
     }
-    
+
     /// Returns `true` if the URL is an image, as determined by the path extension.
     /// Currently supports `png`, `jpg`, `jpeg`, `gif`, and `webp`. For all other path extensions, returns `false`.
     var isImage: Bool {
         let imageExtensions = ["png", "jpg", "jpeg", "gif", "webp"]
         return imageExtensions.contains(pathExtension.lowercased())
     }
-    
+
+    /// Returns `true` if the URL is media; that is, an image or a video. Shorthand for ``isImage`` `||` ``isVideo``.
+    var isMedia: Bool {
+        isImage || isVideo
+    }
+
+    /// Returns `true` if the URL is a video, as determined by the path extension.
+    /// Currently supports `mp4`. For all other path extensions, returns `false`.
+    var isVideo: Bool {
+        let videoExtensions = ["mp4"]
+        return videoExtensions.contains(pathExtension.lowercased())
+    }
+
     /// Returns `absoluteString` but without a trailing slash if one exists. If no trailing slash exists, returns
     /// `absoluteString` as-is.
     /// - Returns: The absolute string of the URL without a trailing slash.
