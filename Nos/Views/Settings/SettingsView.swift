@@ -276,19 +276,6 @@ struct SettingsView: View {
 // DEBUG builds will have everything that's in STAGING builds and more.
 #if STAGING || DEBUG
 extension SettingsView {
-    /// Whether the new media display is enabled.
-    private var isNewMediaDisplayEnabled: Binding<Bool> {
-        Binding<Bool>(
-            get: { featureFlags.isEnabled(.newMediaDisplay) },
-            set: { featureFlags.setFeature(.newMediaDisplay, enabled: $0) }
-        )
-    }
-
-    /// A toggle for the new media display that allows the user to turn the feature on or off.
-    private var newMediaFeatureToggle: some View {
-        NosToggle(isOn: isNewMediaDisplayEnabled, labelText: .localizable.enableNewMediaDisplay)
-    }
-
     /// Whether the new moderation flow is enabled.
     private var isNewModerationFlowEnabled: Binding<Bool> {
         Binding<Bool>(
@@ -322,7 +309,6 @@ extension SettingsView {
     /// Controls that will appear when the app is built for STAGING.
     @MainActor private var stagingControls: some View {
         Group {
-            newMediaFeatureToggle
             newModerationFlowToggle
             deleteAccountToggle
         }
@@ -335,7 +321,6 @@ extension SettingsView {
     /// Controls that will appear when the app is built for DEBUG.
     @MainActor private var debugControls: some View {
         Group {
-            newMediaFeatureToggle
             newModerationFlowToggle
             deleteAccountToggle
             Text(.localizable.sampleDataInstructions)
