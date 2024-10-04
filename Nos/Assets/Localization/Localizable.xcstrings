@@ -144,7 +144,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nos는 Nostr 프로토콜"
+            "value" : "Nos는 Planetary를 개발한 팀이 Nostr 프로토콜을 기반으로 만든 새로운 소셜 미디어 앱입니다. 알고리즘이 아닌 인간을 위해 설계되었습니다. Nos.social에서 자세히 알아보세요."
           }
         },
         "nl" : {
