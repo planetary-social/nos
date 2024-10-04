@@ -114,12 +114,12 @@ private struct FlagPickerRow: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text(flag.title)
                     .foregroundColor(.primaryTxt)
-                    .font(.clarity(.regular))
+                    .font(.body)
 
                 if let description = flag.description {
                     Text(description)
                         .foregroundColor(.secondaryTxt)
-                        .font(.clarity(.regular, textStyle: .footnote))
+                        .font(.footnote)
                         .lineSpacing(8)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true) // this enables the text view expand as needed
@@ -141,7 +141,7 @@ private struct FlagPickerRow: View {
             VStack {
                 Text(text)
                     .foregroundColor(.primaryTxt)
-                    .font(.clarity(.regular, textStyle: .subheadline))
+                    .font(.subheadline)
                     .multilineTextAlignment(.leading)
                     .padding(EdgeInsets(
                         top: 13,
@@ -165,7 +165,7 @@ private struct HeaderView: View {
         Text(text)
             .lineSpacing(5)
             .foregroundColor(.primaryTxt)
-            .font(.clarity(.bold))
+            .font(.headline)
             .padding(.bottom, 10)
     }
 }

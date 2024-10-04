@@ -11,7 +11,7 @@ struct FlagSuccessView: View {
 
             Text(String(localized: .localizable.thanksForTag))
                 .foregroundColor(.primaryTxt)
-                .font(.clarity(.regular, textStyle: .title2))
+                .font(.title2)
                 .padding(.horizontal, 25)
 
             Text(String(localized: .localizable.keepOnHelpingUs))
@@ -19,7 +19,7 @@ struct FlagSuccessView: View {
                 .foregroundColor(.secondaryTxt)
                 .multilineTextAlignment(.center)
                 .lineSpacing(6)
-                .font(.clarity(.regular, textStyle: .subheadline))
+                .font(.body)
         }
     }
 }
