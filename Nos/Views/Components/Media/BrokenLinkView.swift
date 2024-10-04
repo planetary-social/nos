@@ -1,5 +1,6 @@
 import SwiftUI
 
+/// A view that shows a broken link icon to inform the user that the link is broken.
 struct BrokenLinkView: View {
     var body: some View {
         ZStack {

@@ -17,11 +17,11 @@ struct ImageButton: View {
     /// Whether the image is animating or not.
     @State private var isAnimating = false
     
-    /// Whether to show a loading error view or not.
-    @State private var showLoadingError = false
+    /// Whether to show an error view or not.
+    @State private var showError = false
 
     var body: some View {
-        if showLoadingError {
+        if showError {
             ZStack {
                 BrokenLinkView()
             }
@@ -37,8 +37,7 @@ struct ImageButton: View {
                             }
                         }
                         .onFailure { error in
-                            print("failed: \(error)")
-                            showLoadingError = true
+                            showError = true
                             Log.error(error, "There was an error loading the image.")
                         }
                         .resizable()
