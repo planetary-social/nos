@@ -17,6 +17,7 @@ struct ReportMenuModifier: ViewModifier {
     @State private var confirmationDialogState: ConfirmationDialogState<UserSelection>?
     @State private var selectedFlagOption: FlagOption?
     @State private var selectedFlagSendOption: FlagOption?
+    @State private var selectedVisibilityOption: FlagOption?
     @State private var showFlagSuccessView = false
 
     @Environment(\.managedObjectContext) private var viewContext
@@ -55,7 +56,26 @@ struct ReportMenuModifier: ViewModifier {
                     }
                 }
         case .author:
-            oldModerationFlow(content: content)
+            content
+                .sheet(isPresented: $isPresented) {
+                    NavigationStack {
+                        UserFlagView(
+                            selectedFlagOption: $selectedFlagOption,
+                            selectedSendOption: $selectedFlagSendOption,
+                            selectedVisibilityOption: $selectedVisibilityOption,
+                            showSuccessView: $showFlagSuccessView, 
+                            flagTarget: reportedObject,
+                            sendAction: {
+                                let selectCategory = selectedVisibilityOption?.category ?? .visibility(.dontMute)
+                                publishReportForNewModerationFlow(selectCategory)
+                                Task {
+                                    await muteUserIfNeeded()
+                                    showFlagSuccessView = true
+                                }
+                            }
+                        )
+                    }
+                }
         }
     }
 
@@ -92,7 +112,9 @@ struct ReportMenuModifier: ViewModifier {
                 actions: {
                     if let author = reportedObject.author {
                         Button(String(localized: .localizable.yes)) {
-                            mute(author: author)
+                            Task {
+                                await mute(author: author)
+                            }
                         }
                         Button(String(localized: .localizable.no)) {}
                     }
@@ -173,16 +195,26 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
     
-    func mute(author: Author) {
-        Task {
-            do {
-                try await author.mute(viewContext: viewContext)
-            } catch {
-                Log.error(error.localizedDescription)
+    func mute(author: Author) async {
+        do {
+            try await author.mute(viewContext: viewContext)
+        } catch {
+            Log.error(error.localizedDescription)
+        }
+    }
+
+    /// Determines if the user being flagged should be muted.
+    private func muteUserIfNeeded() async {
+        if let author = reportedObject.author {
+            guard case .visibility(let visibilityCategory) = selectedVisibilityOption?.category else { return }
+
+            if visibilityCategory == .mute {
+                guard !author.muted else { return }
+                await mute(author: author)
             }
         }
     }
-    
+
     /// An enum to simplify the user selection through the sequence of connected
     /// dialogs
     enum UserSelection: Equatable {
