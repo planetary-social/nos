@@ -1,3 +1,4 @@
+import Logger
 import SDWebImageSwiftUI
 import SwiftUI
 
@@ -15,28 +16,42 @@ struct ImageButton: View {
 
     /// Whether the image is animating or not.
     @State private var isAnimating = false
+    
+    /// Whether to show a loading error view or not.
+    @State private var showLoadingError = false
 
     var body: some View {
-        Button {
-            isViewerPresented = true
-        } label: {
+        if showLoadingError {
             ZStack {
-                WebImage(url: url, isAnimating: $isAnimating)
-                    .onSuccess { image, _, _ in
-                        Task {
-                            isAnimated = image.sd_isAnimated
+                BrokenLinkView()
+            }
+        } else {
+            Button {
+                isViewerPresented = true
+            } label: {
+                ZStack {
+                    WebImage(url: url, isAnimating: $isAnimating)
+                        .onSuccess { image, _, _ in
+                            Task {
+                                isAnimated = image.sd_isAnimated
+                            }
                         }
-                    }
-                    .resizable()
-                    .scaledToFill()
+                        .onFailure { error in
+                            print("failed: \(error)")
+                            showLoadingError = true
+                            Log.error(error, "There was an error loading the image.")
+                        }
+                        .resizable()
+                        .scaledToFill()
 
-                if isAnimated && !isAnimating {
-                    gifOverlay
+                    if isAnimated && !isAnimating {
+                        gifOverlay
+                    }
                 }
             }
-        }
-        .sheet(isPresented: $isViewerPresented) {
-            ImageViewer(url: url)
+            .sheet(isPresented: $isViewerPresented) {
+                ImageViewer(url: url)
+            }
         }
     }
 
@@ -88,6 +103,14 @@ struct ImageButton: View {
     ImageButton(
         url: URL(
             string: "https://image.nostr.build/9640e78f03afc4927d80a15fd1c4bd1404dc654a8663efb92cc9ee1b8b0719a3.jpg"
+        )!
+    )
+}
+
+#Preview("Broken link") {
+    ImageButton(
+        url: URL(
+            string: "https://example.com/foo.jpg"
         )!
     )
 }
