@@ -11,15 +11,15 @@ struct AuthorListView: View {
 
     @State private var filteredAuthors: [Author]?
 
-    @StateObject private var searchTextObserver = SearchTextFieldObserver()
-    
+    @StateObject private var searchController = SearchController()
+
     @FocusState private var isSearching: Bool
 
     var didSelectGesture: ((Author) -> Void)?
 
     var body: some View {
         ScrollView(.vertical) {
-            SearchBar(text: $searchTextObserver.text, isSearching: $isSearching)
+            SearchBar(text: $searchController.query, isSearching: $isSearching)
                 .readabilityPadding()
                 .padding(.top, 10)
             LazyVStack {
@@ -39,7 +39,7 @@ struct AuthorListView: View {
         }
         .background(Color.appBg)
         .nosNavigationBar(title: .localizable.mention)
-        .onChange(of: searchTextObserver.debouncedText) { _, newValue in
+        .onChange(of: searchController.query) { _, newValue in
             search(for: newValue)
         }
         .onAppear {
@@ -64,7 +64,7 @@ struct AuthorListView: View {
     private func refreshAuthors() {
         let request = Author.allAuthorsWithNameOrDisplayNameRequest(muted: false)
         authors = try? viewContext.fetch(request)
-        search(for: searchTextObserver.text)
+        search(for: searchController.query)
     }
 
     private func search(for query: String) {
@@ -72,8 +72,12 @@ struct AuthorListView: View {
             filteredAuthors = authors
             return
         }
+
+        /// Search the relays for query.
+        searchController.submitSearch(query: query)
+
         let lowercasedQuery = query.lowercased()
-        filteredAuthors = authors?.filter { author in
+        filteredAuthors = searchController.authorResults.filter { author in
             if author.name?.lowercased().contains(lowercasedQuery) == true {
                 return true
             }
