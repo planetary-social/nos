@@ -10,7 +10,7 @@ struct NosNavigationBarModifier: ViewModifier {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text(title)
-                        .font(.clarity(.bold, textStyle: .title3))
+                        .font(.title3)
                         .foregroundColor(.primaryTxt)
                         .tint(.primaryTxt)
                         .allowsHitTesting(false)
