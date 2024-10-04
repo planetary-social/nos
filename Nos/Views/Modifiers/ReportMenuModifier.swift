@@ -69,7 +69,7 @@ struct ReportMenuModifier: ViewModifier {
                                 let selectCategory = selectedVisibilityOption?.category ?? .visibility(.dontMute)
                                 publishReportForNewModerationFlow(selectCategory)
                                 Task {
-                                    await determineFlaggedAccoutVisibility()
+                                    await muteUserIfNeeded()
                                     showFlagSuccessView = true
                                 }
                             }
@@ -203,8 +203,8 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
 
-    /// Determines the visibility status for a flagged account and applies the appropriate action.
-    private func determineFlaggedAccoutVisibility() async {
+    /// Determines if the user being flagged should be muted.
+    private func muteUserIfNeeded() async {
         if let author = reportedObject.author {
             guard case .visibility(let visibilityCategory) = selectedVisibilityOption?.category else { return }
 
