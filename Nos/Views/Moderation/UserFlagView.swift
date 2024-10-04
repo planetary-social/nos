@@ -36,6 +36,18 @@ struct UserFlagView: View {
         return selectedVisibilityOption == nil
     }
 
+    /// Controls when the "Send Section" should slide in from the left.
+    @State private var animateSendSection = false
+
+    /// Controls when the "Visibility Section" should slide in from the left.
+    @State private var animateVisibilitySection = false
+
+    /// Used to identify the "Send Section" section to autoscroll to the when it appears.
+    @Namespace var sendSectionID
+
+    /// Used to identify the "Visibility Section" section to autoscroll to the when it appears.
+    @Namespace var visibilitySectionID
+
     var body: some View {
         ZStack {
             Color.appBg.ignoresSafeArea()
@@ -46,7 +58,6 @@ struct UserFlagView: View {
                     categoryView
                 }
             }
-            .padding()
             .nosNavigationBar(title: .localizable.flagUserTitle)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -86,44 +97,59 @@ struct UserFlagView: View {
         selectedFlagOption = nil
         selectedSendOption = nil
         selectedVisibilityOption = nil
+        animateSendSection = false
+        animateVisibilitySection = false
     }
 
     private var categoryView: some View {
-        ScrollView {
-            VStack(spacing: 30) {
-                FlagOptionPicker(
-                    previousSelection: .constant(nil),
-                    currentSelection: $selectedFlagOption,
-                    options: flagCategories,
-                    title: String(localized: .localizable.flagUserCategoryTitle),
-                    subtitle: String(localized: .localizable.flagUserCategoryDescription)
-                )
+        GeometryReader { geometry in
+            ScrollViewReader { proxy in
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 30) {
+                        FlagOptionPicker(
+                            previousSelection: .constant(nil),
+                            currentSelection: $selectedFlagOption,
+                            options: flagCategories,
+                            title: String(localized: .localizable.flagUserCategoryTitle),
+                            subtitle: String(localized: .localizable.flagUserCategoryDescription)
+                        )
 
-                if selectedFlagOption != nil {
-                    FlagOptionPicker(
-                        previousSelection: $selectedFlagOption,
-                        currentSelection: $selectedSendOption,
-                        options: FlagOption.flagUserSendOptions,
-                        title: String(localized: .localizable.flagSendTitle),
-                        subtitle: nil
-                    )
-                    .transition(.move(edge: .leading).combined(with: .opacity))
-                }
+                        if selectedFlagOption != nil {
+                            FlagOptionPicker(
+                                previousSelection: $selectedFlagOption,
+                                currentSelection: $selectedSendOption,
+                                options: FlagOption.flagUserSendOptions,
+                                title: String(localized: .localizable.flagSendTitle),
+                                subtitle: nil
+                            )
+                            .id(sendSectionID)
+                            .offset(x: animateSendSection ? 0 : -geometry.size.width)
+                        }
 
-                if selectedSendOption != nil && !isUserMuted {
-                    FlagOptionPicker(
-                        previousSelection: .constant(nil),
-                        currentSelection: $selectedVisibilityOption,
-                        options: FlagOption.flagUserVisibilityOptions,
-                        title: String(localized: .localizable.flagUserMuteCategoryTitle),
-                        subtitle: nil
-                    )
-                    .transition(.move(edge: .leading).combined(with: .opacity))
+                        if selectedSendOption != nil && !isUserMuted {
+                            FlagOptionPicker(
+                                previousSelection: .constant(nil),
+                                currentSelection: $selectedVisibilityOption,
+                                options: FlagOption.flagUserVisibilityOptions,
+                                title: String(localized: .localizable.flagUserMuteCategoryTitle),
+                                subtitle: nil
+                            )
+                            .id(visibilitySectionID)
+                            .offset(x: animateVisibilitySection ? 0 : -geometry.size.width)
+                        }
+                    }
+                    .padding()
+                    .onChange(of: selectedFlagOption) {
+                        /// Animates the sliding effect and scrolls to the bottom of the specified section.
+                        proxy.animateAndScrollTo(sendSectionID, animating: $animateSendSection)
+                    }
+                    .onChange(of: selectedSendOption) {
+                        /// Animates the sliding effect and scrolls to the bottom of the specified section.
+                        proxy.animateAndScrollTo(visibilitySectionID, animating: $animateVisibilitySection)
+                    }
                 }
             }
         }
-        .animation(.easeInOut, value: selectedFlagOption)
-        .animation(.easeInOut, value: selectedSendOption)
     }
 }
 
