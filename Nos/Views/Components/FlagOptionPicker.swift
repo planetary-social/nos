@@ -166,6 +166,7 @@ private struct HeaderView: View {
             .lineSpacing(5)
             .foregroundColor(.primaryTxt)
             .font(.headline)
+            .fontWeight(.semibold)
             .padding(.bottom, 10)
     }
 }
