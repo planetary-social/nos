@@ -501,6 +501,12 @@
             "state" : "translated",
             "value" : "Harassment"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "骚扰"
+          }
         }
       }
     },
@@ -800,6 +806,12 @@
             "value" : "بدافزار"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "멀웨어"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -824,6 +836,18 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NSFW"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NSFW"
+          }
+        },
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "NSFW"
@@ -891,6 +915,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "سایر"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기타"
           }
         },
         "sv" : {
@@ -1027,6 +1057,12 @@
             "value" : "اسپم"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "스팸"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1107,6 +1143,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "خشونت"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "폭력"
           }
         },
         "sv" : {

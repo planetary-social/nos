@@ -144,7 +144,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nos는 Planetary를 개발한 팀이 Nostr 프로토콜을 기반으로 만든 새로운 소셜 미디어 앱입니다. 알고리즘이 아닌 인간을 위해 설계되었습니다. Nos.social에서 자세히 알아보세요."
+            "value" : "Nos는 Nostr 프로토콜"
           }
         },
         "nl" : {
@@ -1716,7 +1716,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "앱버전"
+            "value" : "앱 버전: "
           }
         },
         "nl" : {
@@ -1912,7 +1912,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "로그아웃하면 앱에서 개인 키(nsec)가 삭제됩니다. 이 작업을 수행하기 전에 개인키를 백업해 두지 않으면 계정에 액세스할 수 없게 됩니다!"
+            "value" : "로그아웃하면 앱에서 개인 키 (nsec) 가 삭제됩니다. 이 작업을 수행하기 전에 개인 키를 백업해 두지 않으면 계정에 액세스할 수 없게 됩니다!"
           }
         },
         "nl" : {
@@ -2593,7 +2593,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이것이 귀하의 유니버설 네임이 됩니다. 나중에 더 등록할 수 있습니다. 유효한 이름"
+            "value" : "이것이 귀하의 보편적인 이름이 됩니다. 나중에 더 등록할 수 있습니다. 유효한 이름 "
           }
         },
         "sv" : {
@@ -2658,7 +2658,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "여러분의 목소리를 소중히 여기는 Nos에 오신 것을 환영합니다. 고유한 **@username**.nos.social을 확보하여 여정을 시작하세요.\n\n탈중앙화된 세상에서 눈에 띄세요!"
+            "value" : "여러분의 목소리를 소중히 여기는 Nos에 오신 것을 환영합니다. 고유한 **@username**.nos.social을 확보하여 여정을 시작하세요.\n\n분산화된 세상에서 눈에 띄세요!"
           }
         },
         "sw" : {
@@ -2711,7 +2711,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "노스트르에서 나만의 아이덴티티를 증명하세요"
+            "value" : "Nostr에서 나만의 아이덴티티를 증명하세요"
           }
         },
         "sw" : {
@@ -2817,7 +2817,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "@username을 등록하고 탈중앙화된 세상에서 돋보이세요!"
+            "value" : "@username을 등록하고 분산화된 세상에서 돋보이세요!"
           }
         },
         "sw" : {
@@ -4073,7 +4073,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "复制笔记标识符"
+            "value" : "复制 Nostr 笔记 ID"
           }
         },
         "zh-Hant" : {
@@ -4792,6 +4792,12 @@
             "state" : "translated",
             "value" : "Radera"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除"
+          }
         }
       }
     },
@@ -4821,6 +4827,12 @@
             "state" : "translated",
             "value" : "Radera konto"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除账户"
+          }
         }
       }
     },
@@ -4843,6 +4855,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "계정을 삭제하면 Nos 서버에서 모든 데이터가 삭제되고 모든 릴레이에게 동일한 작업을 요청하게 됩니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除您的帐户将从 Nos 服务器中删除您的所有数据，并要求您的所有中继执行同样的操作。"
           }
         }
       }
@@ -4872,6 +4890,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Radera mitt konto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除我的账户"
           }
         }
       }
@@ -5593,7 +5617,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "显示名"
+            "value" : "显示名称"
           }
         },
         "zh-Hant" : {
@@ -5921,6 +5945,12 @@
             "state" : "translated",
             "value" : "계정 삭제 활성화"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用账户删除"
+          }
         }
       }
     },
@@ -5997,6 +6027,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "새로운 모더레이션 흐름 활성화"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用新审核流程"
           }
         }
       }
@@ -7329,6 +7365,12 @@
             "state" : "translated",
             "value" : "콘텐츠 플래그 지정"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标记内容"
+          }
         }
       }
     },
@@ -7352,6 +7394,12 @@
             "state" : "translated",
             "value" : "콘텐츠를 위한 태그를 선택하세요"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "为内容选择标签"
+          }
         }
       }
     },
@@ -7369,6 +7417,18 @@
             "state" : "translated",
             "value" : "Crear un reporte de contenido para esta nota que otros usuarios de la red puedan ver."
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "네트워크의 다른 사용자들이 볼 수 있도록 이 게시물에 대한 콘텐츠 플래그를 작성하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "为这个帖子创建一个内容标记，以便网络中的其他用户可以看到。"
+          }
         }
       }
     },
@@ -7385,6 +7445,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "유해하고 원치 않는 답글 또는 멘션."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有害和不受欢迎的回复或提及。"
           }
         }
       }
@@ -7409,6 +7475,12 @@
             "state" : "translated",
             "value" : "괴롭힘 및 욕설"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "骚扰和亵渎"
+          }
         }
       }
     },
@@ -7425,6 +7497,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "국가법 혹은 CSAM에 저촉되는 콘텐츠"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "违反您所在国家/地区或 CSAM 法律的内容。"
           }
         }
       }
@@ -7449,6 +7527,12 @@
             "state" : "translated",
             "value" : "불법적인"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不合法"
+          }
         }
       }
     },
@@ -7466,6 +7550,12 @@
             "state" : "translated",
             "value" : "성적인 콘텐츠, 포르노 또는 폭력적인 콘텐츠."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不适合工作期间访问的裸体、色情或暴力内容。"
+          }
         }
       }
     },
@@ -7482,6 +7572,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "위에 포함되지 않은 항목."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以上均未包含的项目。"
           }
         }
       }
@@ -7506,6 +7602,12 @@
             "state" : "translated",
             "value" : "기타"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "其他"
+          }
         }
       }
     },
@@ -7516,6 +7618,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The Nos moderation team will analyze the note for %@ and may publish a report from our Tagr-bot account, concealing your identity."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos 중재팀이 %@에 대해 이 게시물을 분석한 뒤, 당신에 대한 정보를 숨긴 채 Tagr-bot 계정을 통해 결과를 업로드할 것입니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos 审核团队将分析 %@ 的笔记，并可能从我们的 Tagr-bot 帐户发布报告，隐藏您的身份。"
           }
         }
       }
@@ -7540,6 +7654,12 @@
             "state" : "translated",
             "value" : "Skräppost"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "垃圾内容"
+          }
         }
       }
     },
@@ -7556,6 +7676,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "이 플래그는 회원님의 계정에 귀속돼요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此标记将归属于您的帐户。"
           }
         }
       }
@@ -7574,6 +7700,12 @@
             "state" : "translated",
             "value" : "공개 플래그 지정"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "公开标记"
+          }
         }
       }
     },
@@ -7590,6 +7722,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nos로 보내거나 공개 플래그 지정하기"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发送给 Nos 或公开标记？"
           }
         }
       }
@@ -7608,6 +7746,12 @@
             "state" : "translated",
             "value" : "이 플래그는 TAGR봇에 귀속돼요."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此标记将归属于 TAGR 机器人。"
+          }
         }
       }
     },
@@ -7624,6 +7768,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nos로 보내요"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发送给 Nos"
           }
         }
       }
@@ -7725,6 +7875,12 @@
             "state" : "translated",
             "value" : "사용자를 위한 태그를 선택하세요"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "为用户选择标签"
+          }
         }
       }
     },
@@ -7741,6 +7897,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "당신의 네트워크의 다른 사람들이 볼 수 있는 이 사용자에 대한 태그를 생성해요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "为该用户创建一个标签，以便您的网络中的其他人可以看到。"
           }
         }
       }
@@ -7759,6 +7921,12 @@
             "state" : "translated",
             "value" : "이 사용자로 부터 계속 노트를 볼 수 있어요,"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您将继续看到来自该用户的笔记。"
+          }
         }
       }
     },
@@ -7775,6 +7943,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "뮤트하지 않기"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不静音"
           }
         }
       }
@@ -7793,6 +7967,12 @@
             "state" : "translated",
             "value" : "사용자가 다른 사람의 신원을 도용하고 있어요."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户正在窃取他人的身份。"
+          }
         }
       }
     },
@@ -7809,6 +7989,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "도용/사칭"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "冒充他人"
           }
         }
       }
@@ -7838,6 +8024,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Créer un signalement pour cet utilisateur que d'autres utilisateurs du réseau peuvent voir."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "네트워크의 다른 사용자들이 볼 수 있도록 이 사용자에 대한 플래그를 작성하세요."
           }
         },
         "sw" : {
@@ -7874,6 +8066,12 @@
             "state" : "translated",
             "value" : "이 유저를 뮤트할건가요?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "静音此用户？"
+          }
         }
       }
     },
@@ -7890,6 +8088,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "이 유저의 노트를 더이상 볼 수 없을거에요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您将不再看到该用户的笔记。"
           }
         }
       }
@@ -7908,6 +8112,12 @@
             "state" : "translated",
             "value" : "뮤트"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "静音"
+          }
         }
       }
     },
@@ -7919,6 +8129,18 @@
             "state" : "translated",
             "value" : "The Nos moderation team will analyze the user for %@ and may publish a report from our Tagr-bot account, concealing your identity."
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos 중재팀이 %@에 대해 이 사용자를 분석한 뒤, 당신에 대한 정보를 숨긴 채 Tagr-bot 계정을 통해 결과를 업로드할 것입니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos 审核团队将对用户进行 %@ 分析，并可能从我们的 Tagr-bot 帐户发布报告，隐藏您的身份。"
+          }
         }
       }
     },
@@ -7929,6 +8151,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Flag User"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标记用户"
           }
         }
       }
@@ -8873,7 +9101,19 @@
             "value" : "GIF"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GIF"
+          }
+        },
         "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GIF"
+          }
+        },
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "GIF"
@@ -9552,6 +9792,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "노스터를 모두에게 더 나은 공간이 되도록 계속 도와주세요!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "继续帮助我们让 Nostr 成为每个人更好的地方！"
           }
         }
       }
@@ -11329,6 +11575,12 @@
             "state" : "translated",
             "value" : "%@ är en ny följare!"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 是一位新关注者！"
+          }
         }
       }
     },
@@ -11511,6 +11763,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Du har en ny följare!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您有一位新关注者！"
           }
         }
       }
@@ -11884,6 +12142,18 @@
             "state" : "translated",
             "value" : "アドレス (NIP-05)"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NIP-05"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NIP-05"
+          }
         }
       }
     },
@@ -11965,6 +12235,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "utilisateur@serveur.com"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "user@server.com"
           }
         }
       }
@@ -12533,6 +12809,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nos (ノス)"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos"
           }
         }
       }
@@ -14287,6 +14575,12 @@
             "value" : "Vous serez redirigé vers le site UNS où vous pourrez enregistrer un nom premium."
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "프리미엄 이름을 등록할 수 있는 UNS 사이트로 리다이렉트됩니다."
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14339,6 +14633,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "미리보기"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "预览"
           }
         }
       }
@@ -15354,6 +15654,12 @@
             "value" : "S'enregistrer"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회원가입"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15417,6 +15723,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Entrez votre numéro de téléphone pour que nous puissions vous envoyer un code par SMS."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "휴대전화 번호를 입력해 주세요. SMS 코드가 전송됩니다."
           }
         },
         "sv" : {
@@ -15649,6 +15961,12 @@
             "state" : "translated",
             "value" : "seurelay.com"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yourrelay.com"
+          }
         }
       }
     },
@@ -15695,6 +16013,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "このリレーは期限切れメッセージをサポートしていません。他のリレーを選択してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 릴레이는 만료된 메시지들을 지원하지 않습니다. 다른 메시지를 선택해 주세요."
           }
         },
         "sv" : {
@@ -15833,6 +16157,12 @@
             "value" : "Important ! NOS fonctionne mieux avec 5 relais ou moins."
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "중요한 사항! Nos는 5개 미만의 릴레이와 함께할 때 제일 잘 작동합니다."
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15880,6 +16210,12 @@
             "value" : "[ %@ ]\nEnvoyer à Nos ou Signaler publiquement"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[ %@ ]\nNos로 보내거나 공개적으로 플래그(표시)하기"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15925,6 +16261,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nos examinera ce drapeau et l'appliquera de manière anonyme si la révision correspond à la catégorie."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos는 이 플래그를 검토한 뒤 적절한 카테고리라고 판단하면 익명으로 적용할 것입니다."
           }
         },
         "sw" : {
@@ -16057,6 +16399,12 @@
             "value" : "Créer un signalement pour cet utilisateur que d'autres utilisateurs du réseau peuvent voir"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "네트워크의 다른 사용자들이 볼 수 있도록 이 포스트에 대한 콘텐츠 플래그를 작성하세요"
+          }
+        },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16108,6 +16456,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ce contenu a été signalé pour %@."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 콘텐츠는 %@의 이유로 플래그 (표시) 되었습니다."
           }
         },
         "sv" : {
@@ -16261,7 +16615,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "标记此内容"
+            "value" : "标记此笔记"
           }
         },
         "zh-Hant" : {
@@ -16297,6 +16651,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "L'équipe de modération Nos analysera la note pour le contenu %@ et pourra publier un rapport pour notre propre compte, dissimulant votre identité."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 콘텐츠는 %@의 이유로 플래그 (표시) 되었습니다."
           }
         },
         "sw" : {
@@ -16361,7 +16721,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "转发"
+            "value" : "转帖"
           }
         },
         "zh-Hant" : {
@@ -16764,7 +17124,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "无法保存中继器"
+            "value" : "无法保存中继。"
           }
         },
         "zh-Hant" : {
@@ -17974,6 +18334,12 @@
             "state" : "translated",
             "value" : "Dela anteckning"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享笔记"
+          }
         }
       }
     },
@@ -18422,6 +18788,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Skräppost"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "垃圾内容"
           }
         }
       }
@@ -19025,6 +19397,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "당신의 태그에 감사해요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "感谢您的标记。"
           }
         }
       }
@@ -20121,6 +20499,12 @@
             "value" : "آدرس اینترنتی URL"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Url"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -20237,6 +20621,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lorsque quelqu'un que vous suivez signale une note ou un utilisateur, nous ajouterons un avertissement de contenu à ses notes."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "당신이 팔로우한 사용자가 게시물이나 사용자에 대해 플래그하면, 저희가 해당 게시물에 콘텐츠 워닝을 추가하겠습니다."
           }
         },
         "sv" : {
@@ -20993,7 +21383,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "查看源代码"
+            "value" : "查看源"
           }
         },
         "zh-Hant" : {
@@ -21149,10 +21539,22 @@
             "value" : "¡Tienes %@ nuevos seguidores!"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@명의 새로운 팔로워가 있습니다!"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Du har %@ nya följare!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你有 %@ 个新关注者！"
           }
         }
       }
