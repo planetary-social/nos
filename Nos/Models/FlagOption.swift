@@ -84,7 +84,7 @@ struct FlagOption: Identifiable, Equatable {
             title: String(localized: .localizable.flagUserDontMuteTitle),
             description: String(localized: .localizable.flagUserDontMuteDescription),
             info: nil,
-            category: .visibility(.unmute)
+            category: .visibility(.dontMute)
         )
     ]
 
@@ -153,5 +153,5 @@ enum SendFlagPrivacy {
 /// Specifies whether a flagged user should be muted or not.
 enum FlagUserVisibility {
     case mute
-    case unmute
+    case dontMute
 }

@@ -9,6 +9,9 @@ struct ContentFlagView: View {
 
     /// The target of the report.
     let flagTarget: ReportTarget
+
+    /// Defines the action to be performed when the user sends a flag report.
+    /// It is called when the user taps the "Send" button after selecting all required options.
     var sendAction: () -> Void
 
     @Environment(\.dismiss) private var dismiss
@@ -20,7 +23,7 @@ struct ContentFlagView: View {
             Color.appBg.ignoresSafeArea()
             Group {
                 if showSuccessView {
-                    successView
+                    FlagSuccessView()
                 } else {
                     categoryView
                 }
@@ -30,13 +33,13 @@ struct ContentFlagView: View {
             .nosNavigationBar(title: .localizable.flagContent)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
+                    Button {
                         dismiss()
                         resetSelections()
-                    }, label: {
+                    } label: {
                         Text(.localizable.cancel)
                             .foregroundColor(.primaryTxt)
-                    })
+                    }
                     .opacity(showSuccessView ? 0 : 1)
                     .disabled(showSuccessView)
                 }
@@ -53,7 +56,6 @@ struct ContentFlagView: View {
                             }
                         }
                     )
-                    .opacity(selectedSendOptionCategory == nil ? 0.5 : 1)
                     .disabled(selectedSendOptionCategory == nil)
                 }
             }
@@ -90,27 +92,6 @@ struct ContentFlagView: View {
                     .transition(.move(edge: .leading).combined(with: .opacity))
                 }
             }
-        }
-    }
-
-    private var successView: some View {
-        VStack(spacing: 30) {
-            Image.circularCheckmark
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 116)
-
-            Text(String(localized: .localizable.thanksForTag))
-                .foregroundColor(.primaryTxt)
-                .font(.clarity(.regular, textStyle: .title2))
-                .padding(.horizontal, 62)
-
-            Text(String(localized: .localizable.keepOnHelpingUs))
-                .padding(.horizontal, 68)
-                .foregroundColor(.secondaryTxt)
-                .multilineTextAlignment(.center)
-                .lineSpacing(6)
-                .font(.clarity(.regular, textStyle: .subheadline))
         }
     }
 }
