@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Release Notes
 - Disable autocorrect on NoteComposer when running on macOS. [#1460](https://github.com/planetary-social/nos/issues/1460)
+- Add @ button to the Note Composer. [#1561](https://github.com/planetary-social/nos/issues/1561)
 
 ### Internal Changes
 - Show WebP images without link preview overlay. Currently behind the “Enable new media display” feature flag. [#1488](https://github.com/planetary-social/nos/issues/1488)
