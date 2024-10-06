@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update Xcode to version 15.4, adding compatibility for Xcode 16.
 - Reduced spammy "Failed to parse Follow" log messages.
 - Upgraded fastlane to version 2.223.1.
+- Improve performance of AuthorLabel. [#1458](https://github.com/planetary-social/nos/issues/1458)
 
 ## [0.2.1] - 2024-10-01Z
 
