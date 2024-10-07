@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the media viewer that displays images, videos, and web pages inside of notes. [#1538](https://github.com/planetary-social/nos/issues/1538)
 - Removed image and video link text from notes. Now only the images and videos will appear, without the link. [#1487](https://github.com/planetary-social/nos/issues/1487)
 - Added new translations for the app so you can use it in Korean, Chinese Simplified, Swedish, and more! Thanks to alternative, 안마리 (everyscreennetwork), Andypsl8, Dženan (Dzenan), ObjectifMoon, ra5pvt1n, and everyone else who contributed translations on Crowdin!
+- Decreased the opacity on disabled buttons.
 
 ### Internal Changes
 - Fix the Crowdin GitHub integration by using the official GitHub action. [#1520](https://github.com/planetary-social/nos/issues/1520)
