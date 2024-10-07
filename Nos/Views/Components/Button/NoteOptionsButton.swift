@@ -28,51 +28,51 @@ struct NoteOptionsButton: View {
                     // This hack fixes a weird issue where the confirmationDialog wouldn't be shown sometimes. ¯\_(ツ)_/¯
                     .background(showingOptions == true ? .clear : .clear)
             }
-            .confirmationDialog(String(localized: .localizable.share), isPresented: $showingOptions) {
-                Button(String(localized: .localizable.copyNoteIdentifier)) {
+            .confirmationDialog("share", isPresented: $showingOptions) {
+                Button("copyNoteIdentifier") {
                     analytics.copiedNoteIdentifier()
                     copyMessageIdentifier()
                 }
-                Button(String(localized: .localizable.shareNote)) {
+                Button("shareNote") {
                     showingShare = true
                     analytics.sharedNoteLink()
                 }
                 if !note.isStub {
-                    Button(String(localized: .localizable.copyNoteText)) {
+                    Button("copyNoteText") {
                         analytics.copiedNoteText()
                         copyMessage()
                     }
-                    Button(String(localized: .localizable.viewSource)) {
+                    Button("viewSource") {
                         analytics.viewedNoteSource()
                         showingSource = true
                     }
                     if note.author != currentUser.author {
-                        Button(String(localized: .localizable.reportNote)) {
+                        Button("reportNote") {
                             showingReportMenu = true
                         }
                     }
                 }
                 if note.author == currentUser.author {
-                    Button(String(localized: .localizable.deleteNote), role: .destructive) {
+                    Button("deleteNote", role: .destructive) {
                         confirmDelete = true
                     }
                 }
             }
             .reportMenu($showingReportMenu, reportedObject: .note(note))
             .alert(
-                String(localized: .localizable.confirmDelete),
+                "confirmDelete",
                 isPresented: $confirmDelete,
                 actions: {
-                    Button(String(localized: .localizable.confirm), role: .destructive) {
+                    Button("confirm", role: .destructive) {
                         analytics.deletedNote()
                         Task { await deletePost() }
                     }
-                    Button(String(localized: .localizable.cancel), role: .cancel) {
+                    Button("cancel", role: .cancel) {
                         confirmDelete = false
                     }
                 },
                 message: {
-                    Text(.localizable.deleteNoteConfirmation)
+                    Text("deleteNoteConfirmation")
                 }
             )
             .sheet(isPresented: $showingSource) {
