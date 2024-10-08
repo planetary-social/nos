@@ -5,6 +5,7 @@ struct BrokenLinkView: View {
     var body: some View {
         ZStack {
             Color.brokenLinkBgOverlay
+                .blendMode(.softLight)
             Image.brokenLink
                 .scaledToFit()
                 .frame(width: 124, height: 124)
