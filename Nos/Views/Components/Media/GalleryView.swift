@@ -146,6 +146,7 @@ fileprivate struct GalleryIndexView: View {
 #Preview("Multiple URLs, landscape image first") {
     let urls = [
         URL(string: "https://image.nostr.build/77713e6c2ef5186d516a6f16fb197fca53a20677c6756a9de1afc2d5e6d96548.jpg")!,
+        URL(string: "https://example.com/no.jpg")!,
         URL(string: "https://image.nostr.build/486821596f66bcc6bae55544ddf8f00be0e4c2470556d3fee8e2a4ddadd01266.jpg")!,
         URL(string: "https://images.unsplash.com/photo-1715686529501-e097bd9caea7")!,
         URL(string: "https://www.youtube.com/watch?v=sB6HY8r983c")!,
@@ -161,6 +162,7 @@ fileprivate struct GalleryIndexView: View {
 #Preview("Multiple URLs, portrait image first") {
     let urls = [
         URL(string: "https://image.nostr.build/486821596f66bcc6bae55544ddf8f00be0e4c2470556d3fee8e2a4ddadd01266.jpg")!,
+        URL(string: "https://example.com/no.jpg")!,
         URL(string: "https://image.nostr.build/77713e6c2ef5186d516a6f16fb197fca53a20677c6756a9de1afc2d5e6d96548.jpg")!,
     ]
     return VStack {
