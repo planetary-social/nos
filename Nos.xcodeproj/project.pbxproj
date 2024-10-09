@@ -2863,8 +2863,9 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "STAGING=1";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nos/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Nos Staging";
+				INFOPLIST_KEY_CFBundleDisplayName = "Nos Dev";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Nos can access camera to allow users to post photos directly.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Nos uses the microphone when you are record a video from within the app.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -3038,6 +3039,7 @@
 				INFOPLIST_FILE = Nos/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Nos Dev";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Nos can access camera to allow users to post photos directly.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Nos uses the microphone when you are record a video from within the app.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -3307,7 +3309,9 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nos/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Nos Dev";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Nos can access camera to allow users to post photos directly.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Nos uses the microphone when you are record a video from within the app.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -3362,7 +3366,9 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nos/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Nos Dev";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Nos can access camera to allow users to post photos directly.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Nos uses the microphone when you are record a video from within the app.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

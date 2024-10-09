@@ -21,6 +21,7 @@ struct NosApp: App {
         // hack to fix confirmationDialog color issue
         // https://github.com/planetary-social/nos/issues/1064
         UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .systemBlue
+        persistenceController.scheduleBackgroundCleanupTask()
     }
     
     var body: some Scene {
@@ -33,9 +34,6 @@ struct NosApp: App {
                 .environment(currentUser)
                 .environmentObject(pushNotificationService)
                 .onOpenURL { DeepLinkService.handle($0, router: router) }
-                .task {
-                    await persistenceController.cleanupEntities()
-                }
                 .onChange(of: scenePhase) { _, newPhase in
                     switch newPhase {
                     case .inactive:
