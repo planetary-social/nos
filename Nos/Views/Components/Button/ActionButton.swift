@@ -135,7 +135,7 @@ struct ActionButtonStyle: ButtonStyle {
                     x: 0,
                     y: 2
                 )
-                .opacity(isEnabled ? 1 : 0.5)
+                .opacity(isEnabled ? 1 : 0.4)
                 .background(
                     ZStack {
                         LinearGradient(
@@ -188,6 +188,7 @@ struct ActionButton_Previews: PreviewProvider {
 
             // Something that should wrap at larger text sizes
             SecondaryActionButton(title: .localizable.reportNoteSendToNosConfirmation("harassment"), action: {})
+                .disabled(true)
         }
     }
 }

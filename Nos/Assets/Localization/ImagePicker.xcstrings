@@ -72,7 +72,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La cámara no esta disponible en este aparato"
+            "value" : "La cámara no está disponible en este dispositivo"
           }
         },
         "fa" : {
@@ -500,6 +500,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Take photo"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tomar una foto"
           }
         },
         "ko" : {

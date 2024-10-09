@@ -15,12 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed image and video link text from notes. Now only the images and videos will appear, without the link. [#1487](https://github.com/planetary-social/nos/issues/1487)
 - Added new translations for the app so you can use it in Korean, Chinese Simplified, Swedish, and more! Thanks to alternative, 안마리 (everyscreennetwork), Andypsl8, Dženan (Dzenan), ObjectifMoon, ra5pvt1n, and everyone else who contributed translations on Crowdin!
 - Updated user mentions search functionality to also search relays in the user's relay list. [#1560](https://github.com/planetary-social/nos/issues/1560)
+- Decreased the opacity on disabled buttons.
 
 ### Internal Changes
+- Moved the database cleanup routine into a background execution task. [#1426](https://github.com/planetary-social/nos/issues/1426)
 - Fix the Crowdin GitHub integration by using the official GitHub action. [#1520](https://github.com/planetary-social/nos/issues/1520)
 - Update Xcode to version 15.4, adding compatibility for Xcode 16.
 - Reduced spammy "Failed to parse Follow" log messages.
 - Upgraded fastlane to version 2.223.1.
+- Improved performance of NoteOptionsButton. [#1458](https://github.com/planetary-social/nos/issues/1458)
 
 ## [0.2.1] - 2024-10-01Z
 

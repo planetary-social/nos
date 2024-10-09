@@ -23,6 +23,7 @@ enum DatabaseCleaner {
         @Dependency(\.analytics) var analytics
         
         let startTime = Date.now
+        analytics.databaseCleanupStarted()
         Log.info("Starting Core Data cleanup...")
         
         Log.info("Database statistics: \(try await PersistenceController.databaseStatistics(from: context))")
@@ -78,6 +79,7 @@ enum DatabaseCleaner {
         
         let elapsedTime = Date.now.timeIntervalSince1970 - startTime.timeIntervalSince1970 
         Log.info("Finished Core Data cleanup in \(elapsedTime) seconds.")
+        analytics.databaseCleanupCompleted(duration: elapsedTime)
     }
     
     /// This converts old hydrated events back to stubs. We do this because EventReferences can form long chains

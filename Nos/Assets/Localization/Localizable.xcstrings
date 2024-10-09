@@ -6147,6 +6147,12 @@
             "value" : "Error"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6757,6 +6763,12 @@
             "value" : "Gaming"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videojuegos"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7360,6 +7372,12 @@
             "value" : "Flag Content"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marcar Contenido"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7441,6 +7459,12 @@
             "value" : "Harmful and unwanted replies or mentions."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Respuestas o menciones dañinas y no deseadas."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7491,6 +7515,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Content that violates the law in your country or CSAM."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contenido que viola la ley en tu país o CSAM."
           }
         },
         "ko" : {
@@ -7545,6 +7575,12 @@
             "value" : "Nudity, porn, or violent content not appropriate for work."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desnudez, pornografía o contenido violento no apropiado para el trabajo."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7566,6 +7602,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Items not included above."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artículos no incluidos arriba."
           }
         },
         "ko" : {
@@ -7620,6 +7662,12 @@
             "value" : "The Nos moderation team will analyze the note for %@ and may publish a report from our Tagr-bot account, concealing your identity."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El equipo de moderación de Nos analizará la nota por contenido de %@ y podrá publicar un informe desde nuestra propia cuenta, ocultando tu identidad."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7638,6 +7686,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spam"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spam"
@@ -7672,6 +7726,12 @@
             "value" : "This flag will be attributed to your account."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta marca se atribuirá a tu cuenta."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7693,6 +7753,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Flag Publicly"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marcar públicamente"
           }
         },
         "ko" : {
@@ -7718,6 +7784,12 @@
             "value" : "Send to Nos or Flag Publicly?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Enviar a Nos o Marcar Públicamente?"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7741,6 +7813,12 @@
             "value" : "This flag will be attributed to TAGR bot."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta marca se atribuirá al bot TAGR."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7762,6 +7840,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Send to Nos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar a Nos"
           }
         },
         "ko" : {
@@ -7870,6 +7954,12 @@
             "value" : "Select a tag for the user"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccione un tag para el usuario"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7891,6 +7981,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create a tag for this user that other people in your network can see."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crea un tag para este usuario que otros en tu red pueden ver."
           }
         },
         "ko" : {
@@ -7916,6 +8012,12 @@
             "value" : "You will continue seeing notes from this user."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seguirás viendo notas de este usuario."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7937,6 +8039,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Don't Mute"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Silenciar"
           }
         },
         "ko" : {
