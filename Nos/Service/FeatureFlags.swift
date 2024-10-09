@@ -7,9 +7,6 @@ enum FeatureFlag {
     /// Whether the new moderation flow should be enabled or not.
     /// - Note: See [#1489](https://github.com/planetary-social/nos/issues/1489) for details on the new moderation flow.
     case newModerationFlow
-    /// Whether delete account UI is enabled or not.
-    /// - Note: See [#80](https://github.com/planetary-social/nos/issues/80) for details on deleting accounts.
-    case deleteAccount
 }
 
 /// The set of feature flags used by the app.
@@ -34,7 +31,6 @@ protocol FeatureFlags {
     /// Feature flags and their values.
     private var featureFlags: [FeatureFlag: Bool] = [
         .newModerationFlow: false,
-        .deleteAccount: false
     ]
 
     /// Returns true if the feature is enabled.
