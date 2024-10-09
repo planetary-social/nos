@@ -10,6 +10,12 @@
             "value" : "in discussion"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "en discusión"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -31,6 +37,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Join the discussion"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unirse a la discusión"
           }
         },
         "zh-Hans" : {
@@ -596,6 +608,12 @@
             "value" : "⚡️ zapped you!"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ ¡te mando un zap!"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -620,6 +638,24 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "⚡️ zapped you %ld sats!"
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "⚡ ¡te mando un zap de %ld sat!"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "⚡ ¡te mando un zap de %ld sats!"
                 }
               }
             }
