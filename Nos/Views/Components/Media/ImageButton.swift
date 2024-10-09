@@ -22,9 +22,7 @@ struct ImageButton: View {
 
     var body: some View {
         if showError {
-            ZStack {
-                BrokenLinkView()
-            }
+            BrokenLinkView()
         } else {
             Button {
                 isViewerPresented = true
