@@ -2,12 +2,16 @@ import SwiftUI
 
 struct NoteCardHeader: View {
     
-    @ObservedObject var note: Event
-    @ObservedObject var author: Author
+    let note: Event
+    let author: Author
     
     var body: some View {
         HStack(alignment: .center) {
-            AuthorLabel(author: author, note: note)
+            AuthorLabel(
+                safeName: author.safeName,
+                profilePhotoURL: author.profilePhotoURL,
+                isReply: note.isReply
+            )
             Spacer()
             if let expirationTime = note.expirationDate?.distanceString() {
                 Image.disappearingMessages
