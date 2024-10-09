@@ -10,7 +10,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     @Dependency(\.currentUser) private var currentUser
     @Dependency(\.pushNotificationService) private var pushNotificationService
     @Dependency(\.analytics) private var analytics
-    @Dependency(\.persistenceController) private var persistenceController
 
     func application(
         _ application: UIApplication,
