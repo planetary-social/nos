@@ -10,17 +10,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Release Notes
+- Updated the media viewer that displays images, videos, and web pages inside of notes. [#1538](https://github.com/planetary-social/nos/issues/1538)
+- Removed image and video link text from notes. Now only the images and videos will appear, without the link. [#1487](https://github.com/planetary-social/nos/issues/1487)
+- Added new translations for the app so you can use it in Korean, Chinese Simplified, Swedish, and more! Thanks to alternative, 안마리 (everyscreennetwork), Andypsl8, Dženan (Dzenan), ObjectifMoon, ra5pvt1n, and everyone else who contributed translations on Crowdin!
+- Decreased the opacity on disabled buttons.
+
+### Internal Changes
+- Fix the Crowdin GitHub integration by using the official GitHub action. [#1520](https://github.com/planetary-social/nos/issues/1520)
+- Update Xcode to version 15.4, adding compatibility for Xcode 16.
+- Reduced spammy "Failed to parse Follow" log messages.
+- Upgraded fastlane to version 2.223.1.
+
 ## [0.2.1] - 2024-10-01Z
 
 ### Release Notes
 - Disable autocorrect on NoteComposer when running on macOS. [#1460](https://github.com/planetary-social/nos/issues/1460)
+- Add @ button to the Note Composer. [#1561](https://github.com/planetary-social/nos/issues/1561)
 
 ### Internal Changes
 - Moved the database cleanup routine into a background execution task. 
     [#1426](https://github.com/planetary-social/nos/issues/1426)
 - Show WebP images without link preview overlay. Currently behind the “Enable new media display” feature flag. [#1488](https://github.com/planetary-social/nos/issues/1488)
 - Show GIF overlay for animated WebP images. Currently behind the “Enable new media display” feature flag. [#1488](https://github.com/planetary-social/nos/issues/1488)
-- Fix the Crowdin GitHub integration by using the official GitHub action. [#1520](https://github.com/planetary-social/nos/issues/1520)
 - Temporarily remove Martin from the list of CODEOWNERS.
 
 ## [0.1.27] - 2024-09-25Z
@@ -45,7 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Publish empty metadata event and empty contact list on delete account. [#1530](https://github.com/planetary-social/nos/issues/1530)
 
 ### Internal Changes
-- Update Xcode to version 16.0.
 - Use NIP-92 media metadata to display media in the proper orientation. Currently behind the “Enable new media display” feature flag. [#1172](https://github.com/planetary-social/nos/issues/1172)
 - Added more instructions to the changelog file.
 - Added some logging when a content warning is displayed. [cleanstr#53](https://github.com/planetary-social/cleanstr/issues/53)
@@ -55,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added SwiftSoup to parse Open Graph metadata. [#1165](https://github.com/planetary-social/nos/issues/1165)
 - Parse Open Graph metadata whenever an event contains a URL, doesn’t have `imeta` tags, and the URL points to an HTML document. [#1425](https://github.com/planetary-social/nos/issues/1425)
 - Added a new flow to flag notes. Currently behind the “Enable new moderation flow” feature flag. [#1489](https://github.com/planetary-social/nos/issues/1489)
+- Added a new flow to flag users. Currently behind the “Enable new moderation flow” feature flag. [#1493](https://github.com/planetary-social/nos/issues/1493)
 
 ## [0.1.26] - 2024-09-09Z
 

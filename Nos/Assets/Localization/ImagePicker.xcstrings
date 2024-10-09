@@ -28,6 +28,12 @@
             "value" : "دوربین"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "카메라"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -73,6 +79,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "دوربین در این دستگاه موجود نیست"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 디바이스에서 카메라 사용 불가"
           }
         },
         "sv" : {
@@ -122,6 +134,12 @@
             "value" : "خطا در بارگذاری فایل"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일을 업로드하는 도중 오류가 발생했어요"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -156,6 +174,12 @@
             "state" : "translated",
             "value" : "El maximo tamaño para publicacion de achivos gratis es %@. Para subir archives mas grande puedes pagar para subscribir a una cuenta Nostr.build pro."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免费媒体上传的最大文件大小为 %@。要上传大文件，请升级到 Nostr.build 专业版帐户。"
+          }
         }
       }
     },
@@ -172,6 +196,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Registarse para una cuenta pro de Nostr.build para la abilidad de subir archivos mas grande"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "获取 Nostr.build 帐户以上传更大的文件"
           }
         }
       }
@@ -237,6 +267,12 @@
             "state" : "translated",
             "value" : "Hubo un error en el intento de subir el archivo. El mensaje de error era\"%@\""
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上传您提供的文件时遇到错误。消息为：“%@”"
+          }
         }
       }
     },
@@ -253,6 +289,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Registar una Cuenta"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "获取帐户"
           }
         }
       }
@@ -378,6 +420,12 @@
             "value" : "گالری عکس"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "갤러리"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -453,6 +501,24 @@
             "state" : "translated",
             "value" : "Take photo"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사진 찍기"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ta foto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拍摄"
+          }
         }
       }
     },
@@ -461,7 +527,7 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Foto mit Kamera aufnehmen"
           }
         },
@@ -479,25 +545,31 @@
         },
         "fa" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "با دوربین عکس بگیرید"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사진 혹은 영상 찍기"
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Ta ett foto med kameran"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "使用摄像机拍摄照片"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "使用攝像機拍攝照片"
           }
         }
@@ -528,6 +600,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "در حال بارگذاری..."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "업로드 중..."
           }
         },
         "sv" : {

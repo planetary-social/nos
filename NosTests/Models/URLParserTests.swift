@@ -13,7 +13,7 @@ class URLParserTests: XCTestCase {
     func testExtractURLs() throws {
         // swiftlint:disable line_length
         let string = "Classifieds incoming... 👀\n\nhttps://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg"
-        let expectedString = "Classifieds incoming... 👀\n\n[nostr.build...](https://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg)"
+        let expectedString = "Classifieds incoming... 👀"
         // swiftlint:enable line_length
         let expectedURLs = [
             URL(string: "https://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg")!
@@ -61,8 +61,6 @@ class URLParserTests: XCTestCase {
         """
         let expectedString = """
         A few links...
-
-        [nostr.build...](https://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg)
         [nos.social](https://nos.social)
         [nostr.com...](https://www.nostr.com/get-started)
         """
@@ -125,7 +123,7 @@ class URLParserTests: XCTestCase {
 
     func testExtractURLsWithImage() throws {
         let string = "Hello, world!https://cdn.ymaws.com/footprints.jpg"
-        let expectedString = "Hello, world![cdn.ymaws.com...](https://cdn.ymaws.com/footprints.jpg)"
+        let expectedString = "Hello, world!"
         let expectedURLs = [
             URL(string: "https://cdn.ymaws.com/footprints.jpg")!
         ]
@@ -138,7 +136,7 @@ class URLParserTests: XCTestCase {
 
     func testExtractURLsWithImageWithExtraNewlines() throws {
         let string = "https://cdn.ymaws.com/footprints.jpg\n\nHello, world!"
-        let expectedString = "[cdn.ymaws.com...](https://cdn.ymaws.com/footprints.jpg)\n\nHello, world!"
+        let expectedString = "Hello, world!"
         let expectedURLs = [
             URL(string: "https://cdn.ymaws.com/footprints.jpg")!
         ]

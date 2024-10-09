@@ -9,6 +9,18 @@
             "state" : "translated",
             "value" : "in discussion"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "토론 중"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在讨论"
+          }
         }
       }
     },
@@ -19,6 +31,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Join the discussion"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入讨论"
           }
         }
       }
@@ -60,6 +78,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "メンションされました"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "님이 당신을 언급했어요"
           }
         },
         "nl" : {
@@ -570,6 +594,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "⚡️ zapped you!"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡️ 당신에게 잽을 보냄"
           }
         }
       }

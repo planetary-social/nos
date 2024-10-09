@@ -9,34 +9,41 @@ struct ContentFlagView: View {
 
     /// The target of the report.
     let flagTarget: ReportTarget
+
+    /// Defines the action to be performed when the user sends a flag report.
+    /// It is called when the user taps the "Send" button after selecting all required options.
     var sendAction: () -> Void
 
     @Environment(\.dismiss) private var dismiss
 
     @State private var flagCategories: [FlagOption] = []
 
+    /// Controls when the "Send Section" should slide in from the left.
+    @State private var animateSendSection = false
+
+    /// Used to identify the "Send Section" section to autoscroll to the when it appears.
+    @Namespace var sendSectionID
+
     var body: some View {
         ZStack {
             Color.appBg.ignoresSafeArea()
             Group {
                 if showSuccessView {
-                    successView
+                    FlagSuccessView()
                 } else {
                     categoryView
                 }
             }
-            .animation(.easeInOut, value: selectedFlagOptionCategory)
-            .padding()
             .nosNavigationBar(title: .localizable.flagContent)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
+                    Button {
                         dismiss()
                         resetSelections()
-                    }, label: {
+                    } label: {
                         Text(.localizable.cancel)
                             .foregroundColor(.primaryTxt)
-                    })
+                    }
                     .opacity(showSuccessView ? 0 : 1)
                     .disabled(showSuccessView)
                 }
@@ -53,7 +60,6 @@ struct ContentFlagView: View {
                             }
                         }
                     )
-                    .opacity(selectedSendOptionCategory == nil ? 0.5 : 1)
                     .disabled(selectedSendOptionCategory == nil)
                 }
             }
@@ -66,51 +72,41 @@ struct ContentFlagView: View {
     private func resetSelections() {
         selectedFlagOptionCategory = nil
         selectedSendOptionCategory = nil
+        animateSendSection = false
     }
 
     private var categoryView: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 30) {
-                FlagOptionPicker(
-                    previousSelection: .constant(nil),
-                    currentSelection: $selectedFlagOptionCategory,
-                    options: flagCategories,
-                    title: String(localized: .localizable.flagContentCategoryTitle),
-                    subtitle: String(localized: .localizable.flagContentCategoryDescription)
-                )
+        GeometryReader { geometry in
+            ScrollViewReader { proxy in
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 30) {
+                        FlagOptionPicker(
+                            previousSelection: .constant(nil),
+                            currentSelection: $selectedFlagOptionCategory,
+                            options: flagCategories,
+                            title: String(localized: .localizable.flagContentCategoryTitle),
+                            subtitle: String(localized: .localizable.flagContentCategoryDescription)
+                        )
 
-                if selectedFlagOptionCategory != nil {
-                    FlagOptionPicker(
-                        previousSelection: $selectedFlagOptionCategory,
-                        currentSelection: $selectedSendOptionCategory,
-                        options: FlagOption.flagContentSendOptions,
-                        title: String(localized: .localizable.flagSendTitle),
-                        subtitle: nil
-                    )
-                    .transition(.move(edge: .leading).combined(with: .opacity))
+                        if selectedFlagOptionCategory != nil {
+                            FlagOptionPicker(
+                                previousSelection: $selectedFlagOptionCategory,
+                                currentSelection: $selectedSendOptionCategory,
+                                options: FlagOption.flagContentSendOptions,
+                                title: String(localized: .localizable.flagSendTitle),
+                                subtitle: nil
+                            )
+                            .id(sendSectionID)
+                            .offset(x: animateSendSection ? 0 : -geometry.size.width)
+                        }
+                    }
+                    .padding()
+                    .onChange(of: selectedFlagOptionCategory) {
+                        /// Animates the sliding effect and scrolls to the bottom of the specified section.
+                        proxy.animateAndScrollTo(sendSectionID, animating: $animateSendSection)
+                    }
                 }
             }
-        }
-    }
-
-    private var successView: some View {
-        VStack(spacing: 30) {
-            Image.circularCheckmark
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 116)
-
-            Text(String(localized: .localizable.thanksForTag))
-                .foregroundColor(.primaryTxt)
-                .font(.clarity(.regular, textStyle: .title2))
-                .padding(.horizontal, 62)
-
-            Text(String(localized: .localizable.keepOnHelpingUs))
-                .padding(.horizontal, 68)
-                .foregroundColor(.secondaryTxt)
-                .multilineTextAlignment(.center)
-                .lineSpacing(6)
-                .font(.clarity(.regular, textStyle: .subheadline))
         }
     }
 }

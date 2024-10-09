@@ -26,8 +26,8 @@ import UIKit
     }
     
     /// Whether the user has entered any text.
-    var isEmpty: Bool = true
-    
+    var isEmpty = true
+
     /// The attributed text the user has entered.
     var text: AttributedString? {
         if let textView {
@@ -71,6 +71,10 @@ import UIKit
         attributedString.replaceCharacters(in: range, with: appendedAttributedString)
         textView.attributedText = attributedString
         textView.selectedRange.location += appendedAttributedString.length
+
+        ///  Check if `@` was appended and show the mentionsAutoComplete list.
+        guard text == "@" else { return }
+        showMentionsAutocomplete = true
     }
     
     /// Appends the given URL and adds the default link styling attributes. Will append a space before the link 
