@@ -15,6 +15,7 @@
 		0304D0B22C9B731F001D16C7 /* MockOpenGraphService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */; };
 		0304D0B32C9B731F001D16C7 /* MockOpenGraphService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */; };
 		030AE4292BE3D63C004DEE02 /* FeaturedAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */; };
+		030FECAB2CB5E0B900820014 /* BuildYourNetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030FECAA2CB5E0B900820014 /* BuildYourNetworkView.swift */; };
 		0314CF742C9C7DD00001A53B /* youTube_fortnight_short.html in Resources */ = {isa = PBXBuildFile; fileRef = 0314CF732C9C7DD00001A53B /* youTube_fortnight_short.html */; };
 		0314D5AC2C7D31060002E7F4 /* MediaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0314D5AB2C7D31060002E7F4 /* MediaService.swift */; };
 		0314D5AD2C7D31060002E7F4 /* MediaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0314D5AB2C7D31060002E7F4 /* MediaService.swift */; };
@@ -596,6 +597,7 @@
 		0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGraphMetatdata.swift; sourceTree = "<group>"; };
 		0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOpenGraphService.swift; sourceTree = "<group>"; };
 		030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedAuthor.swift; sourceTree = "<group>"; };
+		030FECAA2CB5E0B900820014 /* BuildYourNetworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildYourNetworkView.swift; sourceTree = "<group>"; };
 		0314CF732C9C7DD00001A53B /* youTube_fortnight_short.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = youTube_fortnight_short.html; sourceTree = "<group>"; };
 		0314D5AB2C7D31060002E7F4 /* MediaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaService.swift; sourceTree = "<group>"; };
 		0315B5EE2C7E451C0020E707 /* MockMediaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMediaService.swift; sourceTree = "<group>"; };
@@ -1472,12 +1474,13 @@
 		3FB5E64F299D288E00386527 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				3FB5E650299D28A200386527 /* OnboardingView.swift */,
-				3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */,
+				030FECAA2CB5E0B900820014 /* BuildYourNetworkView.swift */,
 				3F30020629C237AB003D4F8B /* OnboardingAgeVerificationView.swift */,
-				3F30020829C23895003D4F8B /* OnboardingNotOldEnoughView.swift */,
-				3F30020A29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift */,
 				3F30020C29C382EB003D4F8B /* OnboardingLoginView.swift */,
+				3F30020829C23895003D4F8B /* OnboardingNotOldEnoughView.swift */,
+				3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */,
+				3F30020A29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift */,
+				3FB5E650299D28A200386527 /* OnboardingView.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -2432,6 +2435,7 @@
 				3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */,
 				0304D0A72C9B4BF2001D16C7 /* OpenGraphMetatdata.swift in Sources */,
 				C973AB5F2A323167002AED16 /* AuthorReference+CoreDataProperties.swift in Sources */,
+				030FECAB2CB5E0B900820014 /* BuildYourNetworkView.swift in Sources */,
 				A3B943CF299AE00100A15A08 /* Keychain.swift in Sources */,
 				C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */,
 				C9646EA129B7A22C007239A4 /* Analytics.swift in Sources */,
