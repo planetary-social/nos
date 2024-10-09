@@ -40,7 +40,10 @@ struct GalleryView: View {
     /// - Parameter orientation: The orientation to use for the gallery.
     /// - Returns: A gallery view in the given orientation.
     private func galleryView(orientation: MediaOrientation) -> some View {
-        VStack {
+        VStack(spacing: 0) {
+            Divider()
+                .overlay(Color.cardDividerTop)
+
             TabView(selection: $selectedTab) {
                 ForEach(urls.indices, id: \.self) { index in
                     AspectRatioContainer(orientation: orientation) {
@@ -57,8 +60,12 @@ struct GalleryView: View {
                 maxHeight: .infinity
             )
             .aspectRatio(orientation.aspectRatio, contentMode: .fit)
-            .padding(.bottom, 10)
             .clipShape(.rect)
+
+            Divider()
+                .overlay(Color.cardDividerTop)
+                .shadow(color: .cardDividerTopShadow, radius: 0, x: 0, y: 1)
+                .padding(.bottom, 10)
 
             GalleryIndexView(numberOfPages: urls.count, currentIndex: selectedTab)
         }
