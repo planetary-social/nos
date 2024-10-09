@@ -90,6 +90,11 @@ class SearchController: ObservableObject {
             }
             .store(in: &cancellables)
 
+        observeContextChanges()
+    }
+
+    /// Observes changes in the `NSManagedObjectContext` and updates the query and author results.
+    func observeContextChanges() {
         NotificationCenter.default.publisher(
             for: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
             object: context
