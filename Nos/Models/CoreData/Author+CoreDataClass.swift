@@ -319,6 +319,18 @@ import Logger
         return fetchRequest
     }
 
+    /// Returns the number of mutual followees between the current author and another author.
+    ///
+    /// - Parameter author: The author whose followees are compared to the current author's followees.
+    /// - Returns: The count of mutual followees shared between the two authors.
+    
+    func mutualFolloweesCount(comparedTo author: Author) -> Int {
+        let currentAuthorDestinations = follows.map { $0.destination }
+        let otherAuthorDestinations = author.follows.map { $0.destination }
+        let mutualFollowees = Set(currentAuthorDestinations).intersection(Set(otherAuthorDestinations))
+        return mutualFollowees.count
+    }
+
     class func all(context: NSManagedObjectContext) -> [Author] {
         let allRequest = Author.allAuthorsRequest()
         
@@ -407,5 +419,24 @@ import Logger
 
         // Publish the modified list
         await currentUser.publishMuteList(keys: Array(Set(mutedList)))
+    }
+}
+
+extension Array where Element == Author {
+    /// Sorts an array of authors based on the number of mutual followees with the current author.
+    ///
+    /// - Parameter authors: An array of optional `Author` objects to be sorted.
+    /// - Returns: A sorted array of `Author` objects, in descending order of mutual followees with the current author.
+
+    func sortByMutualFollowees(with currentAuthor: Author) -> [Author] {
+        self
+            .compactMap { author -> (Author, Int)? in
+                let mutualFollowees = currentAuthor.mutualFolloweesCount(comparedTo: author)
+                return (author, mutualFollowees)
+            }
+        // Sort by mutual followees count in descending order
+            .sorted { $0.1 > $1.1 }
+        // Return only the Author objects
+            .map { $0.0 }
     }
 }
