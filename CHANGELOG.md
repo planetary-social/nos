@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new translations for the app so you can use it in Korean, Chinese Simplified, Swedish, and more! Thanks to alternative, 안마리 (everyscreennetwork), Andypsl8, Dženan (Dzenan), ObjectifMoon, ra5pvt1n, and everyone else who contributed translations on Crowdin!
 - Updated user mentions search functionality to also search relays in the user's relay list. [#1560](https://github.com/planetary-social/nos/issues/1560)
 - Decreased the opacity on disabled buttons.
+- Added participants in a thread to the mentions lookup [#1568](https://github.com/planetary-social/nos/issues/1568)
 
 ### Internal Changes
 - Moved the database cleanup routine into a background execution task. [#1426](https://github.com/planetary-social/nos/issues/1426)
