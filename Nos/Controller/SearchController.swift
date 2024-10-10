@@ -22,6 +22,15 @@ enum SearchState {
     case stillLoading
 }
 
+/// Represents the origin from which a search is initiated.
+enum SearchOrigin {
+    /// Search initiated from the Discover tab
+    case discover
+
+    /// Search initiated from the mentions `AuthorListView`
+    case mentions
+}
+
 /// Manages a search query and list of results.
 class SearchController: ObservableObject {
     
@@ -54,9 +63,14 @@ class SearchController: ObservableObject {
     /// The amount of time, in seconds, to remain in the `.loading` state until switching to `.stillLoading`.
     private let stillLoadingTime: TimeInterval = 10
 
+    /// The origin of the current search.
+    let searchOrigin: SearchOrigin
+
     // MARK: - Init
     
-    init() {
+    init(searchOrigin: SearchOrigin = .discover) {
+        self.searchOrigin = searchOrigin
+
         $query
             .removeDuplicates()
             .map { [weak self] query in
@@ -70,7 +84,12 @@ class SearchController: ObservableObject {
                 guard let self else { return nil }
                 if self.state == .noQuery {
                     // User is starting a new search
-                    analytics.searchedDiscover()
+                    switch searchOrigin {
+                    case .discover:
+                        analytics.searchedDiscover()
+                    case .mentions:
+                        analytics.searchedMentions()
+                    }
                 }
                 self.authorResults = self.authors(named: query)
                 if self.authorResults.isEmpty {
@@ -90,6 +109,11 @@ class SearchController: ObservableObject {
             }
             .store(in: &cancellables)
 
+        observeContextChanges()
+    }
+
+    /// Observes changes in the `NSManagedObjectContext` and updates the query and author results.
+    func observeContextChanges() {
         NotificationCenter.default.publisher(
             for: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
             object: context
@@ -107,7 +131,7 @@ class SearchController: ObservableObject {
         })
         .store(in: &cancellables)
     }
-    
+
     // MARK: - Internal
     
     func author(fromPublicKey publicKeyString: String) -> Author? {

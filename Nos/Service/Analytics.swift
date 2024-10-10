@@ -160,6 +160,11 @@ class Analytics {
         track("Discover Search Started")
     }
 
+    /// Tracks when the user submits a search on the Mentions screen.
+    func searchedMentions() {
+        track("Mentions Search Started")
+    }
+
     /// Tracks when the user taps on a search result on the Discover screen.
     func displayedAuthorFromDiscoverSearch(resultsCount: Int) {
         track(
