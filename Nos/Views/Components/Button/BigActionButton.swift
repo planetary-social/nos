@@ -100,15 +100,13 @@ struct BigActionButtonStyle: ButtonStyle {
     }
 }
 
-struct BigGradientButton_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 20) {
-            BigActionButton(title: .localizable.tryIt, action: {})
-                .frame(width: 268)
-            
-            BigActionButton(title: .localizable.tryIt, action: {})
-                .disabled(true)
-                .frame(width: 268)
-        }
+#Preview {
+    VStack(spacing: 20) {
+        BigActionButton(title: .localizable.accept, action: {})
+            .frame(width: 268)
+
+        BigActionButton(title: .localizable.accept, action: {})
+            .disabled(true)
+            .frame(width: 268)
     }
 }

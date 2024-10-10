@@ -1,8 +1,13 @@
+import Dependencies
 import SwiftUI
 
+/// The Age Verification view in the onboarding.
 struct OnboardingAgeVerificationView: View {
     @EnvironmentObject var state: OnboardingState
-    
+
+    @Dependency(\.crashReporting) private var crashReporting
+    @Dependency(\.currentUser) private var currentUser
+
     var body: some View {
         VStack {
             Text(.localizable.ageVerificationTitle)
@@ -23,7 +28,19 @@ struct OnboardingAgeVerificationView: View {
                 }
                 Spacer(minLength: 15)
                 BigActionButton(title: .localizable.yes) {
-                    state.step = .termsOfService
+                    if state.flow == .loginToExistingAccount {
+                        state.step = .login
+                    } else {
+                        // temporary; this will eventually move to the Create Account screen
+                        do {
+                            try await currentUser.createAccount()
+                        } catch {
+                            crashReporting.report(error)
+                        }
+                        // end temporary account creation
+
+                        state.step = .buildYourNetwork
+                    }
                 }
             }
             .padding(.horizontal, 24)
