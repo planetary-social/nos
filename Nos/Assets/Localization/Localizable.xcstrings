@@ -590,7 +590,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "By proceeding, I accept the [Terms of Service](https://nos.social/terms) and the [Privacy Policy](https://nos.social/privacy)"
+            "value" : "By proceeding, I accept the [Terms of Service](https://nos.social/terms-of-service) and the [Privacy Policy](https://nos.social/privacy)"
           }
         }
       }
