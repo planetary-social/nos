@@ -23,7 +23,11 @@ struct OnboardingAgeVerificationView: View {
                 }
                 Spacer(minLength: 15)
                 BigActionButton(title: .localizable.yes) {
-                    state.step = .termsOfService
+                    if state.flow == .loginToExistingAccount {
+                        state.step = .login
+                    } else {
+                        state.step = .buildYourNetwork
+                    }
                 }
             }
             .padding(.horizontal, 24)

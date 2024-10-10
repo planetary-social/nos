@@ -583,6 +583,18 @@
         }
       }
     },
+    "acceptTermsAndPrivacy" : {
+      "comment" : "Text with links for accepting the terms and privacy policy",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By proceeding, I accept the [Terms of Service](https://nos.social/terms) and the [Privacy Policy](https://nos.social/privacy)"
+          }
+        }
+      }
+    },
     "accountsIFollow" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10445,67 +10457,14 @@
         }
       }
     },
-    "loginWithKey" : {
+    "logInWithAccount" : {
+      "comment" : "Button title for logging in with an existing account",
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mit Schlüssel anmelden"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Login with key"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Iniciar sesión con clave"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ورود با کلید"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se connecter avec une clé"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "키로 로그인하기"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Logga in med nyckel"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ingia na ufunguo"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用密钥登录"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用密鑰登錄"
+            "value" : "Log in with my account"
           }
         }
       }
@@ -12027,6 +11986,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "有新筆記"
+          }
+        }
+      }
+    },
+    "newToNostr" : {
+      "comment" : "Button title for starting the new account flow",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I'm new to Nostr"
           }
         }
       }
@@ -14321,7 +14292,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your **@username** is your identity in the Nos community.\u2028\nChoose a name that reflects you or your organization. Make it memorable and distinct!"
+            "value" : "Your **@username** is your identity in the Nos community. \nChoose a name that reflects you or your organization. Make it memorable and distinct!"
           }
         },
         "es" : {
@@ -19730,71 +19701,6 @@
         }
       }
     },
-    "tryIt" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jetzt ausprobieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try it"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inténtalo"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "امتحان کنید"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Essayer"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "시도해봐요"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prova det"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ijaribu"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "尝试"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "嘗試"
-          }
-        }
-      }
-    },
     "unfollow" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -20310,7 +20216,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Universal Name Space gibt dir einen Namen, den du überall verwenden kannst.\u2028\u2028Verifizieredeine Identität und verknüpfe deine sozialen Konten, Personalausweis, Brieftaschen und mehr."
+            "value" : "Universal Name Space gibt dir einen Namen, den du überall verwenden kannst.  Verifizieredeine Identität und verknüpfe deine sozialen Konten, Personalausweis, Brieftaschen und mehr."
           }
         },
         "en" : {
@@ -20346,7 +20252,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Universal Name Space ger dig ett namn som du kan använda överallt.\u2028\u2028Verifiera din identitet och länka dina sociala konton, statligt ID, plånböcker med mera."
+            "value" : "Universal Name Space ger dig ett namn som du kan använda överallt.  Verifiera din identitet och länka dina sociala konton, statligt ID, plånböcker med mera."
           }
         },
         "sw" : {
@@ -20364,7 +20270,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "通用名空間（Universal Name Space）為你提供一個你可以在任何地方使用的名稱。\u2028\u2028驗證你的身份並關聯你的社交媒體帳戶、政府身分證件、錢包等。"
+            "value" : "通用名空間（Universal Name Space）為你提供一個你可以在任何地方使用的名稱。  驗證你的身份並關聯你的社交媒體帳戶、政府身分證件、錢包等。"
           }
         }
       }
@@ -20818,7 +20724,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Well done, you've successfully claimed your **@username**!\u2028\nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
+            "value" : "Well done, you've successfully claimed your **@username**! \nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
           }
         },
         "es" : {
@@ -21776,7 +21682,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ist Ihr universeller Name.\u2028\u2028Wir haben eine Verbindung zwischen deinem Nostr Profil und deinem universellen Namen erstellt und deinen universellen Name in das Feld \"Benutzername\" in dein Profil eingetragen."
+            "value" : "ist Ihr universeller Name.  Wir haben eine Verbindung zwischen deinem Nostr Profil und deinem universellen Namen erstellt und deinen universellen Name in das Feld \"Benutzername\" in dein Profil eingetragen."
           }
         },
         "en" : {
@@ -21788,7 +21694,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "es tu nombre universal.\u2028\n\nHemos asociado tu perfil de Nostr con tu nombre universal, y hemos configurado tu nombre universal como nombre de usuario en tu perfil."
+            "value" : "es tu nombre universal. \n\nHemos asociado tu perfil de Nostr con tu nombre universal, y hemos configurado tu nombre universal como nombre de usuario en tu perfil."
           }
         },
         "fa" : {
@@ -21812,13 +21718,13 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "is uw nieuwe Nostr gebruikersnaam.\u2028\u2028Deze demo van de Universele Namespace is alleen voor testdoeleinden. Alle namen worden in de toekomst gereset."
+            "value" : "is uw nieuwe Nostr gebruikersnaam.  Deze demo van de Universele Namespace is alleen voor testdoeleinden. Alle namen worden in de toekomst gereset."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "é o seu novo nome de usuário Nostr.\u2028\u2028Esta demonstração do \"Namespace\" Universal é apenas para fins de teste. Todos os nomes serão redefinidos no futuro."
+            "value" : "é o seu novo nome de usuário Nostr.  Esta demonstração do \"Namespace\" Universal é apenas para fins de teste. Todos os nomes serão redefinidos no futuro."
           }
         },
         "sv" : {
@@ -21836,7 +21742,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "是你的通用名。\n \u2028我们已连接了你的 nostr 档案和你的通用名，并将你的通用名作为用户名填入了你的档案。"
+            "value" : "是你的通用名。\n  我们已连接了你的 nostr 档案和你的通用名，并将你的通用名作为用户名填入了你的档案。"
           }
         },
         "zh-Hant" : {
