@@ -1,15 +1,25 @@
 import SwiftUI
 
-/// A view that shows a broken link icon to inform the user that the link is broken.
+/// A view that shows a broken link icon to inform the user that the link is broken. The user can tap the view to open
+/// the link in the browser.
 struct BrokenLinkView: View {
+    /// The URL of the broken link
+    let url: URL
+
+    @Environment(\.openURL) private var openURL
+
     var body: some View {
-        ZStack {
-            LinearGradient.brokenLinkBackground
-            Image.brokenLink
-                .scaledToFit()
-                .frame(width: 124, height: 124)
-                .foregroundStyle(Color.brokenLink)
-                .padding()
+        Button {
+            openURL(url)
+        } label: {
+            ZStack {
+                LinearGradient.brokenLinkBackground
+                Image.brokenLink
+                    .scaledToFit()
+                    .frame(width: 124, height: 124)
+                    .foregroundStyle(Color.brokenLink)
+                    .padding()
+            }
         }
     }
 }
@@ -18,7 +28,7 @@ struct BrokenLinkView: View {
     ZStack {
         LinearGradient.cardBackground
         AspectRatioContainer(orientation: .portrait) {
-            BrokenLinkView()
+            BrokenLinkView(url: URL(string: "https://example.com/no.jpg")!)
         }
     }
 }

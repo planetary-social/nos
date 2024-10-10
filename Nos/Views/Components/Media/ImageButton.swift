@@ -22,7 +22,7 @@ struct ImageButton: View {
 
     var body: some View {
         if showError {
-            BrokenLinkView()
+            BrokenLinkView(url: url)
         } else {
             Button {
                 isViewerPresented = true
