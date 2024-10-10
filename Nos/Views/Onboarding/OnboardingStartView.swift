@@ -1,12 +1,11 @@
-import SwiftUI
 import Dependencies
+import SwiftUI
 
 /// The beginning of the Onboarding views which contains buttons to start creating a new account or log in.
 struct OnboardingStartView: View {
     @EnvironmentObject var state: OnboardingState
 
     @Dependency(\.analytics) private var analytics
-    @Dependency(\.crashReporting) private var crashReporting
 
     var body: some View {
         GeometryReader { geometry in
