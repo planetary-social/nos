@@ -70,35 +70,36 @@ struct NoteView: View {
     ///
     /// - Returns: A sorted array of `Author` objects, in descending order of mutual followees with the current author.
     private func getSortedAuthorsByMutualFollowees() -> [Author] {
-        var authors: [Author] = []
-        guard let currentAuthor = currentUser.author else { return authors }
+        var authors: Set<Author> = []
+        guard let currentAuthor = currentUser.author else { return Array(authors) }
 
         // Include the author of the root note
         if let rootNoteAuthor = note.rootNote()?.author {
-            authors.append(rootNoteAuthor)
+            authors.insert(rootNoteAuthor)
         }
 
         // Include the author of the current note
         if let noteAuthor = note.author {
-            authors.append(noteAuthor)
+            authors.insert(noteAuthor)
         }
 
         // Include authors referenced in the current note
         let noteAuthorReferences = note.loadAuthorsFromReferences(in: persistenceController.viewContext)
-        authors += noteAuthorReferences
+        authors.formUnion(noteAuthorReferences)
 
         // Include authors referenced in the root note
         if let rootNoteAuthorReferences = note.rootNote()?.loadAuthorsFromReferences(
             in: persistenceController.viewContext
         ) {
-            authors += rootNoteAuthorReferences
+            authors.formUnion(rootNoteAuthorReferences)
         }
 
         // Include up to 10 authors from direct replies
         let tenDirectReplies = directReplies.compactMap { $0.author }.prefix(10)
-        authors += tenDirectReplies
+        authors.formUnion(tenDirectReplies)
 
-        return authors.sortByMutualFollowees(with: currentAuthor)
+        let authorArray = Array(authors)
+        return authorArray.sortByMutualFollowees(with: currentAuthor)
     }
 
     func subscribeToReplies() {

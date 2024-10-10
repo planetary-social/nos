@@ -43,7 +43,7 @@ struct AuthorListView: View {
             isSearching = true
 
             guard let threadAuthors = threadAuthors else { return }
-            filteredAuthors += threadAuthors
+            filteredAuthors = threadAuthors
         }
         .onChange(of: searchController.authorResults) { _, newValue in
             filteredAuthors = []
