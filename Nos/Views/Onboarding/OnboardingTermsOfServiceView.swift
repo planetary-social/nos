@@ -45,7 +45,7 @@ struct OnboardingTermsOfServiceView: View {
                     case .createAccount:
                         do {
                             try await currentUser.createAccount()
-                            completion()
+                            state.step = .buildYourNetwork
                         } catch {
                             crashReporting.report(error)
                         }

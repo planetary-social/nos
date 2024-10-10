@@ -22,6 +22,7 @@ enum OnboardingStep {
     case ageVerification
     case notOldEnough
     case termsOfService
+    case buildYourNetwork
     case login
 }
 
@@ -51,6 +52,8 @@ struct OnboardingView: View {
                             .environmentObject(state)
                     case .login:
                         OnboardingLoginView(completion: completion)
+                    case .buildYourNetwork:
+                        BuildYourNetworkView(completion: completion)
                     }
                 }
         }
