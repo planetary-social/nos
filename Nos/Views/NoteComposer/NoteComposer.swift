@@ -51,16 +51,21 @@ struct NoteComposer: View {
     /// The quoted note, if any.
     @State private var quotedNote: Event?
 
+    /// The authors who replied under the note the user is replying if any.
+    var threadAuthors: [Author]?
+
     init(
         initialContents: String? = nil,
         replyTo: Event? = nil,
         quotedNoteID: RawEventID? = nil,
+        threadAuthors: [Author]? = nil,
         isPresented: Binding<Bool>
     ) {
         _isPresented = isPresented
         self.initialContents = initialContents
         self.replyToNote = replyTo
         self.quotedNoteID = quotedNoteID
+        self.threadAuthors = threadAuthors
     }
     
     /// The minimum height of the NoteTextEditor.
@@ -86,7 +91,8 @@ struct NoteComposer: View {
                                     NoteTextEditor(
                                         controller: $editingController,
                                         minHeight: minimumEditorHeight,
-                                        placeholder: .localizable.newNotePlaceholder
+                                        placeholder: .localizable.newNotePlaceholder,
+                                        threadAuthors: threadAuthors
                                     )
                                     .padding(10)
                                     .disabled(showNotePreview)

@@ -8,6 +8,7 @@ struct NoteView: View {
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.persistenceController) private var persistenceController
 
     @State private var showReplyComposer = false
     
@@ -19,7 +20,9 @@ struct NoteView: View {
     var repliesRequest: FetchRequest<Event>
     /// All replies
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
-  
+
+    /// The authors who replied under the note the user is replying if any.
+    @State private var threadAuthors: [Author]?
     @State private var directReplies: [Event] = []
     
     func computeDirectReplies() async {
@@ -61,7 +64,44 @@ struct NoteView: View {
     }
     
     var note: Event
-    
+
+    /// Retrieves a list of authors associated with the current note and sorts them 
+    /// by the number of mutual followees with the current author.
+    ///
+    /// - Returns: A sorted array of `Author` objects, in descending order of mutual followees with the current author.
+    private func getSortedAuthorsByMutualFollowees() -> [Author] {
+        var authors: Set<Author> = []
+        guard let currentAuthor = currentUser.author else { return Array(authors) }
+
+        // Include the author of the root note
+        if let rootNoteAuthor = note.rootNote()?.author {
+            authors.insert(rootNoteAuthor)
+        }
+
+        // Include the author of the current note
+        if let noteAuthor = note.author {
+            authors.insert(noteAuthor)
+        }
+
+        // Include authors referenced in the current note
+        let noteAuthorReferences = note.loadAuthorsFromReferences(in: persistenceController.viewContext)
+        authors.formUnion(noteAuthorReferences)
+
+        // Include authors referenced in the root note
+        if let rootNoteAuthorReferences = note.rootNote()?.loadAuthorsFromReferences(
+            in: persistenceController.viewContext
+        ) {
+            authors.formUnion(rootNoteAuthorReferences)
+        }
+
+        // Include up to 10 authors from direct replies
+        let tenDirectReplies = directReplies.compactMap { $0.author }.prefix(10)
+        authors.formUnion(tenDirectReplies)
+
+        let authorArray = Array(authors)
+        return authorArray.sortByMutualFollowees(with: currentAuthor)
+    }
+
     func subscribeToReplies() {
         Task(priority: .userInitiated) {
             // Close out stale requests
@@ -108,11 +148,20 @@ struct NoteView: View {
                         )
                         .padding(.top, 15)
                         .sheet(isPresented: $showReplyComposer, content: {
-                            NoteComposer(replyTo: note, isPresented: $showReplyComposer)
+                            NoteComposer(
+                                replyTo: note,
+                                threadAuthors: threadAuthors,
+                                isPresented: $showReplyComposer
+                            )
                                 .environment(currentUser)
                                 .interactiveDismissDisabled()
                         })
-                        
+                        .onChange(of: showReplyComposer) { _, newValue in
+                            if newValue {
+                                threadAuthors = getSortedAuthorsByMutualFollowees()
+                            }
+                        }
+
                         ForEach(directReplies.reversed()) { event in
                             ThreadView(root: event, allReplies: replies.reversed())
                         }
