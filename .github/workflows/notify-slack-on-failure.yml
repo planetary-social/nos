@@ -1,0 +1,21 @@
+on:
+  workflow_run:
+    workflows: ["testflight-deploy.yml", "testflight-dev-deploy.yml", "testflight-staging-deploy.yml"]
+    types:
+      - completed
+
+jobs:
+  notify:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send notification to Slack
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          custom-payload: |
+            {
+              "text": "GitHub Action *${{ github.event.workflow_run.name }}* has failed in the *${{ github.repository }}* repository.\n<${{ github.event.workflow_run.html_url }}|View the workflow run>"
+            }
+
