@@ -13,4 +13,4 @@ Post screenshots or video showing your changes, ideally showing how the app work
 
 | Before | After |
 |--------|--------|
-| (replaceme) | (replaceme) |
+| replaceme | replaceme |
