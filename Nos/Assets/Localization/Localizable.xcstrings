@@ -12966,6 +12966,17 @@
         }
       }
     },
+    "nosDoesNotUseAlgorithms" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos does not use algorithms to populate your feed. Notes appear in reverse chronological order based on publish time and date."
+          }
+        }
+      }
+    },
     "nosIsOpenSource" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -21661,6 +21672,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "網站"
+          }
+        }
+      }
+    },
+    "welcomeToYourFeed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to your feed!"
           }
         }
       }
