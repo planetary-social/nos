@@ -219,31 +219,27 @@ struct SettingsView: View {
             }
             .listRowGradientBackground()
             
-            #if STAGING || DEBUG
-            if isDeleteAccountEnabled.wrappedValue {
-                ActionButton(
-                    title: .localizable.deleteMyAccount,
-                    font: .clarityBold(.title3),
-                    padding: EdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0),
-                    depthEffectColor: .actionSecondaryDepthEffect,
-                    backgroundGradient: .verticalAccentSecondary,
-                    shouldFillHorizontalSpace: true
-                ) {
-                    alert = AlertState(
-                        title: { TextState(String(localized: .localizable.deleteAccount)) },
-                        actions: {
-                            ButtonState(role: .destructive, action: .send(.deleteAccount)) {
-                                TextState(String(localized: .localizable.delete))
-                            }
-                        },
-                        message: { TextState(String(localized: .localizable.deleteAccountDescription)) }
-                    )
-                }
-                .clipShape(Capsule())
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets())
+            ActionButton(
+                title: .localizable.deleteMyAccount,
+                font: .clarityBold(.title3),
+                padding: EdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0),
+                depthEffectColor: .actionSecondaryDepthEffect,
+                backgroundGradient: .verticalAccentSecondary,
+                shouldFillHorizontalSpace: true
+            ) {
+                alert = AlertState(
+                    title: { TextState(String(localized: .localizable.deleteAccount)) },
+                    actions: {
+                        ButtonState(role: .destructive, action: .send(.deleteAccount)) {
+                            TextState(String(localized: .localizable.delete))
+                        }
+                    },
+                    message: { TextState(String(localized: .localizable.deleteAccountDescription)) }
+                )
             }
-        #endif
+            .clipShape(Capsule())
+            .listRowBackground(Color.clear)
+            .listRowInsets(EdgeInsets())
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
@@ -288,19 +284,6 @@ extension SettingsView {
     private var newModerationFlowToggle: some View {
         NosToggle(isOn: isNewModerationFlowEnabled, labelText: .localizable.enableNewModerationFlow)
     }
-    
-    /// Whether account deletion is enabled.
-    private var isDeleteAccountEnabled: Binding<Bool> {
-        Binding<Bool>(
-            get: { featureFlags.isEnabled(.deleteAccount) },
-            set: { featureFlags.setFeature(.deleteAccount, enabled: $0) }
-        )
-    }
-    
-    /// A toggle for account deletion that allows the user to turn the feature on or off.
-    private var deleteAccountToggle: some View {
-        NosToggle(isOn: isDeleteAccountEnabled, labelText: .localizable.enableAccountDeletion)
-    }
 }
 #endif
 
@@ -310,7 +293,6 @@ extension SettingsView {
     @MainActor private var stagingControls: some View {
         Group {
             newModerationFlowToggle
-            deleteAccountToggle
         }
     }
 }
@@ -322,7 +304,6 @@ extension SettingsView {
     @MainActor private var debugControls: some View {
         Group {
             newModerationFlowToggle
-            deleteAccountToggle
             Text(.localizable.sampleDataInstructions)
                 .foregroundColor(.primaryTxt)
             Button(String(localized: .localizable.loadSampleData)) {

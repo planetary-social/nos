@@ -2184,6 +2184,28 @@
         }
       }
     },
+    "buildYourNetwork" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Build your network!"
+          }
+        }
+      }
+    },
+    "buildYourNetworkDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your feed is only populated by accounts you follow. Nos does not use algorithms to control what you see."
+          }
+        }
+      }
+    },
     "cancel" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7359,6 +7381,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "篩選"
+          }
+        }
+      }
+    },
+    "findPeople" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find people"
           }
         }
       }
