@@ -31,4 +31,3 @@ struct FakePopoverTipViewStyle: TipViewStyle {
 extension TipViewStyle where Self == FakePopoverTipViewStyle {
     static var fakePopover: Self { Self() }
 }
-
