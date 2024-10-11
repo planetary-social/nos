@@ -48,6 +48,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             await currentUser.subscribe()
             try await Task.sleep(for: .seconds(10))
             Log.info("PushNotifications: Sync complete")
+            
             return .newData
         } catch {
             return .failed
