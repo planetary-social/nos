@@ -1,6 +1,8 @@
+name: Slack Notifier
+
 on:
   workflow_run:
-    workflows: ["testflight-deploy.yml", "testflight-dev-deploy.yml", "testflight-staging-deploy.yml"]
+    workflows: ["TestFlight Release Deployment", "TestFlight Dev deployment", "TestFlight Staging deployment"]
     types:
       - completed
 
