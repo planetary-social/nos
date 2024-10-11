@@ -21,8 +21,8 @@ struct NoteView: View {
     /// All replies
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
 
-    /// The authors who replied under the note the user is replying if any.
-    @State private var threadAuthors: [Author]?
+    /// The authors are referenced in a note / who replied under the note the user is replying if any.
+    @State private var relatedAuthors: [Author]?
     @State private var directReplies: [Event] = []
     
     func computeDirectReplies() async {
@@ -69,7 +69,7 @@ struct NoteView: View {
     /// by the number of mutual followees with the current author.
     ///
     /// - Returns: A sorted array of `Author` objects, in descending order of mutual followees with the current author.
-    private func getSortedAuthorsByMutualFollowees() -> [Author] {
+    private func sortedAuthorsByMutualFollowees() -> [Author] {
         var authors: Set<Author> = []
         guard let currentAuthor = currentUser.author else { return Array(authors) }
 
@@ -150,7 +150,7 @@ struct NoteView: View {
                         .sheet(isPresented: $showReplyComposer, content: {
                             NoteComposer(
                                 replyTo: note,
-                                threadAuthors: threadAuthors,
+                                relatedAuthors: relatedAuthors,
                                 isPresented: $showReplyComposer
                             )
                                 .environment(currentUser)
@@ -158,7 +158,7 @@ struct NoteView: View {
                         })
                         .onChange(of: showReplyComposer) { _, newValue in
                             if newValue {
-                                threadAuthors = getSortedAuthorsByMutualFollowees()
+                                relatedAuthors = sortedAuthorsByMutualFollowees()
                             }
                         }
 

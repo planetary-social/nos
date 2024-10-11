@@ -489,6 +489,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         
         return nil
     }
+
     /// This tracks which relays this event is deleted on. Hide posts with deletedOn.count > 0
     func trackDelete(on relay: Relay, context: NSManagedObjectContext) throws {
         if EventKind(rawValue: kind) == .delete, let eTags = allTags as? [[String]] {

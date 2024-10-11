@@ -13,8 +13,8 @@ struct AuthorListView: View {
     @FocusState private var isSearching: Bool
     @State private var filteredAuthors: [Author] = []
 
-    /// The authors who replied under the note the user is replying if any.
-    var threadAuthors: [Author]?
+    /// The authors are referenced in a note / who replied under the note the user is replying if any.
+    var relatedAuthors: [Author]?
 
     var didSelectGesture: ((Author) -> Void)?
 
@@ -42,18 +42,21 @@ struct AuthorListView: View {
         .onAppear {
             isSearching = true
 
-            guard let threadAuthors = threadAuthors else { return }
-            filteredAuthors = threadAuthors
+            guard let relatedAuthors = relatedAuthors else { return }
+            filteredAuthors = relatedAuthors
         }
         .onChange(of: searchController.authorResults) { _, newValue in
             filteredAuthors = []
 
-            guard let currentAuthor = currentUser.author else { return }
+            guard let currentAuthor = currentUser.author else {
+                filteredAuthors = newValue
+                return
+            }
             let sortedAuthors = newValue.sortByMutualFollowees(with: currentAuthor)
             filteredAuthors += sortedAuthors
 
-            guard let threadAuthors = threadAuthors else { return }
-            filteredAuthors += threadAuthors
+            guard let relatedAuthors = relatedAuthors else { return }
+            filteredAuthors += relatedAuthors
         }
         .disableAutocorrection(true)
         .toolbar {

@@ -424,7 +424,7 @@ import Logger
 extension Array where Element == Author {
     /// Sorts an array of authors based on the number of mutual followees with the current author.
     ///
-    /// - Parameter authors: An array of optional `Author` objects to be sorted.
+    /// - Parameter currentAuthor: The current `Author` to compare the other author to.
     /// - Returns: A sorted array of `Author` objects, in descending order of mutual followees with the current author.
     func sortByMutualFollowees(with currentAuthor: Author) -> [Author] {
         self

@@ -12,19 +12,19 @@ struct NoteTextEditor: View {
     
     var placeholder: LocalizedStringResource
 
-    /// The authors who replied under the note the user is replying if any.
-    var threadAuthors: [Author]?
+    /// The authors are referenced in a note / who replied under the note the user is replying if any.
+    var relatedAuthors: [Author]?
 
     init(
         controller: Binding<NoteEditorController>,
         minHeight: CGFloat,
         placeholder: LocalizedStringResource,
-        threadAuthors: [Author]? = nil
+        relatedAuthors: [Author]? = nil
     ) {
         self._controller = controller
         self.minHeight = minHeight
         self.placeholder = placeholder
-        self.threadAuthors = threadAuthors
+        self.relatedAuthors = relatedAuthors
     }
     
     var body: some View {
@@ -40,7 +40,7 @@ struct NoteTextEditor: View {
             NavigationStack {
                 AuthorListView(
                     isPresented: $controller.showMentionsAutocomplete,
-                    threadAuthors: threadAuthors
+                    relatedAuthors: relatedAuthors
                 ) { [weak controller] author in
                     /// Guard against double presses
                     guard let controller, controller.showMentionsAutocomplete else { return }
@@ -64,7 +64,7 @@ struct NoteTextEditor: View {
             controller: $controller,
             minHeight: 500,
             placeholder: placeholder,
-            threadAuthors: []
+            relatedAuthors: []
         )
         Spacer()
     }
