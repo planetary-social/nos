@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2024-10-11Z
+
 ### Release Notes
 - Updated the media viewer that displays images, videos, and web pages inside of notes. [#1538](https://github.com/planetary-social/nos/issues/1538)
 - Removed image and video link text from notes. Now only the images and videos will appear, without the link. [#1487](https://github.com/planetary-social/nos/issues/1487)
