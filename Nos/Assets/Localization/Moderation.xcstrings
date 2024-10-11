@@ -16,6 +16,12 @@
             "value" : "Bisexual porn"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porno bisexual"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -55,6 +61,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bodily Harm"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lesiones Corporales"
           }
         },
         "fa" : {
@@ -98,6 +110,12 @@
             "value" : "Casual nudity"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desnudez casual"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -137,6 +155,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Child Sexual Abuse"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abuso Sexual de Menores"
           }
         },
         "fa" : {
@@ -180,6 +204,12 @@
             "value" : "Coarse Language or Intolerance"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lenguaje vulgar o intolerancia"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -219,6 +249,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copyright Violation"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Violación de Copyright"
           }
         },
         "fa" : {
@@ -262,6 +298,12 @@
             "value" : "Drug-related crime"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crimen relacionado con drogas"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -301,6 +343,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erotica"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erótica"
           }
         },
         "fa" : {
@@ -344,6 +392,12 @@
             "value" : "Financial Harm"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daño Financiero"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -383,6 +437,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fraud & Scams"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fraude y Estafas"
           }
         },
         "fa" : {
@@ -426,6 +486,12 @@
             "value" : "Gay male porn"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porno homosexual entre hombres"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -467,6 +533,12 @@
             "value" : "Gender-fluid / non-binary porn"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porno entre gente no binarios"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -502,6 +574,12 @@
             "value" : "Harassment"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acoso"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -523,6 +601,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Harassment, Stalking, or Doxxing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acoso, Acecho, o Doxxing"
           }
         },
         "fa" : {
@@ -566,6 +650,12 @@
             "value" : "Heterosexual Porn"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porno heterosexual"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -599,6 +689,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Illegal"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ilegal"
           }
         },
         "fa" : {
@@ -642,6 +738,12 @@
             "value" : "Impersonation"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suplantación"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -681,6 +783,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Intolerance & Hate"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intolerancia y Odio"
           }
         },
         "fa" : {
@@ -724,6 +832,12 @@
             "value" : "Lesbian porn"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porno homosexual entre mujeres"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -757,6 +871,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Likely to cause harm"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probable que cause daño"
           }
         },
         "fa" : {
@@ -795,6 +915,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Malware"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Malware"
@@ -841,6 +967,12 @@
             "value" : "NSFW"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NSFW"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -868,6 +1000,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nudity or Sexual Content"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desnudez o contenido sexual"
           }
         },
         "fa" : {
@@ -909,6 +1047,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Other"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otro"
           }
         },
         "fa" : {
@@ -958,6 +1102,12 @@
             "value" : "Pornography"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pornografía"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -993,6 +1143,12 @@
             "value" : "Prostitution"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prostitución"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1022,6 +1178,12 @@
             "value" : "Sex"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sexo"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1046,6 +1208,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spam"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spam"
@@ -1098,6 +1266,12 @@
             "value" : "Transsexual porn"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porno transexual"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1137,6 +1311,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Violence"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Violencia"
           }
         },
         "fa" : {
@@ -1186,6 +1366,12 @@
             "value" : "Violence towards a human being"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Violencia hacia un ser humano"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1225,6 +1411,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Violence towards a sentient animal"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Violencia hacia un animal consciente"
           }
         },
         "fa" : {
