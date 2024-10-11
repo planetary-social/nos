@@ -189,7 +189,7 @@ struct CompactNoteView_Previews: PreviewProvider {
             CompactNoteView(note: previewData.doubleImageNote, showLinkPreviews: false)
         }
         .padding()
-        .background(Color.previewBg)
+        .background(LinearGradient.cardBackground)
         .inject(previewData: PreviewData())
     }
 }
