@@ -2,8 +2,9 @@ import SwiftUI
 import Combine
 import CoreData
 import Dependencies
+import TipKit
 
-struct DiscoverTab: View {    
+struct DiscoverTab: View {
     // MARK: - Properties
     
     @EnvironmentObject private var router: Router
@@ -20,15 +21,25 @@ struct DiscoverTab: View {
 
     @State var predicate: NSPredicate = .false
 
+    let goToFeedTip = GoToFeedTip()
+
     // MARK: - View
     
     var body: some View {
         NosNavigationStack(path: $router.discoverPath) {
             ZStack {
-                DiscoverContentsView(
-                    featuredAuthorCategory: .all,
-                    searchController: searchController
-                )
+                VStack {
+                    DiscoverContentsView(
+                        featuredAuthorCategory: .all,
+                        searchController: searchController
+                    )
+
+                    TipView(goToFeedTip)
+                        .padding(.horizontal, 12)
+                        .padding(.bottom, 8)
+                        .tipBackground(LinearGradient.horizontalAccentReversed)
+                        .tipViewStyle(.fakePopover)
+                }
             }
             .searchable(
                 text: $searchController.query, 
@@ -59,6 +70,12 @@ struct DiscoverTab: View {
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
             .navigationBarItems(leading: SideMenuButton())
         }
+    }
+}
+
+struct GoToFeedTip: Tip {
+    var title: Text {
+        Text("goToYourFeed")
     }
 }
 
