@@ -323,7 +323,6 @@ import Logger
     ///
     /// - Parameter author: The author whose followees are compared to the current author's followees.
     /// - Returns: The count of mutual followees shared between the two authors.
-    
     func mutualFolloweesCount(comparedTo author: Author) -> Int {
         let currentAuthorDestinations = follows.map { $0.destination }
         let otherAuthorDestinations = author.follows.map { $0.destination }
