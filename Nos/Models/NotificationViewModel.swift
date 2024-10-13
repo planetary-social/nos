@@ -9,15 +9,16 @@ import UIKit
 /// `loadContent()` to populate the `content` variable because it relies on some
 ///  database queries.
 class NotificationViewModel: ObservableObject, Identifiable {
-    let noteID: RawEventID?
-    let authorID: RawAuthorID?
+    let noteID: RawEventID
     let authorProfilePhotoURL: URL?
     let actionText: AttributedString
     @Published var content: AttributedString?
     let date: Date
     
-    var id: String = UUID().uuidString
-    
+    var id: RawEventID {
+        noteID
+    }
+
     /// Generates a notification request that can be sent to the UNNotificationCenter to display a banner notification.
     /// You probably want to call `loadContent(in:)` before accessing this.
     var notificationCenterRequest: UNNotificationRequest {
@@ -29,30 +30,20 @@ class NotificationViewModel: ObservableObject, Identifiable {
         content.userInfo = ["eventID": id]
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         return UNNotificationRequest(
-            identifier: id, 
-            content: content, 
+            identifier: noteID,
+            content: content,
             trigger: trigger
         )
     }
     
     convenience init?(coreDataModel: NosNotification, context: NSManagedObjectContext) {
         guard let eventID = coreDataModel.eventID,
+            let note = Event.find(by: eventID, context: context),
             let user = coreDataModel.user else {
             return nil
         }
-        
-        
-        if let note = Event.find(by: eventID, context: context) {
-            self.init(note: note, user: user)
-        } else if let follower = coreDataModel.follower {
-            self.init(follower: follower)
-        } else {
-            return nil
-        }
-    }
-    
-    init(follower: Author) {
-        // TODO: initialize date, authorProfilePhotoURL, actionText
+
+        self.init(note: note, user: user)
     }
     
     init(note: Event, user: Author) {
