@@ -28,7 +28,8 @@ extension Author {
     @NSManaged public var relays: Set<Relay>
     
     /// All notifications that should notify this Author if they are the logged in user.
-    @NSManaged public var notifications: Set<NosNotification>
+    /// The notifications are intended for the current author to be received.
+    @NSManaged public var incomingNotifications: Set<NosNotification>
 }
 
 // MARK: Generated accessors for events

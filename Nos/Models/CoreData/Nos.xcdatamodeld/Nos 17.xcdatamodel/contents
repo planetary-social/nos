@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23231" systemVersion="24A335" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="23H122" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Author" representedClassName=".Author" syncable="YES">
         <attribute name="about" optional="YES" attributeType="String"/>
         <attribute name="displayName" optional="YES" attributeType="String"/>
@@ -17,7 +17,7 @@
         <relationship name="followers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Follow" inverseName="destination" inverseEntity="Follow"/>
         <relationship name="followNotifications" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NosNotification" inverseName="follower" inverseEntity="NosNotification"/>
         <relationship name="follows" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Follow" inverseName="source" inverseEntity="Follow"/>
-        <relationship name="notifications" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NosNotification" inverseName="user" inverseEntity="NosNotification"/>
+        <relationship name="incomingNotifications" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NosNotification" inverseName="user" inverseEntity="NosNotification"/>
         <relationship name="relays" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="authors" inverseEntity="Relay"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -74,7 +74,7 @@
         <attribute name="eventID" optional="YES" attributeType="String"/>
         <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <relationship name="follower" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="followNotifications" inverseEntity="Author"/>
-        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="notifications" inverseEntity="Author"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="incomingNotifications" inverseEntity="Author"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="eventID"/>
