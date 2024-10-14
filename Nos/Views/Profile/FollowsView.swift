@@ -39,10 +39,10 @@ struct FollowsView: View {
                         .readabilityPadding()
                         .task {
                             subscriptions[author.id] =
-                            await relayService.requestMetadata(
-                                for: author.hexadecimalPublicKey,
-                                since: author.lastUpdatedMetadata
-                            )
+                                await relayService.requestMetadata(
+                                    for: author.hexadecimalPublicKey,
+                                    since: author.lastUpdatedMetadata
+                                )
                         }
                     }
                 }

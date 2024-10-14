@@ -1,11 +1,11 @@
-import SwiftUI
 import Logger
+import SwiftUI
 
 /// A view that puts a note behind a content warning if appropriate.
 struct WarningView: View {
-    
+
     @Bindable var controller: NoteWarningController
-    
+
     var body: some View {
         if !controller.showWarning {
             EmptyView()
@@ -18,32 +18,35 @@ struct WarningView: View {
 }
 
 struct OutOfNetworkView: View {
-    
+
     @Bindable var controller: NoteWarningController
-    
+
     @State private var isTextBoxShown = false
     @State private var isOverlayHelpTextBoxShown = false
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
                 Spacer()
-                Button(action: {
-                    self.isOverlayHelpTextBoxShown.toggle()
-                }, label: {
-                    (isTextBoxShown ? Image.x : Image.info)
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                })
+                Button(
+                    action: {
+                        self.isOverlayHelpTextBoxShown.toggle()
+                    },
+                    label: {
+                        (isTextBoxShown ? Image.x : Image.info)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                    }
+                )
                 .padding(.trailing, 24)
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
             .padding(.top, 24)
-            
+
             // Center align the content
             VStack(alignment: .center) {
-                Spacer() // pushes content to the center
-                
+                Spacer()  // pushes content to the center
+
                 if self.isOverlayHelpTextBoxShown {
                     Text(.localizable.outsideNetworkExplanation)
                         .font(.body)
@@ -57,51 +60,54 @@ struct OutOfNetworkView: View {
                         .padding(.horizontal, 24)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                
+
                 SecondaryActionButton(title: .localizable.viewThisPostAnyway) {
                     withAnimation {
                         controller.userHidWarning = true
                     }
                 }
-                .padding(.top, 10) // Move the button closer to the text
-                
-                Spacer() // pushes content to the center
+                .padding(.top, 10)  // Move the button closer to the text
+
+                Spacer()  // pushes content to the center
             }
-            .frame(maxWidth: .infinity) // Allow the VStack to take full width
-            Spacer(minLength: 30) // Ensure there's some spacing at the bottom
+            .frame(maxWidth: .infinity)  // Allow the VStack to take full width
+            Spacer(minLength: 30)  // Ensure there's some spacing at the bottom
         }
     }
 }
 
 struct OverlayContentReportView: View {
-    
+
     @Bindable var controller: NoteWarningController
-    
+
     @State private var isTextBoxShown = false
     @State var isOverlayHelpTextBoxShown = false
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
                 Spacer()
-                Button(action: {
-                    withAnimation {
-                        self.isOverlayHelpTextBoxShown.toggle()
+                Button(
+                    action: {
+                        withAnimation {
+                            self.isOverlayHelpTextBoxShown.toggle()
+                        }
+                    },
+                    label: {
+                        (isTextBoxShown ? Image.x : Image.info)
+                            .resizable()
+                            .frame(width: 24, height: 24)
                     }
-                }, label: {
-                    (isTextBoxShown ? Image.x : Image.info)
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                })
+                )
                 .padding(.trailing, 24)
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
             .padding(.top, 24)
-            
+
             // Center align the content
             VStack(alignment: .center) {
-                Spacer() // pushes content to the center
-                
+                Spacer()  // pushes content to the center
+
                 // TextBox or Image based on isTextBoxShown
                 if self.isOverlayHelpTextBoxShown {
                     Text(.localizable.contentWarningExplanation)
@@ -111,12 +117,12 @@ struct OverlayContentReportView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .layoutPriority(1)
                 } else {
-                    
+
                     Image.warningEye
                         .scaledToFit()
-                        .frame(width: 48, height: 48) // Set the width and height to 48
+                        .frame(width: 48, height: 48)  // Set the width and height to 48
                         .padding(.bottom, 20)
-                    
+
                     if controller.noteReports.count > 0 {
                         ContentWarningMessage(reports: controller.noteReports, type: .note)
                     } else if controller.authorReports.count > 0 {
@@ -128,24 +134,24 @@ struct OverlayContentReportView: View {
                         controller.userHidWarning = true
                     }
                 }
-                .padding(.top, 10) // Move the button closer to the text
-                
-                Spacer() // pushes content to the center
+                .padding(.top, 10)  // Move the button closer to the text
+
+                Spacer()  // pushes content to the center
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            Spacer(minLength: 30) // Ensure there's some spacing at the bottom
-            
+            Spacer(minLength: 30)  // Ensure there's some spacing at the bottom
+
         }
     }
 }
 
 struct ContentWarningMessage: View {
-    
+
     var reports: [Event]
     var type: ContentWarningType
-    
+
     @State private var controller = ContentWarningController()
-    
+
     var body: some View {
         Text(controller.localizedContentWarning)
             .font(.body)
@@ -166,7 +172,7 @@ struct ContentWarningMessage: View {
 
 #Preview {
     var previewData = PreviewData()
-    
+
     return VStack {
         ContentWarningMessage(reports: [previewData.shortNoteReportOne], type: .author)
         ContentWarningMessage(reports: [previewData.shortNoteReportOne, previewData.shortNoteReportTwo], type: .author)
@@ -174,7 +180,7 @@ struct ContentWarningMessage: View {
             reports: [
                 previewData.shortNoteReportOne,
                 previewData.shortNoteReportTwo,
-                previewData.shortNoteReportThree
+                previewData.shortNoteReportThree,
             ],
             type: .author
         )
@@ -184,7 +190,7 @@ struct ContentWarningMessage: View {
             reports: [
                 previewData.shortNoteReportOne,
                 previewData.shortNoteReportTwo,
-                previewData.shortNoteReportThree
+                previewData.shortNoteReportThree,
             ],
             type: .note
         )

@@ -3,12 +3,12 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ImagePickerUIViewController: UIViewControllerRepresentable {
-    
+
     let sourceType: UIImagePickerController.SourceType
     let mediaTypes: [UTType]
     let cameraDevice: UIImagePickerController.CameraDevice
     let onCompletion: ((URL?) -> Void)
-    
+
     init(
         sourceType: UIImagePickerController.SourceType = .photoLibrary,
         mediaTypes: [UTType] = [.image, .movie],
@@ -21,7 +21,7 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
         self.cameraDevice = cameraDevice
         self.onCompletion = onCompletion
     }
-    
+
     func makeUIViewController(
         context: UIViewControllerRepresentableContext<ImagePickerUIViewController>
     ) -> UIImagePickerController {
@@ -40,7 +40,7 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
     func updateUIViewController(
         _ uiViewController: UIImagePickerController,
         context: UIViewControllerRepresentableContext<ImagePickerUIViewController>
-    ) { }
+    ) {}
 
     func makeCoordinator() -> Coordinator {
         Coordinator(onCompletion: onCompletion)
@@ -52,7 +52,7 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
         init(onCompletion: @escaping ((URL?) -> Void)) {
             self.onCompletion = onCompletion
         }
-        
+
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             onCompletion(nil)
         }
@@ -64,7 +64,8 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
             if let videoURL = info[.mediaURL] as? URL {
                 onCompletion(videoURL)
             } else if let image = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage,
-                let imageData = image.jpegData(compressionQuality: 1.0) {
+                let imageData = image.jpegData(compressionQuality: 1.0)
+            {
                 let url = saveImage(imageData)
                 onCompletion(url)
             } else if let imageURL = info[.imageURL] as? URL {

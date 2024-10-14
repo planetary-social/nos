@@ -2,12 +2,12 @@ import Foundation
 
 // https://gist.github.com/swhitty/9be89dfe97dbb55c6ef0f916273bbb97
 extension Task where Failure == Error {
-    
-    // Start a new Task with a timeout. If the timeout expires before the operation is 
+
+    // Start a new Task with a timeout. If the timeout expires before the operation is
     // completed then the task is cancelled and an error is thrown.
     init(
-        priority: TaskPriority? = nil, 
-        timeout: TimeInterval, 
+        priority: TaskPriority? = nil,
+        timeout: TimeInterval,
         operation: @escaping @Sendable () async throws -> Success
     ) {
         self = Task(priority: priority) {

@@ -1,10 +1,10 @@
-import SwiftUI
 import Dependencies
+import SwiftUI
 
 struct AppView: View {
 
     @State var showNewPost = false
-    @State var newPostContents: String? 
+    @State var newPostContents: String?
 
     @Environment(AppController.self) var appController
     @EnvironmentObject private var router: Router
@@ -13,7 +13,7 @@ struct AppView: View {
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.userDefaults) private var userDefaults
     @Environment(CurrentUser.self) var currentUser
-    
+
     @State private var lastSelectedTab = AppDestination.home
     @State private var showNIP05Wizard = false
 
@@ -52,7 +52,7 @@ struct AppView: View {
                                 }
                             }
                     }
-                    
+
                     DiscoverTab()
                         .tabItem {
                             VStack {
@@ -69,7 +69,7 @@ struct AppView: View {
                         .toolbarBackground(.visible, for: .tabBar)
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(AppDestination.discover)
-                    
+
                     VStack {}
                         .tabItem {
                             VStack {
@@ -77,8 +77,8 @@ struct AppView: View {
                                 Text(.localizable.post)
                             }
                         }
-                    .tag(AppDestination.noteComposer(nil))
-                    
+                        .tag(AppDestination.noteComposer(nil))
+
                     NotificationsView(user: currentUser.author)
                         .tabItem {
                             VStack {
@@ -96,7 +96,7 @@ struct AppView: View {
                         .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                         .tag(AppDestination.notifications)
                         .badge(pushNotificationService.badgeCount)
-                    
+
                     if let author = currentUser.author {
                         ProfileTab(author: author, path: $router.profilePath)
                             .tabItem {
@@ -133,12 +133,14 @@ struct AppView: View {
                         }
                     }
                 }
-                .sheet(isPresented: $showNewPost, content: {
-                    NoteComposer(initialContents: newPostContents, isPresented: $showNewPost)
-                        .environment(currentUser)
-                        .interactiveDismissDisabled()
-                })
-                
+                .sheet(
+                    isPresented: $showNewPost,
+                    content: {
+                        NoteComposer(initialContents: newPostContents, isPresented: $showNewPost)
+                            .environment(currentUser)
+                            .interactiveDismissDisabled()
+                    })
+
                 SideMenu(
                     menuWidth: 300,
                     menuOpened: router.sideMenuOpened,
@@ -191,13 +193,13 @@ struct AppView: View {
 }
 
 struct AppView_Previews: PreviewProvider {
-    
+
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.viewContext
     static var relayService = previewData.relayService
     static var router = Router()
-    static var currentUser = previewData.currentUser 
+    static var currentUser = previewData.currentUser
     static var pushNotificationService = DependencyValues().pushNotificationService
 
     static var loggedInAppController: AppController = {
@@ -205,13 +207,13 @@ struct AppView_Previews: PreviewProvider {
         appController.completeOnboarding()
         return appController
     }()
-    
+
     static var routerWithSideMenuOpened: Router = {
         let router = Router()
         router.toggleSideMenu()
         return router
     }()
-    
+
     static var previews: some View {
         AppView()
             .environment(\.managedObjectContext, previewContext)

@@ -1,7 +1,7 @@
 import Foundation
 
 extension NSRegularExpression {
-    
+
     /// Helper function to perform replacements using NSRegularExpression.
     /// - Parameters:
     ///   - string: The input string.
@@ -17,14 +17,14 @@ extension NSRegularExpression {
     ) -> String {
         var result = ""
         var lastRangeEnd = string.startIndex
-        
+
         for match in matches(in: string, options: options, range: range) {
             guard let matchRange = Range(match.range, in: string) else { continue }
             result += string[lastRangeEnd..<matchRange.lowerBound]
             result += transform(match)
             lastRangeEnd = matchRange.upperBound
         }
-        
+
         result += string[lastRangeEnd..<string.endIndex]
         return result
     }

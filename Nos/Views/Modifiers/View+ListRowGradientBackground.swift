@@ -11,10 +11,11 @@ extension View {
 struct ListRowGradientBackground: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .listRowBackground(LinearGradient(
-                colors: [Color.cardBgTop, Color.cardBgBottom],
-                startPoint: .top,
-                endPoint: .bottom
-            ))
+            .listRowBackground(
+                LinearGradient(
+                    colors: [Color.cardBgTop, Color.cardBgBottom],
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
     }
 }

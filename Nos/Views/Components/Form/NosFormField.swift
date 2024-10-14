@@ -14,7 +14,7 @@ struct NosFormField<Control: View>: View {
         self.label = label
         self.control = builder()
     }
-    
+
     var body: some View {
         VStack {
             HStack {
@@ -23,7 +23,7 @@ struct NosFormField<Control: View>: View {
                     .font(.clarity(.medium, textStyle: .subheadline))
                 Spacer()
             }
-            
+
             control
                 .accessibilityLabel(String(localized: label))
                 .focused($focus)

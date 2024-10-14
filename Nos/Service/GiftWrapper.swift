@@ -27,7 +27,7 @@ enum GiftWrapper: NIP44v2Encrypting {
             senderKeyPair: senderKeyPair,
             receiverPubkey: receiverPubkey
         )
-        
+
         let sealCreatedAt = randomTimeUpTo2DaysInThePast()
         var seal = JSONEvent(
             pubKey: senderKeyPair.publicKeyHex,
@@ -47,7 +47,7 @@ enum GiftWrapper: NIP44v2Encrypting {
             senderKeyPair: randomKeyPair,
             receiverPubkey: receiverPubkey
         )
-        
+
         let wrapCreatedAt = randomTimeUpTo2DaysInThePast()
         var giftWrap = JSONEvent(
             pubKey: randomKeyPair.publicKeyHex,
@@ -56,9 +56,9 @@ enum GiftWrapper: NIP44v2Encrypting {
             tags: [["p", receiverPubkey]],
             content: encryptedSeal
         )
-        
+
         try giftWrap.sign(withKey: randomKeyPair)
-        
+
         // Unsigned, publication will do that
         return giftWrap
     }
@@ -78,11 +78,11 @@ enum GiftWrapper: NIP44v2Encrypting {
         guard let sealEvent = JSONEvent.from(json: seal) else {
             throw GiftWrapperError.serializationError
         }
-        
+
         guard try sealEvent.verifySignature() else {
             throw GiftWrapperError.invalidSealSignature
         }
-        
+
         let encryptedRumor = sealEvent.content
 
         let rumor = try decryptCyphertext(
@@ -90,20 +90,20 @@ enum GiftWrapper: NIP44v2Encrypting {
             receiverKeyPair: receiverKeyPair,
             senderPubkey: sealEvent.pubKey
         )
-        
+
         guard let rumorEvent = JSONEvent.from(json: rumor) else {
             throw GiftWrapperError.serializationError
         }
-        
+
         if rumorEvent.pubKey != sealEvent.pubKey {
             throw GiftWrapperError.invalidPublicKey
         }
 
         return rumorEvent
     }
-    
+
     // MARK: - Helpers
-    
+
     private static func encryptJSONEvent(
         _ jsonEvent: JSONEvent,
         senderKeyPair: KeyPair,
@@ -112,14 +112,14 @@ enum GiftWrapper: NIP44v2Encrypting {
         guard let jsonEventJson = try jsonEvent.toJSON() else {
             throw GiftWrapperError.serializationError
         }
-        
+
         return try encryptPlainText(
             jsonEventJson,
             senderKeyPair: senderKeyPair,
             receiverPubkey: receiverPubkey
         )
     }
-    
+
     private static func encryptPlainText(
         _ plainText: String,
         senderKeyPair: KeyPair,
@@ -127,14 +127,14 @@ enum GiftWrapper: NIP44v2Encrypting {
     ) throws -> String {
         let privateKeyA = try toNostrSDKPrivateKey(keyPair: senderKeyPair)
         let publicKeyB = try toNostrSDKPublicKey(rawAuthorId: receiverPubkey)
-        
+
         return try NIP44v2Encrypter().encrypt(
             plaintext: plainText,
             privateKeyA: privateKeyA,
             publicKeyB: publicKeyB
         )
     }
-    
+
     private static func decryptCyphertext(
         _ cyphertext: String,
         receiverKeyPair: KeyPair,
@@ -142,14 +142,14 @@ enum GiftWrapper: NIP44v2Encrypting {
     ) throws -> String {
         let privateKeyA = try toNostrSDKPrivateKey(keyPair: receiverKeyPair)
         let publicKeyB = try toNostrSDKPublicKey(rawAuthorId: senderPubkey)
-        
+
         return try NIP44v2Encrypter().decrypt(
             payload: cyphertext,
             privateKeyA: privateKeyA,
             publicKeyB: publicKeyB
         )
     }
-    
+
     private static func validateRumor(_ rumor: JSONEvent) throws -> JSONEvent {
         guard rumor.signature.isEmptyOrNil else {
             throw GiftWrapperError.signedRumor
@@ -183,7 +183,7 @@ enum GiftWrapper: NIP44v2Encrypting {
 
         return publicKey
     }
-    
+
     static func randomTimeUpTo2DaysInThePast() -> Date {
         Date().addingTimeInterval(-TimeInterval.random(in: 0...twoDays))
     }

@@ -1,5 +1,5 @@
-import SwiftUI
 import CoreData
+import SwiftUI
 
 extension View {
     /// Forwards any URLs the user taps in this view to `Router.open(url:with:)`.
@@ -9,14 +9,16 @@ extension View {
 }
 
 struct HandleURLsInRouter: ViewModifier {
-    
+
     @EnvironmentObject private var router: Router
-    
+
     func body(content: Content) -> some View {
         content
-            .environment(\.openURL, OpenURLAction { url in
-                router.open(url: url)
-                return .handled
-            })
+            .environment(
+                \.openURL,
+                OpenURLAction { url in
+                    router.open(url: url)
+                    return .handled
+                })
     }
 }

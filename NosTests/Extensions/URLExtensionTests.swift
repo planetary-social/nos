@@ -108,17 +108,17 @@ final class URLExtensionTests: XCTestCase {
         let url = URL(string: "https://subdomain.example.com")!
         XCTAssertEqual(url.truncatedMarkdownLink, "[subdomain.example.com](https://subdomain.example.com)")
     }
-    
+
     func test_truncatedMarkdownLink_withNonEmptyPathExtension() {
         let url = URL(string: "https://example.com/image.png")!
         XCTAssertEqual(url.truncatedMarkdownLink, "[example.com...](https://example.com/image.png)")
     }
-    
+
     func test_truncatedMarkdownLink_withNilHost() {
         let url = URL(string: "nostr:1248904")!
         XCTAssertEqual(url.truncatedMarkdownLink, "[nostr:1248904](nostr:1248904)")
     }
-    
+
     func test_truncatedMarkdownLink_withWWW_removesWWW() {
         let url = URL(string: "https://www.example.com")!
         XCTAssertEqual(url.truncatedMarkdownLink, "[example.com](https://www.example.com)")
@@ -128,12 +128,12 @@ final class URLExtensionTests: XCTestCase {
         let url = URL(string: "www.nostr.com/get-started")!
         XCTAssertEqual(url.truncatedMarkdownLink, "[nostr.com...](https://www.nostr.com/get-started)")
     }
-    
+
     func test_truncatedMarkdownLink_noScheme_withWWW_noPath_doesNotIncludeEllipsis() {
         let url = URL(string: "https://www.nos.social/about")!
         XCTAssertEqual(url.truncatedMarkdownLink, "[nos.social...](https://www.nos.social/about)")
     }
-    
+
     func test_truncatedMarkdownLink_withShortPath() {
         let url = URL(string: "https://nips.be/1")!
         XCTAssertEqual(url.truncatedMarkdownLink, "[nips.be...](https://nips.be/1)")

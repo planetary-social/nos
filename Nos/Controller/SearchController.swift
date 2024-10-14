@@ -1,7 +1,7 @@
-import Foundation
 import Combine
-import Dependencies
 import CoreData
+import Dependencies
+import Foundation
 import Logger
 
 /// The current state of the search.
@@ -24,12 +24,12 @@ enum SearchState {
 
 /// Manages a search query and list of results.
 class SearchController: ObservableObject {
-    
+
     // MARK: - Properties
-    
+
     /// The search query string.
     @Published var query: String = ""
-    
+
     /// Any and all authors in the search results. As of this writing, _only_ authors appear in search results,
     /// so this contains all search results, period.
     @Published var authorResults = [Author]()
@@ -55,7 +55,7 @@ class SearchController: ObservableObject {
     private let stillLoadingTime: TimeInterval = 10
 
     // MARK: - Init
-    
+
     init() {
         $query
             .removeDuplicates()
@@ -107,9 +107,9 @@ class SearchController: ObservableObject {
         })
         .store(in: &cancellables)
     }
-    
+
     // MARK: - Internal
-    
+
     func author(fromPublicKey publicKeyString: String) -> Author? {
         let strippedString = publicKeyString.trimmingCharacters(
             in: NSCharacterSet.whitespacesAndNewlines
@@ -123,14 +123,14 @@ class SearchController: ObservableObject {
         try? context.saveIfNeeded()
         return author
     }
-    
+
     func authors(named name: String) -> [Author] {
         guard let authors = try? Author.find(named: name, context: context) else {
             return []
         }
         return authors.sorted(by: { $0.followers.count > $1.followers.count })
     }
-    
+
     func clear() {
         state = .noQuery
         searchSubscriptions.removeAll()
@@ -138,7 +138,7 @@ class SearchController: ObservableObject {
         query = ""
         authorResults = []
     }
-    
+
     private func note(fromPublicKey publicKeyString: String) -> Event? {
         let strippedString = publicKeyString.trimmingCharacters(
             in: NSCharacterSet.whitespacesAndNewlines
@@ -156,7 +156,7 @@ class SearchController: ObservableObject {
             return nil
         }
     }
-    
+
     /// Searches the relays and UNS for the given query.
     /// - Parameter query: The string to search for.
     ///
@@ -193,7 +193,7 @@ class SearchController: ObservableObject {
             self.searchSubscriptions.append(subscription)
         }
     }
-    
+
     func searchUNS(for query: String) {
         Task {
             do {
@@ -225,7 +225,7 @@ class SearchController: ObservableObject {
             }
         }
     }
-    
+
     /// Searches for the value in `query`. Only needed when the user taps the Search button since typeahead search
     /// handles other use cases.
     ///
@@ -233,9 +233,9 @@ class SearchController: ObservableObject {
     /// the relay service. If there's a match, shows the author.
     ///
     /// Second, checks to see if `query` matches an author's public key and if so, shows the author.
-    /// 
+    ///
     /// Third, checks to see if `query` matches a note's public key and if so, shows the note.
-    /// 
+    ///
     /// Finally, if all previous checks fail, searches the relays and UNS for the given query.
     func submitSearch(query: String) {
         searchSubscriptions.removeAll()

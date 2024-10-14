@@ -5,7 +5,7 @@ extension View {
     /// Allows you to round specific corners of views with different radii.
     /// https://stackoverflow.com/a/58606176/982195
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape( RoundedCorner(radius: radius, corners: corners) )
+        clipShape(RoundedCorner(radius: radius, corners: corners))
     }
 }
 

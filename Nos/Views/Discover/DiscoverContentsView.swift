@@ -1,6 +1,6 @@
+import Dependencies
 import Logger
 import SwiftUI
-import Dependencies
 
 struct DiscoverContentsView: View {
     @ObservedObject var searchController: SearchController
@@ -17,7 +17,7 @@ struct DiscoverContentsView: View {
     @State private var featuredAuthorIDs = [RawAuthorID]()
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
     @State private var selectedCategory: FeaturedAuthorCategory = .all
-    
+
     @State private var featuredAuthorsPerformingInitialLoad = true
     let featuredAuthorsInitialLoadTime = 1
 
@@ -30,7 +30,7 @@ struct DiscoverContentsView: View {
         self.searchController = searchController
         self.selectedCategory = featuredAuthorCategory
     }
-    
+
     var body: some View {
         VStack {
             GeometryReader { geometry in
@@ -43,8 +43,8 @@ struct DiscoverContentsView: View {
                     case .loading, .stillLoading:
                         FullscreenProgressView(
                             isPresented: .constant(true),
-                            text: searchController.state == .stillLoading ?
-                            String(localized: .localizable.notFindingResults) : nil
+                            text: searchController.state == .stillLoading
+                                ? String(localized: .localizable.notFindingResults) : nil
                         )
                     case .results:
                         ScrollView {
@@ -75,13 +75,13 @@ struct DiscoverContentsView: View {
             }
         }
     }
-    
+
     var featuredAuthorsView: some View {
         ZStack {
             ScrollView {
                 LazyVStack {
                     categoryPicker
-                    
+
                     ForEach(featuredAuthorIDs) { authorID in
                         AuthorObservationView(authorID: authorID) { author in
                             AuthorCard(author: author) {
@@ -92,10 +92,10 @@ struct DiscoverContentsView: View {
                             .readabilityPadding()
                             .task {
                                 subscriptions[author.id] =
-                                await relayService.requestMetadata(
-                                    for: author.hexadecimalPublicKey,
-                                    since: author.lastUpdatedMetadata
-                                )
+                                    await relayService.requestMetadata(
+                                        for: author.hexadecimalPublicKey,
+                                        since: author.lastUpdatedMetadata
+                                    )
                             }
                         }
                     }
@@ -107,10 +107,10 @@ struct DiscoverContentsView: View {
                     proxy.scrollTo(firstAuthorID, anchor: .bottom)
                 }
             }
-            
+
             if featuredAuthorsPerformingInitialLoad {
                 FullscreenProgressView(
-                    isPresented: $featuredAuthorsPerformingInitialLoad, 
+                    isPresented: $featuredAuthorsPerformingInitialLoad,
                     hideAfter: .now() + .seconds(featuredAuthorsInitialLoadTime)
                 )
                 .onAppear {
@@ -136,27 +136,26 @@ struct DiscoverContentsView: View {
         HStack(spacing: 2) {
             Spacer()
             ForEach(FeaturedAuthorCategory.allCases, id: \.self) { category in
-                Button(action: {
-                    selectedCategory = category
-                }, label: {
-                    Text(category.text)
-                        .font(.callout)
-                        .padding(.vertical, 4)
-                        .padding(.horizontal, 8)
-                        .background(
-                            selectedCategory == category ?
-                            Color.pickerBackgroundSelected :
-                                Color.clear
-                        )
-                        .foregroundColor(
-                            selectedCategory == category ?
-                            Color.primaryTxt :
-                                Color.secondaryTxt
-                        )
-                        .cornerRadius(20)
-                        .padding(4)
-                        .frame(minWidth: 44, minHeight: 44)
-                })
+                Button(
+                    action: {
+                        selectedCategory = category
+                    },
+                    label: {
+                        Text(category.text)
+                            .font(.callout)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 8)
+                            .background(
+                                selectedCategory == category ? Color.pickerBackgroundSelected : Color.clear
+                            )
+                            .foregroundColor(
+                                selectedCategory == category ? Color.primaryTxt : Color.secondaryTxt
+                            )
+                            .cornerRadius(20)
+                            .padding(4)
+                            .frame(minWidth: 44, minHeight: 44)
+                    }
+                )
                 .onChange(of: selectedCategory) { _, _ in
                     updateDisplayedFeaturedAuthors()
                 }

@@ -1,11 +1,11 @@
 import SwiftUI
 
-/// This is a component of `NoteComposer` that displays a preview of the note being replied to. 
+/// This is a component of `NoteComposer` that displays a preview of the note being replied to.
 struct ReplyPreview: View {
-    
+
     var note: Event
     @Environment(CurrentUser.self) var currentUser
-    
+
     var body: some View {
         VStack(spacing: 8) {
             HStack {
@@ -19,10 +19,10 @@ struct ReplyPreview: View {
             }
             .padding(.horizontal, 24)
             .padding(.top, 24)
-            
+
             CompactNoteView(note: note, shouldTruncate: false, showLinkPreviews: false, allowUserInteraction: false)
                 .padding(.horizontal, 9)
-            
+
             HStack {
                 AvatarView(imageUrl: currentUser.author?.profilePhotoURL, size: 30)
                 Text(currentUser.author?.safeName ?? "")
@@ -39,7 +39,7 @@ struct ReplyPreview: View {
 
 #Preview {
     var previewData = PreviewData()
-    
+
     return ReplyPreview(note: previewData.longNote)
         .background(Color.appBg)
         .inject(previewData: previewData)

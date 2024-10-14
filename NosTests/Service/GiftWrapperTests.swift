@@ -4,7 +4,7 @@ final class GiftWrapperTests: XCTestCase {
     func testGiftWrappedRumor() throws {
         let senderKeyPair = KeyFixture.alice
         let receiverKeyPair = KeyFixture.bob
-        
+
         let rumor = JSONEvent(
             pubKey: senderKeyPair.publicKeyHex,
             createdAt: Date(),
@@ -12,13 +12,13 @@ final class GiftWrapperTests: XCTestCase {
             tags: [["p", receiverKeyPair.publicKeyHex]],
             content: "Are you going to the party tonight? 🎉"
         )
-        
+
         let wrappedDM = try GiftWrapper.wrap(
             rumor: rumor,
             senderKeyPair: senderKeyPair,
             receiverPubkey: receiverKeyPair.publicKeyHex
         )
-        
+
         XCTAssertEqual(wrappedDM.kind, EventKind.giftWrap.rawValue)
         XCTAssertEqual(wrappedDM.tags, [["p", receiverKeyPair.publicKeyHex]])
         XCTAssertGreaterThan(
@@ -45,7 +45,7 @@ final class GiftWrapperTests: XCTestCase {
             giftWrap: wrappedDM,
             receiverKeyPair: receiverKeyPair
         )
-        
+
         XCTAssertEqual(unwrappedDM.kind, EventKind.directMessageRumor.rawValue)
         XCTAssertEqual(unwrappedDM.pubKey, senderKeyPair.publicKeyHex)
         XCTAssertEqual(unwrappedDM.content, "Are you going to the party tonight? 🎉")

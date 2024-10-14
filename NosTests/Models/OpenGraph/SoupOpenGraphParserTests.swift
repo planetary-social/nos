@@ -19,7 +19,7 @@ class SoupOpenGraphParserTests: XCTestCase {
 
         // Assert
         XCTAssertEqual(metadata.type, .video)
-        
+
         XCTAssertEqual(metadata.video?.url?.absoluteString, "https://example.com/movie.swf")
         XCTAssertEqual(metadata.video?.width, 2560)
         XCTAssertEqual(metadata.video?.height, 1440)
@@ -39,7 +39,7 @@ class SoupOpenGraphParserTests: XCTestCase {
 
         // Assert
         XCTAssertEqual(metadata.type, .unknown)
-        
+
         XCTAssertEqual(metadata.video?.url?.absoluteString, "https://example.com/rock.mp4")
         XCTAssertEqual(metadata.image?.url?.absoluteString, "https://example.com/rock.jpg")
     }
@@ -107,7 +107,7 @@ class SoupOpenGraphParserTests: XCTestCase {
         XCTAssertEqual(metadata.video?.url?.absoluteString, "https://www.youtube.com/embed/ZILsHowUjpQ")
         XCTAssertEqual(metadata.video?.width, 1280)
         XCTAssertEqual(metadata.video?.height, 720)
-        
+
         XCTAssertEqual(metadata.image?.width, 1280)
         XCTAssertEqual(metadata.image?.height, 720)
     }
@@ -122,7 +122,7 @@ class SoupOpenGraphParserTests: XCTestCase {
 
         // Assert
         XCTAssertEqual(
-            metadata.title, 
+            metadata.title,
             "A fortnight since TTPD 🤍 brought to you by YouTube Shorts #ForAFortnightChallenge"
         )
 

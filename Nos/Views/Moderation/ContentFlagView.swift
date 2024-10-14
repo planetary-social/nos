@@ -123,7 +123,7 @@ struct ContentFlagView: View {
                 ContentFlagView(
                     selectedFlagOptionCategory: $selectedFlagOptionCategory,
                     selectedSendOptionCategory: $selectedSendOptionCategory,
-                    showSuccessView: $showSuccessView, 
+                    showSuccessView: $showSuccessView,
                     flagTarget: .note(event),
                     sendAction: {}
                 )

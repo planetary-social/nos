@@ -7,7 +7,7 @@ class NamesAPI {
 
     /// A shared URLCache instance to store responses from NIP-05 providers
     private let urlCache = URLCache(
-        memoryCapacity: 4 * 1024 * 1024, // 4 MB
+        memoryCapacity: 4 * 1024 * 1024,  // 4 MB
         diskCapacity: 20 * 1024 * 1024,  // 20 MB
         directory: .cachesDirectory.appending(component: "NamesAPI")
     )
@@ -233,7 +233,7 @@ class NamesAPI {
         let content = ""
         let tags = [
             ["u", url.absoluteString],
-            ["method", method.rawValue]
+            ["method", method.rawValue],
         ]
         var jsonEvent = JSONEvent(
             pubKey: keyPair.publicKeyHex,
@@ -270,8 +270,8 @@ class NamesAPI {
                 "name": username,
                 "data": [
                     "pubkey": keyPair.publicKeyHex,
-                    "relays": relays.map { $0.absoluteString }
-                ]
+                    "relays": relays.map { $0.absoluteString },
+                ],
             ]
         )
     }

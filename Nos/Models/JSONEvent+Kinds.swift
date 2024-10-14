@@ -1,7 +1,7 @@
 import Foundation
 
 extension JSONEvent {
-    
+
     /// An event that represents the user's contact list (who they are following) and their relays.
     /// - Parameters:
     ///   - pubKey: The pubkey of the user whose contact list and relays the event represents.
@@ -11,7 +11,7 @@ extension JSONEvent {
     static func contactList(pubKey: String, tags: [[String]], relayAddresses: [String]) -> JSONEvent {
         let relayStrings = relayAddresses.map { "\"\($0)\":{\"write\":true,\"read\":true}" }
         let content = "{" + relayStrings.joined(separator: ",") + "}"
-        
+
         return JSONEvent(
             pubKey: pubKey,
             kind: .contactList,
@@ -19,7 +19,7 @@ extension JSONEvent {
             content: content
         )
     }
-    
+
     /// An event that represents the user's request for all of their published notes to be removed from relays.
     /// - Parameters:
     ///   - pubKey: The public key of the user making the request.
@@ -34,7 +34,7 @@ extension JSONEvent {
         } else {
             tags = [["relay", "ALL_RELAYS"]]
         }
-        
+
         return JSONEvent(
             pubKey: pubKey,
             kind: .requestToVanish,

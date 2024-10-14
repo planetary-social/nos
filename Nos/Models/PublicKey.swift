@@ -4,7 +4,7 @@ import secp256k1_bindings
 
 enum KeyError: Error {
     case invalidPubKey
-    
+
     var description: String? {
         switch self {
         case .invalidPubKey:
@@ -19,7 +19,7 @@ struct PublicKey {
     var hex: RawAuthorID
     let npub: String
     let bytes: [UInt8]
-     
+
     private let underlyingKey: secp256k1.Signing.XonlyKey
 
     static func build(npubOrHex: String) -> PublicKey? {
@@ -35,7 +35,7 @@ struct PublicKey {
             return nil
         }
     }
-    
+
     init?(npub: String) {
         do {
             let identifier = try NostrIdentifier.decode(bech32String: npub)

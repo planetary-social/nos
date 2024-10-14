@@ -1,19 +1,19 @@
-import SwiftUI
 import Dependencies
+import SwiftUI
 
 struct UNSWizardPhoneView: View {
-    
+
     @ObservedObject var controller: UNSWizardController
     @Dependency(\.analytics) var analytics
     @Dependency(\.unsAPI) var api
     @State var phoneNumber: String = ""
-    
+
     enum FocusedField {
         case textEditor
     }
-    
+
     @FocusState private var focusedField: FocusedField?
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -21,13 +21,13 @@ struct UNSWizardPhoneView: View {
                     UNSStepImage { Image.unsPhone.offset(x: 7, y: 5) }
                         .padding(40)
                         .padding(.top, 50)
-                    
+
                     Text(.localizable.registration)
                         .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
-                    
+
                     Text(.localizable.registrationDescription)
                         .fontWeight(.medium)
                         .multilineTextAlignment(.center)
@@ -35,14 +35,14 @@ struct UNSWizardPhoneView: View {
                         .padding(.vertical, 17)
                         .padding(.horizontal, 20)
                         .shadow(radius: 1, y: 1)
-                    
+
                     UNSWizardTextField(text: $phoneNumber, placeholder: "+1-234-567-8910")
                         .focused($focusedField, equals: .textEditor)
                         .keyboardType(.phonePad)
                         .autocorrectionDisabled()
-                    
+
                     Spacer()
-                    
+
                     BigActionButton(title: .localizable.sendCode) {
                         await submit()
                     }
@@ -57,7 +57,7 @@ struct UNSWizardPhoneView: View {
             }
         }
     }
-    
+
     private func submit() async {
         analytics.enteredUNSPhone()
         var number = phoneNumber
@@ -67,23 +67,23 @@ struct UNSWizardPhoneView: View {
         number = "+\(number)"
         controller.phoneNumber = number
         self.phoneNumber = ""
-        
+
         do {
             controller.state = .loading
             try await api.requestVerificationCode(phoneNumber: number)
             controller.state = .verificationCode
         } catch {
             controller.state = .error(error)
-        } 
+        }
     }
 }
 
 struct UNSWizardPhone_Previews: PreviewProvider {
-    
+
     @State static var controller = UNSWizardController(
-        state: .intro 
+        state: .intro
     )
-    
+
     static var previews: some View {
         UNSWizardPhoneView(controller: controller)
     }

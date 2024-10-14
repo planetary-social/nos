@@ -1,5 +1,5 @@
-import Foundation
 import CoreData
+import Foundation
 import Logger
 
 typealias Followed = [Follow]
@@ -22,7 +22,7 @@ extension Array where Element == String {
 
 @objc(Follow)
 public class Follow: NosManagedObject {
-    
+
     // swiftlint:disable:next function_body_length
     class func upsert(
         by author: Author,
@@ -69,32 +69,32 @@ public class Follow: NosManagedObject {
         } else {
             follow = Follow(context: context)
         }
-        
+
         follow.source = author
 
         let followedAuthor = try Author.findOrCreate(by: followedKey, context: context)
         follow.destination = followedAuthor
-        
+
         if jsonTag.count > 2, !jsonTag[2].isEmpty {
             if let relay = try? Relay.findOrCreate(by: jsonTag[2], context: context) {
                 author.add(relay: relay)
             }
         }
-        
+
         if jsonTag.count > 3 {
             follow.petName = jsonTag[3]
         }
-        
+
         return follow
     }
-    
+
     @nonobjc public class func followsRequest(sources authors: [Author]) -> NSFetchRequest<Follow> {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "source IN %@", authors)
         return fetchRequest
     }
-    
+
     @nonobjc public class func followsRequest(source: Author, destination: Author) -> NSFetchRequest<Follow> {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]
@@ -108,7 +108,7 @@ public class Follow: NosManagedObject {
         fetchRequest.predicate = NSPredicate(format: "destination IN %@", authors)
         return fetchRequest
     }
-    
+
     @nonobjc public class func allFollowsRequest() -> NSFetchRequest<Follow> {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.sortDescriptors = [
@@ -125,35 +125,35 @@ public class Follow: NosManagedObject {
         fetchRequest.predicate = NSPredicate(format: "source = nil")
         return fetchRequest
     }
-    
+
     class func follows(source: Author, destination: Author, context: NSManagedObjectContext) -> [Follow] {
         let fetchRequest = Follow.followsRequest(source: source, destination: destination)
-        
+
         do {
             return try context.fetch(fetchRequest)
         } catch let error as NSError {
             Log.error("Failed to fetch follows. Error: \(error.description)")
         }
-        
+
         return []
     }
-    
+
     class func deleteFollows(in follows: Set<Follow>, context: NSManagedObjectContext) {
         for follow in follows {
             context.delete(follow)
         }
     }
-    
+
     class func find(source: Author, destination: Author, context: NSManagedObjectContext) throws -> Follow? {
         let fetchRequest = Follow.followsRequest(source: source, destination: destination)
         fetchRequest.fetchLimit = 1
         if let follow = try context.fetch(fetchRequest).first {
             return follow
         }
-        
+
         return nil
     }
-    
+
     class func findOrCreate(source: Author, destination: Author, context: NSManagedObjectContext) throws -> Follow {
         if let follow = try? Follow.find(source: source, destination: destination, context: context) {
             return follow

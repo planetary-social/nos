@@ -1,5 +1,5 @@
-import UIKit
 import SwiftUI
+import UIKit
 
 struct ActivityViewController: UIViewControllerRepresentable {
 
@@ -15,7 +15,7 @@ struct ActivityViewController: UIViewControllerRepresentable {
             activityItems: activityItems,
             applicationActivities: applicationActivities
         )
-        controller.completionWithItemsHandler = { _, _, _, _  in
+        controller.completionWithItemsHandler = { _, _, _, _ in
             completion?()
         }
         return controller
@@ -24,5 +24,5 @@ struct ActivityViewController: UIViewControllerRepresentable {
     func updateUIViewController(
         _ uiViewController: UIActivityViewController,
         context: UIViewControllerRepresentableContext<ActivityViewController>
-    ) { }
+    ) {}
 }

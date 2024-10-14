@@ -2,25 +2,28 @@ import SwiftUI
 
 /// A big bright button that is used as the primary call-to-action on a screen.
 struct BigActionButton: View {
-    
+
     var title: LocalizedStringResource
     var backgroundGradient: LinearGradient = .bigAction
     var action: () async -> Void
     @State var disabled = false
-    
+
     var body: some View {
-        Button(action: {
-            disabled = true
-            Task {
-                await action()
-                disabled = false
+        Button(
+            action: {
+                disabled = true
+                Task {
+                    await action()
+                    disabled = false
+                }
+            },
+            label: {
+                Text(title)
+                    .font(.clarity(.bold))
+                    .transition(.opacity)
+                    .font(.headline)
             }
-        }, label: {
-            Text(title)
-                .font(.clarity(.bold))
-                .transition(.opacity)
-                .font(.headline)
-        })
+        )
         .lineLimit(nil)
         .foregroundColor(.black)
         .buttonStyle(BigActionButtonStyle(backgroundGradient: backgroundGradient))
@@ -33,7 +36,7 @@ extension LinearGradient {
         LinearGradient(
             colors: [
                 Color.bigActionButtonGradientTop,
-                Color.bigActionButtonGradientBottom
+                Color.bigActionButtonGradientBottom,
             ],
             startPoint: .top,
             endPoint: .bottom
@@ -42,12 +45,12 @@ extension LinearGradient {
 }
 
 struct BigActionButtonStyle: ButtonStyle {
-    
+
     @SwiftUI.Environment(\.isEnabled) private var isEnabled
-    
+
     var backgroundGradient: LinearGradient = .bigAction
     let cornerRadius: CGFloat = 50
-    
+
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             // Button shadow/background
@@ -59,10 +62,10 @@ struct BigActionButtonStyle: ButtonStyle {
             .shadow(
                 color: Color.lightShadow,
                 radius: 2,
-                x: 0, 
+                x: 0,
                 y: configuration.isPressed ? 0 : 1
             )
-            
+
             // Button face
             ZStack {
                 // Gradient background color
@@ -76,10 +79,10 @@ struct BigActionButtonStyle: ButtonStyle {
                         endPoint: UnitPoint(x: 0.5, y: 0.99)
                     )
                     .blendMode(.softLight)
-                    
+
                     backgroundGradient.blendMode(.normal)
                 }
-                
+
                 // Text container
                 configuration.label
                     .foregroundColor(.white)
@@ -105,7 +108,7 @@ struct BigGradientButton_Previews: PreviewProvider {
         VStack(spacing: 20) {
             BigActionButton(title: .localizable.tryIt, action: {})
                 .frame(width: 268)
-            
+
             BigActionButton(title: .localizable.tryIt, action: {})
                 .disabled(true)
                 .frame(width: 268)

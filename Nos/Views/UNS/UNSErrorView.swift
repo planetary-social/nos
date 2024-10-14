@@ -1,14 +1,14 @@
-import SwiftUI
 import Dependencies
 import Logger
+import SwiftUI
 
 struct UNSErrorView: View {
-    
+
     @ObservedObject var controller: UNSWizardController
     @Dependency(\.analytics) var analytics
     @Dependency(\.unsAPI) var api
     @Dependency(\.crashReporting) var crashReporting
-    
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -16,7 +16,7 @@ struct UNSErrorView: View {
                     UNSStepImage { Image.unsVerificationCode.offset(x: 7, y: 5) }
                         .padding(40)
                         .padding(.top, 50)
-                    
+
                     Text(.localizable.oops)
                         .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
@@ -24,14 +24,14 @@ struct UNSErrorView: View {
                         .shadow(radius: 1, y: 1)
                         .padding(.top, 20)
                         .padding(.bottom, 3)
-                    
+
                     Text(.localizable.anErrorOccurred)
                         .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
                         .padding(.bottom, 20)
-                    
+
                     Text(.localizable.tryAgainOrContactSupport)
                         .fontWeight(.medium)
                         .multilineTextAlignment(.center)
@@ -41,12 +41,12 @@ struct UNSErrorView: View {
                         .shadow(radius: 1, y: 1)
                         .padding(.bottom, 20)
                 }
-                
+
                 Spacer()
-                
+
                 BigActionButton(title: .localizable.goBack) {
                     if api.accessToken != nil {
-                        do { 
+                        do {
                             try await controller.navigateToChooseOrRegisterName()
                         } catch {
                             Log.optional(error)
@@ -73,12 +73,12 @@ struct UNSErrorView: View {
                     crashReporting.report(errorMessage)
                 }
             }
-        } 
+        }
     }
 }
 
 #Preview {
     @State var controller = UNSWizardController(state: .error(nil))
-    
+
     return UNSErrorView(controller: controller)
 }

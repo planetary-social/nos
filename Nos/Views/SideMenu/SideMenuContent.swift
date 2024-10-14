@@ -1,20 +1,20 @@
-import SwiftUI
-import MessageUI
 import Dependencies
+import MessageUI
+import SwiftUI
 
 struct SideMenuContent: View {
-    
+
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
-    
+
     @State private var isShowingReportABugMailView = false
     @State private var shareNosPressed = false
-    
+
     @State var result: Result<MFMailComposeResult, Error>?
-    
+
     let closeMenu: @MainActor () -> Void
-    
+
     @MainActor var profileHeader: some View {
         Group {
             if let author = currentUser.author, author.needsMetadata == true {
@@ -59,7 +59,7 @@ struct SideMenuContent: View {
             }
         }
     }
-    
+
     var body: some View {
         NosNavigationStack(path: $router.sideMenuPath) {
             ScrollView {
@@ -122,14 +122,14 @@ struct SideMenuContent: View {
 }
 
 struct SideMenuRow: View {
-    
+
     var title: LocalizedStringResource
     var image: Image
     var destination: SideMenu.Destination?
     var action: (() -> Void)?
-    
+
     @EnvironmentObject private var router: Router
-    
+
     var body: some View {
         Button {
             if let destination {
@@ -153,9 +153,9 @@ struct SideMenuRow: View {
 }
 
 struct SideMenuContent_Previews: PreviewProvider {
-    
+
     static var previewData = PreviewData()
-    static var emptyUserData = { 
+    static var emptyUserData = {
         var data = PreviewData()
         _ = data.currentUser
         Task {
@@ -164,15 +164,15 @@ struct SideMenuContent_Previews: PreviewProvider {
         return data
     }()
     static var menuOpened = true
-    
+
     static var previews: some View {
         Group {
-            SideMenuContent { 
+            SideMenuContent {
                 menuOpened = false
             }
             .inject(previewData: previewData)
-            
-            SideMenuContent { 
+
+            SideMenuContent {
                 menuOpened = false
             }
             .inject(previewData: emptyUserData)

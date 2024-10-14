@@ -5,7 +5,7 @@ import SwiftUI
 import SwiftUINavigation
 
 struct NoteComposer: View {
-    
+
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) var currentUser
@@ -18,18 +18,18 @@ struct NoteComposer: View {
     @State private var editingController = NoteEditorController()
 
     /// The height of the NoteTextEditor that fits all entered text.
-    /// This value will be updated by NoteTextEditor automatically, and should be used to set its frame from SwiftUI. 
-    /// This is done to work around some incompatibilities between UIKit and SwiftUI where the UITextView won't expand 
+    /// This value will be updated by NoteTextEditor automatically, and should be used to set its frame from SwiftUI.
+    /// This is done to work around some incompatibilities between UIKit and SwiftUI where the UITextView won't expand
     /// properly.
     @State private var scrollViewHeight: CGFloat = 0
 
     @State var expirationTime: TimeInterval?
-    
+
     @State private var alert: AlertState<Never>?
-    
+
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay?
-    
+
     /// Shows a note preview above the composer.
     @State private var showNotePreview = false
 
@@ -41,13 +41,13 @@ struct NoteComposer: View {
 
     var initialContents: String?
     @Binding var isPresented: Bool
-    
+
     /// The note that the user is replying to, if any.
     private var replyToNote: Event?
-    
+
     /// The id of a note the user is quoting, if any.
     private let quotedNoteID: RawEventID?
-    
+
     /// The quoted note, if any.
     @State private var quotedNote: Event?
 
@@ -62,16 +62,16 @@ struct NoteComposer: View {
         self.replyToNote = replyTo
         self.quotedNoteID = quotedNoteID
     }
-    
+
     /// The minimum height of the NoteTextEditor.
-    /// 
+    ///
     /// We do this because editor won't expand to fill available space when it's in a ScrollView.
     /// And we need it to because people try to tap below the text field bounds to paste if it doesn't
     /// fill the screen. We remove this minimum in the case that a user is quote-reposting another note.
     var minimumEditorHeight: CGFloat {
         quotedNote == nil ? max(scrollViewHeight - 12, 0) : 0
     }
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -112,7 +112,7 @@ struct NoteComposer: View {
                                 .onAppear {
                                     Task {
                                         try await Task.sleep(for: .seconds(0.5))
-                                        withAnimation(.easeInOut(duration: 0.25)) { 
+                                        withAnimation(.easeInOut(duration: 0.25)) {
                                             proxy.scrollTo(0, anchor: nil)
                                         }
                                     }
@@ -120,10 +120,10 @@ struct NoteComposer: View {
                             }
                         }
                         .onChange(of: geometry.size.height) { _, newValue in
-                            scrollViewHeight = newValue 
+                            scrollViewHeight = newValue
                         }
                     }
-                    
+
                     composerActionBar
                 }
                 .onChange(of: showNotePreview) { _, newValue in
@@ -203,8 +203,7 @@ struct NoteComposer: View {
             .navigationBarItems(
                 leading: Button {
                     isPresented = false
-                }
-                label: {
+                } label: {
                     Text(.localizable.cancel)
                         .foregroundColor(.primaryTxt)
                 },
@@ -264,39 +263,47 @@ struct NoteComposer: View {
 
     private func postAction() async {
         guard currentUser.keyPair != nil, let author = currentUser.author else {
-            alert = AlertState(title: {
-                TextState(String(localized: .localizable.error))
-            }, message: {
-                TextState(String(localized: .localizable.youNeedToEnterAPrivateKeyBeforePosting))
-            })
+            alert = AlertState(
+                title: {
+                    TextState(String(localized: .localizable.error))
+                },
+                message: {
+                    TextState(String(localized: .localizable.youNeedToEnterAPrivateKeyBeforePosting))
+                })
             return
         }
         if let relay = selectedRelay {
             guard expirationTime == nil || relay.supportedNIPs?.contains(40) == true else {
-                alert = AlertState(title: {
-                    TextState(String(localized: .localizable.error))
-                }, message: {
-                    TextState(String(localized: .localizable.relayDoesNotSupportNIP40))
-                })
+                alert = AlertState(
+                    title: {
+                        TextState(String(localized: .localizable.error))
+                    },
+                    message: {
+                        TextState(String(localized: .localizable.relayDoesNotSupportNIP40))
+                    })
                 return
             }
         } else if expirationTime != nil {
             do {
                 let relays = try await Relay.find(supporting: 40, for: author, context: viewContext)
                 if relays.isEmpty {
-                    alert = AlertState(title: {
-                        TextState(String(localized: .localizable.error))
-                    }, message: {
-                        TextState(String(localized: .localizable.anyRelaysSupportingNIP40))
-                    })
+                    alert = AlertState(
+                        title: {
+                            TextState(String(localized: .localizable.error))
+                        },
+                        message: {
+                            TextState(String(localized: .localizable.anyRelaysSupportingNIP40))
+                        })
                     return
                 }
             } catch {
-                alert = AlertState(title: {
-                    TextState(String(localized: .localizable.error))
-                }, message: {
-                    TextState(error.localizedDescription)
-                })
+                alert = AlertState(
+                    title: {
+                        TextState(String(localized: .localizable.error))
+                    },
+                    message: {
+                        TextState(error.localizedDescription)
+                    })
                 return
             }
         }
@@ -305,12 +312,12 @@ struct NoteComposer: View {
         }
         isPresented = false
     }
-    
+
     private func loadQuotedNote() {
         guard let quotedNoteID else {
             return
         }
-        
+
         quotedNote = try? Event.findOrCreateStubBy(
             id: quotedNoteID,
             context: persistenceController.viewContext
@@ -320,7 +327,7 @@ struct NoteComposer: View {
     private var isPostEnabled: Bool {
         !isUploadingImage && (!editingController.isEmpty || quotedNote?.bech32NoteID.isEmptyOrNil == false)
     }
-    
+
     private var postText: AttributedString {
         var text = editingController.text ?? ""
         if let noteLink = quotedNote?.bech32NoteID {

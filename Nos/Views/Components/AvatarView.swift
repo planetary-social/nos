@@ -1,11 +1,11 @@
-import SwiftUI
 import SDWebImageSwiftUI
+import SwiftUI
 
 struct AvatarView: View {
-    
+
     var imageUrl: URL?
     var size: CGFloat
-    
+
     var body: some View {
         WebImage(
             url: imageUrl,
@@ -29,9 +29,9 @@ struct AvatarView: View {
 }
 
 struct AvatarView_Previews: PreviewProvider {
-    
+
     static let avatarURL = URL(string: "https://tinyurl.com/47amhyzz") ?? URL.homeDirectory
-    
+
     static var previews: some View {
         VStack {
             AvatarView(imageUrl: avatarURL, size: 24)

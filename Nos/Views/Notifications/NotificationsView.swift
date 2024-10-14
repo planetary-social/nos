@@ -1,12 +1,12 @@
-import SwiftUI
 import Combine
 import CoreData
 import Dependencies
 import Logger
+import SwiftUI
 
 /// Displays a list of cells that let the user know when other users interact with their notes.
 struct NotificationsView: View {
-    
+
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
@@ -16,11 +16,11 @@ struct NotificationsView: View {
     @FetchRequest private var events: FetchedResults<Event>
     @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var isVisible = false
-    
+
     // Probably the logged in user should be in the @Environment eventually
     private var user: Author?
     private let maxNotificationsToShow = 100
-    
+
     init(user: Author?) {
         self.user = user
         if let user {
@@ -28,15 +28,15 @@ struct NotificationsView: View {
         } else {
             _events = FetchRequest(fetchRequest: Event.emptyRequest())
         }
-    }    
-    
+    }
+
     func subscribeToNewEvents() async {
         await cancelSubscriptions()
-        
+
         guard let currentUserKey = user?.hexadecimalPublicKey else {
             return
         }
-        
+
         let filter = Filter(
             kinds: [.text, .zapReceipt],
             pTags: [currentUserKey],
@@ -46,11 +46,11 @@ struct NotificationsView: View {
         let subscriptions = await relayService.fetchEvents(matching: filter)
         relaySubscriptions.append(subscriptions)
     }
-    
+
     func cancelSubscriptions() async {
         relaySubscriptions.removeAll()
     }
-    
+
     func markAllNotificationsRead() async {
         if user != nil {
             do {
@@ -62,7 +62,7 @@ struct NotificationsView: View {
             }
         }
     }
-    
+
     var body: some View {
         NosNavigationStack(path: $router.notificationsPath) {
             ScrollView(.vertical) {
@@ -82,11 +82,13 @@ struct NotificationsView: View {
                 }
                 .padding(.top, 10)
             }
-            .overlay(Group {
-                if events.isEmpty {
-                    Text(.localizable.noNotifications)
+            .overlay(
+                Group {
+                    if events.isEmpty {
+                        Text(.localizable.noNotifications)
+                    }
                 }
-            })
+            )
             .background(Color.appBg)
             .padding(.top, 1)
             .nosNavigationBar(title: .localizable.notifications)
@@ -103,7 +105,7 @@ struct NotificationsView: View {
             .onDisappear {
                 isVisible = false
             }
-            .onChange(of: isVisible) { 
+            .onChange(of: isVisible) {
                 Task { await markAllNotificationsRead() }
                 if isVisible {
                     analytics.showedNotifications()
@@ -124,19 +126,19 @@ struct NotificationsView: View {
 }
 
 struct NotificationsView_Previews: PreviewProvider {
-    
+
     static var previewData = PreviewData()
-    
+
     static var previewContext = previewData.previewContext
-    
+
     static var alice: Author {
         previewData.alice
     }
-    
+
     static var bob: Author {
         previewData.bob
     }
-    
+
     static func createTestData(in context: NSManagedObjectContext) {
         let mentionNote = Event(context: context)
         mentionNote.content = "Hello, bob!"
@@ -147,14 +149,14 @@ struct NotificationsView_Previews: PreviewProvider {
         authorRef.pubkey = bob.hexadecimalPublicKey
         mentionNote.authorReferences = NSMutableOrderedSet(array: [authorRef])
         try? mentionNote.sign(withKey: KeyFixture.alice)
-        
+
         let bobNote = Event(context: context)
         bobNote.content = "Hello, world!"
         bobNote.kind = 1
         bobNote.author = bob
         bobNote.createdAt = .now
         try? bobNote.sign(withKey: KeyFixture.bob)
-        
+
         let replyNote = Event(context: context)
         replyNote.content = "Top of the morning to you, bob! This text should be truncated."
         replyNote.kind = 1
@@ -165,10 +167,10 @@ struct NotificationsView_Previews: PreviewProvider {
         eventRef.referencingEvent = replyNote
         replyNote.eventReferences = NSMutableOrderedSet(array: [eventRef])
         try? replyNote.sign(withKey: KeyFixture.alice)
-        
+
         try? context.save()
     }
-    
+
     static var previews: some View {
         NavigationView {
             NotificationsView(user: bob)

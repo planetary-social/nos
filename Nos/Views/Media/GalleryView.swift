@@ -6,19 +6,19 @@ import SwiftUI
 struct GalleryView: View {
     /// The URLs of the content to display.
     let urls: [URL]
-    
+
     /// The currently-selected tab in the tab view.
     @State private var selectedTab = 0
-    
+
     /// The orientation of all media in this gallery view. Initially set to `.landscape` until we load the first URL and
     /// determine its orientation, then updated to match the first item's orientation.
     @State private var orientation: MediaOrientation?
-    
+
     /// This essential first image determines the orientation of the gallery view. Whatever orientation this is, so the
     /// rest shall be.
     /// Oh, but also: it's not always an image, so this won't work if it's a video or web link. Oopsie.
     @State private var firstImage: Image?
-    
+
     /// The media service that loads content from URLs and determines the orientation for this gallery.
     @Dependency(\.mediaService) private var mediaService
 
@@ -33,7 +33,7 @@ struct GalleryView: View {
             loadingView()
         }
     }
-    
+
     /// Produces a tab view with custom paging indicators in the given orientation.
     /// - Parameter orientation: The orientation to use for the gallery.
     /// - Returns: A gallery view in the given orientation.
@@ -62,7 +62,7 @@ struct GalleryView: View {
         }
         .padding(.bottom, 10)
     }
-    
+
     /// Produces a ``LinkView`` with the given URL in the given orientation.
     /// - Parameters:
     ///   - url: The URL to display in the ``LinkView``.
@@ -73,7 +73,7 @@ struct GalleryView: View {
             LinkView(url: url)
         }
     }
-    
+
     /// A loading view that fills the space for the given `loadingOrientation` and loads the first URL to determine the
     /// orientation for the gallery.
     /// - Parameter loadingOrientation: The ``MediaOrientation`` to use to display the loading view.
@@ -97,19 +97,19 @@ struct GalleryView: View {
 // Thanks for the [example](https://betterprogramming.pub/custom-paging-ui-in-swiftui-13f1347cf529) Alexandru Turcanu!
 
 /// Custom paging indicators for a `GalleryView`.
-fileprivate struct GalleryIndexView: View {
+private struct GalleryIndexView: View {
     /// The number of pages in the tab view.
     let numberOfPages: Int
 
     /// The currently-selected tab in the tab view.
     let currentIndex: Int
-    
+
     /// The size of the circle representing the currently-selected tab.
     private let circleSize: CGFloat = 8.0
 
     /// The space between circles.
     private let circleSpacing: CGFloat = 6.0
-    
+
     /// The fill style of the circle indicating which tab is selected.
     private let primaryFill = LinearGradient.horizontalAccent
 

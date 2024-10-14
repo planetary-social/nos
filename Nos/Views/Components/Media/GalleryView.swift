@@ -12,13 +12,13 @@ struct GalleryView: View {
 
     /// The currently-selected tab in the tab view.
     @State private var selectedTab = 0
-    
+
     /// The orientation for this gallery view.
     @State private var orientation: MediaOrientation?
-    
+
     /// The media service that loads content from URLs and determines the orientation for this gallery.
     @Dependency(\.mediaService) private var mediaService
-    
+
     /// The orientation determined by the `metadata`, if any.
     private var metadataOrientation: MediaOrientation? {
         metadata?[urls.first?.absoluteString]?.orientation
@@ -35,7 +35,7 @@ struct GalleryView: View {
             loadingView()
         }
     }
-    
+
     /// Produces a tab view with custom paging indicators in the given orientation.
     /// - Parameter orientation: The orientation to use for the gallery.
     /// - Returns: A gallery view in the given orientation.
@@ -71,7 +71,7 @@ struct GalleryView: View {
         }
         .padding(.bottom, 10)
     }
-    
+
     /// Produces a ``LinkView`` with the given URL in the given orientation.
     /// - Parameters:
     ///   - url: The URL to display in the ``LinkView``.
@@ -82,7 +82,7 @@ struct GalleryView: View {
             LinkView(url: url)
         }
     }
-    
+
     /// A loading view that determines the orientation for the gallery. When possible, the aspect ratio of the
     /// loading view matches the aspect ratio of the gallery. Otherwise, `landscape`.
     /// - Returns: A loading view in the aspect ratio that matches the gallery media when possible.
@@ -110,19 +110,19 @@ struct GalleryView: View {
 // Thanks for the [example](https://betterprogramming.pub/custom-paging-ui-in-swiftui-13f1347cf529) Alexandru Turcanu!
 
 /// Custom paging indicators for a `GalleryView`.
-fileprivate struct GalleryIndexView: View {
+private struct GalleryIndexView: View {
     /// The number of pages in the tab view.
     let numberOfPages: Int
 
     /// The currently-selected tab in the tab view.
     let currentIndex: Int
-    
+
     /// The size of the circle representing the currently-selected tab.
     private let circleSize: CGFloat = 8.0
 
     /// The space between circles.
     private let circleSpacing: CGFloat = 6.0
-    
+
     /// The fill style of the circle indicating which tab is selected.
     private let primaryFill = LinearGradient.horizontalAccent
 

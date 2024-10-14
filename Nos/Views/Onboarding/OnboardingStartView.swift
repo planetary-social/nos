@@ -1,10 +1,10 @@
-import SwiftUI
 import Dependencies
+import SwiftUI
 
 struct OnboardingStartView: View {
     @EnvironmentObject var state: OnboardingState
     @Dependency(\.analytics) private var analytics
-    
+
     var body: some View {
         VStack {
             Image.nosLogo

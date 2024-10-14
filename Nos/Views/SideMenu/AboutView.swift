@@ -14,7 +14,7 @@ struct AboutView: View {
                     .font(.custom("ClarityCity-Bold", size: 25.21))
                     .fontWeight(.heavy)
                     .foregroundStyle(LinearGradient.diagonalAccent2.blendMode(.normal))
-                
+
                 VStack {
                     HighlightedText(
                         String(localized: .localizable.aboutNos),

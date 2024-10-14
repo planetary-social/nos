@@ -9,7 +9,7 @@ struct EditProfileDestination: Hashable {
 }
 
 struct ProfileEditView: View {
-    
+
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
@@ -17,7 +17,7 @@ struct ProfileEditView: View {
     @Dependency(\.crashReporting) private var crashReporting
 
     @ObservedObject var author: Author
-    
+
     @State private var displayNameText: String = ""
     @State private var bioText: String = ""
     @State private var avatarText: String = ""
@@ -28,10 +28,10 @@ struct ProfileEditView: View {
     @State private var unsController = UNSWizardController()
     @State private var showConfirmationDialog = false
     @State private var saveError: SaveError?
-    
+
     @State private var isUploadingPhoto = false
     @State private var alert: AlertState<AlertAction>?
-    
+
     fileprivate enum AlertAction {}
 
     private var showAlert: Binding<Bool> {
@@ -44,7 +44,7 @@ struct ProfileEditView: View {
 
     var body: some View {
         let avatarSize: CGFloat = 99
-        
+
         NosForm {
             EditableAvatarView(
                 size: avatarSize,
@@ -52,14 +52,14 @@ struct ProfileEditView: View {
                 isUploadingPhoto: $isUploadingPhoto
             )
             .padding(.top, 16)
-            
+
             NosFormSection(label: .localizable.profilePicture) {
                 NosTextField(label: .localizable.url, text: $avatarText)
                     #if os(iOS)
-                    .keyboardType(.URL)
+                        .keyboardType(.URL)
                     #endif
             }
-            
+
             NosFormSection(label: .localizable.basicInfo) {
                 NosTextField(label: .localizable.displayName, text: $displayNameText)
                 FormSeparator()
@@ -70,7 +70,7 @@ struct ProfileEditView: View {
                     )
                 } else if let nip05 = author.nip05, !nip05.isEmpty {
                     NIP05Field(
-                        nip05: nip05, 
+                        nip05: nip05,
                         showConfirmationDialog: $showConfirmationDialog
                     )
                 } else {
@@ -84,17 +84,17 @@ struct ProfileEditView: View {
                 FormSeparator()
                 NosTextField(label: .localizable.website, text: $website)
             }
-            
+
             HStack {
                 Text(.localizable.identityVerification)
                     .font(.clarity(.semibold, textStyle: .headline))
                     .foregroundColor(.primaryTxt)
                     .padding(.top, 16)
-                
+
                 Spacer()
             }
             .padding(.horizontal, 13)
-            
+
             if unsText.isEmpty {
                 SetUpUNSBanner(
                     text: .localizable.unsTagline,
@@ -109,9 +109,12 @@ struct ProfileEditView: View {
                 }
             }
         }
-        .sheet(isPresented: $showUniversalNameWizard, content: {
-            UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
-        })
+        .sheet(
+            isPresented: $showUniversalNameWizard,
+            content: {
+                UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
+            }
+        )
         .sheet(isPresented: $showNIP05Wizard) {
             CreateUsernameWizard(isPresented: $showNIP05Wizard)
         }
@@ -125,7 +128,7 @@ struct ProfileEditView: View {
             if !newValue {
                 unsText = currentUser.author?.uns ?? ""
                 unsController = UNSWizardController()
-                author.willChangeValue(for: \Author.uns) // Trigger ProfileView to load USBC balance
+                author.willChangeValue(for: \Author.uns)  // Trigger ProfileView to load USBC balance
             }
         }
         .scrollContentBackground(.hidden)
@@ -133,9 +136,11 @@ struct ProfileEditView: View {
         .nosNavigationBar(title: .localizable.profileTitle)
         .navigationBarBackButtonHidden()
         .navigationBarItems(
-            leading: Button(String(localized: .localizable.cancel), action: { 
-                router.pop()
-            }),
+            leading: Button(
+                String(localized: .localizable.cancel),
+                action: {
+                    router.pop()
+                }),
             trailing:
                 ActionButton(title: .localizable.done) {
                     await save()
@@ -172,7 +177,7 @@ struct ProfileEditView: View {
         website = author.website ?? ""
         unsText = author.uns ?? ""
     }
-    
+
     private func save() async {
         author.displayName = displayNameText
         author.about = bioText
@@ -208,8 +213,8 @@ struct ProfileEditView: View {
     }
 }
 
-fileprivate struct NosNIP05Field: View {
-    
+private struct NosNIP05Field: View {
+
     var username: String
     @Binding var showConfirmationDialog: Bool
 
@@ -232,7 +237,7 @@ fileprivate struct NosNIP05Field: View {
                                 LinearGradient(
                                     colors: [
                                         Color.nip05FieldFgGradientTop,
-                                        Color.nip05FieldFgGradientBottom
+                                        Color.nip05FieldFgGradientBottom,
                                     ],
                                     startPoint: .top,
                                     endPoint: .bottom
@@ -245,27 +250,24 @@ fileprivate struct NosNIP05Field: View {
                     }
                 }
                 .padding(.vertical, 15)
-                (
-                    Text(Image(systemName: "exclamationmark.triangle"))
-                        .foregroundStyle(Color.nip05FieldTextForeground) +
-                    Text(" ") +
-                    Text(.localizable.usernameWarningMessage)
-                        .foregroundStyle(Color.secondaryTxt)
-                )
-                .font(.footnote)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .fixedSize(horizontal: false, vertical: true)
+                (Text(Image(systemName: "exclamationmark.triangle"))
+                    .foregroundStyle(Color.nip05FieldTextForeground) + Text(" ")
+                    + Text(.localizable.usernameWarningMessage)
+                    .foregroundStyle(Color.secondaryTxt))
+                    .font(.footnote)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }
 }
 
-fileprivate struct NIP05Field: View {
+private struct NIP05Field: View {
 
     var nip05: String
     @Binding var showConfirmationDialog: Bool
-    
+
     var body: some View {
         NosFormField(
             label: .localizable.username
@@ -283,7 +285,7 @@ fileprivate struct NIP05Field: View {
                                 LinearGradient(
                                     colors: [
                                         Color.nip05FieldFgGradientTop,
-                                        Color.nip05FieldFgGradientBottom
+                                        Color.nip05FieldFgGradientBottom,
                                     ],
                                     startPoint: .top,
                                     endPoint: .bottom
@@ -296,23 +298,20 @@ fileprivate struct NIP05Field: View {
                     }
                 }
                 .padding(.vertical, 15)
-                (
-                    Text(Image(systemName: "exclamationmark.triangle"))
-                        .foregroundStyle(Color.nip05FieldTextForeground) +
-                    Text(" ") +
-                    Text(.localizable.usernameWarningMessage)
-                        .foregroundStyle(Color.secondaryTxt)
-                )
-                .font(.footnote)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .fixedSize(horizontal: false, vertical: true)
+                (Text(Image(systemName: "exclamationmark.triangle"))
+                    .foregroundStyle(Color.nip05FieldTextForeground) + Text(" ")
+                    + Text(.localizable.usernameWarningMessage)
+                    .foregroundStyle(Color.secondaryTxt))
+                    .font(.footnote)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }
 }
 
-fileprivate struct NosNIP05Banner: View {
+private struct NosNIP05Banner: View {
 
     @Binding var showNIP05Wizard: Bool
 
@@ -332,7 +331,7 @@ fileprivate struct NosNIP05Banner: View {
 }
 
 struct ProfileEditView_Previews: PreviewProvider {
-    
+
     static var previewData = PreviewData()
 
     static var previews: some View {

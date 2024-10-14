@@ -1,9 +1,9 @@
-import Foundation
-import UIKit
-import Logger
 import Dependencies
+import Foundation
+import Logger
 import SDWebImage
 import SDWebImageWebPCoder
+import UIKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
 

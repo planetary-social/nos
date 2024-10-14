@@ -3,7 +3,7 @@ import XCTest
 
 /// Tests for the `Author` model.
 final class AuthorTests: CoreDataTestCase {
-    
+
     /// Verifies that the `followedKeys` property returns the correct set of keys followed by the author.
     /// Written for bug [#845](https://github.com/planetary-social/nos/issues/845).
     func testFollowedKeys() throws {
@@ -21,7 +21,7 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertEqual(author.follows.count, 700)
         XCTAssertEqual(Set(author.followedKeys), Set(expectedFollowedKeys))
     }
-    
+
     @MainActor func testFollowedKeysIgnoresInvalidKeys() throws {
         // inject bad data into the database
         let user = try Author.findOrCreate(by: "user", context: testContext)
@@ -29,7 +29,7 @@ final class AuthorTests: CoreDataTestCase {
         let follow = Follow(context: testContext)
         follow.source = user
         follow.destination = followee
-        
+
         let fetchedAuthor = try Author.find(by: "user", context: testContext)
         XCTAssertEqual(fetchedAuthor?.followedKeys, [])
     }
@@ -145,25 +145,25 @@ final class AuthorTests: CoreDataTestCase {
 
         XCTAssertEqual(author.formattedNIP05, expected)
     }
-    
+
     func test_weblink_with_nos_social_NIP05() throws {
         let context = persistenceController.viewContext
         let author = try Author.findOrCreate(by: "test", context: context)
         author.nip05 = "test@nos.social"
         let expected = "https://test.nos.social"
-        
+
         XCTAssertEqual(author.webLink, expected)
     }
-    
+
     func test_weblink_with_non_nos_social_NIP05() throws {
         let expected = "https://njump.me/user@test.net"
         let context = persistenceController.viewContext
         let author = try Author.findOrCreate(by: "test", context: context)
         author.nip05 = "user@test.net"
-        
+
         XCTAssertEqual(author.webLink, expected)
     }
-    
+
     func test_weblink_with_nil_NIP05() throws {
         let expected = "https://njump.me/\(KeyFixture.alice.npub)"
         let context = persistenceController.viewContext
@@ -171,70 +171,70 @@ final class AuthorTests: CoreDataTestCase {
         author.nip05 = nil
         XCTAssertEqual(author.webLink, expected)
     }
-    
+
     // MARK: Fetch requests
-    
+
     @MainActor func test_knownFollowers_givenMultipleFollowers() throws {
         // Arrange
         let alice = try Author.findOrCreate(by: "alice", context: testContext)
-        let bob   = try Author.findOrCreate(by: "bob", context: testContext)
-        bob.lastUpdatedContactList = Date(timeIntervalSince1970: 1) // for sorting
-        let carl  = try Author.findOrCreate(by: "carl", context: testContext)
-        carl.lastUpdatedContactList = Date(timeIntervalSince1970: 0) // for sorting
-        let eve   = try Author.findOrCreate(by: "eve", context: testContext)
-        
+        let bob = try Author.findOrCreate(by: "bob", context: testContext)
+        bob.lastUpdatedContactList = Date(timeIntervalSince1970: 1)  // for sorting
+        let carl = try Author.findOrCreate(by: "carl", context: testContext)
+        carl.lastUpdatedContactList = Date(timeIntervalSince1970: 0)  // for sorting
+        let eve = try Author.findOrCreate(by: "eve", context: testContext)
+
         // Act
         // Alice follows bob and carl who both follow eve
         _ = try Follow.findOrCreate(source: alice, destination: bob, context: testContext)
         _ = try Follow.findOrCreate(source: alice, destination: carl, context: testContext)
         _ = try Follow.findOrCreate(source: bob, destination: eve, context: testContext)
         _ = try Follow.findOrCreate(source: carl, destination: eve, context: testContext)
-        
+
         try testContext.saveIfNeeded()
-        
+
         // Assert
         XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: eve)), [bob, carl])
         XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: bob)), [])
         XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: carl)), [])
         XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: alice)), [])
     }
-    
+
     @MainActor func test_knownFollowers_givenFollowCircle() throws {
         // Arrange
         let alice = try Author.findOrCreate(by: "alice", context: testContext)
-        let bob   = try Author.findOrCreate(by: "bob", context: testContext)
-        let carl  = try Author.findOrCreate(by: "carl", context: testContext)
-        let eve   = try Author.findOrCreate(by: "eve", context: testContext)
-        
+        let bob = try Author.findOrCreate(by: "bob", context: testContext)
+        let carl = try Author.findOrCreate(by: "carl", context: testContext)
+        let eve = try Author.findOrCreate(by: "eve", context: testContext)
+
         // Act
         // Create a circle of follows.
         _ = try Follow.findOrCreate(source: alice, destination: bob, context: testContext)
         _ = try Follow.findOrCreate(source: bob, destination: carl, context: testContext)
         _ = try Follow.findOrCreate(source: carl, destination: eve, context: testContext)
         _ = try Follow.findOrCreate(source: eve, destination: alice, context: testContext)
-        
+
         try testContext.saveIfNeeded()
-        
+
         // Assert
         XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: carl)), [bob])
         XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: eve)), [])
         XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: bob)), [])
         XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: alice)), [])
     }
-    
+
     @MainActor func test_knownFollowers_givenSelfFollow() throws {
         // Arrange
         let alice = try Author.findOrCreate(by: "alice", context: testContext)
-        let eve   = try Author.findOrCreate(by: "eve", context: testContext)
-        
+        let eve = try Author.findOrCreate(by: "eve", context: testContext)
+
         // Act
         _ = try Follow.findOrCreate(source: alice, destination: alice, context: testContext)
         _ = try Follow.findOrCreate(source: alice, destination: eve, context: testContext)
         _ = try Follow.findOrCreate(source: eve, destination: alice, context: testContext)
         _ = try Follow.findOrCreate(source: eve, destination: eve, context: testContext)
-        
+
         try testContext.saveIfNeeded()
-        
+
         // Assert
         XCTAssertEqual(try testContext.fetch(alice.knownFollowers(of: eve)), [])
     }
@@ -252,26 +252,26 @@ final class AuthorTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(events.count, 0)
     }
-    
+
     @MainActor func test_outOfNetwork_givenCircleOfFollows() throws {
         // Arrange
         let alice = try Author.findOrCreate(by: "alice", context: testContext)
-        let bob   = try Author.findOrCreate(by: "bob", context: testContext)
-        let carl  = try Author.findOrCreate(by: "carl", context: testContext)
-        let eve   = try Author.findOrCreate(by: "eve", context: testContext)
-        
+        let bob = try Author.findOrCreate(by: "bob", context: testContext)
+        let carl = try Author.findOrCreate(by: "carl", context: testContext)
+        let eve = try Author.findOrCreate(by: "eve", context: testContext)
+
         // Act
         // Create a circle of follows alice -> bob -> carl -> eve -> alice
         _ = try Follow.findOrCreate(source: alice, destination: bob, context: testContext)
         _ = try Follow.findOrCreate(source: bob, destination: carl, context: testContext)
         _ = try Follow.findOrCreate(source: carl, destination: eve, context: testContext)
         _ = try Follow.findOrCreate(source: eve, destination: alice, context: testContext)
-        
+
         try testContext.saveIfNeeded()
-        
-        // Act 
+
+        // Act
         let authors = try testContext.fetch(Author.outOfNetwork(for: alice))
-        
+
         // Assert
         XCTAssertEqual(authors, [eve])
     }

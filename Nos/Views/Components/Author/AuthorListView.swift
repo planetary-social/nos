@@ -2,9 +2,9 @@ import Foundation
 import SwiftUI
 
 struct AuthorListView: View {
-    
+
     @Binding var isPresented: Bool
-    
+
     @Environment(\.managedObjectContext) private var viewContext
 
     @State private var authors: [Author]?
@@ -12,7 +12,7 @@ struct AuthorListView: View {
     @State private var filteredAuthors: [Author]?
 
     @StateObject private var searchTextObserver = SearchTextFieldObserver()
-    
+
     @FocusState private var isSearching: Bool
 
     var didSelectGesture: ((Author) -> Void)?
@@ -51,12 +51,14 @@ struct AuthorListView: View {
         }
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button(action: {
-                    isPresented = false
-                }, label: {
-                    Text(.localizable.cancel)
-                        .foregroundColor(.primaryTxt)
-                })
+                Button(
+                    action: {
+                        isPresented = false
+                    },
+                    label: {
+                        Text(.localizable.cancel)
+                            .foregroundColor(.primaryTxt)
+                    })
             }
         }
     }

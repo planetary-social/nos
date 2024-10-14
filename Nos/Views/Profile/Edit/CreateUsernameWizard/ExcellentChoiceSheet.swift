@@ -119,7 +119,7 @@ struct ExcellentChoiceSheet: View {
                 analytics.registeredNIP05Username()
             } catch {
                 Log.error(error.localizedDescription)
-                
+
                 // Do our best reverting the changes.
                 currentUser.author?.nip05 = oldNIP05
                 try? currentUser.viewContext.saveIfNeeded()

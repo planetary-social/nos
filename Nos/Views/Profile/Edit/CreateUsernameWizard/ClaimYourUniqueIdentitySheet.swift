@@ -23,7 +23,7 @@ struct ClaimYourUniqueIdentitySheet: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 10)
-            
+
             Spacer(minLength: 20)
         }
     }

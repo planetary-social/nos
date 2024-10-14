@@ -25,7 +25,7 @@ struct OpenGraphMedia: Equatable {
 
     /// The height of the media.
     let height: Double?
-    
+
     /// Initializes an `OpenGraphMedia` with the given parameters. Returns `nil` if all parameter values are `nil`.
     /// - Parameters:
     ///   - url: The URL of the media.

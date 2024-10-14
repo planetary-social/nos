@@ -1,8 +1,8 @@
-import SwiftUI
 import Combine
 import CoreData
-import Logger
 import Dependencies
+import Logger
+import SwiftUI
 
 // Manages the app's navigation state.
 @MainActor class Router: ObservableObject {
@@ -18,7 +18,7 @@ import Dependencies
     @Dependency(\.relayService) private var relayService
     @Dependency(\.crashReporting) private var crashReporting
 
-    /// The `NavigationPath` of the tab (or side menu) the user currently has open. 
+    /// The `NavigationPath` of the tab (or side menu) the user currently has open.
     /// This has to be a two-way binding, but really the only things that should be modifying it are the `Router`
     /// or a `NavigationStack`. Don't mutate it directly outside this class.
     var currentPath: Binding<NavigationPath> {
@@ -47,12 +47,12 @@ import Dependencies
     func push<D: Hashable>(_ destination: D) {
         currentPath.wrappedValue.append(destination)
     }
-    
+
     /// Pushes a view displaying the object wrapped in a `NosNavigationDestination`.
     func push(_ destination: NosNavigationDestination) {
         currentPath.wrappedValue.append(destination)
     }
-    
+
     /// Pushes a detail view for the given note.
     func push(_ note: Event) {
         if let identifier = note.identifier {
@@ -67,7 +67,7 @@ import Dependencies
             fatalError("Tried to push a note with no identifier; that's not going to work.")
         }
     }
-    
+
     /// Pushes a detail view for the note with the given ID, creating one if needed.
     func pushNote(id: RawEventID) {
         do {
@@ -77,13 +77,13 @@ import Dependencies
             Log.optional(error)
             crashReporting.report(error)
         }
-    }    
-    
+    }
+
     /// Pushes a detail view for the event with the given replaceable ID and author, creating one if needed.
     func pushNote(replaceableID: RawReplaceableID, authorID: RawAuthorID, kind: Int64) {
         do {
             let note = try Event.findOrCreateStubBy(
-                replaceableID: replaceableID, 
+                replaceableID: replaceableID,
                 authorID: authorID,
                 kind: kind,
                 context: persistenceController.viewContext
@@ -94,12 +94,12 @@ import Dependencies
             crashReporting.report(error)
         }
     }
-    
+
     /// Pushes a profile view for the given author.
     func push(_ author: Author) {
         push(.author(author.hexadecimalPublicKey))
     }
-    
+
     /// Pushes a profile view for the author with the given ID, creating one if needed.
     func pushAuthor(id: RawAuthorID) {
         do {
@@ -110,7 +110,7 @@ import Dependencies
             crashReporting.report(error)
         }
     }
-    
+
     /// Pushes a web view for the given url.
     func push(_ url: URL) {
         push(.url(url))
@@ -184,14 +184,16 @@ extension Router {
                     guard parts.count >= 3,
                         let kindString = parts.last,
                         let kind = Int64(kindString),
-                        let authorID = parts.dropLast().last else {
+                        let authorID = parts.dropLast().last
+                    else {
                         Log.debug("Something went wrong parsing the replaceableID and author from the naddr link")
                         return
                     }
                     let replaceableID = parts.dropLast(2).joined(separator: separator)
                     pushNote(replaceableID: replaceableID, authorID: authorID, kind: kind)
                 } else if let scheme = url.scheme,
-                    DeepLinkService.supportedURLSchemes.contains(scheme) {
+                    DeepLinkService.supportedURLSchemes.contains(scheme)
+                {
                     DeepLinkService.handle(url, router: self)
                 } else if url.scheme == "http" || url.scheme == "https" {
                     push(url)

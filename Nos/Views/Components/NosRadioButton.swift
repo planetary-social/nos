@@ -1,4 +1,5 @@
 import SwiftUI
+
 /// A  custom radio button.
 struct NosRadioButton: View {
     var isSelected: Bool
@@ -25,7 +26,7 @@ private struct RadioButtonBackground: View {
                     )
                 )
                 .frame(width: 25, height: 25)
-            // Inner shadow effect
+                // Inner shadow effect
                 .overlay(
                     Circle()
                         .fill(
@@ -38,10 +39,10 @@ private struct RadioButtonBackground: View {
                         .stroke(Color.radioButtonInnerDropShadow, lineWidth: 1)
                         .blur(radius: 1.67)
                         .offset(x: 0, y: 0.67)
-                        .mask(Circle()) // Ensures the inner shadow stays within the circle's shape
+                        .mask(Circle())  // Ensures the inner shadow stays within the circle's shape
                 )
 
-            // Outer shadow effect
+                // Outer shadow effect
                 .shadow(color: Color.radioButtonOuterDropShadow, radius: 0, x: 0, y: 0.99)
         }
     }

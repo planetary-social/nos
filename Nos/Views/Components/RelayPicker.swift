@@ -1,38 +1,38 @@
-import SwiftUI
 import CoreData
+import SwiftUI
 
 struct RelayPicker: View {
-    
+
     @Binding var selectedRelay: Relay?
     @Binding var isPresented: Bool
-    
+
     var defaultSelection: String
-    
+
     @FetchRequest var relays: FetchedResults<Relay>
-    
+
     init(selectedRelay: Binding<Relay?>, defaultSelection: String, author: Author, isPresented: Binding<Bool>) {
         self._selectedRelay = selectedRelay
         self.defaultSelection = defaultSelection
         _relays = FetchRequest(fetchRequest: Relay.relays(for: author))
         _isPresented = isPresented
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
-            
+
             let pickerRows = VStack(spacing: 0) {
                 // shadow effect at the top
                 Rectangle()
                     .frame(height: 1)
                     .foregroundStyle(.clear)
                     .shadow(radius: 15, y: 10)
-                
+
                 RelayPickerRow(string: defaultSelection, selection: $selectedRelay)
                 ForEach(relays) { relay in
-                    
+
                     BeveledSeparator()
                         .padding(.horizontal, 20)
-                    
+
                     RelayPickerRow(relay: relay, selection: $selectedRelay)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -42,9 +42,9 @@ struct RelayPicker: View {
                     .foregroundStyle(LinearGradient.cardBackground)
                     .cornerRadius(20, corners: [.bottomLeft, .bottomRight])
                     .shadow(radius: 15, y: 10)
-            ) 
+            )
             .readabilityPadding()
-            
+
             VStack(spacing: 0) {
                 ViewThatFits(in: .vertical) {
                     VStack {
@@ -52,7 +52,7 @@ struct RelayPicker: View {
                         Color.clear
                             .contentShape(Rectangle())
                             .frame(minHeight: 0)
-                            .onTapGesture { 
+                            .onTapGesture {
                                 withAnimation {
                                     isPresented = false
                                 }
@@ -66,26 +66,26 @@ struct RelayPicker: View {
         }
         .transition(.move(edge: .top))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .zIndex(99) // Fixes dismissal animation
+        .zIndex(99)  // Fixes dismissal animation
     }
 }
 
 struct RelayPickerRow: View {
-    
+
     var relay: Relay?
     var defaultSelection: String?
     @Binding var selection: Relay?
-    
+
     internal init(relay: Relay? = nil, selection: Binding<Relay?>) {
         self.relay = relay
         self._selection = selection
     }
-    
+
     internal init(string: String, selection: Binding<Relay?>) {
         self.defaultSelection = string
         self._selection = selection
     }
-    
+
     var title: String {
         if let relay {
             return relay.host ?? String(localized: .localizable.error)
@@ -93,7 +93,7 @@ struct RelayPickerRow: View {
             return defaultSelection ?? String(localized: .localizable.error)
         }
     }
-    
+
     var isSelected: Bool {
         if let relay {
             return relay.objectID == selection?.objectID
@@ -101,7 +101,7 @@ struct RelayPickerRow: View {
             return selection == nil
         }
     }
-    
+
     var body: some View {
         Button {
             selection = relay
@@ -116,7 +116,7 @@ struct RelayPickerRow: View {
                             .shadow(radius: 4, y: 4)
                         Spacer()
                     }
-                    
+
                     if let description = relay?.relayDescription {
                         HStack {
                             Text(description)
@@ -148,7 +148,7 @@ struct RelayPickerRow: View {
 
     @State var selectedRelay: Relay?
     var previewData = PreviewData()
-    
+
     func createTestData() {
         let user = previewData.alice
         let addresses = ["wss://nostr.com", "wss://nos.social", "wss://alongdomainnametoseewhathappens.com"]
@@ -158,7 +158,7 @@ struct RelayPickerRow: View {
             relay?.addToAuthors(user)
         }
     }
-    
+
     return RelayPicker(
         selectedRelay: $selectedRelay,
         defaultSelection: String(localized: .localizable.allMyRelays),
@@ -174,7 +174,7 @@ struct RelayPickerRow: View {
 
     @State var selectedRelay: Relay?
     var previewData = PreviewData()
-    
+
     func createTestData() {
         let user = previewData.alice
         let addresses = Relay.allKnown
@@ -184,7 +184,7 @@ struct RelayPickerRow: View {
             relay?.addToAuthors(user)
         }
     }
-    
+
     return RelayPicker(
         selectedRelay: $selectedRelay,
         defaultSelection: String(localized: .localizable.allMyRelays),

@@ -1,4 +1,5 @@
 import SwiftUI
+
 /// Displays a list of selectable flag options
 struct FlagOptionPicker: View {
     /// The previous selection made by the user, used for displaying information related to changes in selection.
@@ -48,7 +49,7 @@ struct FlagOptionPicker: View {
             ForEach(options) { flag in
                 FlagPickerRow(
                     flag: flag,
-                    selection: $currentSelection, 
+                    selection: $currentSelection,
                     previousSelection: $previousSelection
                 )
                 BeveledSeparator()
@@ -79,11 +80,14 @@ private struct FlagPickerRow: View {
     }
 
     var body: some View {
-        Button(action: {
-            selection = flag
-        }, label: {
-            buttonLabel
-        })
+        Button(
+            action: {
+                selection = flag
+            },
+            label: {
+                buttonLabel
+            }
+        )
         .padding(14)
     }
 
@@ -122,7 +126,7 @@ private struct FlagPickerRow: View {
                         .font(.footnote)
                         .lineSpacing(8)
                         .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true) // this enables the text view expand as needed
+                        .fixedSize(horizontal: false, vertical: true)  // this enables the text view expand as needed
                 }
             }
             Spacer()
@@ -143,13 +147,15 @@ private struct FlagPickerRow: View {
                     .foregroundColor(.primaryTxt)
                     .font(.subheadline)
                     .multilineTextAlignment(.leading)
-                    .padding(EdgeInsets(
-                        top: 13,
-                        leading: 12,
-                        bottom: 18,
-                        trailing: 13
-                    ))
-                .lineSpacing(8)
+                    .padding(
+                        EdgeInsets(
+                            top: 13,
+                            leading: 12,
+                            bottom: 18,
+                            trailing: 13
+                        )
+                    )
+                    .lineSpacing(8)
 
                 Spacer()
             }
@@ -179,7 +185,7 @@ private struct HeaderView: View {
 
         var body: some View {
             FlagOptionPicker(
-                previousSelection: $selectedFlag, 
+                previousSelection: $selectedFlag,
                 currentSelection: $selectedFlag,
                 options: flagCategories,
                 title: "Create a tag for this content that other people in your network can see.",

@@ -1,9 +1,9 @@
+import Dependencies
 import Foundation
 import Logger
-import Dependencies
 
 enum DeepLinkService {
-    
+
     /// Returns the URL schemes that Nos supports. Dev, Staging, and Production builds each have their own scheme,
     /// and all of them also support the `nostr:` scheme.
     static var supportedURLSchemes: [String] = {
@@ -13,28 +13,29 @@ enum DeepLinkService {
                 return urlSchemes
             }
         }
-        
+
         return []
     }()
-    
+
     @MainActor static func handle(_ url: URL, router: Router) {
         @Dependency(\.persistenceController) var persistenceController
         Log.info("handling link \(url.absoluteString)")
-        
+
         let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
-        
+
         guard let components,
             let scheme = components.scheme,
-            supportedURLSchemes.contains(scheme) else {
+            supportedURLSchemes.contains(scheme)
+        else {
             return
         }
-        
+
         if components.host == "note", components.path == "/new" {
             let noteContents = components
                 .queryItems?
                 .first(where: { $0.name == "contents" })?
                 .value
-            
+
             router.showNoteComposer(contents: noteContents)
         } else {
             // The destination (npub, note, nprofile, nevent, or naddr) may be in the host or the path.

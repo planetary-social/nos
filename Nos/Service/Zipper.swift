@@ -24,7 +24,7 @@ enum Zipper {
         }
         return try await zipFiles([sqliteURL])
     }
-    
+
     /// Zips the files at the given URLs.
     /// - Parameter fileURLs: the URLs of the files to zip.
     /// - Returns: The file URL of the zip.
@@ -38,15 +38,15 @@ enum Zipper {
                 let destFileURL = url.appendingPathComponent(appFileURL.lastPathComponent)
                 try FileManager.default.copyItem(at: appFileURL, to: destFileURL)
             }
-            
+
             try fileURLs.forEach { try copy($0) }
 
             let coord = NSFileCoordinator()
             var readError: NSError?
             return try await withCheckedThrowingContinuation { continuation in
                 coord.coordinate(
-                    readingItemAt: url, 
-                    options: .forUploading, 
+                    readingItemAt: url,
+                    options: .forUploading,
                     error: &readError
                 ) { (zippedURL: URL) in
                     do {

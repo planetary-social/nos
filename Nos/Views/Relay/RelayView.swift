@@ -1,6 +1,6 @@
-import SwiftUI
 import CoreData
 import Dependencies
+import SwiftUI
 import SwiftUINavigation
 
 struct RelaysDestination: Hashable {
@@ -13,14 +13,14 @@ struct RelayView: View {
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) private var currentUser
     @ObservedObject var author: Author
-    
+
     @State var newRelayAddress: String = ""
-    
+
     @State private var alert: AlertState<Never>?
-    
+
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
-    
+
     @FetchRequest var relays: FetchedResults<Relay>
 
     private var sortedRelays: [Relay] {
@@ -30,13 +30,13 @@ struct RelayView: View {
     }
 
     var editable: Bool
-    
+
     init(author: Author, editable: Bool = true) {
         self.author = author
         self.editable = editable
         _relays = FetchRequest(fetchRequest: Relay.relays(for: author))
     }
-    
+
     var body: some View {
         List {
             Section {
@@ -82,7 +82,7 @@ struct RelayView: View {
                         }
                     }
                 }
-                
+
                 if author.relays.count == 0, editable {
                     Text(.localizable.noRelaysMessage)
                 }
@@ -98,7 +98,7 @@ struct RelayView: View {
             }
             .deleteDisabled(!editable)
             .listRowGradientBackground()
-            
+
             let authorRelayUrls = author.relays.compactMap { $0.address }
             let recommendedRelays = Relay.recommended
                 .filter { !authorRelayUrls.contains($0) }
@@ -129,7 +129,7 @@ struct RelayView: View {
                 }
                 .listRowGradientBackground()
             }
-            
+
             if editable {
                 Section {
                     HStack {
@@ -137,8 +137,8 @@ struct RelayView: View {
                             .foregroundColor(.primaryTxt)
                             .autocorrectionDisabled()
                             #if os(iOS)
-                            .textInputAutocapitalization(.never)
-                            .keyboardType(.URL)
+                                .textInputAutocapitalization(.never)
+                                .keyboardType(.URL)
                             #endif
                         SecondaryActionButton(title: .localizable.save) {
                             addRelay()
@@ -165,9 +165,9 @@ struct RelayView: View {
         .toolbar {
             if editable {
                 #if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        EditButton()
+                    }
                 #endif
             }
         }
@@ -176,7 +176,7 @@ struct RelayView: View {
             analytics.showedRelays()
         }
     }
-    
+
     func publishChanges() async {
         let followKeys = await Array(currentUser.socialGraph.followedKeys)
         await currentUser.publishContactList(tags: followKeys.pTags)
@@ -185,7 +185,7 @@ struct RelayView: View {
     private func addRelay() {
         withAnimation {
             guard !newRelayAddress.isEmpty else { return }
-            
+
             do {
                 var address = newRelayAddress.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
                 if !address.starts(with: "wss://") {
@@ -203,21 +203,23 @@ struct RelayView: View {
                 } else {
                     errorMessage = .localizable.saveRelayError
                 }
-                alert = AlertState(title: {
-                    TextState(String(localized: .localizable.error))
-                }, message: {
-                    TextState(String(localized: errorMessage))
-                })
+                alert = AlertState(
+                    title: {
+                        TextState(String(localized: .localizable.error))
+                    },
+                    message: {
+                        TextState(String(localized: errorMessage))
+                    })
             }
         }
     }
 }
 
 struct RelayView_Previews: PreviewProvider {
-    
+
     static var previewData = PreviewData()
     static var previewContext = PersistenceController.preview.viewContext
-    
+
     static var emptyContext = PersistenceController.empty.viewContext
 
     static var user: Author {
@@ -225,7 +227,7 @@ struct RelayView_Previews: PreviewProvider {
         author.hexadecimalPublicKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
         return author
     }
-    
+
     static var previews: some View {
         NavigationStack {
             RelayView(author: user)

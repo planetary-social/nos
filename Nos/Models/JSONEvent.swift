@@ -1,9 +1,9 @@
-import secp256k1
 import Foundation
 import Logger
+import secp256k1
 
 struct JSONEvent: Codable, Hashable, VerifiableEvent {
-    
+
     var id: String
     var pubKey: String
     var createdAt: Int64
@@ -22,7 +22,7 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
         case content
         case signature = "sig"
     }
-    
+
     internal init(
         id: String,
         pubKey: String,
@@ -40,7 +40,7 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
         self.content = content
         self.signature = signature
     }
-    
+
     internal init(
         pubKey: RawAuthorID,
         createdAt: Date = .now,
@@ -100,23 +100,23 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
         guard let jsonData = json.data(using: .utf8) else {
             return nil
         }
-        
+
         let decoder = JSONDecoder()
         return try? decoder.decode(JSONEvent.self, from: jsonData)
     }
-    
+
     func toJSON() throws -> String? {
         let encoder = JSONEncoder()
         let data = try encoder.encode(self)
         return String(decoding: data, as: UTF8.self)
     }
-    
+
     mutating func sign(withKey privateKey: KeyPair) throws {
         id = try calculateIdentifier()
         var serializedBytes = try id.bytes
         signature = try privateKey.sign(bytes: &serializedBytes)
     }
-    
+
     var serializedEventForSigning: [Any?] {
         [
             0,
@@ -124,10 +124,10 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
             createdAt,
             kind,
             tags,
-            content
+            content,
         ]
     }
-    
+
     func calculateIdentifier() throws -> String {
         let serializedEventData = try JSONSerialization.data(
             withJSONObject: serializedEventForSigning,
@@ -135,7 +135,7 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
         )
         return serializedEventData.sha256
     }
-    
+
     var dictionary: [String: Any] {
         [
             "id": id,
@@ -147,7 +147,7 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
             "sig": signature ?? "",
         ]
     }
-    
+
     var createdDate: Date {
         Date(timeIntervalSince1970: TimeInterval(createdAt))
     }
@@ -164,7 +164,7 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
     func buildPublishRequest() throws -> String {
         let request: [Any] = ["EVENT", dictionary]
         let requestData = try JSONSerialization.data(withJSONObject: request)
-        return String(decoding: requestData, as: UTF8.self) 
+        return String(decoding: requestData, as: UTF8.self)
     }
 }
 
@@ -176,15 +176,18 @@ struct MetadataEventJSON: Codable {
     var about: String?
     var website: String?
     var picture: String?
-    
+
     var profilePhotoURL: URL? {
         URL(string: picture ?? "")
     }
-    
+
     private enum CodingKeys: String, CodingKey {
-        case displayName = "display_name", name, nip05, uns = "uns_name", about, website, picture
+        case displayName = "display_name"
+        case name, nip05
+        case uns = "uns_name"
+        case about, website, picture
     }
-    
+
     var dictionary: [String: String] {
         [
             "display_name": displayName ?? "",

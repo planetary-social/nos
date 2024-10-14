@@ -1,17 +1,17 @@
-import Foundation
 import CoreData
 import Dependencies
+import Foundation
 import Logger
 
 @objc(Author)
 @Observable public class Author: NosManagedObject {
-    
+
     @Dependency(\.currentUser) @ObservationIgnored var currentUser
-    
+
     var npubString: String? {
         publicKey?.npub
     }
-    
+
     /// Human-friendly identifier suitable for being displayed in the UI.
     var humanFriendlyIdentifier: String {
         if let formattedNIP05, !formattedNIP05.isEmpty {
@@ -25,19 +25,19 @@ import Logger
         if let displayName, !displayName.isEmpty {
             return displayName
         }
-        
+
         if let name, !name.isEmpty {
             return name
         }
-        
+
         return npubString?.prefix(10).appending("...") ?? hexadecimalPublicKey ?? "error"
     }
-    
+
     var publicKey: PublicKey? {
         guard let hex = hexadecimalPublicKey else {
             return nil
         }
-        
+
         return PublicKey(hex: hex)
     }
 
@@ -73,10 +73,11 @@ import Logger
         let parts = nip05.split(separator: "@")
 
         guard let username = parts[safe: 0],
-            let domain = parts[safe: 1] else {
+            let domain = parts[safe: 1]
+        else {
             return nil
         }
-        
+
         return (String(username), String(domain))
     }
 
@@ -92,19 +93,19 @@ import Logger
         guard let nip05 else {
             return nil
         }
-        
+
         guard let nip05Parts, nip05Parts.username == "_" else {
             return nip05
         }
 
         return String(nip05Parts.domain)
     }
-    
+
     var needsMetadata: Bool {
         // TODO: consider checking lastUpdated time as an optimization.
         about == nil && name == nil && displayName == nil && profilePhotoURL == nil && nip05 == nil
     }
-    
+
     var webLink: String {
         if hasNosNIP05 {
             return "https://\(nosNIP05Username).nos.social"
@@ -127,17 +128,17 @@ import Logger
         }
         return nil
     }
-    
+
     var followedKeys: [RawAuthorID] {
         follows
-            .compactMap({ $0.destination?.hexadecimalPublicKey }) 
+            .compactMap({ $0.destination?.hexadecimalPublicKey })
             .filter { $0.isValid }
     }
 
     var hasHumanFriendlyName: Bool {
         name?.isEmpty == false || displayName?.isEmpty == false
     }
-    
+
     class func request(by pubKey: RawAuthorID) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey = %@", pubKey)
@@ -151,10 +152,10 @@ import Logger
         if let author = try context.fetch(fetchRequest).first {
             return author
         }
-        
+
         return nil
     }
-    
+
     class func find(named name: String, context: NSManagedObjectContext) throws -> [Author] {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(
@@ -163,7 +164,7 @@ import Logger
         let authors = try context.fetch(fetchRequest)
         return authors
     }
-    
+
     @discardableResult
     class func findOrCreate(by pubKey: RawAuthorID, context: NSManagedObjectContext) throws -> Author {
         if let author = try? Author.find(by: pubKey, context: context) {
@@ -175,13 +176,13 @@ import Logger
             return author
         }
     }
-    
+
     @nonobjc public class func allAuthorsRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
         return fetchRequest
     }
-    
+
     @nonobjc public class func allAuthorsRequest(muted: Bool) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.predicate = NSPredicate(format: "muted == %i", muted)
@@ -194,28 +195,28 @@ import Logger
         fetchRequest.predicate = NSPredicate(format: "muted == %i AND (displayName != nil OR name != nil)", muted)
         return fetchRequest
     }
-    
+
     @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.predicate = NSPredicate.false
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
         return fetchRequest
     }
-    
+
     /// Returns the authors that this author (self) follows who also follow the given `author`.
     @nonobjc public func knownFollowers(of author: Author) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "ANY followers.source = %@ AND ANY follows.destination = %@ AND SELF != %@ AND SELF != %@", 
-            self, 
-            author, 
+            format: "ANY followers.source = %@ AND ANY follows.destination = %@ AND SELF != %@ AND SELF != %@",
+            self,
+            author,
             self,
             author
         )
         return fetchRequest
     }
-    
+
     /// Builds a predicate that queries for all notes (root or replies), reposts and long forms for a
     /// given profile
     ///
@@ -223,8 +224,8 @@ import Logger
     /// It doesn't return events if the profile is muted
     @nonobjc func activityPredicate(before: Date) -> NSPredicate {
         NSPredicate(
-            format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@ AND author.muted = 0 AND " +
-                "deletedOn.@count = 0 AND createdAt <= %@",
+            format: "(kind = %i OR kind = %i OR kind = %i) AND author = %@ AND author.muted = 0 AND "
+                + "deletedOn.@count = 0 AND createdAt <= %@",
             EventKind.text.rawValue,
             EventKind.repost.rawValue,
             EventKind.longFormContent.rawValue,
@@ -234,14 +235,12 @@ import Logger
     }
 
     @nonobjc func postsPredicate(before: Date) -> NSPredicate {
-        let onlyRootPostsClause = "(kind = 1 AND SUBQUERY(" +
-            "eventReferences, " +
-            "$reference, " +
-            "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
-        ").@count = 0)"
+        let onlyRootPostsClause =
+            "(kind = 1 AND SUBQUERY(" + "eventReferences, " + "$reference, "
+            + "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" + ").@count = 0)"
         return NSPredicate(
-            format: "(\(onlyRootPostsClause) OR kind = %i) " +
-                "AND author = %@ AND deletedOn.@count = 0 AND createdAt <= %@",
+            format: "(\(onlyRootPostsClause) OR kind = %i) "
+                + "AND author = %@ AND deletedOn.@count = 0 AND createdAt <= %@",
             EventKind.longFormContent.rawValue,
             self,
             before as CVarArg
@@ -279,7 +278,7 @@ import Logger
         )
         return fetchRequest
     }
-    
+
     @nonobjc class func oneHopRequest(for author: Author) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
@@ -295,16 +294,16 @@ import Logger
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "NOT (ANY followers.source IN %@.follows.destination) " +
-                "AND NOT (hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey) AND " +
-                "hexadecimalPublicKey != %@.hexadecimalPublicKey AND muted = 0",
+            format: "NOT (ANY followers.source IN %@.follows.destination) "
+                + "AND NOT (hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey) AND "
+                + "hexadecimalPublicKey != %@.hexadecimalPublicKey AND muted = 0",
             author,
             author,
             author
         )
         return fetchRequest
     }
-    
+
     func reportsReferencingFetchRequest() -> NSFetchRequest<Event> {
         guard let hexadecimalPublicKey else {
             return Event.emptyRequest()
@@ -321,7 +320,7 @@ import Logger
 
     class func all(context: NSManagedObjectContext) -> [Author] {
         let allRequest = Author.allAuthorsRequest()
-        
+
         do {
             let results = try context.fetch(allRequest)
             return results
@@ -330,17 +329,18 @@ import Logger
             return []
         }
     }
-    
+
     func add(relay: Relay) {
-        relays.insert(relay) 
+        relays.insert(relay)
     }
-    
+
     @MainActor func mute(viewContext context: NSManagedObjectContext) async throws {
         guard let mutedAuthorKey = hexadecimalPublicKey, let currentAuthor = currentUser.author,
-            mutedAuthorKey != currentAuthor.hexadecimalPublicKey else {
+            mutedAuthorKey != currentAuthor.hexadecimalPublicKey
+        else {
             return
         }
-        
+
         print("Muting \(mutedAuthorKey)")
         muted = true
 
@@ -366,7 +366,7 @@ import Logger
         // Publish the modified list
         await currentUser.publishMuteList(keys: Array(Set(mutedList)))
     }
-    
+
     func remove(relay: Relay) {
         relays.remove(relay)
         print("Removed \(relay.address ?? "") from \(hexadecimalPublicKey ?? "")")
@@ -384,13 +384,14 @@ import Logger
             return []
         }
     }
-    
+
     @MainActor func unmute(viewContext context: NSManagedObjectContext) async throws {
         guard let unmutedAuthorKey = hexadecimalPublicKey, let currentAuthor = currentUser.author,
-            unmutedAuthorKey != currentAuthor.hexadecimalPublicKey else {
+            unmutedAuthorKey != currentAuthor.hexadecimalPublicKey
+        else {
             return
         }
-        
+
         print("Un-muting \(unmutedAuthorKey)")
         muted = false
 

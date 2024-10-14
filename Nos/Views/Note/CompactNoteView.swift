@@ -1,24 +1,24 @@
-import SwiftUI
-import Logger
 import Dependencies
+import Logger
+import SwiftUI
 
 /// A view that displays the text of a note (kind: 1 Nostr event) and truncates it with a "Read more" button if
 /// it is too long
 struct CompactNoteView: View {
-    
+
     /// The note whose content will be displayed
     private let note: Event
-    
+
     /// The maximum number of lines to show before truncating (if `showFullMessage` is false)
     private let truncationLineLimit = 12
-    
-    /// If true this view will truncate long notes and show a "Read more" button to view the whole thing. If false 
+
+    /// If true this view will truncate long notes and show a "Read more" button to view the whole thing. If false
     /// the full note will always be displayed
     private var shouldTruncate: Bool
-    
+
     /// Whether link previews should be displayed for links found in the note text.
     private var showLinkPreviews: Bool
-    
+
     /// If true links will be highlighted and open when tapped. If false the text will change to a secondary color
     /// and links will not be tappable.
     private var allowUserInteraction: Bool
@@ -29,17 +29,17 @@ struct CompactNoteView: View {
     /// Whether this view is currently displayed in a truncated state
     @State private var isTextTruncated = true
 
-    /// The size of the full note text 
+    /// The size of the full note text
     @State private var intrinsicSize = CGSize.zero
-    
+
     /// The size of the note text truncated to `truncationLineLimit` lines.
     @State private var truncatedSize = CGSize.zero
-    
+
     @EnvironmentObject private var router: Router
-    
+
     internal init(
-        note: Event, 
-        shouldTruncate: Bool = false, 
+        note: Event,
+        shouldTruncate: Bool = false,
         showLinkPreviews: Bool = true,
         allowUserInteraction: Bool = true
     ) {
@@ -48,33 +48,35 @@ struct CompactNoteView: View {
         self.showLinkPreviews = showLinkPreviews
         self.allowUserInteraction = allowUserInteraction
     }
-    
+
     /// Calculates whether the note text is long enough to need truncation given `truncationLineLimit`.
     var noteNeedsTruncation: Bool {
-        shouldTruncate && intrinsicSize.height > truncatedSize.height + 30 
+        shouldTruncate && intrinsicSize.height > truncatedSize.height + 30
     }
-    
-    /// Calculates whether the Read More button should be shown. 
+
+    /// Calculates whether the Read More button should be shown.
     var showReadMoreButton: Bool {
         noteNeedsTruncation && isTextTruncated
     }
-    
+
     var formattedText: some View {
         noteText
             .font(.body)
             .foregroundColor(allowUserInteraction ? .primaryTxt : .secondaryTxt)
-            .tint(allowUserInteraction ? .accent : .secondaryTxt) 
+            .tint(allowUserInteraction ? .accent : .secondaryTxt)
             .padding(15)
             .textSelection(.enabled)
-            .environment(\.openURL, OpenURLAction { url in
-                guard allowUserInteraction else {
+            .environment(
+                \.openURL,
+                OpenURLAction { url in
+                    guard allowUserInteraction else {
+                        return .handled
+                    }
+                    router.open(url: url)
                     return .handled
-                }
-                router.open(url: url)
-                return .handled
-            })
+                })
     }
-    
+
     var noteText: some View {
         Group {
             switch note.attributedContent {
@@ -114,8 +116,8 @@ struct CompactNoteView: View {
                         }
                     }
                     .background {
-                        // To calculate whether the text should be truncated we create this hidden view of 
-                        // `formattedText` and record its size. It is compared to `truncatedSize` and used in the 
+                        // To calculate whether the text should be truncated we create this hidden view of
+                        // `formattedText` and record its size. It is compared to `truncatedSize` and used in the
                         // calculation of `noteNeedsTruncation`.
                         formattedText
                             .fixedSize(horizontal: false, vertical: true)
@@ -165,20 +167,20 @@ struct CompactNoteView: View {
     }
 }
 
-fileprivate struct IntrinsicSizePreferenceKey: PreferenceKey {
+private struct IntrinsicSizePreferenceKey: PreferenceKey {
     static var defaultValue: CGSize = .zero
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }
 
-fileprivate struct TruncatedSizePreferenceKey: PreferenceKey {
+private struct TruncatedSizePreferenceKey: PreferenceKey {
     static var defaultValue: CGSize = .zero
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }
 
 struct CompactNoteView_Previews: PreviewProvider {
-    
+
     static var previewData = PreviewData()
-    
+
     static var previews: some View {
         Group {
             CompactNoteView(note: previewData.linkNote, allowUserInteraction: false)

@@ -2,10 +2,10 @@ import SwiftUI
 import SwiftUINavigation
 
 struct NosTextField: View {
-    
+
     var label: LocalizedStringResource
     @Binding var text: String
-    
+
     var body: some View {
         NosFormField(label: label) {
             TextField("", text: $text)
@@ -22,8 +22,8 @@ struct NosTextField_Previews: PreviewProvider {
             NosFormSection(label: .localizable.profilePicture) {
                 WithState(initialValue: "Alice") { text in
                     NosTextField(label: .localizable.url, text: text)
-                }    
-            }   
+                }
+            }
         }
     }
 }

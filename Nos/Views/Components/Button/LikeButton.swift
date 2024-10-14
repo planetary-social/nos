@@ -3,7 +3,7 @@ import Logger
 import SwiftUI
 
 struct LikeButton: View {
-    
+
     var note: Event
 
     /// Indicates whether the number of likes is displayed.
@@ -35,7 +35,7 @@ struct LikeButton: View {
             _likes = FetchRequest(fetchRequest: Event.emptyRequest())
         }
     }
-    
+
     var likeCount: Int {
         likes
             .compactMap { $0.eventReferences.lastObject as? EventReference }
@@ -43,7 +43,7 @@ struct LikeButton: View {
             .filter { $0 == note.identifier }
             .count
     }
-      
+
     var currentUserLikesNote: Bool {
         likes
             .filter {
@@ -52,7 +52,7 @@ struct LikeButton: View {
             .compactMap { $0.eventReferences.lastObject as? EventReference }
             .contains(where: { $0.eventId == note.identifier })
     }
-    
+
     var buttonLabel: some View {
         HStack {
             if currentUserLikesNote || isLiked {
@@ -69,7 +69,7 @@ struct LikeButton: View {
         .padding(.horizontal, 10)
         .padding(.vertical, 12)
     }
-    
+
     var body: some View {
         Button {
             Task {
@@ -77,7 +77,7 @@ struct LikeButton: View {
             }
         } label: {
             buttonLabel
-        }                             
+        }
         .disabled(isPublishing)
     }
 

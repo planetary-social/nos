@@ -1,23 +1,23 @@
-import SwiftUI
 import Logger
+import SwiftUI
 
 /// A view similar to `TextEditor` for composing Nostr notes. Supports autocomplete of mentions.
 struct NoteTextEditor: View {
-    
+
     /// A controller for the entered text.
     @Binding private var controller: NoteEditorController
-    
+
     /// The smallest size of EditableNoteText
     var minHeight: CGFloat
-    
+
     var placeholder: LocalizedStringResource
-    
+
     init(controller: Binding<NoteEditorController>, minHeight: CGFloat, placeholder: LocalizedStringResource) {
         self._controller = controller
         self.minHeight = minHeight
         self.placeholder = placeholder
     }
-    
+
     var body: some View {
         NoteUITextViewRepresentable(
             controller: controller,
@@ -32,7 +32,7 @@ struct NoteTextEditor: View {
                 AuthorListView(isPresented: $controller.showMentionsAutocomplete) { [weak controller] author in
                     /// Guard against double presses
                     guard let controller, controller.showMentionsAutocomplete else { return }
-                    
+
                     controller.insertMention(of: author)
                     controller.showMentionsAutocomplete = false
                 }
@@ -42,11 +42,11 @@ struct NoteTextEditor: View {
 }
 
 #Preview {
-    
+
     var previewData = PreviewData()
     @State var controller = NoteEditorController()
     let placeholder: LocalizedStringResource = .localizable.newNotePlaceholder
-    
+
     return NavigationStack {
         NoteTextEditor(
             controller: $controller,
@@ -56,7 +56,7 @@ struct NoteTextEditor: View {
         Spacer()
     }
     .inject(previewData: previewData)
-    .onAppear { 
+    .onAppear {
         _ = previewData.alice
     }
 }

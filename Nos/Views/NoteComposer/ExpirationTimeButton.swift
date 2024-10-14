@@ -2,12 +2,12 @@ import SwiftUI
 
 /// A button that lets the user select an `ExpirationTimeOption` to specify when an event should be deleted.
 struct ExpirationTimeButton: View {
-    
+
     var model: ExpirationTimeOption
     @State var showClearButton = false
     var minSize: Binding<CGSize?>?
     @Binding var isSelected: Bool
-    
+
     var body: some View {
         ZStack {
             let textLayer = HStack(spacing: 3) {
@@ -19,7 +19,7 @@ struct ExpirationTimeButton: View {
                         .foregroundColor(.secondaryTxt)
                         .font(.clarity(.regular, textStyle: .caption2))
                 }
-                
+
                 if showClearButton {
                     Image(systemName: "xmark")
                         .font(.callout)
@@ -32,7 +32,7 @@ struct ExpirationTimeButton: View {
             .frame(minWidth: minSize?.wrappedValue?.width, minHeight: minSize?.wrappedValue?.height)
             .cornerRadius(5)
             .background(Color.buttonBevelBg)
-            
+
             if isSelected {
                 textLayer
                     // highlighted border
@@ -63,13 +63,13 @@ struct ExpirationTimeButton: View {
         .accessibilityLabel(Text(model.accessibilityLabel))
         .cornerRadius(5)
         .onTapGesture {
-            isSelected.toggle() 
+            isSelected.toggle()
         }
     }
 }
 
 struct ExpirationTimeButton_Previews: PreviewProvider {
-    
+
     static var previews: some View {
         VStack {
             HStack {
@@ -77,8 +77,8 @@ struct ExpirationTimeButton_Previews: PreviewProvider {
                 ExpirationTimeButton(model: ExpirationTimeOption.oneDay, isSelected: .constant(false))
                 ExpirationTimeButton(model: ExpirationTimeOption.sevenDays, isSelected: .constant(true))
                 ExpirationTimeButton(
-                    model: ExpirationTimeOption.oneHour, 
-                    showClearButton: true, 
+                    model: ExpirationTimeOption.oneHour,
+                    showClearButton: true,
                     isSelected: .constant(true)
                 )
             }

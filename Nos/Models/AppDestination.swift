@@ -8,7 +8,7 @@ enum AppDestination: Hashable, Equatable {
     case notifications
     case noteComposer(String?)
     case profile
-    
+
     var destinationString: String {
         switch self {
         case .home:
@@ -23,7 +23,7 @@ enum AppDestination: Hashable, Equatable {
             return String(localized: .localizable.profileTitle)
         }
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(destinationString)
     }

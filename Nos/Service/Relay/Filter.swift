@@ -1,9 +1,9 @@
 import Foundation
 
-/// Describes a set of Nostr Events, usually so we can ask relay servers for them. 
+/// Describes a set of Nostr Events, usually so we can ask relay servers for them.
 /// See [NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md#communication-between-clients-and-relays).
 struct Filter: Hashable, Identifiable {
-    
+
     /// List of author identifiers the Filter should be constrained to.
     var authorKeys: [RawAuthorID]
 
@@ -86,10 +86,10 @@ struct Filter: Hashable, Identifiable {
         self.until = until
         self.keepSubscriptionOpen = keepSubscriptionOpen
     }
-    
+
     var dictionary: [String: Any] {
         var filterDict = [String: Any]()
-        
+
         if let limit {
             filterDict["limit"] = limit
         }
@@ -97,7 +97,7 @@ struct Filter: Hashable, Identifiable {
         if !authorKeys.isEmpty {
             filterDict["authors"] = authorKeys
         }
-        
+
         if !eventIDs.isEmpty {
             filterDict["ids"] = eventIDs
         }
@@ -113,19 +113,19 @@ struct Filter: Hashable, Identifiable {
         if !eTags.isEmpty {
             filterDict["#e"] = eTags
         }
-        
+
         if !pTags.isEmpty {
             filterDict["#p"] = pTags
         }
-        
+
         if let search {
             filterDict["search"] = search
         }
-        
+
         if let since {
             filterDict["since"] = Int(since.timeIntervalSince1970)
         }
-        
+
         if let until {
             filterDict["until"] = Int(until.timeIntervalSince1970)
         }
@@ -150,7 +150,7 @@ struct Filter: Hashable, Identifiable {
         hasher.combine(until)
         hasher.combine(keepSubscriptionOpen)
     }
-    
+
     var id: String {
         hashValue.description
     }

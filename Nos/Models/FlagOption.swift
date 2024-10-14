@@ -13,7 +13,7 @@ struct FlagOption: Identifiable, Equatable {
     /// and inserts it into a localizable string to provide additional context or details for the current flag.
     /// This message is shown in the info box based on the current selection.
     /// - Parameter String?: The title of the previously selected flag, if available.
-    /// - Returns: A message related to the current flag based on the previous selection, 
+    /// - Returns: A message related to the current flag based on the previous selection,
     /// or `nil` if no message is provided.
     let info: ((String?) -> String?)?
 
@@ -50,7 +50,7 @@ struct FlagOption: Identifiable, Equatable {
             description: String(localized: .localizable.flagPubliclyDescription),
             info: nil,
             category: .privacy(.publicly)
-        )
+        ),
     ]
 
     /// `FlagOption` instances representing different categories of how a user can be flagged.
@@ -69,7 +69,7 @@ struct FlagOption: Identifiable, Equatable {
             description: String(localized: .localizable.flagPubliclyDescription),
             info: nil,
             category: .privacy(.publicly)
-        )
+        ),
     ]
 
     /// `FlagOption` instances representing different categories of the visibility of a flagged user.
@@ -85,7 +85,7 @@ struct FlagOption: Identifiable, Equatable {
             description: String(localized: .localizable.flagUserDontMuteDescription),
             info: nil,
             category: .visibility(.dontMute)
-        )
+        ),
     ]
 
     static func == (lhs: FlagOption, rhs: FlagOption) -> Bool {
@@ -100,7 +100,7 @@ extension FlagOption {
         info: nil,
         category: .report(ReportCategory.spam)
     )
-    
+
     static let harassment = FlagOption(
         title: String(localized: .localizable.flagContentHarassmentTitle),
         description: String(localized: .localizable.flagContentHarassmentDescription),

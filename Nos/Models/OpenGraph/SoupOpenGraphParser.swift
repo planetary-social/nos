@@ -49,7 +49,7 @@ extension SoupOpenGraphParser {
 
         return OpenGraphMedia(url: url, width: width, height: height)
     }
-    
+
     /// Gets the Open Graph type metadata from the given HTML document.
     /// - Parameter document: The HTML document.
     /// - Returns: The Open Graph type metadata, or `nil` if none is found

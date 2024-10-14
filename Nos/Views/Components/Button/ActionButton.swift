@@ -2,7 +2,7 @@ import SwiftUI
 
 /// A big bright button that is used as the primary call-to-action on a screen.
 struct ActionButton: View {
-    
+
     enum ImageAlignment {
         case left
         case right
@@ -18,7 +18,7 @@ struct ActionButton: View {
     var backgroundGradient = LinearGradient(
         colors: [
             Color.actionPrimaryGradientTop,
-            Color.actionPrimaryGradientBottom
+            Color.actionPrimaryGradientBottom,
         ],
         startPoint: .bottomLeading,
         endPoint: .topTrailing
@@ -30,48 +30,53 @@ struct ActionButton: View {
     var shouldFillHorizontalSpace = false
     var action: (() async -> Void)?
     @State var disabled = false
-    
+
     var body: some View {
-        Button(action: {
-            disabled = true
-            Task {
-                await action?()
-                disabled = false
+        Button(
+            action: {
+                disabled = true
+                Task {
+                    await action?()
+                    disabled = false
+                }
+            },
+            label: {
+                HStack(spacing: 4) {
+                    if shouldFillHorizontalSpace {
+                        // Center the image+text if the button has to fill the
+                        // available space.
+                        Spacer(minLength: 0)
+                    }
+                    if imageAlignment == .left {
+                        image
+                    }
+                    Text(title)
+                        .font(font)
+                        .transition(.opacity)
+                        .font(.headline)
+                        .foregroundColor(textColor)
+                    if imageAlignment == .right {
+                        image
+                    }
+                    if shouldFillHorizontalSpace {
+                        // Center the image+text if the button has to fill the
+                        // available space.
+                        Spacer(minLength: 0)
+                    }
+                }
             }
-        }, label: {
-            HStack(spacing: 4) {
-                if shouldFillHorizontalSpace {
-                    // Center the image+text if the button has to fill the
-                    // available space.
-                    Spacer(minLength: 0)
-                }
-                if imageAlignment == .left {
-                    image
-                }
-                Text(title)
-                    .font(font)
-                    .transition(.opacity)
-                    .font(.headline)
-                    .foregroundColor(textColor)
-                if imageAlignment == .right {
-                    image
-                }
-                if shouldFillHorizontalSpace {
-                    // Center the image+text if the button has to fill the
-                    // available space.
-                    Spacer(minLength: 0)
-                }
-            }
-        })
+        )
         .lineLimit(nil)
         .foregroundColor(.black)
-        .buttonStyle(ActionButtonStyle(
-            depthEffectColor: depthEffectColor,
-            backgroundGradient: backgroundGradient,
-            padding: padding,
-            textShadow: textShadow,
-            shouldFillHorizontalSpace: shouldFillHorizontalSpace
-        ))
+        .buttonStyle(
+            ActionButtonStyle(
+                depthEffectColor: depthEffectColor,
+                backgroundGradient: backgroundGradient,
+                padding: padding,
+                textShadow: textShadow,
+                shouldFillHorizontalSpace: shouldFillHorizontalSpace
+            )
+        )
         .disabled(disabled)
     }
 }
@@ -87,7 +92,7 @@ struct SecondaryActionButton: View {
     /// button.
     var shouldFillHorizontalSpace = false
     var action: (() async -> Void)?
-    
+
     var body: some View {
         ActionButton(
             title: title,
@@ -103,9 +108,9 @@ struct SecondaryActionButton: View {
 }
 
 struct ActionButtonStyle: ButtonStyle {
-    
+
     @SwiftUI.Environment(\.isEnabled) private var isEnabled
-    
+
     let cornerRadius: CGFloat = 17
     let depthEffectColor: Color
     let backgroundGradient: LinearGradient
@@ -141,13 +146,13 @@ struct ActionButtonStyle: ButtonStyle {
                         LinearGradient(
                             colors: [
                                 Color.actionButtonBackgroundGradientTop,
-                                Color.actionButtonBackgroundGradientBottom
+                                Color.actionButtonBackgroundGradientBottom,
                             ],
                             startPoint: .top,
                             endPoint: .bottom
                         )
                         .blendMode(.softLight)
-                        
+
                         backgroundGradient.blendMode(.normal)
                     }
                 )
@@ -165,17 +170,17 @@ struct ActionButton_Previews: PreviewProvider {
 
             ActionButton(title: .localizable.done, action: {})
                 .disabled(true)
-            
+
             ActionButton(
                 title: .localizable.edit,
                 font: .clarity(.medium),
-                image: Image.editProfile, 
+                image: Image.editProfile,
                 textColor: Color.actionBannerButtonTxt,
                 depthEffectColor: Color.actionBannerButtonEffect,
                 backgroundGradient: LinearGradient(
                     colors: [
                         Color.actionBannerButtonGradientLeading,
-                        Color.actionBannerButtonGradientTrailing
+                        Color.actionBannerButtonGradientTrailing,
                     ],
                     startPoint: .leading,
                     endPoint: .trailing
@@ -183,7 +188,7 @@ struct ActionButton_Previews: PreviewProvider {
                 textShadow: false,
                 action: {}
             )
-            
+
             SecondaryActionButton(title: .localizable.edit, action: {})
 
             // Something that should wrap at larger text sizes

@@ -47,7 +47,7 @@ struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {
         attributed.mergeAttributes(container)
         return attributed
     }
-    
+
     var body: some View {
         ScrollView {
             if let source = viewModel.rawMessage {
@@ -82,7 +82,7 @@ struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {
     }
 }
 
-fileprivate class PreviewViewModel: RawEventViewModel {
+private class PreviewViewModel: RawEventViewModel {
 
     @Published var rawMessage: String?
 
@@ -102,28 +102,28 @@ fileprivate class PreviewViewModel: RawEventViewModel {
 struct RawMessageView_Previews: PreviewProvider {
     // swiftlint:disable line_length
     static let source = """
-    {
-        "key": "%6Ic4dzY/mBxVXdSNwSIyQ1TqBp+FKsY+tLnumBPdxaA=.sha256",
-        "value": {
-            "previous": "%d8Iyl2ZVHwdyiAAeIvbDCVXVeLXPYajI7IRHgC0/rf4=.sha256",
-            "author": "@8Y7zrkRdt1HxkueXjdwIU4fbYkjapDztCHgjNjiCn/M=.ed25519",
-            "sequence": 31,
-            "timestamp": 1549386935492,
-            "hash": "sha256",
-            "content": {
-                "type": "vote",
-                "channel": "ssb-server",
-                "vote": {
-                    "link": "%OoBqCtaYm6ayBQqCVlHi66vsWfvaK5+t98aqsXlRyZU=.sha256",
-                    "value": 1,
-                    "expression": "Like"
-                }
+        {
+            "key": "%6Ic4dzY/mBxVXdSNwSIyQ1TqBp+FKsY+tLnumBPdxaA=.sha256",
+            "value": {
+                "previous": "%d8Iyl2ZVHwdyiAAeIvbDCVXVeLXPYajI7IRHgC0/rf4=.sha256",
+                "author": "@8Y7zrkRdt1HxkueXjdwIU4fbYkjapDztCHgjNjiCn/M=.ed25519",
+                "sequence": 31,
+                "timestamp": 1549386935492,
+                "hash": "sha256",
+                "content": {
+                    "type": "vote",
+                    "channel": "ssb-server",
+                    "vote": {
+                        "link": "%OoBqCtaYm6ayBQqCVlHi66vsWfvaK5+t98aqsXlRyZU=.sha256",
+                        "value": 1,
+                        "expression": "Like"
+                    }
+                },
+                "signature": "8caUJ2gqJ4DOnfD2gDFpyWbseUeNMhzX/tr8j2IR7xSG3GcyDG8GCAyrv7YkOTu2PnEM6fdLb1jNrit+YVYlDg==.sig.ed25519"
             },
-            "signature": "8caUJ2gqJ4DOnfD2gDFpyWbseUeNMhzX/tr8j2IR7xSG3GcyDG8GCAyrv7YkOTu2PnEM6fdLb1jNrit+YVYlDg==.sig.ed25519"
-        },
-        "timestamp": 1546962907954.0059
-    }
-    """
+            "timestamp": 1546962907954.0059
+        }
+        """
     // swiftlint:enable line_length
 
     static var previews: some View {

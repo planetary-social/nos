@@ -11,7 +11,7 @@ struct WizardSheetDescriptionText: View {
     private enum Description {
         case plainText(LocalizedStringResource)
         case markdown(AttributedString)
-        
+
         var text: Text {
             switch self {
             case .plainText(let localizedStringResource):
@@ -27,15 +27,16 @@ struct WizardSheetDescriptionText: View {
     }
 
     init(_ attributedString: AttributedString, tint: Color) {
-        self.description = .markdown(attributedString
-            .replacingAttributes(
-                AttributeContainer(
-                    [.inlinePresentationIntent: InlinePresentationIntent.stronglyEmphasized.rawValue]
-                ),
-                with: AttributeContainer(
-                    [.foregroundColor: UIColor(tint)]
-                )
-            ))
+        self.description = .markdown(
+            attributedString
+                .replacingAttributes(
+                    AttributeContainer(
+                        [.inlinePresentationIntent: InlinePresentationIntent.stronglyEmphasized.rawValue]
+                    ),
+                    with: AttributeContainer(
+                        [.foregroundColor: UIColor(tint)]
+                    )
+                ))
     }
 
     init(

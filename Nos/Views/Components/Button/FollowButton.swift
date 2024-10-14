@@ -1,6 +1,6 @@
-import SwiftUI
-import Dependencies
 import CoreData
+import Dependencies
+import SwiftUI
 
 struct FollowButton: View {
     @ObservedObject var currentUserAuthor: Author
@@ -15,7 +15,7 @@ struct FollowButton: View {
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
-    
+
     /// Returns an icon associated to the follow or unfollow state.
     private func image(for following: Bool) -> Image? {
         guard shouldDisplayIcon else {
@@ -23,7 +23,7 @@ struct FollowButton: View {
         }
         return following ? Image.slimFollowingIcon : Image.slimFollowIcon
     }
-    
+
     var body: some View {
         let following = currentUser.isFollowing(author: author)
         ActionButton(
@@ -48,28 +48,28 @@ struct FollowButton: View {
 }
 
 struct FollowButton_Previews: PreviewProvider {
-    
+
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
-    
+
     static var previewContext = {
         let context = persistenceController.viewContext
         return context
     }()
-    
+
     static var user: Author {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.pubKeyHex
         return author
     }
-    
+
     static var alice: Author = {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
         author.name = "Alice"
         return author
     }()
-    
+
     static func createTestData(in context: NSManagedObjectContext) {
         let follow = Follow(context: previewContext)
         follow.source = user
@@ -77,7 +77,7 @@ struct FollowButton_Previews: PreviewProvider {
         user.follows = Set([follow])
         try? previewContext.save()
     }
-    
+
     static var previews: some View {
         VStack(spacing: 10) {
             FollowButton(currentUserAuthor: user, author: alice)

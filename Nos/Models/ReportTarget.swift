@@ -2,10 +2,10 @@ import Foundation
 
 /// The types of objects that can be reported.
 enum ReportTarget {
-    
+
     case note(Event)
     case author(Author)
-    
+
     /// The author who owns the content being reported.
     var author: Author? {
         switch self {
@@ -15,7 +15,7 @@ enum ReportTarget {
             return author
         }
     }
-    
+
     var analyticsString: String {
         switch self {
         case .note:
@@ -24,9 +24,9 @@ enum ReportTarget {
             return "profile"
         }
     }
-    
+
     /// Creates tags referencing this target that can be attached to a report event.
-    ///  - Parameter reportType: the NIP-56 report_type (spam, illegal, etc.) 
+    ///  - Parameter reportType: the NIP-56 report_type (spam, illegal, etc.)
     func tags(for reportType: String) -> [[String]] {
         var tags = [[String]]()
         switch self {
@@ -42,7 +42,7 @@ enum ReportTarget {
                 tags.append(["p", pubKey])
             }
         }
-        
+
         return tags
     }
 }

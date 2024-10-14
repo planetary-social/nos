@@ -1,5 +1,5 @@
-import Foundation
 import CommonCrypto
+import Foundation
 
 extension Data {
     var sha256: String {

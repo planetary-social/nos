@@ -1,13 +1,13 @@
+import Dependencies
 import Foundation
 import SwiftUI
-import Dependencies
 
 struct NoteOptionsButton: View {
     @Environment(CurrentUser.self) private var currentUser
-    
+
     @Dependency(\.analytics) private var analytics
     @Dependency(\.persistenceController) private var persistenceController
-    
+
     @ObservedObject var note: Event
 
     @State private var showingOptions = false
@@ -77,9 +77,12 @@ struct NoteOptionsButton: View {
             )
             .sheet(isPresented: $showingSource) {
                 NavigationView {
-                    RawEventView(viewModel: RawEventController(note: note, dismissHandler: {
-                        showingSource = false
-                    }))
+                    RawEventView(
+                        viewModel: RawEventController(
+                            note: note,
+                            dismissHandler: {
+                                showingSource = false
+                            }))
                 }
             }
             .sheet(isPresented: $showingShare) {
@@ -90,22 +93,22 @@ struct NoteOptionsButton: View {
             }
         }
     }
-    
+
     func copyMessageIdentifier() {
         UIPasteboard.general.string = note.bech32NoteID
     }
-    
+
     func copyMessage() {
         Task {
             // TODO: put links back in
             let attrString = await Event.attributedContent(
-                noteID: note.identifier, 
+                noteID: note.identifier,
                 context: persistenceController.viewContext
-            ) 
+            )
             UIPasteboard.general.string = String(attrString.characters)
         }
     }
-    
+
     func deletePost() async {
         if let identifier = note.identifier {
             await currentUser.publishDelete(for: [identifier])
@@ -118,13 +121,13 @@ struct NoteOptionsButton_Previews: PreviewProvider {
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.viewContext
     static var currentUser = previewData.currentUser
-    
+
     static var shortNote: Event {
         let note = Event(context: previewContext)
         note.content = "Hello, world!"
         return note
     }
-    
+
     static let note: Event = {
         var note = shortNote
         return note

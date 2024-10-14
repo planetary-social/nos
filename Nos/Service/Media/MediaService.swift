@@ -63,9 +63,10 @@ struct DefaultMediaService: MediaService {
 
         switch type {
         case .video:
-            if let width = metadata.video?.width, 
+            if let width = metadata.video?.width,
                 let height = metadata.video?.height,
-                height > width {
+                height > width
+            {
                 return .portrait
             } else {
                 return .landscape

@@ -1,7 +1,7 @@
-import Foundation
-import SwiftUI
 import CoreData
 import Dependencies
+import Foundation
+import SwiftUI
 
 /// This view displays the a button with the information we have for a note suitable for being used in a list
 /// or grid.
@@ -26,14 +26,14 @@ struct NoteButton: View {
 
     var displayRootMessage: Bool
     var isTapEnabled: Bool
-    
+
     private let replyAction: ((Event) -> Void)?
     private let tapAction: ((Event) -> Void)?
     @State private var relaySubscriptions = SubscriptionCancellables()
 
     @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
-    
+
     /// Initializes a NoteButton object.
     ///
     /// - Parameter note: Note event to display.
@@ -55,10 +55,10 @@ struct NoteButton: View {
     /// - Parameter tapAction: Handler that get called when the user taps on the button. If
     /// `nil`, it navigates to RepliesView. Defaults to `nil`.
     init(
-        note: Event, 
-        style: CardStyle = CardStyle.compact, 
-        shouldTruncate: Bool = true, 
-        hideOutOfNetwork: Bool = true, 
+        note: Event,
+        style: CardStyle = CardStyle.compact,
+        shouldTruncate: Bool = true,
+        hideOutOfNetwork: Bool = true,
         repliesDisplayType: RepliesDisplayType = .displayNothing,
         showsLikeCount: Bool = true,
         showsRepostCount: Bool = true,
@@ -85,7 +85,8 @@ struct NoteButton: View {
     /// The note displayed in the note card. Could be different from `note` i.e. in the case of a repost.
     var displayedNote: Event {
         if note.kind == EventKind.repost.rawValue,
-            let repostedNote = note.repostedNote() {
+            let repostedNote = note.repostedNote()
+        {
             return repostedNote
         } else {
             return note
@@ -95,25 +96,27 @@ struct NoteButton: View {
     var body: some View {
         VStack {
             if note.kind == EventKind.repost.rawValue, let author = note.author {
-                Button(action: { 
-                    router.push(author)
-                }, label: { 
-                    HStack(alignment: .center) {
-                        AuthorLabel(author: author)
-                        Image.repostSymbol
-                        if let elapsedTime = note.createdAt?.distanceString() {
-                            Text(elapsedTime)
-                                .lineLimit(1)
-                                .font(.clarity(.medium))
-                                .foregroundColor(.secondaryTxt)
+                Button(
+                    action: {
+                        router.push(author)
+                    },
+                    label: {
+                        HStack(alignment: .center) {
+                            AuthorLabel(author: author)
+                            Image.repostSymbol
+                            if let elapsedTime = note.createdAt?.distanceString() {
+                                Text(elapsedTime)
+                                    .lineLimit(1)
+                                    .font(.clarity(.medium))
+                                    .foregroundColor(.secondaryTxt)
+                            }
+                            Spacer()
                         }
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                    .readabilityPadding()
-                })
+                        .padding(.horizontal)
+                        .readabilityPadding()
+                    })
             }
-            
+
             let buttonLabel = NoteCard(
                 note: displayedNote,
                 style: style,
@@ -151,17 +154,19 @@ struct NoteButton: View {
 
             switch style {
             case .compact:
-                let compactButtonOrLabel = buttonOrLabel
+                let compactButtonOrLabel =
+                    buttonOrLabel
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal)
                     .readabilityPadding()
-                
-                if displayRootMessage, 
+
+                if displayRootMessage,
                     note.kind != EventKind.repost.rawValue,
-                    let root = note.rootNote() ?? note.referencedNote() {
-                    
+                    let root = note.rootNote() ?? note.referencedNote()
+                {
+
                     ThreadRootView(
-                        root: root, 
+                        root: root,
                         isRootNoteInteractive: !note.isPreview,
                         tapAction: { root in router.push(root) },
                         reply: { compactButtonOrLabel }
@@ -205,7 +210,7 @@ struct NoteButton: View {
 }
 
 struct NoteButton_Previews: PreviewProvider {
-    
+
     static var previewData = PreviewData()
     static var previews: some View {
         ScrollView {

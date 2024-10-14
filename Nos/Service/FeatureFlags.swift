@@ -1,5 +1,5 @@
-import Foundation
 import Dependencies
+import Foundation
 import SwiftUI
 
 /// Feature flags for enabling experimental or beta features.
@@ -16,8 +16,8 @@ protocol FeatureFlags {
 
     // MARK: - Additional requirements for debug mode
     #if DEBUG || STAGING
-    /// Sets the value of the specified feature flag.
-    func setFeature(_ feature: FeatureFlag, enabled: Bool)
+        /// Sets the value of the specified feature flag.
+        func setFeature(_ feature: FeatureFlag, enabled: Bool)
     #endif
 }
 
@@ -30,7 +30,7 @@ protocol FeatureFlags {
 
     /// Feature flags and their values.
     private var featureFlags: [FeatureFlag: Bool] = [
-        .newModerationFlow: false,
+        .newModerationFlow: false
     ]
 
     /// Returns true if the feature is enabled.
@@ -39,8 +39,8 @@ protocol FeatureFlags {
     }
 
     #if DEBUG || STAGING
-    func setFeature(_ feature: FeatureFlag, enabled: Bool) {
-        featureFlags[feature] = enabled
-    }
+        func setFeature(_ feature: FeatureFlag, enabled: Bool) {
+            featureFlags[feature] = enabled
+        }
     #endif
 }

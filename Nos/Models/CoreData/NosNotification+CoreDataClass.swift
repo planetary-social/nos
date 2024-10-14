@@ -1,7 +1,7 @@
-import Foundation
 import CoreData
+import Foundation
 
-/// Represents a notification we will display to the user. We save records of them to the database in order to 
+/// Represents a notification we will display to the user. We save records of them to the database in order to
 /// de-duplicate them and keep track of whether they have been seen by the user.
 @objc(NosNotification)
 public class NosNotification: NSManagedObject {
@@ -26,16 +26,16 @@ public class NosNotification: NSManagedObject {
             return notification
         }
     }
-    
+
     static func find(by eventID: RawEventID, in context: NSManagedObjectContext) throws -> NosNotification? {
         let fetchRequest = request(by: eventID)
         if let notification = try context.fetch(fetchRequest).first {
             return notification
         }
-        
+
         return nil
     }
-    
+
     static func request(by eventID: RawEventID) -> NSFetchRequest<NosNotification> {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
         fetchRequest.predicate = NSPredicate(format: "eventID = %@", eventID)
@@ -43,13 +43,13 @@ public class NosNotification: NSManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \NosNotification.eventID, ascending: false)]
         return fetchRequest
     }
-    
+
     static func unreadCount(in context: NSManagedObjectContext) throws -> Int {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
         fetchRequest.predicate = NSPredicate(format: "isRead != 1")
         return try context.count(for: fetchRequest)
     }
-    
+
     // TODO: user is unused; is this a bug?
     static func markAllAsRead(in context: NSManagedObjectContext) async throws {
         try await context.perform {
@@ -59,7 +59,7 @@ public class NosNotification: NSManagedObject {
             for notification in unreadNotifications {
                 notification.isRead = true
             }
-            
+
             try? context.saveIfNeeded()
         }
     }

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CardButtonStyle: ButtonStyle {
-    
+
     var style: CardStyle
 
     func makeBody(configuration: Configuration) -> some View {
@@ -9,8 +9,8 @@ struct CardButtonStyle: ButtonStyle {
     }
 }
 
-fileprivate extension CardStyle {
-    var cornerRadius: CGFloat {
+extension CardStyle {
+    fileprivate var cornerRadius: CGFloat {
         switch self {
         case .golden:
             return 16
@@ -42,7 +42,7 @@ extension View {
     VStack {
         Spacer()
         Button {
-        } label: { 
+        } label: {
             VStack {
                 Text("hello world")
                     .padding()

@@ -4,35 +4,35 @@ import Foundation
 
 /// Registers for push notifications.
 final class PushNotificationRegistrar {
-    
+
     enum PushNotificationError: LocalizedError {
         case missingPubkey
         case missingDeviceToken
         case unexpected
-        
+
         var errorDescription: String? {
             switch self {
-            case .missingPubkey:        "The pubkey is required"
-            case .missingDeviceToken:   "Device token is required"
-            case .unexpected:           "Something unexpected happened"
+            case .missingPubkey: "The pubkey is required"
+            case .missingDeviceToken: "Device token is required"
+            case .unexpected: "Something unexpected happened"
             }
         }
     }
-    
-#if DEBUG
-    private static let notificationServiceRelayURL = URL(string: "wss://dev-notifications.nos.social")!
-#else
-    private static let notificationServiceRelayURL = URL(string: "wss://notifications.nos.social")!
-#endif
-    
+
+    #if DEBUG
+        private static let notificationServiceRelayURL = URL(string: "wss://dev-notifications.nos.social")!
+    #else
+        private static let notificationServiceRelayURL = URL(string: "wss://notifications.nos.social")!
+    #endif
+
     @Dependency(\.relayService) private var relayService
     @Dependency(\.analytics) private var analytics
     @Dependency(\.currentUser) private var currentUser
-    
+
     private var deviceToken: Data?
     private var registeredPubkey: String?
     private var registrationTask: Task<Void, Error>?
-    
+
     /// Registers a user for push notifications by publishing a registration event. Calls to
     /// this function are handled serially.
     /// - Parameters:
@@ -43,19 +43,19 @@ final class PushNotificationRegistrar {
         guard let userKey = user.publicKeyHex, let keyPair = user.keyPair else {
             throw PushNotificationError.missingPubkey
         }
-        
-        try await registrationTask?.value   // wait for the previous task to finish
-        
+
+        try await registrationTask?.value  // wait for the previous task to finish
+
         guard let token = deviceToken ?? self.deviceToken else {
             throw PushNotificationError.missingDeviceToken
         }
-        
+
         self.deviceToken = token
-        
+
         guard userKey != registeredPubkey else {
             return  // already registered this user
         }
-        
+
         registrationTask = Task {
             do {
                 let jsonEvent = JSONEvent(
@@ -76,10 +76,10 @@ final class PushNotificationRegistrar {
                 throw error
             }
         }
-        
+
         try await registrationTask?.value
     }
-    
+
     /// Builds the string needed for the `content` field.
     private func registrationContent(deviceToken: Data, user: CurrentUser) async throws -> String {
         guard let publicKeyHex = currentUser.publicKeyHex else {
@@ -97,12 +97,12 @@ final class PushNotificationRegistrar {
     }
 }
 
-fileprivate struct Registration: Encodable {
+private struct Registration: Encodable {
     let apnsToken: String
     let publicKey: String
     let relays: [RegistrationRelayAddress]
 }
 
-fileprivate struct RegistrationRelayAddress: Encodable {
+private struct RegistrationRelayAddress: Encodable {
     let address: String
 }

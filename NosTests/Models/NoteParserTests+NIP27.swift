@@ -116,7 +116,7 @@ extension NoteParserTests {
             ["p", hex],
             ["p", "8c430bdaadc1a202e4dd11c86c82546bb108d755e374b7918181f533b94e312e"],
             ["e", "a9788ca56a90bb5b856e89f16f5f3b0da93c28ea625e845c9925a41377152a13", "", "root"],
-            ["e", "3d9503a2d4ad024749b138c041e99934474e2822e2a1c697792dab5b24acc285", "", "reply"]
+            ["e", "3d9503a2d4ad024749b138c041e99934474e2822e2a1c697792dab5b24acc285", "", "reply"],
         ]
 
         // Act
@@ -142,20 +142,18 @@ extension NoteParserTests {
 
     @MainActor func testNIP27MentionToProfileWithURLInName() throws {
         // Arrange
-        let name = "nos.social" // This should not break the parsing
+        let name = "nos.social"  // This should not break the parsing
         let npub = "npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch"
         let hex = "0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6"
 
-        let content = "Yep. Something like that. I, of course could implement it " +
-            "in nostr:\(npub) but haven’t yet."
-        let expected = "Yep. Something like that. I, of course could implement it " +
-            "in @\(name) but haven’t yet."
+        let content = "Yep. Something like that. I, of course could implement it " + "in nostr:\(npub) but haven’t yet."
+        let expected = "Yep. Something like that. I, of course could implement it " + "in @\(name) but haven’t yet."
 
         let tags = [
             ["p", hex],
             ["p", "8c430bdaadc1a202e4dd11c86c82546bb108d755e374b7918181f533b94e312e"],
             ["e", "a9788ca56a90bb5b856e89f16f5f3b0da93c28ea625e845c9925a41377152a13", "", "root"],
-            ["e", "3d9503a2d4ad024749b138c041e99934474e2822e2a1c697792dab5b24acc285", "", "reply"]
+            ["e", "3d9503a2d4ad024749b138c041e99934474e2822e2a1c697792dab5b24acc285", "", "reply"],
         ]
 
         // Act

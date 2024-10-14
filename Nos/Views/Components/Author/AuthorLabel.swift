@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct AuthorLabel: View {
-    
+
     @ObservedObject var author: Author
     var note: Event?
-    
+
     private var attributedAuthor: AttributedString {
         var authorName = AttributedString(author.safeName)
         authorName.foregroundColor = .primaryTxt
@@ -13,7 +13,7 @@ struct AuthorLabel: View {
             let postedOrRepliedString = String(localized: note.isReply ? .reply.replied : .reply.posted)
             var postedOrReplied = AttributedString(" " + postedOrRepliedString)
             postedOrReplied.foregroundColor = .secondaryTxt
-            
+
             authorName.append(postedOrReplied)
         }
         return authorName

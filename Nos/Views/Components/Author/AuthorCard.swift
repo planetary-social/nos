@@ -9,7 +9,7 @@ struct AuthorCard: View {
     let showsFollowButton: Bool
 
     var tapAction: (() -> Void)?
-    
+
     /// Initializes an `AuthorCard` with the given parameters.
     /// - Parameters:
     ///   - author: The author to show in the card.
@@ -98,7 +98,7 @@ struct AuthorCard: View {
 
 #Preview {
     var previewData = PreviewData()
-    
+
     return VStack {
         AuthorCard(author: previewData.alice)
         AuthorCard(author: previewData.unsAuthor, showsFollowButton: false)

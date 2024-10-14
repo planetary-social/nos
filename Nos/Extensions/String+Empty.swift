@@ -1,6 +1,6 @@
 import Foundation
 
-extension Optional<String> {
+extension String? {
     var isEmptyOrNil: Bool {
         self == nil || self?.isEmpty == true
     }

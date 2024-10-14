@@ -1,25 +1,25 @@
-import Foundation
 import Dependencies
-import SwiftUI
+import Foundation
 import Logger
+import SwiftUI
 
 @Observable class AppController {
-    
+
     enum CurrentState {
         case onboarding
         case loggedIn
     }
-    
+
     private(set) var currentState: CurrentState?
-    
+
     @ObservationIgnored @Dependency(\.analytics) private var analytics
     @ObservationIgnored @Dependency(\.router) private var router
     @ObservationIgnored @Dependency(\.currentUser) private var currentUser
-    
+
     init() {
         Log.info("App Version: \(Bundle.current.versionAndBuild)")
     }
-    
+
     func configureCurrentState() {
         currentState = currentUser.keyPair == nil ? .onboarding : .loggedIn
         Task { @MainActor in
@@ -29,7 +29,7 @@ import Logger
             }
         }
     }
-    
+
     @MainActor func completeOnboarding() {
         router.sideMenuPath = NavigationPath()
         router.closeSideMenu()

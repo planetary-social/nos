@@ -32,7 +32,7 @@ struct InlineMetadataTag {
             return .landscape
         }
     }
-    
+
     /// Initializes an ``InlineMetadataTag`` with the given URL and dimensions.
     /// - Parameters:
     ///   - url: The URL of the media described by this metadata.
@@ -46,7 +46,8 @@ struct InlineMetadataTag {
     /// - Parameter imetaTag: The `imeta` tag from the JSON.
     init?(imetaTag: [String]) {
         guard let urlPair = imetaTag.first(where: { $0.starts(with: "url") }),
-            let url = urlPair.components(separatedBy: " ").last else {
+            let url = urlPair.components(separatedBy: " ").last
+        else {
             return nil
         }
         self.url = url
@@ -58,7 +59,8 @@ struct InlineMetadataTag {
             let width = components.first,
             let height = components.last,
             let widthValue = Double(width),
-            let heightValue = Double(height) {
+            let heightValue = Double(height)
+        {
             self.dimensions = CGSize(width: widthValue, height: heightValue)
         } else {
             self.dimensions = nil

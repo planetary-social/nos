@@ -1,8 +1,8 @@
-import Foundation
 import CoreData
+import Foundation
 
 enum EventFixture {
-    
+
     /// Builds an event with sensible defaults. Just pass the values you need to specify.
     static func build(
         in context: NSManagedObjectContext,
@@ -20,18 +20,18 @@ enum EventFixture {
         event.content = content
         event.kind = 1
         event.allTags = tags as? NSObject
-        
+
         let author = try Author.findOrCreate(by: publicKey, context: context)
         event.author = author
-        
+
         if let identifier {
             event.identifier = identifier
         } else {
             event.identifier = try event.calculateIdentifier()
         }
-        
+
         event.deletedOn = deletedOn
-        
+
         return event
     }
 }

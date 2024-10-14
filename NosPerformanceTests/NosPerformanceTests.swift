@@ -1,5 +1,5 @@
-import XCTest
 import SDWebImageSwiftUI
+import XCTest
 
 final class NosPerformanceTests: XCTestCase {
 
@@ -18,13 +18,13 @@ final class NosPerformanceTests: XCTestCase {
         }
     }
 
-    func testScrollingAnimationPerformance() throws { 
+    func testScrollingAnimationPerformance() throws {
         let app = XCUIApplication()
         app.launch()
         let homeFeed = app.scrollViews["home feed"]
         SDImageCache.shared.clearMemory()
         SDImageCache.shared.clearDisk()
-            
+
         measure(metrics: [XCTOSSignpostMetric.scrollingAndDecelerationMetric]) {
             homeFeed.swipeUp(velocity: .fast)
             homeFeed.swipeUp(velocity: .fast)

@@ -5,25 +5,25 @@ enum ContentWarningType {
     case note
 }
 
-/// A class that takes a collection of content reports and generates a content warning string that can be 
+/// A class that takes a collection of content reports and generates a content warning string that can be
 /// displayed to the user.
 @Observable class ContentWarningController {
-    
+
     var reports: [Event]
     var type: ContentWarningType
-    
+
     init(reports: [Event] = [Event](), type: ContentWarningType = .note) {
         self.reports = reports
         self.type = type
     }
-    
+
     /// A warning that is generated based on the given `reports` and `types` explaining what this content was reported
     /// for and by whom.
     var localizedContentWarning: LocalizedStringResource {
         guard !reports.isEmpty else {
             return .localizable.anErrorOccurred
         }
-        
+
         switch type {
         case .author:
             if authorNames.count > 1 {
@@ -39,20 +39,21 @@ enum ContentWarningType {
             }
         }
     }
-    
+
     /// The names of the authors who made reports
     private var authorNames: [String] {
         Array(Set(reports.compactMap { $0.author?.name })).sorted()
     }
-    
+
     /// The name of the first author in the list of reports
     private var firstAuthorSafeName: String {
         authorNames.first ?? String(localized: .localizable.unknownAuthor)
     }
-    
+
     /// The string explaining the reason(s) for the reports.
     private var reason: String {
-        let reasons = uniqueReasons
+        let reasons =
+            uniqueReasons
             .filter { !$0.isEmpty }
             .sorted()
             .joined(separator: ", ")
@@ -62,7 +63,7 @@ enum ContentWarningType {
             return reasons
         }
     }
-    
+
     /// A set of all the reasons from all reports
     private var uniqueReasons: Set<String> {
         var reasons = [String]()
@@ -73,7 +74,7 @@ enum ContentWarningType {
         }
         return Set(reasons.map { $0.lowercased() })
     }
-    
+
     /// Extracts a human readable string explaining the reason for the given report `Event`.
     private func reasonString(from report: Event) -> String? {
         if let reportTags = report.allTags as? [[String]] {
@@ -81,13 +82,13 @@ enum ContentWarningType {
             for tag in reportTags where tag.count >= 2 {
                 let reasonCode = tag[1]
                 if reasonCode.hasPrefix("MOD>") {
-                    let codeSuffix = String(reasonCode.dropFirst(4)) // Drop "MOD>" prefix
+                    let codeSuffix = String(reasonCode.dropFirst(4))  // Drop "MOD>" prefix
                     if let reportCategory = ReportCategory.findCategory(from: codeSuffix) {
                         return reportCategory.displayName
                     }
-                } 
+                }
             }
-            
+
             // Look for report type
             for tag in reportTags where tag.count >= 2 {
                 var tagType: String
@@ -99,10 +100,10 @@ enum ContentWarningType {
                 }
                 if tag[safe: 0] == tagType, tag.count >= 3 {
                     return tag[2]
-                } 
+                }
             }
         }
-        
+
         // fall back to `content`
         if let contentReason = report.content, contentReason.isEmpty == false {
             return contentReason

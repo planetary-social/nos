@@ -2,10 +2,10 @@ import SwiftUI
 import SwiftUINavigation
 
 struct UNSWizardTextField: View {
-    
+
     var text: Binding<String>
     var placeholder: String = ""
-    
+
     var body: some View {
         TextField(text: text) {
             Text(placeholder)
@@ -30,7 +30,7 @@ struct UNSWizardTextField: View {
         }
         .padding(.vertical, 40)
     }
-    
+
     private func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }

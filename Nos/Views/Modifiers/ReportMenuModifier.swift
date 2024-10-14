@@ -1,6 +1,6 @@
-import SwiftUI
 import Dependencies
 import Logger
+import SwiftUI
 import SwiftUINavigation
 
 /// The report menu can be added to another element and controlled with the `isPresented` variable. When `isPresented`
@@ -8,9 +8,9 @@ import SwiftUINavigation
 /// category and optionally mute the respective author.
 struct ReportMenuModifier: ViewModifier {
     @Binding var isPresented: Bool
-    
+
     var reportedObject: ReportTarget
-    
+
     @State private var userSelection: UserSelection?
     @State private var confirmReport = false
     @State private var showMuteDialog = false
@@ -44,7 +44,7 @@ struct ReportMenuModifier: ViewModifier {
                         ContentFlagView(
                             selectedFlagOptionCategory: $selectedFlagOption,
                             selectedSendOptionCategory: $selectedFlagSendOption,
-                            showSuccessView: $showFlagSuccessView, 
+                            showSuccessView: $showFlagSuccessView,
                             flagTarget: reportedObject,
                             sendAction: {
                                 if let selectCategory = selectedFlagOption?.category {
@@ -63,7 +63,7 @@ struct ReportMenuModifier: ViewModifier {
                             selectedFlagOption: $selectedFlagOption,
                             selectedSendOption: $selectedFlagSendOption,
                             selectedVisibilityOption: $selectedVisibilityOption,
-                            showSuccessView: $showFlagSuccessView, 
+                            showSuccessView: $showFlagSuccessView,
                             flagTarget: reportedObject,
                             sendAction: {
                                 let selectCategory = selectedVisibilityOption?.category ?? .visibility(.dontMute)
@@ -83,7 +83,7 @@ struct ReportMenuModifier: ViewModifier {
     @ViewBuilder
     func oldModerationFlow(content: Content) -> some View {
         content
-        // ReportCategory menu
+            // ReportCategory menu
             .confirmationDialog(unwrapping: $confirmationDialogState, action: processUserSelection)
             .alert(
                 String(localized: .localizable.confirmFlag),
@@ -91,7 +91,7 @@ struct ReportMenuModifier: ViewModifier {
                 actions: {
                     Button(String(localized: .localizable.confirm)) {
                         publishReport(userSelection)
-                        
+
                         if let author = reportedObject.author, !author.muted {
                             showMuteDialog = true
                         }
@@ -105,7 +105,7 @@ struct ReportMenuModifier: ViewModifier {
                     Text(text)
                 }
             )
-        // Mute user menu
+            // Mute user menu
             .alert(
                 String(localized: .localizable.muteUser),
                 isPresented: $showMuteDialog,
@@ -152,11 +152,11 @@ struct ReportMenuModifier: ViewModifier {
 
     func processUserSelection(_ userSelection: UserSelection?) {
         self.userSelection = userSelection
-        
+
         guard let userSelection else {
             return
         }
-        
+
         switch userSelection {
         case .noteCategorySelected(let category):
             Task {
@@ -169,11 +169,11 @@ struct ReportMenuModifier: ViewModifier {
                         },
                         ButtonState(action: .send(.flagPublicly(category))) {
                             TextState("Flag Publicly")
-                        }
+                        },
                     ]
                 )
             }
-            
+
         case .authorCategorySelected(let category):
             Task {
                 confirmationDialogState = ConfirmationDialogState(
@@ -185,16 +185,16 @@ struct ReportMenuModifier: ViewModifier {
                         },
                         ButtonState(action: .send(.flagPublicly(category))) {
                             TextState("Flag Publicly")
-                        }
+                        },
                     ]
                 )
             }
-            
+
         case .sendToNos, .flagPublicly:
             confirmReport = true
         }
     }
-    
+
     func mute(author: Author) async {
         do {
             try await author.mute(viewContext: viewContext)
@@ -222,7 +222,7 @@ struct ReportMenuModifier: ViewModifier {
         case authorCategorySelected(ReportCategory)
         case sendToNos(ReportCategory)
         case flagPublicly(ReportCategory)
-        
+
         func confirmationAlertMessage(for reportedObject: ReportTarget) -> String {
             switch self {
             case .sendToNos(let category):
@@ -232,24 +232,24 @@ struct ReportMenuModifier: ViewModifier {
                 case .author:
                     return String(localized: .localizable.reportAuthorSendToNosConfirmation)
                 }
-                
+
             case .flagPublicly(let category):
                 return String(localized: .localizable.reportFlagPubliclyConfirmation(category.displayName))
-                
+
             case .noteCategorySelected(let category),
                 .authorCategorySelected(let category):
                 return String(localized: .localizable.reportFlagPubliclyConfirmation(category.displayName))
             }
         }
     }
-    
+
     /// List of the top-level report categories we care about.
     func topLevelButtons() -> [ButtonState<UserSelection>] {
         switch reportedObject {
         case .note:
             ReportCategory.noteCategories.map { category in
                 let userSelection = UserSelection.noteCategorySelected(category)
-                
+
                 return ButtonState(action: .send(userSelection)) {
                     TextState(verbatim: category.displayName)
                 }
@@ -257,7 +257,7 @@ struct ReportMenuModifier: ViewModifier {
         case .author:
             ReportCategory.authorCategories.map { category in
                 let userSelection = UserSelection.authorCategorySelected(category)
-                
+
                 return ButtonState(action: .send(userSelection)) {
                     TextState(verbatim: category.displayName)
                 }
@@ -307,7 +307,7 @@ struct ReportMenuModifier: ViewModifier {
             Log.error("Invalid user selection")
         }
     }
-    
+
     func sendToNos(_ selectedCategory: ReportCategory) {
         ReportPublisher().publishPrivateReport(
             for: reportedObject,
@@ -315,7 +315,7 @@ struct ReportMenuModifier: ViewModifier {
             context: viewContext
         )
     }
-    
+
     func flagPublicly(_ selectedCategory: ReportCategory) {
         ReportPublisher().publishPublicReport(
             for: reportedObject,
@@ -323,7 +323,7 @@ struct ReportMenuModifier: ViewModifier {
             context: viewContext
         )
     }
-    
+
     func getAlertMessage(for userSelection: UserSelection?, with reportedObject: ReportTarget) -> String {
         userSelection?.confirmationAlertMessage(for: reportedObject) ?? String(localized: .localizable.error)
     }

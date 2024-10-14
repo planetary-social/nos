@@ -24,7 +24,7 @@ struct SetUpUNSBanner: View {
                         .foregroundColor(.white)
                     Spacer()
                 }
-                
+
                 HStack {
                     ActionButton(
                         title: button,
@@ -54,7 +54,7 @@ struct SetUpUNSBanner: View {
                 }
                 .offset(y: -2)
             )
-            
+
             .cornerRadius(20)
         }
         .fixedSize(horizontal: false, vertical: true)

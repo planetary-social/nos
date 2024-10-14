@@ -1,11 +1,11 @@
-import SwiftUI
 import Combine
 import CoreData
 import Dependencies
+import SwiftUI
 
-struct DiscoverTab: View {    
+struct DiscoverTab: View {
     // MARK: - Properties
-    
+
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
@@ -13,7 +13,7 @@ struct DiscoverTab: View {
     @State var showInfoPopover = false
 
     @State var columns: Int = 0
-    
+
     @State private var isVisible = false
 
     @StateObject private var searchController = SearchController()
@@ -21,7 +21,7 @@ struct DiscoverTab: View {
     @State var predicate: NSPredicate = .false
 
     // MARK: - View
-    
+
     var body: some View {
         NosNavigationStack(path: $router.discoverPath) {
             ZStack {
@@ -31,8 +31,8 @@ struct DiscoverTab: View {
                 )
             }
             .searchable(
-                text: $searchController.query, 
-                placement: .toolbar, 
+                text: $searchController.query,
+                placement: .toolbar,
                 prompt: Text(.localizable.searchBar)
             )
             .autocorrectionDisabled()
@@ -71,26 +71,26 @@ struct SizePreferenceKey: PreferenceKey {
 }
 
 struct DiscoverTab_Previews: PreviewProvider {
-    
+
     static var previewData = PreviewData()
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.viewContext
 
     static var currentUser = previewData.currentUser
     static var router = Router()
-    
+
     static var user: Author {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
         return author
     }
-    
+
     static func createTestData(in context: NSManagedObjectContext) {
         let shortNote = Event(context: previewContext)
         shortNote.identifier = "1"
         shortNote.author = user
         shortNote.content = "Hello, world!"
-        
+
         let longNote = Event(context: previewContext)
         longNote.identifier = "2"
         longNote.author = user
@@ -105,7 +105,7 @@ struct DiscoverTab_Previews: PreviewProvider {
             .environmentObject(router)
             .environment(currentUser)
             .onAppear { createTestData(in: previewContext) }
-        
+
         DiscoverTab()
             .environment(\.managedObjectContext, previewContext)
             .environmentObject(router)

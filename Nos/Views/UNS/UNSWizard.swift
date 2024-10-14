@@ -1,19 +1,19 @@
-import SwiftUI
 import Dependencies
+import SwiftUI
 
 struct UNSWizard: View {
-        
+
     @ObservedObject var controller: UNSWizardController
     @Binding var isPresented: Bool
-    
+
     @Dependency(\.analytics) var analytics
 
     enum FocusedField {
         case textEditor
     }
-    
+
     @FocusState private var focusedField: FocusedField?
-    
+
     var body: some View {
         VStack {
             switch controller.state {
@@ -57,11 +57,11 @@ struct UNSWizard: View {
 }
 
 #Preview {
-    
+
     @State var controller = UNSWizardController()
     @State var isPresented = true
     @State var previewData = PreviewData()
-    
+
     return UNSWizard(controller: controller, isPresented: $isPresented)
         .inject(previewData: previewData)
 }

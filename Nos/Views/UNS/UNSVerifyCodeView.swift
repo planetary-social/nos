@@ -1,11 +1,11 @@
-import SwiftUI
 import Dependencies
+import SwiftUI
 
 struct UNSVerifyCodeView: View {
-    
+
     @Dependency(\.analytics) var analytics
     @Dependency(\.unsAPI) var api
-    
+
     @State var verificationCode: String = ""
     @ObservedObject var controller: UNSWizardController
     @FocusState private var focusedField: FocusedField?
@@ -13,7 +13,7 @@ struct UNSVerifyCodeView: View {
     enum FocusedField {
         case textEditor
     }
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -21,13 +21,13 @@ struct UNSVerifyCodeView: View {
                     UNSStepImage { Image.unsVerificationCode.offset(x: 7, y: 5) }
                         .padding(40)
                         .padding(.top, 50)
-                    
+
                     Text(.localizable.verification)
                         .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
-                    
+
                     let phoneString = controller.phoneNumber ?? "you."
                     HighlightedText(
                         String(localized: .localizable.verificationDescription(phoneString)),
@@ -41,14 +41,14 @@ struct UNSVerifyCodeView: View {
                     .multilineTextAlignment(.center)
                     .padding(.vertical, 17)
                     .padding(.horizontal, 20)
-                    
+
                     UNSWizardTextField(text: $verificationCode, placeholder: "123456")
                         .focused($focusedField, equals: .textEditor)
                         .keyboardType(.numberPad)
                         .autocorrectionDisabled()
-                    
+
                     Spacer()
-                    
+
                     BigActionButton(title: .localizable.submit) {
                         await submit()
                     }
@@ -63,14 +63,14 @@ struct UNSVerifyCodeView: View {
             }
         }
     }
-    
+
     private func submit() async {
         do {
             guard let phoneNumber = controller.phoneNumber else {
                 // Shouldn't end up here
                 throw UNSError.developer
             }
-            
+
             analytics.enteredUNSCode()
             try await api.verifyPhone(
                 phoneNumber: phoneNumber,
@@ -86,12 +86,12 @@ struct UNSVerifyCodeView: View {
 }
 
 struct UNSVerifyCodeView_Previews: PreviewProvider {
-    
+
     @State static var controller = UNSWizardController(
         state: .verificationCode,
         phoneNumber: "+1768555451"
     )
-    
+
     static var previews: some View {
         UNSVerifyCodeView(controller: controller)
     }

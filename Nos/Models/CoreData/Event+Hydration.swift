@@ -2,11 +2,11 @@ import CoreData
 import Logger
 
 extension Event {
-    
+
     /// Populates an event stub (with only its ID set) using the data in the given JSON.
     func hydrate(from jsonEvent: JSONEvent, relay: Relay?, in context: NSManagedObjectContext) throws {
         assert(isStub, "Tried to hydrate an event that isn't a stub. This is a programming error")
-        
+
         // if this stub was created with a replaceableIdentifier and author, it won't have an identifier yet
         identifier = jsonEvent.id
 
@@ -19,58 +19,60 @@ extension Event {
         kind = jsonEvent.kind
         signature = jsonEvent.signature
         sendAttempts = 0
-        
+
         // Tags
         allTags = jsonEvent.tags as NSObject
         for tag in jsonEvent.tags {
             if tag[safe: 0] == "expiration",
                 let expirationDateString = tag[safe: 1],
                 let expirationDateUnix = TimeInterval(expirationDateString),
-                expirationDateUnix != 0 {
+                expirationDateUnix != 0
+            {
                 let expirationDate = Date(timeIntervalSince1970: expirationDateUnix)
                 self.expirationDate = expirationDate
                 if isExpired {
                     throw EventError.expiredEvent
                 }
             } else if tag[safe: 0] == "d",
-                let dTag = tag[safe: 1] {
+                let dTag = tag[safe: 1]
+            {
                 replaceableIdentifier = dTag
             }
         }
-        
+
         // Author
         guard let newAuthor = try? Author.findOrCreate(by: jsonEvent.pubKey, context: context) else {
             throw EventError.missingAuthor
         }
-        
+
         author = newAuthor
-        
+
         // Relay
         relay.unwrap { markSeen(on: $0) }
-        
+
         guard let eventKind = EventKind(rawValue: kind) else {
             throw EventError.unrecognizedKind
         }
-        
+
         switch eventKind {
         case .contactList:
             hydrateContactList(from: jsonEvent, author: newAuthor, context: context)
-            
+
         case .metaData:
             hydrateMetaData(from: jsonEvent, author: newAuthor, context: context)
-            
+
         case .mute:
             hydrateMuteList(from: jsonEvent, context: context)
         case .repost:
-            
+
             hydrateDefault(from: jsonEvent, context: context)
             parseContent(from: jsonEvent, context: context)
-            
+
         default:
             hydrateDefault(from: jsonEvent, context: context)
         }
     }
-    
+
     private func hydrateContactList(
         from jsonEvent: JSONEvent,
         author newAuthor: Author,
@@ -79,7 +81,7 @@ extension Event {
         guard createdAt! > newAuthor.lastUpdatedContactList ?? Date.distantPast else {
             return
         }
-        
+
         newAuthor.lastUpdatedContactList = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
 
         // Put existing follows into a dictionary so we can avoid doing a fetch request to look up each one.
@@ -89,11 +91,12 @@ extension Event {
                 originalFollows[pubKey] = follow
             }
         }
-        
+
         var newFollows = Set<Follow>()
         for jsonTag in jsonEvent.tags where jsonTag[safe: 0] == "p" {
             if let followedKey = jsonTag[safe: 1],
-                let existingFollow = originalFollows[followedKey] {
+                let existingFollow = originalFollows[followedKey]
+            {
                 // We already have a Core Data Follow model for this user
                 newFollows.insert(existingFollow)
             } else {
@@ -104,20 +107,21 @@ extension Event {
                 }
             }
         }
-        
+
         // Did we unfollow someone? If so, remove them from core data
         let removedFollows = Set(originalFollows.values).subtracting(newFollows)
         if !removedFollows.isEmpty {
             Log.info("Removing \(removedFollows.count) follows")
             Follow.deleteFollows(in: removedFollows, context: context)
         }
-        
+
         newAuthor.follows = newFollows
-        
+
         // Get the user's active relays out of the content property
         if let data = jsonEvent.content.data(using: .utf8, allowLossyConversion: false),
             let relayEntries = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
-            let relays = (relayEntries as? [String: Any])?.keys {
+            let relays = (relayEntries as? [String: Any])?.keys
+        {
             newAuthor.relays = Set()
 
             for address in relays {
@@ -127,7 +131,7 @@ extension Event {
             }
         }
     }
-    
+
     private func hydrateDefault(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         let newEventReferences = NSMutableOrderedSet()
         let newAuthorReferences = NSMutableOrderedSet()
@@ -151,13 +155,13 @@ extension Event {
         eventReferences = newEventReferences
         authorReferences = newAuthorReferences
     }
-    
+
     private func hydrateMetaData(from jsonEvent: JSONEvent, author newAuthor: Author, context: NSManagedObjectContext) {
         guard createdAt! > newAuthor.lastUpdatedMetadata ?? Date.distantPast else {
             // This is old data
             return
         }
-        
+
         if let contentData = jsonEvent.content.data(using: .utf8) {
             newAuthor.lastUpdatedMetadata = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
             // There may be unsupported metadata. Store it to send back later in metadata publishes.
@@ -165,7 +169,7 @@ extension Event {
 
             do {
                 let metadata = try JSONDecoder().decode(MetadataEventJSON.self, from: contentData)
-                
+
                 // Every event has an author created, so it just needs to be populated
                 newAuthor.name = metadata.name
                 newAuthor.displayName = metadata.displayName
@@ -179,12 +183,12 @@ extension Event {
             }
         }
     }
-    
+
     private func hydrateMuteList(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
         let mutedKeys = jsonEvent.tags.map { $0[1] }
-        
+
         let request = Author.allAuthorsRequest(muted: true)
-        
+
         // Un-Mute anyone (locally only) who is muted but not in the mutedKeys
         if let authors = try? context.fetch(request) {
             for author in authors where !mutedKeys.contains(author.hexadecimalPublicKey!) {
@@ -192,7 +196,7 @@ extension Event {
                 print("Parse-Un-Muted \(author.hexadecimalPublicKey ?? "")")
             }
         }
-        
+
         // Mute anyone (locally only) in the mutedKeys
         for key in mutedKeys {
             if let author = try? Author.find(by: key, context: context) {
@@ -200,7 +204,7 @@ extension Event {
                 print("Parse-Muted \(author.hexadecimalPublicKey ?? "")")
             }
         }
-        
+
         // Force ensure current user never was muted
         Task { @MainActor in
             currentUser.author?.muted = false

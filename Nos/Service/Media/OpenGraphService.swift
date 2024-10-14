@@ -20,7 +20,7 @@ struct DefaultOpenGraphService: OpenGraphService {
     }
 
     func fetchMetadata(for url: URL) async throws -> OpenGraphMetadata? {
-        var request = URLRequest(url: url) // example.com/video.mp4 // example.com/video
+        var request = URLRequest(url: url)  // example.com/video.mp4 // example.com/video
         // some websites, like YouTube, only provide metadata for specific User-Agent values
         request.setValue("facebookexternalhit/1.1 Facebot Twitterbot/1.0", forHTTPHeaderField: "User-Agent")
         let (data, response) = try await session.data(for: request)

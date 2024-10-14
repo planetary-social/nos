@@ -1,7 +1,7 @@
-import SwiftUI
-import Logger
 import CoreData
 import Dependencies
+import Logger
+import SwiftUI
 
 /// This view displays the information we have for a message suitable for being used in a list or grid.
 ///
@@ -10,7 +10,7 @@ struct NoteCard: View {
 
     @ObservedObject var note: Event
     @State private var quotedNote: Event?
-    
+
     let style: CardStyle
 
     @State private var warningController = NoteWarningController()
@@ -19,18 +19,18 @@ struct NoteCard: View {
 
     private let shouldTruncate: Bool
     private let repliesDisplayType: RepliesDisplayType
-    
+
     /// Indicates whether the number of likes is displayed.
     private let showsLikeCount: Bool
 
     /// Indicates whether the number of reposts is displayed.
     private let showsRepostCount: Bool
-    
+
     private let hideOutOfNetwork: Bool
     private let rendersQuotedNotes: Bool
     private let showsActions: Bool
     private let replyAction: ((Event) -> Void)?
-    
+
     /// Initializes a NoteCard object.
     ///
     /// - Parameter note: Note event to display.
@@ -67,7 +67,7 @@ struct NoteCard: View {
         self.showsRepostCount = showsRepostCount
         self.replyAction = replyAction
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             switch style {
@@ -100,21 +100,21 @@ struct NoteCard: View {
                             .padding(30)
                         } else {
                             CompactNoteView(
-                                note: note, 
-                                shouldTruncate: shouldTruncate, 
+                                note: note,
+                                shouldTruncate: shouldTruncate,
                                 showLinkPreviews: !warningController.showWarning
                             )
                             .blur(radius: warningController.showWarning ? 6 : 0)
                             .frame(maxWidth: .infinity)
-                            
+
                             if rendersQuotedNotes, let quotedNote {
                                 Button {
                                     router.push(quotedNote)
                                 } label: {
                                     NoteCard(
-                                        note: quotedNote, 
-                                        hideOutOfNetwork: false, 
-                                        rendersQuotedNotes: false, 
+                                        note: quotedNote,
+                                        hideOutOfNetwork: false,
+                                        rendersQuotedNotes: false,
                                         showsActions: false
                                     )
                                     .withStyledBorder()
@@ -179,12 +179,12 @@ struct NoteCard: View {
         )
         .listRowInsets(EdgeInsets())
     }
-    
+
     private func loadQuotedNote() {
         guard rendersQuotedNotes, let quotedNoteID = note.quotedNoteID else {
             return
         }
-        
+
         @Dependency(\.persistenceController) var persistenceController
         quotedNote = try? Event.findOrCreateStubBy(
             id: quotedNoteID,
@@ -203,7 +203,7 @@ struct NoteCard: View {
 }
 
 struct NoteCard_Previews: PreviewProvider {
-    
+
     static var previewData = PreviewData()
     static var previews: some View {
         Group {

@@ -5,7 +5,7 @@ import SwiftUI
 ///
 /// This View was implemented to be re-used in the wizards that set-up and delete usernames in EditProfile screen.
 struct WizardSheetTitleText: View {
-    
+
     private var localizedStringResource: LocalizedStringResource
 
     init(_ localizedStringResource: LocalizedStringResource) {

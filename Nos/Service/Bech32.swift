@@ -7,7 +7,7 @@ import Foundation
 /// https://medium.com/@meshcollider/some-of-the-math-behind-bech32-addresses-cf03c7496285 could help understanding
 /// how Bech32 works
 enum Bech32 {
-    private static let gen: [UInt32] = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3]
+    private static let gen: [UInt32] = [0x3b6a_57b2, 0x2650_8e6d, 0x1ea1_19fa, 0x3d42_33dd, 0x2a14_62b3]
     /// Bech32 checksum delimiter
     private static let checksumMarker: String = "1"
     /// Bech32 character set for encoding
@@ -17,13 +17,13 @@ enum Bech32 {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        15, -1, 10, 17, 21, 20, 26, 30,  7,  5, -1, -1, -1, -1, -1, -1,
-        -1, 29, -1, 24, 13, 25,  9,  8, 23, -1, 18, 22, 31, 27, 19, -1,
-        1,  0,  3, 16, 11, 28, 12, 14,  6,  4,  2, -1, -1, -1, -1, -1,
-        -1, 29, -1, 24, 13, 25,  9,  8, 23, -1, 18, 22, 31, 27, 19, -1,
-        1,  0,  3, 16, 11, 28, 12, 14,  6,  4,  2, -1, -1, -1, -1, -1
+        15, -1, 10, 17, 21, 20, 26, 30, 7, 5, -1, -1, -1, -1, -1, -1,
+        -1, 29, -1, 24, 13, 25, 9, 8, 23, -1, 18, 22, 31, 27, 19, -1,
+        1, 0, 3, 16, 11, 28, 12, 14, 6, 4, 2, -1, -1, -1, -1, -1,
+        -1, 29, -1, 24, 13, 25, 9, 8, 23, -1, 18, 22, 31, 27, 19, -1,
+        1, 0, 3, 16, 11, 28, 12, 14, 6, 4, 2, -1, -1, -1, -1, -1,
     ]
-    
+
     /// Find the polynomial with value coefficients mod the generator as 30-bit.
     private static func polymod(_ values: Data) -> UInt32 {
         var chk: UInt32 = 1
@@ -36,11 +36,11 @@ enum Bech32 {
         }
         return chk
     }
-    
+
     /// Expand a HRP for use in checksum computation.
     private static func expandHrp(_ hrp: String) -> Data {
         guard let hrpBytes = hrp.data(using: .utf8) else { return Data() }
-        var result = Data(repeating: 0x00, count: hrpBytes.count*2+1)
+        var result = Data(repeating: 0x00, count: hrpBytes.count * 2 + 1)
         for (i, c) in hrpBytes.enumerated() {
             result[i] = c >> 5
             result[i + hrpBytes.count + 1] = c & 0x1f
@@ -48,14 +48,14 @@ enum Bech32 {
         result[hrp.count] = 0
         return result
     }
-    
+
     /// Verify checksum
     private static func verifyChecksum(hrp: String, checksum: Data) -> Bool {
         var data = expandHrp(hrp)
         data.append(checksum)
         return polymod(data) == 1
     }
-    
+
     /// Create checksum
     private static func createChecksum(hrp: String, values: Data) -> Data {
         var enc = expandHrp(hrp)
@@ -68,7 +68,7 @@ enum Bech32 {
         }
         return ret
     }
-    
+
     /// Encode Bech32 string
     static func encode(_ hrp: String, baseFiveData values: Data) -> String {
         let checksum = createChecksum(hrp: hrp, values: values)
@@ -80,20 +80,20 @@ enum Bech32 {
         for i in combined {
             ret.append(encCharset[Int(i)])
         }
-        return String(decoding: ret, as: UTF8.self) 
+        return String(decoding: ret, as: UTF8.self)
     }
-    
+
     static func encode(_ hrp: String, baseEightData: Data) -> String {
         encode(hrp, baseFiveData: baseEightData.base5)
     }
-    
+
     static func encode(_ hrp: String, hex: String) -> String? {
         guard let decoded = hex.hexDecoded else {
             return nil
         }
         return encode(hrp, baseFiveData: decoded.base5)
     }
-    
+
     /// Decode Bech32 string
     static func decode(_ str: String) throws -> (hrp: String, checksum: Data) {
         guard let strBytes = str.data(using: .utf8) else {
@@ -142,7 +142,7 @@ enum Bech32 {
         guard verifyChecksum(hrp: hrp, checksum: values) else {
             throw DecodingError.checksumMismatch
         }
-        return (hrp, Data(values[..<(vSize-6)]))
+        return (hrp, Data(values[..<(vSize - 6)]))
     }
 }
 
@@ -155,10 +155,10 @@ extension Bech32 {
         case incorrectHrpSize
         case incorrectChecksumSize
         case stringLengthExceeded
-        
+
         case invalidCharacter
         case checksumMismatch
-        
+
         var errorDescription: String? {
             switch self {
             case .checksumMismatch:

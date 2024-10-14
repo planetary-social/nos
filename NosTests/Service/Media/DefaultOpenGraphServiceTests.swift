@@ -37,7 +37,7 @@ class DefaultOpenGraphServiceTests: XCTestCase {
         // Assert
         XCTAssertEqual(mockParser.metadataCallCount, 0)
     }
-    
+
     /// Make sure we have the right User-Agent since some websites only provide Open Graph metadata for specific values.
     func test_fetchMetadata_request_has_correct_user_agent() async throws {
         // Arrange

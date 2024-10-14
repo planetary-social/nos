@@ -114,7 +114,7 @@ struct PickYourUsernameSheet: View {
     }
 }
 
-fileprivate class UsernameObserver: ObservableObject {
+private class UsernameObserver: ObservableObject {
 
     @Published
     var debouncedText = ""
@@ -136,7 +136,7 @@ fileprivate class UsernameObserver: ObservableObject {
     }
 }
 
-fileprivate struct UsernameTextField: View {
+private struct UsernameTextField: View {
 
     @StateObject var usernameObserver: UsernameObserver
     @FocusState private var usernameFieldIsFocused: Bool

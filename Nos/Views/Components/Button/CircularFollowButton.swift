@@ -54,7 +54,7 @@ struct CircularFollowButton: View {
                     )
                 if following {
                     Image.followingIcon
-                        .padding(.top, 3) // the icon file isn't square so we need to shift it down
+                        .padding(.top, 3)  // the icon file isn't square so we need to shift it down
                 } else {
                     Image.followIcon
                 }

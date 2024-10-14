@@ -2,7 +2,7 @@ import SwiftUI
 
 struct OnboardingAgeVerificationView: View {
     @EnvironmentObject var state: OnboardingState
-    
+
     var body: some View {
         VStack {
             Text(.localizable.ageVerificationTitle)

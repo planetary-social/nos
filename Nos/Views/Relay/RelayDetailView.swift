@@ -56,10 +56,10 @@ struct RelayDetailView: View {
                     .font(.clarity(.bold))
             } footer: {
                 #if DEBUG
-                if let date = relay.metadataFetchedAt {
-                    Text("\(String(localized: .localizable.fetchedAt)): \(date.distanceString())")
-                        .font(.clarity(.regular))
-                }
+                    if let date = relay.metadataFetchedAt {
+                        Text("\(String(localized: .localizable.fetchedAt)): \(date.distanceString())")
+                            .font(.clarity(.regular))
+                    }
                 #endif
             }
             .listRowGradientBackground()
@@ -74,7 +74,7 @@ struct RelayDetailView_Previews: PreviewProvider {
     static var previewContext = PersistenceController.preview.viewContext
     static var relay: Relay {
         do {
-            return try Relay.findOrCreate(by: "wss://example.com", context: previewContext) 
+            return try Relay.findOrCreate(by: "wss://example.com", context: previewContext)
         } catch {
             return Relay(context: previewContext)
         }

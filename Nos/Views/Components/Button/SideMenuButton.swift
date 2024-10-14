@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct SideMenuButton: View {
-    
+
     @EnvironmentObject private var router: Router
-    
+
     var body: some View {
         Button {
             router.toggleSideMenu()

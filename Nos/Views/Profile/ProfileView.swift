@@ -1,11 +1,11 @@
-import SwiftUI
 import CoreData
 import Dependencies
-import SwiftUINavigation
 import Logger
+import SwiftUI
+import SwiftUINavigation
 
 struct ProfileView: View {
-    
+
     @ObservedObject var author: Author
     var addDoubleTapToPop = false
 
@@ -39,20 +39,20 @@ struct ProfileView: View {
 
     func downloadAuthorData() async {
         relaySubscriptions.removeAll()
-        
+
         guard let authorKey = author.hexadecimalPublicKey else {
             return
         }
-        
+
         // Profile data
         relaySubscriptions.append(
             await relayService.requestProfileData(
-                for: authorKey, 
-                lastUpdateMetadata: author.lastUpdatedMetadata, 
-                lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
+                for: authorKey,
+                lastUpdateMetadata: author.lastUpdatedMetadata,
+                lastUpdatedContactList: nil  // always grab contact list because we purge follows aggressively
             )
         )
-        
+
         // reports
         let reportFilter = Filter(
             kinds: [.report],
@@ -65,9 +65,10 @@ struct ProfileView: View {
     }
 
     private var title: AttributedString {
-        let prefix = isShowingLoggedInUser ?
-            String(localized: LocalizedStringResource.localizable.yourProfile) :
-            String(localized: LocalizedStringResource.localizable.profileTitle)
+        let prefix =
+            isShowingLoggedInUser
+            ? String(localized: LocalizedStringResource.localizable.yourProfile)
+            : String(localized: LocalizedStringResource.localizable.profileTitle)
         if author.muted {
             let suffix = "(\(String(localized: .localizable.muted).lowercased()))"
             var attributedString = AttributedString("\(prefix) \(suffix)")
@@ -89,7 +90,7 @@ struct ProfileView: View {
                     relayFilter: selectedTab.relayFilter(author: author),
                     relay: nil,
                     managedObjectContext: viewContext,
-                    tab: .profile, 
+                    tab: .profile,
                     header: {
                         ProfileHeader(author: author, selectedTab: $selectedTab)
                             .compositingGroup()
@@ -100,7 +101,7 @@ struct ProfileView: View {
                             Text(.localizable.noEventsOnProfile)
                                 .padding()
                                 .readabilityPadding()
-                            
+
                             SecondaryActionButton(title: .localizable.tapToRefresh) {
                                 refreshController.startRefresh = true
                             }
@@ -179,11 +180,13 @@ struct ProfileView: View {
                                         do {
                                             try await author.unmute(viewContext: viewContext)
                                         } catch {
-                                            alert = AlertState(title: {
-                                                TextState(String(localized: .localizable.error))
-                                            }, message: {
-                                                TextState(error.localizedDescription)
-                                            })
+                                            alert = AlertState(
+                                                title: {
+                                                    TextState(String(localized: .localizable.error))
+                                                },
+                                                message: {
+                                                    TextState(error.localizedDescription)
+                                                })
                                         }
                                     }
                                 }
@@ -193,16 +196,18 @@ struct ProfileView: View {
                                         do {
                                             try await author.mute(viewContext: viewContext)
                                         } catch {
-                                            alert = AlertState(title: {
-                                                TextState(String(localized: .localizable.error))
-                                            }, message: {
-                                                TextState(error.localizedDescription)
-                                            })
+                                            alert = AlertState(
+                                                title: {
+                                                    TextState(String(localized: .localizable.error))
+                                                },
+                                                message: {
+                                                    TextState(error.localizedDescription)
+                                                })
                                         }
                                     }
                                 }
                             }
-                            
+
                             Button(String(localized: .localizable.flagUser)) {
                                 showingReportMenu = true
                             }
@@ -212,7 +217,7 @@ struct ProfileView: View {
         )
         .alert(unwrapping: $alert)
         .onAppear {
-            Task { 
+            Task {
                 await downloadAuthorData()
             }
             analytics.showedProfile()
@@ -225,7 +230,7 @@ struct ProfileView: View {
 
 #Preview("Generic user") {
     var previewData = PreviewData()
-    
+
     return NavigationStack {
         ProfileView(author: previewData.previewAuthor)
     }
@@ -234,7 +239,7 @@ struct ProfileView: View {
 
 #Preview("UNS") {
     var previewData = PreviewData()
-    
+
     return NavigationStack {
         ProfileView(author: previewData.eve)
     }
@@ -242,15 +247,15 @@ struct ProfileView: View {
 }
 
 #Preview("Logged in User") {
-    
-    @Dependency(\.persistenceController) var persistenceController 
-    
+
+    @Dependency(\.persistenceController) var persistenceController
+
     lazy var previewContext: NSManagedObjectContext = {
-        persistenceController.viewContext  
+        persistenceController.viewContext
     }()
-    
+
     var previewData = PreviewData(currentUserKey: KeyFixture.eve)
-    
+
     return NavigationStack {
         ProfileView(author: previewData.eve)
     }

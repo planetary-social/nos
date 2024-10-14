@@ -1,5 +1,5 @@
-import XCTest
 import CoreData
+import XCTest
 
 final class ReportPublisherTests: CoreDataTestCase {
     @MainActor func testCreatePublicReport() throws {
@@ -13,13 +13,15 @@ final class ReportPublisherTests: CoreDataTestCase {
             category: ReportCategory.findCategory(from: "CL")!,
             pubKey: aliceKeyPair.publicKeyHex
         )
-        
+
         XCTAssertEqual(publicReport.kind, EventKind.report.rawValue)
         XCTAssertEqual(publicReport.pubKey, aliceKeyPair.publicKeyHex)
-        XCTAssertEqual(publicReport.tags, [
-            ["e", note.identifier!, "profanity"],
-            ["p", bobKeyPair.publicKeyHex]
-        ])
+        XCTAssertEqual(
+            publicReport.tags,
+            [
+                ["e", note.identifier!, "profanity"],
+                ["p", bobKeyPair.publicKeyHex],
+            ])
     }
 
     @MainActor func testCreateNoteReportRequestDM() throws {
@@ -33,14 +35,16 @@ final class ReportPublisherTests: CoreDataTestCase {
             category: ReportCategory.findCategory(from: "CL")!,
             keyPair: aliceKeyPair
         )!
-        
+
         XCTAssertEqual(reportRequestDM.kind, EventKind.giftWrap.rawValue)
         XCTAssertNotEqual(reportRequestDM.pubKey, aliceKeyPair.publicKeyHex)
-        XCTAssertEqual(reportRequestDM.tags, [
-            ["p", Tagr.publicKey.hex]
-        ])
+        XCTAssertEqual(
+            reportRequestDM.tags,
+            [
+                ["p", Tagr.publicKey.hex]
+            ])
     }
-    
+
     @MainActor func testCreateAuthorReportRequestDM() throws {
         let aliceKeyPair = KeyFixture.alice
         let bobKeyPair = KeyFixture.bob
@@ -56,16 +60,18 @@ final class ReportPublisherTests: CoreDataTestCase {
             category: ReportCategory.findCategory(from: "CL")!,
             keyPair: aliceKeyPair
         )!
-        
+
         XCTAssertEqual(reportRequestDM.kind, EventKind.giftWrap.rawValue)
         XCTAssertNotEqual(reportRequestDM.pubKey, aliceKeyPair.publicKeyHex)
-        XCTAssertEqual(reportRequestDM.tags, [
-            ["p", Tagr.publicKey.hex]
-        ])
+        XCTAssertEqual(
+            reportRequestDM.tags,
+            [
+                ["p", Tagr.publicKey.hex]
+            ])
     }
 
     // MARK: Helpers
-    
+
     func createTestEvent(
         in context: NSManagedObjectContext,
         keyPair: KeyPair
@@ -74,13 +80,13 @@ final class ReportPublisherTests: CoreDataTestCase {
         event.createdAt = Date(timeIntervalSince1970: TimeInterval(1_675_264_762))
         event.content = "Testing nos #[0]"
         event.kind = 1
-        
+
         let author = Author(context: context)
         author.hexadecimalPublicKey = keyPair.publicKeyHex
         event.author = author
-        
+
         try event.sign(withKey: keyPair)
-        
+
         return event
     }
 }

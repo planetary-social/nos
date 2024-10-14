@@ -1,34 +1,34 @@
-import SwiftUI
-import CoreData
 import Combine
+import CoreData
 import Dependencies
+import SwiftUI
 
 struct HomeFeedView: View {
-    
+
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
     @State private var refreshController = RefreshController(lastRefreshDate: Date.now + Self.staticLoadTime)
     @State private var isVisible = false
-    
+
     /// When set to true this will display a fullscreen progress wheel for a set amount of time to give us a chance
     /// to get some data from relay. The amount of time is defined in `staticLoadTime`.
     @State private var showTimedLoadingIndicator = true
-    
-    /// The amount of time (in seconds) the loading indicator will be shown when showTimedLoadingIndicator is set to 
+
+    /// The amount of time (in seconds) the loading indicator will be shown when showTimedLoadingIndicator is set to
     /// true.
     static let staticLoadTime: TimeInterval = 2
 
     let user: Author
 
     @State private var showRelayPicker = false
-    @State private var selectedRelay: Relay? 
+    @State private var selectedRelay: Relay?
 
     init(user: Author) {
         self.user = user
     }
-    
+
     var homeFeedFetchRequest: NSFetchRequest<Event> {
         Event.homeFeed(
             for: user,
@@ -49,10 +49,10 @@ struct HomeFeedView: View {
         var filter = Filter(kinds: [.text, .delete, .repost, .longFormContent, .report])
         if selectedRelay == nil {
             filter.authorKeys = user.followedKeys.sorted()
-        } 
+        }
         return filter
     }
-    
+
     var navigationBarTitle: LocalizedStringResource {
         if let relayName = selectedRelay?.host {
             LocalizedStringResource(stringLiteral: relayName)
@@ -92,8 +92,8 @@ struct HomeFeedView: View {
                     isPresented: $showTimedLoadingIndicator,
                     hideAfter: .now() + .seconds(Int(Self.staticLoadTime))
                 )
-            } 
-            
+            }
+
             if showRelayPicker {
                 RelayPicker(
                     selectedRelay: $selectedRelay,
@@ -141,11 +141,11 @@ struct HomeFeedView: View {
         .nosNavigationBar(title: navigationBarTitle)
         .onAppear {
             if router.selectedTab == .home {
-                isVisible = true 
+                isVisible = true
             }
         }
         .onDisappear { isVisible = false }
-        .onChange(of: isVisible) { 
+        .onChange(of: isVisible) {
             if isVisible {
                 analytics.showedHome()
             }
@@ -155,7 +155,7 @@ struct HomeFeedView: View {
 
 #Preview {
     var previewData = PreviewData()
-    
+
     func createTestData() {
         let user = previewData.alice
         let addresses = Relay.recommended
@@ -164,10 +164,10 @@ struct HomeFeedView: View {
             relay?.relayDescription = "A Nostr relay that aims to cultivate a healthy community."
             relay?.addToAuthors(user)
         }
-        
+
         _ = previewData.shortNote
     }
-    
+
     return NavigationStack {
         HomeFeedView(user: previewData.alice)
     }

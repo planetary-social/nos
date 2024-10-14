@@ -60,7 +60,7 @@ class NostrBuildAPIClient: FileStorageAPIClient {
     }
 
     // MARK: - Internal
-    
+
     /// The URL of the API to upload data to.
     private func apiURL() async throws -> URL {
         if serverInfo?.apiUrl == nil {
@@ -68,13 +68,14 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         }
 
         guard let apiURLString = serverInfo?.apiUrl,
-            let apiURL = URL(string: apiURLString) else {
+            let apiURL = URL(string: apiURLString)
+        else {
             throw FileStorageAPIClientError.invalidURLRequest
         }
-        
+
         return apiURL
     }
-    
+
     /// The URL of the uploaded asset parsed from the API's response.
     private func assetURL(from responseData: Data, response: HTTPURLResponse?) throws -> URL {
         let decodedResponse = try decoder.decode(FileStorageUploadResponseJSON.self, from: responseData)
@@ -114,7 +115,7 @@ class NostrBuildAPIClient: FileStorageAPIClient {
             throw FileStorageAPIClientError.decodingError
         }
     }
-    
+
     /// Gets the file size limit from the error message.
     /// - Parameter message: The error message from nostr.build.
     /// - Returns: The file size limit from the error message.
@@ -124,7 +125,7 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         guard let match = message.firstMatch(of: pattern) else {
             return nil
         }
-        
+
         return String(match.1)
     }
 
@@ -138,7 +139,7 @@ class NostrBuildAPIClient: FileStorageAPIClient {
             apiURL: apiURL
         )
     }
-    
+
     /// Creates a URLRequest and Data to be uploaded to the file storage API.
     private func uploadRequest(
         data: Data,
@@ -153,13 +154,13 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
 
         var header = ""
-        
+
         if isProfilePhoto {
             header.append("\r\n--\(boundary)\r\n")
             header.append("Content-Disposition: form-data; name=\"media_type\"\r\n")
             header.append("\"avatar\"\r\n\r\n")
         }
-        
+
         header.append("\r\n--\(boundary)\r\n")
         header.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(filename)\"\r\n")
         header.append("Content-Type: image/jpg\r\n\r\n")
@@ -168,7 +169,8 @@ class NostrBuildAPIClient: FileStorageAPIClient {
         footer.append("\r\n--\(boundary)--\r\n")
 
         guard let headerData = header.data(using: .utf8),
-            let footerData = footer.data(using: .utf8) else {
+            let footerData = footer.data(using: .utf8)
+        else {
             throw FileStorageAPIClientError.encodingError
         }
 

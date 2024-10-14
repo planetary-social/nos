@@ -5,7 +5,7 @@ import Foundation
 struct WebSocketErrorEvent: Equatable {
     var retryCounter: Int = 1
     var nextRetry: Date = .now
-    
+
     mutating func trackRetry() {
         self.retryCounter += 1
         let delaySeconds = NSDecimalNumber(

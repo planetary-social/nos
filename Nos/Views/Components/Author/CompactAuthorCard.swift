@@ -8,7 +8,7 @@ struct CompactAuthorCard: View {
 
     @EnvironmentObject private var router: Router
     @EnvironmentObject private var relayService: RelayService
-    
+
     @State private var relaySubscriptions = SubscriptionCancellables()
 
     var body: some View {
@@ -41,12 +41,12 @@ struct CompactAuthorCard: View {
         .listRowInsets(EdgeInsets())
         .cornerRadius(15)
         .onAppear {
-            Task(priority: .userInitiated) { 
+            Task(priority: .userInitiated) {
                 let subscription = await relayService.requestMetadata(
-                    for: author.hexadecimalPublicKey, 
+                    for: author.hexadecimalPublicKey,
                     since: author.lastUpdatedMetadata
-                ) 
-                relaySubscriptions.append(subscription) 
+                )
+                relaySubscriptions.append(subscription)
             }
         }
         .onDisappear {

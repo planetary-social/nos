@@ -1,23 +1,23 @@
 import SwiftUI
 
 struct UNSWizardIntroView: View {
-    
+
     @ObservedObject var controller: UNSWizardController
-    
+
     var body: some View {
         VStack {
             Image.unsIntro
                 .frame(width: 178, height: 178)
                 .padding(40)
                 .padding(.top, 50)
-            
+
             Text(.localizable.unsRegister)
                 .font(.clarityBold(.title))
                 .multilineTextAlignment(.center)
                 .foregroundColor(.primaryTxt)
                 .readabilityPadding()
                 .shadow(radius: 1, y: 1)
-            
+
             Text(.localizable.unsRegisterDescription)
                 .fontWeight(.medium)
                 .multilineTextAlignment(.center)
@@ -26,19 +26,19 @@ struct UNSWizardIntroView: View {
                 .padding(.vertical, 17)
                 .padding(.horizontal, 20)
                 .shadow(radius: 1, y: 1)
-            
-            Button { 
+
+            Button {
                 UIApplication.shared.open(URL(string: "https://universalname.space")!)
-            } label: { 
+            } label: {
                 Text(.localizable.unsLearnMore)
                     .foregroundStyle(LinearGradient.horizontalAccent)
                     .fontWeight(.medium)
                     .multilineTextAlignment(.center)
                     .shadow(radius: 1, y: 1)
             }
-            
+
             Spacer()
-            
+
             BigActionButton(title: .localizable.start) {
                 controller.state = .enterPhone
             }
@@ -51,11 +51,11 @@ struct UNSWizardIntroView: View {
 }
 
 struct UNSWizardIntro_Previews: PreviewProvider {
-    
+
     @State static var controller = UNSWizardController(
-        state: .intro 
+        state: .intro
     )
-    
+
     static var previews: some View {
         UNSWizardIntroView(controller: controller)
     }

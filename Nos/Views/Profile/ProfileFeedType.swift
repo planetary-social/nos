@@ -4,20 +4,20 @@ import CoreData
 enum ProfileFeedType {
     case activity
     case notes
-    
+
     func databaseFilter(author: Author, before date: Date) -> NSFetchRequest<Event> {
         author.allPostsRequest(before: date, onlyRootPosts: self == .notes)
     }
-    
+
     func relayFilter(author: Author) -> Filter {
         var kinds: [EventKind]
         switch self {
         case .activity:
-            kinds = [.text, .delete, .repost, .longFormContent] 
+            kinds = [.text, .delete, .repost, .longFormContent]
         case .notes:
             kinds = [.text, .delete]
         }
-        
+
         return Filter(authorKeys: [author.hexadecimalPublicKey ?? "error"], kinds: kinds)
     }
 }

@@ -16,7 +16,7 @@ struct ImageButton: View {
 
     /// Whether the image is animating or not.
     @State private var isAnimating = false
-    
+
     /// Whether to show an error view or not.
     @State private var showError = false
 
@@ -83,7 +83,8 @@ struct ImageButton: View {
 #Preview("Animated WebP") {
     ImageButton(
         url: URL(
-            string: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYWtidXM3bTc5bWRzMW15c2xma3ZodXhuOGYzcThzZzB1enh0Z2hhZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iemgeDQlYlgNZrZUoQ/giphy.webp" // swiftlint:disable:this line_length
+            string:
+                "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYWtidXM3bTc5bWRzMW15c2xma3ZodXhuOGYzcThzZzB1enh0Z2hhZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iemgeDQlYlgNZrZUoQ/giphy.webp"  // swiftlint:disable:this line_length
         )!
     )
 }

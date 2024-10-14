@@ -17,7 +17,8 @@ final class Bech32Tests: XCTestCase {
     func testShareableIdentifier() throws {
         let prefix = "nprofile"
         // swiftlint:disable:next line_length
-        let nprofile = "nprofile1qqsrhuxx8l9ex335q7he0f09aej04zpazpl0ne2cgukyawd24mayt8gpp4mhxue69uhhytnc9e3k7mgpz4mhxue69uhkg6nzv9ejuumpv34kytnrdaksjlyr9p"
+        let nprofile =
+            "nprofile1qqsrhuxx8l9ex335q7he0f09aej04zpazpl0ne2cgukyawd24mayt8gpp4mhxue69uhhytnc9e3k7mgpz4mhxue69uhkg6nzv9ejuumpv34kytnrdaksjlyr9p"
 
         let hex = "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d"
         let decoded = try Bech32.decode(nprofile)
@@ -25,7 +26,7 @@ final class Bech32Tests: XCTestCase {
         let base8data = try XCTUnwrap(try decoded.checksum.base8FromBase5())
         let offset = 0
         let length = base8data[offset + 1]
-        let value = base8data.subdata(in: offset + 2 ..< offset + 2 + Int(length))
+        let value = base8data.subdata(in: offset + 2..<offset + 2 + Int(length))
         XCTAssertEqual(value.hexString, hex)
     }
 }

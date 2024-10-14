@@ -32,7 +32,7 @@ class NostrBuildAPIClientTests: XCTestCase {
             XCTFail("Expected an error to be thrown")
         } catch {
             switch error {
-            case FileStorageAPIClientError.decodingError: 
+            case FileStorageAPIClientError.decodingError:
                 break
             default:
                 XCTFail("Expected a decodingError but got \(error)")

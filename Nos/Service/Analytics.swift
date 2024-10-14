@@ -1,7 +1,7 @@
-import Foundation
-import PostHog
 import Dependencies
+import Foundation
 import Logger
+import PostHog
 import Starscream
 
 /// An object to manage analytics data, currently wired up to send data to PostHog and registered as a global
@@ -35,85 +35,85 @@ class Analytics {
     }
 
     // MARK: - Screens
-    
+
     func startedOnboarding() {
         track("Started Onboarding")
     }
-    
+
     func completedOnboarding() {
         track("Completed Onboarding")
     }
-    
+
     func showedHome() {
         track("Home Tab Tapped")
     }
-    
+
     func showedDiscover() {
         track("Discover Tab Tapped")
     }
-    
+
     func showedNoteComposer() {
         track("New Note Tapped")
     }
-    
+
     func showedNotifications() {
         track("Notifications Tab Tapped")
     }
-    
+
     func showedProfile() {
         track("Profile View Opened")
     }
-    
+
     func showedThread() {
         track("Thread View Opened")
     }
-    
+
     func showedSideMenu() {
         track("Contact Support Tapped")
     }
-    
+
     func showedRelays() {
         track("Relay View Opened")
     }
-    
+
     func showedSettings() {
         track("Settings View Opened")
     }
-    
+
     func showedSupport() {
         track("Contact Support Tapped")
     }
 
     // MARK: - Actions
-    
+
     func generatedKey() {
         track("Generated Private Key")
     }
-    
+
     func importedKey() {
         track("Imported Private Key")
     }
-    
+
     func added(_ relay: Relay) {
         track("Added Relay", properties: ["relay_address": relay.address ?? ""])
     }
-    
+
     func removed(_ relay: Relay) {
         track("Removed Relay", properties: ["relay_address": relay.address ?? ""])
     }
-    
+
     func followed(_ author: Author) {
         track("Followed", properties: ["followed": author.publicKey?.npub ?? ""])
     }
-    
+
     func unfollowed(_ author: Author) {
         track("Unfollowed", properties: ["unfollowed": author.publicKey?.npub ?? ""])
     }
-    
+
     func reported(_ reportedObject: ReportTarget) {
         track("Reported", properties: ["type": reportedObject.analyticsString])
     }
-    
+
     func identify(with keyPair: KeyPair, nip05: String? = nil) {
         let npub = keyPair.npub
         Log.info("Analytics: Identified \(npub)")
@@ -123,29 +123,29 @@ class Analytics {
         }
         postHog?.identify(keyPair.npub, userProperties: userProperties)
     }
-    
+
     func databaseStatistics(_ statistics: [(String, Int)]) {
         let properties = Dictionary(uniqueKeysWithValues: statistics)
         track("Database Statistics", properties: properties)
     }
-    
+
     func databaseCleanupStarted() {
         track("Database Cleanup Started")
     }
-    
+
     func databaseCleanupTaskExpired() {
         track("Database Cleanup Task Expired")
     }
-    
+
     func databaseCleanupCompleted(duration: TimeInterval) {
         track("Database Cleanup Completed", properties: ["duration": duration])
     }
-    
+
     func logout() {
         track("Logged out")
         postHog?.reset()
     }
-    
+
     private func track(_ eventName: String, properties: [String: Any] = [:]) {
         if properties.isEmpty {
             Log.info("Analytics: \(eventName)")
@@ -176,45 +176,45 @@ class Analytics {
     }
 
     // MARK: - Relays
-    
+
     func rateLimited(by socket: WebSocket, requestCount: Int) {
         track(
-            "Rate Limited", 
+            "Rate Limited",
             properties: [
                 "relay": socket.request.url?.absoluteString ?? "null",
                 "count": requestCount,
             ]
         )
     }
-    
+
     func badRequest(from socket: WebSocket, message: String) {
         track(
-            "Bad Request to Relay", 
+            "Bad Request to Relay",
             properties: [
                 "relay": socket.request.url?.absoluteString ?? "null",
-                "details": message
+                "details": message,
             ]
         )
     }
-    
+
     // MARK: - Notifications
-    
+
     func receivedNotification() {
         track("Push Notification Received")
     }
-    
+
     func displayedNotification() {
         track("Push Notification Displayed")
     }
-    
+
     func tappedNotification() {
         track("Push Notification Tapped")
     }
-    
+
     func pushNotificationRegistrationFailed(reason: String) {
         track("Push Notification Registration Failed", properties: ["reason": reason])
     }
-    
+
     // MARK: NIP-05 Usernames
 
     func showedNIP05Wizard() {
@@ -234,61 +234,61 @@ class Analytics {
     }
 
     // MARK: UNS
-    
+
     func showedUNSWizard() {
         track("UNS Showed Wizard")
     }
-    
+
     func canceledUNSWizard() {
         track("UNS Canceled Wizard")
     }
-    
+
     func completedUNSWizard() {
         track("UNS Completed Wizard")
     }
-    
+
     func enteredUNSPhone() {
         track("UNS Entered Phone")
     }
-    
+
     func enteredUNSCode() {
         track("UNS Entered Code")
     }
-    
+
     func registeredUNSName() {
         track("UNS Registered Name")
     }
-    
+
     func linkedUNSName() {
         track("UNS Linked Name")
     }
-    
+
     func choseInvalidUNSName() {
         track("UNS Invalid Name")
     }
-    
+
     func encounteredUNSError(_ error: Error?) {
         track("UNS Error", properties: ["errorDescription": error?.localizedDescription ?? "null"])
     }
-    
+
     // MARK: Message Actions
-    
+
     func copiedNoteIdentifier() {
         track("Copied Note Identifier")
     }
-    
+
     func sharedNoteLink() {
         track("Shared Note Link")
     }
-    
+
     func copiedNoteText() {
         track("Copied Note Text")
     }
-    
+
     func viewedNoteSource() {
         track("Viewed Note Source")
     }
-    
+
     func deletedNote() {
         track("Deleted Note")
     }
@@ -301,19 +301,19 @@ class Analytics {
     func selectedUploadFromCamera() {
         track("Selected Upload From Camera")
     }
-    
+
     func selectedUploadFromPhotoLibrary() {
         track("Selected Upload From Photo Library")
     }
-    
+
     func selectedImage() {
         track("Selected Image")
     }
-    
+
     func cancelledImageSelection() {
         track("Cancelled Image Selection")
     }
-    
+
     func cancelledUploadSourceSelection() {
         track("Cancelled Upload Source Selection")
     }

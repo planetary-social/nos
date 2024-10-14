@@ -42,7 +42,7 @@ extension URL {
         }
         return string
     }
-    
+
     /// Returns a Markdown-formatted link that can be used for display. The display portion of the Markdown string will
     /// not contain the URL scheme, path, or path extension. In place of the path and path extension, an ellipsis will
     /// appear. For example, with a URL like `https://www.nos.social/about`, this will return
@@ -53,11 +53,11 @@ extension URL {
         guard var host = url.host() else {
             return "[\(url.absoluteString)](\(url.absoluteString))"
         }
-        
+
         if host.hasPrefix("www.") {
             host = String(host.dropFirst(4))
         }
-        
+
         if url.path().isEmpty {
             return "[\(host)](\(url.absoluteString))"
         } else {

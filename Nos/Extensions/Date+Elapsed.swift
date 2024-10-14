@@ -59,13 +59,17 @@ extension Date {
         dateComponentsFormatter.maximumUnitCount = 1
         dateComponentsFormatter.allowedUnits = unitFlags
 
-        if let day = components.day, day >= 1, let formattedDate =
-            dateComponentsFormatter.string(from: DateComponents(calendar: calendar, day: day)) {
+        if let day = components.day, day >= 1,
+            let formattedDate =
+                dateComponentsFormatter.string(from: DateComponents(calendar: calendar, day: day))
+        {
             return formattedDate
         }
 
-        if let hour = components.hour, hour >= 1, let formattedDate =
-            dateComponentsFormatter.string(from: DateComponents(calendar: calendar, hour: hour)) {
+        if let hour = components.hour, hour >= 1,
+            let formattedDate =
+                dateComponentsFormatter.string(from: DateComponents(calendar: calendar, hour: hour))
+        {
             return formattedDate
         }
 

@@ -1,5 +1,5 @@
-import Foundation
 import CoreData
+import Foundation
 import UIKit
 
 /// A model that turns an Event into something that can be displayed in a NotificationCard or via NotificationCenter
@@ -14,11 +14,11 @@ class NotificationViewModel: ObservableObject, Identifiable {
     let actionText: AttributedString
     @Published var content: AttributedString?
     let date: Date
-    
+
     var id: RawEventID {
         noteID
     }
-    
+
     /// Generates a notification request that can be sent to the UNNotificationCenter to display a banner notification.
     /// You probably want to call `loadContent(in:)` before accessing this.
     var notificationCenterRequest: UNNotificationRequest {
@@ -30,22 +30,23 @@ class NotificationViewModel: ObservableObject, Identifiable {
         content.userInfo = ["eventID": id]
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         return UNNotificationRequest(
-            identifier: noteID, 
-            content: content, 
+            identifier: noteID,
+            content: content,
             trigger: trigger
         )
     }
-    
+
     convenience init?(coreDataModel: NosNotification, context: NSManagedObjectContext) {
         guard let eventID = coreDataModel.eventID,
             let note = Event.find(by: eventID, context: context),
-            let user = coreDataModel.user else {
+            let user = coreDataModel.user
+        else {
             return nil
         }
-        
+
         self.init(note: note, user: user)
     }
-    
+
     init(note: Event, user: Author) {
         self.noteID = note.identifier ?? ""
         self.date = note.createdAt ?? .distantPast
@@ -56,12 +57,13 @@ class NotificationViewModel: ObservableObject, Identifiable {
         var authorName = AttributedString("\(note.author?.safeName ?? String(localized: .localizable.someone)) ")
         var range = Range(uncheckedBounds: (authorName.startIndex, authorName.endIndex))
         authorName[range].font = .boldSystemFont(ofSize: 17)
-        
+
         if note.isProfileZap(to: user) {
             if let tags = note.allTags as? [[String]],
                 let amountTag = tags.first(where: { $0.first == "amount" }),
                 let amountInMillisatsAsString = amountTag[safe: 1],
-                let amountInMillisats = Int(amountInMillisatsAsString) {
+                let amountInMillisats = Int(amountInMillisatsAsString)
+            {
                 let zapText = String(localized: .reply.zappedYouSats(amountInMillisats / 1000))
                 actionText = authorName + AttributedString(zapText)
             } else {
@@ -74,14 +76,14 @@ class NotificationViewModel: ObservableObject, Identifiable {
         } else {
             actionText = AttributedString()
         }
-        
+
         range = Range(uncheckedBounds: (actionText.startIndex, actionText.endIndex))
         actionText[range].foregroundColor = .primaryTxt
         self.actionText = actionText
-        
+
         content = AttributedString(note.content ?? "")
     }
-    
+
     /// Populates the `content` variable. This is not done at init in order to keep
     /// it synchronous for use in a View.
     @MainActor @discardableResult func loadContent(in context: NSManagedObjectContext) async -> AttributedString? {

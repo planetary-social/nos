@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct NosNavigationBarModifier: ViewModifier {
-    
+
     var title: AttributedString
 
     func body(content: Content) -> some View {

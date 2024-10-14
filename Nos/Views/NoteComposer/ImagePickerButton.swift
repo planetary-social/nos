@@ -1,6 +1,6 @@
 import AVKit
-import SwiftUI
 import Dependencies
+import SwiftUI
 
 struct ImagePickerButton<Label>: View where Label: View {
 
@@ -22,9 +22,9 @@ struct ImagePickerButton<Label>: View where Label: View {
     /// Source used by ImagePicker when opening it
     @State
     private var imagePickerSource: UIImagePickerController.SourceType?
-    
+
     @Dependency(\.analytics) private var analytics
-    
+
     @EnvironmentObject private var router: Router
 
     private var showImagePicker: Binding<Bool> {
@@ -113,19 +113,19 @@ struct ImagePickerButton<Label>: View where Label: View {
         )
         .sheet(isPresented: showImagePicker) {
             ImagePickerUIViewController(
-                sourceType: imagePickerSource ?? .photoLibrary, 
+                sourceType: imagePickerSource ?? .photoLibrary,
                 mediaTypes: mediaTypes,
                 cameraDevice: cameraDevice,
                 onCompletion: userPicked
-            ) 
+            )
             .edgesIgnoringSafeArea(.bottom)
         }
     }
-    
+
     private var cameraButtonTitle: String {
         String(localized: mediaTypes.contains(.movie) ? .imagePicker.takePhotoOrVideo : .imagePicker.takePhoto)
     }
-    
+
     /// Called when a user chooses an image or video.
     /// - Parameter url: The URL of the image or video on disk.
     func userPicked(url: URL?) {

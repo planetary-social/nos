@@ -1,24 +1,26 @@
 import SwiftUI
 
 struct ThreadView: View {
-    
+
     var root: Event
 
     var thread: [Event] = []
-    
+
     @EnvironmentObject private var router: Router
-    
+
     /// Takes a root `Event`, and an array of all replies to the parent note of this thread,
     /// and builds the longest possible thread from that array of all replies.
     init(root: Event, allReplies: [Event]) {
         self.root = root
-        
+
         var currentEvent: Event = root
         while true {
-            if let nextEvent = allReplies
+            if let nextEvent =
+                allReplies
                 .first(where: {
                     ($0.eventReferences.lastObject as? EventReference)?.eventId == currentEvent.identifier
-                }) {
+                })
+            {
                 thread.append(nextEvent)
                 currentEvent = nextEvent
             } else {
@@ -26,7 +28,7 @@ struct ThreadView: View {
             }
         }
     }
-    
+
     var body: some View {
         LazyVStack {
             NoteButton(
@@ -70,27 +72,27 @@ struct ThreadView_Previews: PreviewProvider {
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.viewContext
     static var router = Router()
-    
+
     static var emptyPersistenceController = PersistenceController.empty
     static var emptyPreviewContext = emptyPersistenceController.viewContext
     static var emptyRelayService = previewData.relayService
     static var currentUser = previewData.currentUser
-    
+
     static var alice: Author = {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.alice.publicKeyHex
         author.name = "Alice"
         return author
     }()
-    
+
     static var bob: Author = {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.bob.publicKeyHex
         author.name = "Bob"
-        
+
         return author
     }()
-        
+
     static var rootNote: Event {
         let bobNote = Event(context: previewContext)
         bobNote.content = "Hello, world!"
@@ -105,14 +107,14 @@ struct ThreadView_Previews: PreviewProvider {
         }
         return bobNote
     }
-    
+
     static var replyNote: Event {
         let replyNote = Event(context: previewContext)
         replyNote.content = "Top of the morning to you, bob! This text should be truncated."
         replyNote.kind = 1
         replyNote.createdAt = .now
         replyNote.author = alice
-    
+
         let eventRef = EventReference(context: previewContext)
         eventRef.eventId = "root"
         eventRef.referencedEvent = rootNote
@@ -126,14 +128,14 @@ struct ThreadView_Previews: PreviewProvider {
         }
         return replyNote
     }
-    
+
     static var secondReply: Event {
         let replyNote = Event(context: previewContext)
         replyNote.content = "Top of the morning to you, bob! This text should be truncated."
         replyNote.kind = 1
         replyNote.createdAt = .now
         replyNote.author = alice
-    
+
         let eventRef = EventReference(context: previewContext)
         eventRef.eventId = "root"
         eventRef.referencedEvent = rootNote
@@ -147,7 +149,7 @@ struct ThreadView_Previews: PreviewProvider {
         }
         return replyNote
     }
-    
+
     static var previews: some View {
         ThreadView(root: rootNote, allReplies: [replyNote, secondReply])
             .environment(\.managedObjectContext, emptyPreviewContext)

@@ -129,11 +129,13 @@ struct ComposerActionBar: View {
                 ExpirationTimeButton(
                     model: option,
                     showClearButton: true,
-                    isSelected: Binding(get: {
-                        self.expirationTime == option.timeInterval
-                    }, set: {
-                        self.expirationTime = $0 ? option.timeInterval : nil
-                    })
+                    isSelected: Binding(
+                        get: {
+                            self.expirationTime == option.timeInterval
+                        },
+                        set: {
+                            self.expirationTime = $0 ? option.timeInterval : nil
+                        })
                 )
                 .accessibilityLabel(Text(.localizable.expirationDate))
                 .padding(12)
@@ -192,7 +194,7 @@ struct ComposerActionBar: View {
     private func startUploadingImage() {
         self.isUploadingImage = true
     }
-    
+
     private func endUploadingImage() {
         self.isUploadingImage = false
         self.subMenu = .none
@@ -221,7 +223,7 @@ struct ComposerActionBar: View {
                 .default(
                     TextState(String(localized: .imagePicker.getAccount)),
                     action: .send(.getAccount)
-                )
+                ),
             ]
         } else if case let FileStorageAPIClientError.uploadFailed(errorMessage) = error, let errorMessage {
             message = String(localized: .imagePicker.errorUploadingFileWithMessage(errorMessage))
@@ -238,25 +240,25 @@ struct ComposerActionBar: View {
 }
 
 struct ComposerActionBar_Previews: PreviewProvider {
-    
+
     @State static var controller = NoteEditorController()
     @State static var emptyExpirationTime: TimeInterval?
     @State static var setExpirationTime: TimeInterval? = 60 * 60
     @State static var showPreview = false
-    
+
     static var previews: some View {
         VStack {
             Spacer()
             ComposerActionBar(
-                editingController: $controller, 
-                expirationTime: $emptyExpirationTime, 
+                editingController: $controller,
+                expirationTime: $emptyExpirationTime,
                 isUploadingImage: .constant(false),
                 showPreview: $showPreview
             )
             Spacer()
             ComposerActionBar(
-                editingController: $controller, 
-                expirationTime: $setExpirationTime, 
+                editingController: $controller,
+                expirationTime: $setExpirationTime,
                 isUploadingImage: .constant(false),
                 showPreview: $showPreview
             )

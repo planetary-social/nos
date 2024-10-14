@@ -1,6 +1,6 @@
-import SwiftUI
 import Dependencies
 import Logger
+import SwiftUI
 
 class OnboardingState: ObservableObject {
     @Published var flow: OnboardingFlow = .createAccount
@@ -28,10 +28,10 @@ enum OnboardingStep {
 
 struct OnboardingView: View {
     @StateObject var state = OnboardingState()
-    
+
     /// Completion to be called when all onboarding steps are complete
     let completion: @MainActor () -> Void
-    
+
     var body: some View {
         NavigationStack(path: $state.path) {
             OnboardingStartView()

@@ -1,5 +1,5 @@
-import Foundation
 import Dependencies
+import Foundation
 
 typealias UNSName = String
 
@@ -11,10 +11,10 @@ extension UNSName: Identifiable {
 
 /// A controller for the Universal Name Wizard that walks a user through registering and linking a Universal Name to
 /// their Nostr profile.
-/// 
+///
 /// The controller keeps track of the user's place within the wizard using the `state` variable which is observed
-/// by the `UNSWizard` view. It also holds some state like the current user information, names they have already 
-/// registered, etc. 
+/// by the `UNSWizard` view. It also holds some state like the current user information, names they have already
+/// registered, etc.
 class UNSWizardController: ObservableObject {
     indirect enum FlowState {
         case loading
@@ -28,22 +28,22 @@ class UNSWizardController: ObservableObject {
         case nameTaken(FlowState)
         case needsPayment(URL)
     }
-    
+
     @Published var state: FlowState
     @Published var phoneNumber: String?
     @Published var nameRecord: UNSNameRecord?
-    
+
     /// All names the user has already registered
     @Published var names: [UNSNameRecord]?
-    
+
     @Dependency(\.unsAPI) var api
-    @Dependency(\.currentUser) var currentUser 
+    @Dependency(\.currentUser) var currentUser
     @Dependency(\.analytics) var analytics
 
     internal init(
-        state: UNSWizardController.FlowState = .intro, 
+        state: UNSWizardController.FlowState = .intro,
         phoneNumber: String? = nil,
-        nameRecord: UNSNameRecord? = nil, 
+        nameRecord: UNSNameRecord? = nil,
         names: [UNSNameRecord]? = nil
     ) {
         self.state = state
@@ -51,7 +51,7 @@ class UNSWizardController: ObservableObject {
         self.nameRecord = nameRecord
         self.names = names
     }
-    
+
     @MainActor func link(existingName: UNSNameRecord) async throws {
         nameRecord = existingName
         var nip05: String
@@ -69,7 +69,7 @@ class UNSWizardController: ObservableObject {
         analytics.linkedUNSName()
         try await saveDetails(name: existingName.name, nip05: nip05)
     }
-    
+
     @MainActor func register(desiredName: UNSName) async throws {
         let previousState = state
         state = .loading
@@ -77,11 +77,11 @@ class UNSWizardController: ObservableObject {
             let nameID = try await api.createName(
                 // TODO: sanitize somewhere else
                 desiredName.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-            ) 
+            )
             nameRecord = UNSNameRecord(name: desiredName, id: nameID)
-            
+
             let message = try await api.requestNostrVerification(
-                npub: currentUser.keyPair!.npub, 
+                npub: currentUser.keyPair!.npub,
                 nameID: nameRecord!.id
             )!
             let nip05 = try await api.submitNostrVerification(
@@ -100,7 +100,7 @@ class UNSWizardController: ObservableObject {
             }
         }
     }
-    
+
     @MainActor func navigateToChooseOrRegisterName() async throws {
         state = .loading
         let names = try await api.getNames()
@@ -111,11 +111,12 @@ class UNSWizardController: ObservableObject {
             state = .newName
         }
     }
-    
+
     @MainActor func saveDetails(name: String, nip05: String) async throws {
         let context = currentUser.viewContext!
         guard let authorKey = currentUser.publicKeyHex,
-            let author = try Author.find(by: authorKey, context: context) else {
+            let author = try Author.find(by: authorKey, context: context)
+        else {
             throw UNSError.noUser
         }
         author.uns = name

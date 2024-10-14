@@ -15,24 +15,25 @@ struct NoteParser {
         /// The id of the first quoted note in the content, if one exists.
         let quotedNoteID: RawEventID?
     }
-    
+
     /// Parses attributed text generated when composing a note and returns
     /// the content and tags.
     func parse(attributedText: AttributedString) -> (String, [[String]]) {
         cleanLinks(in: attributedText)
     }
-    
+
     /// Parses the content and tags stored in a note and returns an attributed text with tagged entities replaced
     /// with readable names.
     func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
         let replaced = replaceTaggedNostrEntities(in: content, tags: tags, context: context)
         let (result, _) = replaceNostrEntities(in: replaced)
-        return (try? AttributedString(
-            markdown: result,
-            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        )) ?? AttributedString(content)
+        return
+            (try? AttributedString(
+                markdown: result,
+                options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+            )) ?? AttributedString(content)
     }
-    
+
     /// Parses the content and tags stored in a note and returns components that can be used
     /// to display the note in the UI.
     func components(from content: String, tags: [[String]], context: NSManagedObjectContext) -> NoteDisplayComponents {
@@ -41,11 +42,12 @@ struct NoteParser {
         )
         let replaced = replaceTaggedNostrEntities(in: cleanedString, tags: tags, context: context)
         let (result, quotedNoteID) = replaceNostrEntities(in: replaced, capturesFirstNote: true)
-        
-        let attributedContent = (try? AttributedString(
-            markdown: result.trimmingCharacters(in: .whitespacesAndNewlines),
-            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        )) ?? AttributedString(content)
+
+        let attributedContent =
+            (try? AttributedString(
+                markdown: result.trimmingCharacters(in: .whitespacesAndNewlines),
+                options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+            )) ?? AttributedString(content)
         return NoteDisplayComponents(
             attributedContent: attributedContent,
             contentLinks: urls,
@@ -82,7 +84,8 @@ struct NoteParser {
             let findAndReplaceEventReference: (String) -> String = { hex in
                 context.performAndWait {
                     if let event = try? Event.findOrCreateStubBy(id: hex, context: context),
-                        let bech32NoteID = event.bech32NoteID {
+                        let bech32NoteID = event.bech32NoteID
+                    {
                         return "\(prefix)[@\(bech32NoteID)](%\(hex))"
                     } else {
                         return "\(prefix)[@\(hex)](%\(hex))"
@@ -111,7 +114,7 @@ struct NoteParser {
                     return String(substring)
                 }
             }
-            
+
             try? context.saveIfNeeded()
             return String(substring)
         }
@@ -129,10 +132,10 @@ struct NoteParser {
     private func replaceNostrEntities(in content: String, capturesFirstNote: Bool = false) -> (String, RawEventID?) {
         // Note: This pattern contains a lookbehind, which is not currently supported by the newer Swift regex syntax.
         let pattern = "(?<=^|\\s|[^:\\/])@?(?:nostr:)?((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,})"
-        let regex = try! NSRegularExpression(pattern: pattern, options: []) // swiftlint:disable:this force_try
-        
+        let regex = try! NSRegularExpression(pattern: pattern, options: [])  // swiftlint:disable:this force_try
+
         var firstNoteID: RawEventID?
-        
+
         let result = regex.stringByReplacingMatches(
             in: content,
             options: [],
@@ -141,17 +144,17 @@ struct NoteParser {
             let nsRange = match.range(at: 0)
             guard let range = Range(nsRange, in: content) else { return "" }
             let substring = String(content[range])
-            
+
             let entityRange = match.range(at: 1)
             guard let entityRange = Range(entityRange, in: content) else { return substring }
             let entity = String(content[entityRange])
-            
+
             var prefix = ""
             let firstCharacter = String(substring.prefix(1))
             if firstCharacter.range(of: #"\s|\r\n|\r|\n"#, options: .regularExpression) != nil {
                 prefix = firstCharacter
             }
-            
+
             do {
                 let identifier = try NostrIdentifier.decode(bech32String: entity)
                 switch identifier {
@@ -165,8 +168,8 @@ struct NoteParser {
                         return "\(prefix)[\(String(localized: .localizable.linkToNote))](%\(rawEventID))"
                     }
                 case .naddr(let replaceableID, _, let authorID, let kind):
-                    return "\(prefix)[\(String(localized: .localizable.linkToNote))]" +
-                    "($\(replaceableID);\(authorID);\(kind))"
+                    return "\(prefix)[\(String(localized: .localizable.linkToNote))]"
+                        + "($\(replaceableID);\(authorID);\(kind))"
                 case .nsec:
                     return substring
                 }
@@ -174,7 +177,7 @@ struct NoteParser {
                 return substring
             }
         }
-        
+
         return (result, firstNoteID)
     }
 
@@ -210,7 +213,8 @@ struct NoteParser {
         var range = firstRun.range
         while let nextRun = links.popLast(),
             nextRun.range.lowerBound == range.upperBound,
-            nextRun.link == firstRun.link {
+            nextRun.link == firstRun.link
+        {
             range = range.lowerBound..<nextRun.range.upperBound
             attributes.merge(nextRun.attributes)
         }

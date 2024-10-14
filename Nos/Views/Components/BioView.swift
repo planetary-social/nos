@@ -8,7 +8,7 @@ struct BioView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @Dependency(\.noteParser) private var noteParser
-    
+
     @State
     private var shouldShowReadMore = false
 

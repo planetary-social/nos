@@ -1,14 +1,14 @@
 import SwiftUI
 
-fileprivate struct PickerRow<Label: View>: View {
+private struct PickerRow<Label: View>: View {
     @Binding var isSelected: Bool
     var label: Label
-    
+
     init(isSelected: Binding<Bool>, @ViewBuilder builder: () -> Label) {
         self._isSelected = isSelected
         self.label = builder()
     }
-    
+
     var body: some View {
         HStack {
             if isSelected {
@@ -20,13 +20,13 @@ fileprivate struct PickerRow<Label: View>: View {
                     .stroke(Color.secondaryTxt)
                     .frame(width: 16, height: 16)
             }
-            
+
             if isSelected {
-                label.foregroundStyle(LinearGradient.verticalAccentPrimary) 
+                label.foregroundStyle(LinearGradient.verticalAccentPrimary)
             } else {
-                label.foregroundStyle(Color.primaryTxt) 
+                label.foregroundStyle(Color.primaryTxt)
             }
-            
+
             Spacer()
         }
         .padding(.horizontal, 15)
@@ -35,30 +35,30 @@ fileprivate struct PickerRow<Label: View>: View {
 }
 
 struct UNSNamePicker: View {
-    
+
     @Binding var selectedName: UNSNameRecord?
     @Binding var desiredName: UNSName
     @ObservedObject var controller: UNSWizardController
     @FocusState private var isTextFieldFocused: Bool
-    
+
     var textFieldForegroundStyle: LinearGradient {
         if isTextFieldFocused {
             LinearGradient.verticalAccentPrimary
         } else {
             LinearGradient(colors: [Color.primaryTxt], startPoint: .top, endPoint: .bottom)
-        } 
+        }
     }
-    
+
     var body: some View {
         VStack {
             VStack {
                 if let names = controller.names {
                     ForEach(names) { name in
-                        Button { 
+                        Button {
                             selectedName = name
                             isTextFieldFocused = false
-                        } label: { 
-                            let isSelected = Binding { 
+                        } label: {
+                            let isSelected = Binding {
                                 selectedName == name && !isTextFieldFocused
                             } set: { isSelected in
                                 if isSelected {
@@ -67,7 +67,7 @@ struct UNSNamePicker: View {
                                     selectedName = nil
                                 }
                             }
-                            
+
                             PickerRow(isSelected: isSelected) {
                                 Text(name.name)
                                     .font(.clarity(.bold, textStyle: .title2))
@@ -80,7 +80,7 @@ struct UNSNamePicker: View {
                 }
             }
             .padding(.vertical, 15)
-            
+
             Rectangle()
                 .frame(height: 2)
                 .foregroundColor(.secondaryTxt)
@@ -95,7 +95,7 @@ struct UNSNamePicker: View {
                         .stroke(Color.secondaryTxt)
                         .frame(width: 16, height: 16)
                 }
-                
+
                 TextField(text: $desiredName) {
                     Text(.localizable.createNewName)
                         .foregroundColor(.secondaryTxt)
@@ -112,7 +112,7 @@ struct UNSNamePicker: View {
                         selectedName = nil
                     }
                 }
-                
+
                 Spacer()
             }
             .padding(.horizontal, 15)
@@ -121,7 +121,7 @@ struct UNSNamePicker: View {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(Color.secondaryTxt, lineWidth: 2)
                 .background(Color.textFieldBg)
-        )    
+        )
     }
 }
 
@@ -134,7 +134,7 @@ struct UNSNamePicker: View {
         ])
         @State var selectedName: UNSNameRecord?
         @State var desiredName: UNSName = ""
-        
+
         var body: some View {
             VStack {
                 Spacer()

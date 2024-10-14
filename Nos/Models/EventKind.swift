@@ -35,7 +35,7 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 
     /// Request to Vanish
     case requestToVanish = 62
-    
+
     /// Gift Wrap
     case giftWrap = 1059
 
@@ -50,16 +50,16 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 
     /// Zap Request
     case zapRequest = 9734
-    
+
     /// Zap Receipt
     case zapReceipt = 9735
-    
+
     /// Mute List
     case mute = 10_000
 
     /// NIP-98 HTTP Authentication
     case httpAuth = 27_235
-    
+
     // NIP-42 Relay Authentication
     case relayAuth = 22_242
 

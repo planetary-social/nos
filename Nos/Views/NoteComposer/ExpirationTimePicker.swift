@@ -1,12 +1,12 @@
-import SwiftUI
 import Foundation
+import SwiftUI
 
-/// A view that allows the user to pick an expiration date for an event. 
+/// A view that allows the user to pick an expiration date for an event.
 struct ExpirationTimePicker: View {
-    
+
     struct ExpirationTimeButtonSize: PreferenceKey {
         static let defaultValue: CGSize = .zero
-        
+
         static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
             let next = nextValue()
             value = CGSize(
@@ -15,29 +15,32 @@ struct ExpirationTimePicker: View {
             )
         }
     }
-    
+
     @Binding var expirationTime: TimeInterval?
-    
+
     @State private var buttonSize: CGSize?
-   
+
     var body: some View {
         HStack {
             ForEach(ExpirationTimeOption.allCases) { option in
                 ExpirationTimeButton(
-                    model: option, 
+                    model: option,
                     minSize: $buttonSize,
-                    isSelected: Binding(get: { 
-                        expirationTime == option.timeInterval
-                    }, set: { 
-                        expirationTime = $0 ? option.timeInterval : nil
-                    })
+                    isSelected: Binding(
+                        get: {
+                            expirationTime == option.timeInterval
+                        },
+                        set: {
+                            expirationTime = $0 ? option.timeInterval : nil
+                        })
                 )
-                .background(GeometryReader { geometry in
-                    Color.clear.preference(
-                        key: ExpirationTimeButtonSize.self,
-                        value: geometry.size
-                    )
-                })
+                .background(
+                    GeometryReader { geometry in
+                        Color.clear.preference(
+                            key: ExpirationTimeButtonSize.self,
+                            value: geometry.size
+                        )
+                    })
             }
         }
         .onPreferenceChange(ExpirationTimeButtonSize.self) {
@@ -47,11 +50,11 @@ struct ExpirationTimePicker: View {
 }
 
 struct ExpirationTimePicker_Previews: PreviewProvider {
-    
-    @State static var emptyExpirationTime: TimeInterval? 
-    
+
+    @State static var emptyExpirationTime: TimeInterval?
+
     @State static var oneHourExpirationTime: TimeInterval? = 60 * 60
-    
+
     static var previews: some View {
         VStack {
             ExpirationTimePicker(expirationTime: $emptyExpirationTime)

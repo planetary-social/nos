@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct MutesDestination: Hashable { }
+struct MutesDestination: Hashable {}
 
 struct MutesView: View {
     @FetchRequest

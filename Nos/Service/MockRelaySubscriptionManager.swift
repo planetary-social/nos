@@ -2,7 +2,7 @@ import Foundation
 import Starscream
 
 class MockRelaySubscriptionManager: RelaySubscriptionManager {
-    
+
     var all = [RelaySubscription]()
 
     var sockets = [WebSocket]()
@@ -24,14 +24,14 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
 
     func close(socket: WebSocket) async {
     }
-    
+
     func trackAuthenticationRequest(from socket: WebSocket, responseID: RawNostrID) async {
     }
-    
+
     func checkAuthentication(
-        success: Bool, 
-        from socket: WebSocket, 
-        eventID: RawNostrID, 
+        success: Bool,
+        from socket: WebSocket,
+        eventID: RawNostrID,
         message: String?
     ) async -> Bool {
         false
@@ -55,10 +55,10 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
         queueSubscriptionFilter = filter
         return RelaySubscription(filter: filter, relayAddress: relayAddress)
     }
-    
+
     func receivedClose(for subscriptionID: RelaySubscription.ID, from socket: WebSocket) async {
     }
-    
+
     func socket(for address: String) async -> WebSocket? {
         nil
     }

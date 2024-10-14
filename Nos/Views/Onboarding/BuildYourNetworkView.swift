@@ -4,7 +4,7 @@ import SwiftUI
 struct BuildYourNetworkView: View {
     /// The action to perform when the user taps the Find people button.
     let completion: @MainActor () -> Void
-    
+
     /// The padding around most of the views here -- the text and button -- but not the image.
     private let padding: CGFloat = 40
 

@@ -1,32 +1,32 @@
-import Foundation
 import CoreData
+import Foundation
 import Logger
 import UIKit
 
-/// A representation of the people a given user follows and the people they follow designed to cache this data in 
-/// memory and make it cheap to access. This class watches the database for changes to the social graph and updates 
+/// A representation of the people a given user follows and the people they follow designed to cache this data in
+/// memory and make it cheap to access. This class watches the database for changes to the social graph and updates
 /// itself accordingly.
 actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
-    
-    // MARK: Public interface 
-    
+
+    // MARK: Public interface
+
     private(set) var followedKeys = Set<RawAuthorID>()
-    
+
     func isInNetwork(_ key: RawAuthorID?) -> Bool {
         guard let key, let userKey else {
             return false
         }
-        
+
         if followedKeys.contains(key) || twoHopKeys.contains(key) {
             Log.debug("cache hit: inNetwork")
             return true
         }
-        
+
         if outOfNetworkKeys.contains(key) {
             Log.debug("cache hit: outOfNetwork")
             return false
         }
-        
+
         // We haven't cached this key. Make a db request
         Log.debug("cache miss")
         do {
@@ -43,86 +43,86 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
                 )
                 return try context.count(for: fetchRequest) > 0
             }
-            
+
             if inNetwork {
                 twoHopKeys.insert(key)
             } else {
                 outOfNetworkKeys.insert(key)
             }
-            
+
             return inNetwork
         } catch {
             Log.optional(error, "Could not figure out if \(key) is inNetwork")
             return false
         }
     }
-    
+
     func follows(_ key: RawAuthorID?) -> Bool {
         guard let key, let userKey else {
             return false
         }
-        
+
         return followedKeys.contains(key) || userKey == key
     }
-    
+
     // MARK: - Private properties
-    
+
     private let userKey: RawAuthorID?
     private let context: NSManagedObjectContext
-    
+
     private var userWatcher: NSFetchedResultsController<Author>?
     private var oneHopWatcher: NSFetchedResultsController<Author>?
     private var twoHopKeys = Set<RawAuthorID>()
     private var outOfNetworkKeys = Set<RawAuthorID>()
-    
+
     // MARK: - Setup
-    
+
     init(userKey: RawAuthorID?, context: NSManagedObjectContext) {
         self.userKey = userKey
         self.context = context
         super.init()
-        
+
         Task {
             await initializeFollowList()
         }
-        
+
         Task { @MainActor in
             NotificationCenter.default.addObserver(
-                self, 
-                selector: #selector(didReceiveMemoryWarning), 
-                name: UIApplication.didReceiveMemoryWarningNotification, 
+                self,
+                selector: #selector(didReceiveMemoryWarning),
+                name: UIApplication.didReceiveMemoryWarningNotification,
                 object: nil
             )
         }
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     @objc nonisolated func didReceiveMemoryWarning() {
         Task {
             await clearCache()
         }
     }
-    
+
     // MARK: - Processing changes
-    
+
     func clearCache() {
         twoHopKeys.removeAll()
         outOfNetworkKeys.removeAll()
     }
-    
+
     func initializeFollowList() async {
         guard let userKey else {
             return
         }
         let startDate = Date.now
         followedKeys.insert(userKey)
-        
+
         do {
             try await context.perform { [self] in
-                let authorRequest = Author.request(by: userKey) 
+                let authorRequest = Author.request(by: userKey)
                 authorRequest.relationshipKeyPathsForPrefetching = ["follows.destination.hexadecimalPublicKey"]
                 self.userWatcher = NSFetchedResultsController(
                     fetchRequest: authorRequest,
@@ -150,14 +150,14 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
             Log.error(error.localizedDescription)
             return
         }
-        
-        let elapsedTime = Date.now.timeIntervalSince1970 - startDate.timeIntervalSince1970 
+
+        let elapsedTime = Date.now.timeIntervalSince1970 - startDate.timeIntervalSince1970
         Log.info("Finished SocialGraphCache init in \(elapsedTime) seconds.")
     }
-    
+
     /// Takes the new set of authors that the `user` has followed and updates our cache appropriately.
     /// - Parameters:
-    ///   - user: the key of the user at the center of the social graph  
+    ///   - user: the key of the user at the center of the social graph
     ///   - followedKey: the key of the author the user has followed
     ///   - follows: the keys of the authors `followedKey` has followed
     private func process(
@@ -172,28 +172,29 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
         followedKeys.insert(user)
         outOfNetworkKeys = outOfNetworkKeys.subtracting(newFollowedKeys)
     }
-    
+
     private func process(followed newFollowedKeys: Set<RawAuthorID>) async {
         outOfNetworkKeys.subtract(newFollowedKeys)
         twoHopKeys.formUnion(newFollowedKeys)
     }
-    
+
     // MARK: - NSFetchedResultsControllerDelegate
-    
+
     nonisolated func controller(
-        _ controller: NSFetchedResultsController<NSFetchRequestResult>, 
-        didChange anObject: Any, 
-        at indexPath: IndexPath?, 
-        for type: NSFetchedResultsChangeType, 
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChange anObject: Any,
+        at indexPath: IndexPath?,
+        for type: NSFetchedResultsChangeType,
         newIndexPath: IndexPath?
     ) {
-        guard let userKey, 
-            let changedAuthor = anObject as? Author, 
-            changedAuthor.hexadecimalPublicKey != nil else {
+        guard let userKey,
+            let changedAuthor = anObject as? Author,
+            changedAuthor.hexadecimalPublicKey != nil
+        else {
             return
         }
         let newFollowedKeys = Set(changedAuthor.followedKeys)
-        
+
         Task {
             if await controller === self.oneHopWatcher {
                 await process(followed: newFollowedKeys)

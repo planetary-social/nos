@@ -1,18 +1,18 @@
+import Logger
 import MessageUI
 import SwiftUI
-import Logger
 
 struct ReportABugMailView: UIViewControllerRepresentable {
-    
+
     @Environment(\.presentationMode) var presentation
     @Binding var result: Result<MFMailComposeResult, Error>?
-    
+
     typealias UIViewControllerType = MFMailComposeViewController
-    
+
     class Coordinator: NSObject, MFMailComposeViewControllerDelegate {
         @Binding var presentation: PresentationMode
         @Binding var result: Result<MFMailComposeResult, Error>?
-        
+
         init(
             presentation: Binding<PresentationMode>,
             result: Binding<Result<MFMailComposeResult, Error>?>
@@ -35,11 +35,11 @@ struct ReportABugMailView: UIViewControllerRepresentable {
             }
         }
     }
-    
+
     func makeCoordinator() -> Coordinator {
         Coordinator(presentation: presentation, result: $result)
     }
-    
+
     func makeUIViewController(context: Context) -> MFMailComposeViewController {
         let mailViewController = MFMailComposeViewController()
         mailViewController.mailComposeDelegate = context.coordinator
@@ -53,7 +53,7 @@ struct ReportABugMailView: UIViewControllerRepresentable {
             do {
                 mailViewController.addAttachmentData(
                     try Data(contentsOf: try await Zipper.zipLogs()),
-                    mimeType: "application/zip", 
+                    mimeType: "application/zip",
                     fileName: "diagnostics.zip"
                 )
             } catch {
@@ -62,7 +62,7 @@ struct ReportABugMailView: UIViewControllerRepresentable {
         }
         return mailViewController
     }
-    
+
     func updateUIViewController(_ uiViewController: MFMailComposeViewController, context: Context) {
     }
 }

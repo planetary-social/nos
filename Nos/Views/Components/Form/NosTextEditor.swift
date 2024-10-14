@@ -2,12 +2,12 @@ import SwiftUI
 import SwiftUINavigation
 
 struct NosTextEditor: View {
-    
+
     var label: LocalizedStringResource
     @Binding var text: String
-    
+
     var body: some View {
-        NosFormField(label: label) { 
+        NosFormField(label: label) {
             TextEditor(text: $text)
                 .textInputAutocapitalization(.none)
                 .foregroundColor(.primaryTxt)
@@ -24,7 +24,7 @@ struct NosTextEditor_Previews: PreviewProvider {
                     NosTextEditor(label: .localizable.bio, text: text)
                         .scrollContentBackground(.hidden)
                         .frame(maxHeight: 200)
-                }    
+                }
             }
         }
     }

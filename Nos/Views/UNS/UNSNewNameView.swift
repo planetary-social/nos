@@ -1,14 +1,14 @@
-import SwiftUI
 import Dependencies
 import Logger
+import SwiftUI
 
 struct UNSNewNameView: View {
-    
+
     @Dependency(\.analytics) var analytics
     @ObservedObject var controller: UNSWizardController
     @Dependency(\.unsAPI) var api
     @State var name: UNSName = ""
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -16,14 +16,14 @@ struct UNSNewNameView: View {
                     UNSStepImage { Image.unsName.offset(x: 7, y: 5) }
                         .padding(20)
                         .padding(.top, 50)
-                    
+
                     Text(.localizable.chooseYourName)
                         .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
                         .padding(20)
-                    
+
                     Text(.localizable.chooseYourNameDescription)
                         .fontWeight(.medium)
                         .multilineTextAlignment(.center)
@@ -31,11 +31,11 @@ struct UNSNewNameView: View {
                         .padding(.vertical, 17)
                         .padding(.horizontal, 20)
                         .shadow(radius: 1, y: 1)
-                    
+
                     Spacer()
                     UNSWizardTextField(text: $name)
                     Spacer()
-                    
+
                     BigActionButton(title: .localizable.next) {
                         await submit()
                     }
@@ -47,13 +47,13 @@ struct UNSNewNameView: View {
             .background(Color.appBg)
         }
     }
-    
+
     func submit() async {
         do {
             try await controller.register(desiredName: name)
         } catch {
             controller.state = .error(error)
-        }   
+        }
     }
 }
 

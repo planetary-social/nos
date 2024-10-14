@@ -1,10 +1,10 @@
-import SwiftUI
-import Logger
 import Dependencies
+import Logger
+import SwiftUI
 
 @main
 struct NosApp: App {
-    
+
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.relayService) private var relayService
@@ -14,16 +14,16 @@ struct NosApp: App {
     private let appController = AppController()
     @Environment(\.scenePhase) private var scenePhase
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
+
     init() {
-        _ = crashReporting // force crash reporting init as early as possible
-        
+        _ = crashReporting  // force crash reporting init as early as possible
+
         // hack to fix confirmationDialog color issue
         // https://github.com/planetary-social/nos/issues/1064
         UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .systemBlue
         persistenceController.scheduleBackgroundCleanupTask()
     }
-    
+
     var body: some Scene {
         WindowGroup {
             AppView()

@@ -5,7 +5,7 @@ import SwiftUI
 struct AspectRatioContainer<Content: View>: View {
     /// The orientation, which determines the aspect ratio of this container.
     let orientation: MediaOrientation
-    
+
     /// The content to be displayed in the container.
     let content: () -> Content
 

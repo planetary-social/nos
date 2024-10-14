@@ -1,13 +1,13 @@
-import SwiftUI
 import Dependencies
+import SwiftUI
 
 struct UNSSuccessView: View {
-    
+
     @ObservedObject var controller: UNSWizardController
     @Binding var isPresented: Bool
     @Dependency(\.analytics) var analytics
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-    
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -28,14 +28,14 @@ struct UNSSuccessView: View {
                     .frame(width: 178, height: 178)
                     .padding(20)
                     .padding(.top, 50)
-                    
+
                     Text(.localizable.success)
                         .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
                         .padding(20)
-                    
+
                     Text(.localizable.unsSuccessDescription)
                         .fontWeight(.medium)
                         .multilineTextAlignment(.center)
@@ -45,9 +45,9 @@ struct UNSSuccessView: View {
                         .shadow(radius: 1, y: 1)
                         .padding(20)
                 }
-                
+
                 Spacer()
-                
+
                 BigActionButton(title: .localizable.done) {
                     isPresented = false
                 }
@@ -66,9 +66,11 @@ struct UNSSuccessView: View {
 #Preview {
     @State var isPresented = true
     @State var controller = UNSWizardController(nameRecord: UNSNameRecord(name: "Chardot", id: "1"))
-    
+
     return VStack {}
-        .sheet(isPresented: $isPresented, content: {
-            UNSSuccessView(controller: controller, isPresented: $isPresented)
-        })
+        .sheet(
+            isPresented: $isPresented,
+            content: {
+                UNSSuccessView(controller: controller, isPresented: $isPresented)
+            })
 }

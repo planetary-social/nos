@@ -2,7 +2,7 @@ import SwiftUI
 
 /// A large colorful banner with a message and action button.
 struct ActionBanner: View {
-    
+
     var messageText: LocalizedStringResource
     var messageImage: Image?
     var buttonText: LocalizedStringResource
@@ -17,13 +17,13 @@ struct ActionBanner: View {
             endPoint: .trailing
         )
     }
-    
+
     var body: some View {
         ZStack {
             Color.actionBannerBg
                 .cornerRadius(21)
                 .offset(y: 2)
-            
+
             VStack {
                 HStack {
                     Text(messageText)
@@ -85,11 +85,11 @@ struct ActionBanner: View {
                             endPoint: .bottom
                         )
                         .blendMode(.softLight)
-                        
+
                         backgroundGradient.blendMode(.normal)
                     }
                 }
-                    .offset(y: -2)
+                .offset(y: -2)
             )
             .cornerRadius(20)
         }

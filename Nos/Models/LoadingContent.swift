@@ -1,5 +1,6 @@
 import Foundation
 
 enum LoadingContent<Content: Equatable>: Equatable {
-    case loading, loaded(Content)
+    case loading
+    case loaded(Content)
 }

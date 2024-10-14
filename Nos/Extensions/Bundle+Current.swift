@@ -5,7 +5,7 @@ private class CurrentBundle {}
 extension Bundle {
 
     static let current = Bundle(for: CurrentBundle.self)
-    
+
     var version: String {
         let version = self.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
         return version

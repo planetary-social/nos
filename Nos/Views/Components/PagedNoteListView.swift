@@ -1,14 +1,14 @@
-import SwiftUI
 import CoreData
 import Dependencies
 import Logger
+import SwiftUI
 
 /// The PagedNoteListView is designed to display an infinite list of notes in reverse-chronological order.
-/// It takes two filters: one to load events from our local database (Core Data) and one to load them from the 
+/// It takes two filters: one to load events from our local database (Core Data) and one to load them from the
 /// relays. As the user scrolls down we will keep adjusting the relay filter to get older events.
-/// 
+///
 /// Under the hood PagedNoteListView is using UICollectionView and NSFetchedResultsController. We leverage the
-/// UICollectionViewDataSourcePrefetching protocol to call Event.loadViewData() on events in advanced of them being 
+/// UICollectionViewDataSourcePrefetching protocol to call Event.loadViewData() on events in advanced of them being
 /// shown, which allows us to perform expensive tasks like downloading images, calculating attributed text, fetching
 /// author metadata and linked notes, etc. before the view is displayed.
 struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresentable {
@@ -19,18 +19,18 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// Allows us to refresh the PagedNoteListView from outside this view itself, such as with a separate button.
     @Binding var refreshController: RefreshController
 
-    /// A fetch request that specifies the events that should be shown. The events should be sorted in 
+    /// A fetch request that specifies the events that should be shown. The events should be sorted in
     /// reverse-chronological order and should match the events returned by `relayFilter`.
     let databaseFilter: NSFetchRequest<Event>
-    
+
     /// A Filter that specifies the events that should be shown. The Filter should not have `limit`, `since`, or `until`
     /// set as they will be overmanaged internally. The events downloaded by this filter should match the ones returned
-    /// by the `databaseFilter`. 
+    /// by the `databaseFilter`.
     let relayFilter: Filter
-    
+
     /// The relay to load data from. If `nil` then all the relays in the user's list will be used.
-    let relay: Relay? 
-    
+    let relay: Relay?
+
     /// The managed object context used to fetch events from Core Data.
     let managedObjectContext: NSManagedObjectContext
 
@@ -40,7 +40,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
 
     /// A view that will be displayed as the collection view header.
     let header: () -> Header
-    
+
     /// A view that will be displayed below the header when no notes are being shown.
     let emptyPlaceholder: () -> EmptyPlaceholder
 
@@ -56,10 +56,10 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         collectionView.contentInset = .zero
         collectionView.layoutMargins = .zero
         let dataSource = context.coordinator.dataSource(
-            databaseFilter: databaseFilter, 
+            databaseFilter: databaseFilter,
             relayFilter: relayFilter,
             relay: relay,
-            collectionView: collectionView, 
+            collectionView: collectionView,
             managedObjectContext: self.managedObjectContext,
             header: header,
             emptyPlaceholder: emptyPlaceholder
@@ -69,8 +69,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
 
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(
-            context.coordinator, 
-            action: #selector(Coordinator.refreshData(_:)), 
+            context.coordinator,
+            action: #selector(Coordinator.refreshData(_:)),
             for: .valueChanged
         )
         collectionView.refreshControl = refreshControl
@@ -83,7 +83,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
 
         return collectionView
     }
-    
+
     func updateUIView(_ collectionView: UICollectionView, context: Context) {
         if let dataSource = collectionView.dataSource as? PagedNoteDataSource<Header, EmptyPlaceholder> {
             if relayFilter != dataSource.relayFilter || relay != dataSource.relay {
@@ -102,7 +102,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             }
         }
     }
-    
+
     static func dismantleUIView(_ uiView: UICollectionView, coordinator: Coordinator<Header, EmptyPlaceholder>) {
         tearDownObservers(coordinator: coordinator)
     }
@@ -120,7 +120,8 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         ) { [weak uiView] notification in
             // if the tab that's selected is the tab in which this `PagedNoteListView` is displayed, scroll to the top
             guard let selectedTab = notification.userInfo?["tab"] as? AppDestination,
-                selectedTab == tab else {
+                selectedTab == tab
+            else {
                 return
             }
             // scrolling to CGRect.zero does not work, so this seems to be the best we can do
@@ -149,33 +150,33 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         let section = NSCollectionLayoutSection(group: group)
         section.contentInsets = .zero
         section.interGroupSpacing = 16
-        
+
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(300))
         let headerItem = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: headerSize, 
-            elementKind: UICollectionView.elementKindSectionHeader, 
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
             alignment: .top
         )
         headerItem.edgeSpacing = .none
-        
+
         let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(300))
         let footerItem = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: footerSize, 
-            elementKind: UICollectionView.elementKindSectionFooter, 
+            layoutSize: footerSize,
+            elementKind: UICollectionView.elementKindSectionFooter,
             alignment: .bottom
         )
         headerItem.edgeSpacing = .none
-        
+
         section.boundarySupplementaryItems = [headerItem, footerItem]
-        
+
         return UICollectionViewCompositionalLayout(section: section)
     }
-    
+
     // swiftlint:disable generic_type_name
     /// The coordinator mainly holds a strong reference to the `dataSource` and proxies pull-to-refresh events.
     class Coordinator<CoordinatorHeader: View, CoordinatorEmptyPlaceholder: View> {
         // swiftlint:enable generic_type_name
-        
+
         /// Controls refresh actions. Used for setting the `lastRefreshDate` whenever the data is refreshed.
         let refreshController: RefreshController
 
@@ -200,15 +201,15 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             @ViewBuilder emptyPlaceholder: @escaping () -> CoordinatorEmptyPlaceholder
         ) -> PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder> {
             if let dataSource {
-                return dataSource 
+                return dataSource
             }
             self.collectionView = collectionView
 
             let dataSource = PagedNoteDataSource(
-                databaseFilter: databaseFilter, 
+                databaseFilter: databaseFilter,
                 relayFilter: relayFilter,
                 relay: relay,
-                collectionView: collectionView, 
+                collectionView: collectionView,
                 managedObjectContext: managedObjectContext,
                 header: header,
                 emptyPlaceholder: emptyPlaceholder
@@ -216,7 +217,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             self.dataSource = dataSource
             return dataSource
         }
-    
+
         @objc func refreshData(_ sender: Any) {
             DispatchQueue.main.async { [weak refreshController] in
                 refreshController?.lastRefreshDate = .now
@@ -244,7 +245,7 @@ extension Notification.Name {
     return PagedNoteListView(
         refreshController: $refreshController,
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
-        relayFilter: Filter(), 
+        relayFilter: Filter(),
         relay: nil,
         managedObjectContext: previewData.previewContext,
         tab: .home,

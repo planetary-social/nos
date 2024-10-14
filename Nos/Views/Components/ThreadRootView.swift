@@ -32,7 +32,7 @@ struct ThreadRootView<Reply: View>: View {
         self.tapAction = tapAction
         self.reply = reply()
     }
-    
+
     var body: some View {
         ZStack(alignment: .top) {
             NoteButton(
@@ -59,12 +59,12 @@ struct ThreadRootView<Reply: View>: View {
 
 struct ThreadRootView_Previews: PreviewProvider {
     static var previewData = PreviewData()
-    
+
     static var previews: some View {
         ScrollView {
             VStack {
                 ThreadRootView(
-                    root: previewData.longNote, 
+                    root: previewData.longNote,
                     tapAction: { _ in },
                     reply: {
                         NoteButton(

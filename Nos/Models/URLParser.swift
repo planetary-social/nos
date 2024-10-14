@@ -7,13 +7,15 @@ struct URLParser {
     /// A regular expression pattern for matching URLs.
     /// - Note: Uses rules from the [Domain Name System](https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax,_internationalization)
     ///         page on Wikipedia.
-    static let urlRegex = "(\\s*)(?<url>((https?://){1}|(?<![\\w@.]))([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*(?<![.,!?\\)\\]]))"
+    static let urlRegex =
+        "(\\s*)(?<url>((https?://){1}|(?<![\\w@.]))([a-zA-Z0-9][-a-zA-Z0-9]{0,62}\\.){1,127}[a-z]{2,63}\\b[-a-zA-Z0-9@:%_\\+.~#?&/=]*(?<![.,!?\\)\\]]))"
     // swiftlint:enable line_length
 
     /// Returns an array with all unformatted urls
     func findUnformattedURLs(in content: String) throws -> [URL] {
         // swiftlint:disable line_length
-        let regex = "((http|https)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)"
+        let regex =
+            "((http|https)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)"
         // swiftlint:enable line_length
 
         var links = [URL]()
@@ -52,7 +54,7 @@ struct URLParser {
 
         return (mutableString as String, urls)
     }
-    
+
     /// Replaces raw URLs with Markdown links in the given `mutableString`. Removes media URLs (image and video) from
     /// `mutableString` and converts all other URLs to pretty Markdown links for display.
     /// - Parameter mutableString: The mutable string that may contain URLs and will be modified for display.

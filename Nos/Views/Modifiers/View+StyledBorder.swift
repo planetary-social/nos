@@ -18,7 +18,7 @@ struct StyledBorder: ViewModifier {
                         LinearGradient(
                             gradient: Gradient(colors: [
                                 .styledBorderGradientTop,
-                                .styledBorderGradientBottom
+                                .styledBorderGradientBottom,
                             ]),
                             startPoint: .top,
                             endPoint: .bottom

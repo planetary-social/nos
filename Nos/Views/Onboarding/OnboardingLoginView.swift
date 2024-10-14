@@ -1,18 +1,18 @@
-import SwiftUI
 import Dependencies
 import Logger
+import SwiftUI
 
 struct OnboardingLoginView: View {
     let completion: @MainActor () -> Void
-    
+
     @Dependency(\.analytics) private var analytics
     @Environment(CurrentUser.self) var currentUser
-    
+
     @Environment(\.managedObjectContext) private var viewContext
-    
+
     @State var privateKeyString = ""
     @State var showError = false
-    
+
     @MainActor func importKey(_ keyPair: KeyPair) async {
         await currentUser.setKeyPair(keyPair)
         analytics.importedKey()
@@ -29,7 +29,7 @@ struct OnboardingLoginView: View {
 
         completion()
     }
-    
+
     var body: some View {
         VStack {
             Form {

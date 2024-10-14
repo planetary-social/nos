@@ -1,11 +1,11 @@
-import SwiftUI
 import Dependencies
 import Logger
+import SwiftUI
 import SwiftUINavigation
 
 let showReportWarningsKey = "com.verse.nos.settings.showReportWarnings"
 let showOutOfNetworkWarningKey = "com.verse.nos.settings.showOutOfNetworkWarning"
-    
+
 struct SettingsView: View {
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
@@ -82,7 +82,7 @@ struct SettingsView: View {
                     .fixedSize(horizontal: true, vertical: false)
                     .padding(.vertical, 5)
                 }
-                
+
                 ActionButton(title: .localizable.logout) {
                     alert = AlertState(
                         title: { TextState(String(localized: .localizable.logout)) },
@@ -93,7 +93,7 @@ struct SettingsView: View {
                         },
                         message: { TextState(String(localized: .localizable.backUpYourKeyWarning)) }
                     )
-                }        
+                }
                 .padding(.vertical, 5)
             } header: {
                 VStack(alignment: .leading, spacing: 10) {
@@ -111,14 +111,14 @@ struct SettingsView: View {
                 .padding(.bottom, 20)
             }
             .listRowGradientBackground()
-            
+
             Section {
                 VStack {
                     NosToggle(isOn: $showReportWarnings, labelText: .localizable.useReportsFromFollows)
-                    .onChange(of: showReportWarnings) { _, newValue in
-                        userDefaults.set(newValue, forKey: showReportWarningsKey)
-                    }
-                    
+                        .onChange(of: showReportWarnings) { _, newValue in
+                            userDefaults.set(newValue, forKey: showReportWarningsKey)
+                        }
+
                     HStack {
                         Text(.localizable.useReportsFromFollowsDescription)
                             .foregroundColor(.secondaryTxt)
@@ -130,10 +130,10 @@ struct SettingsView: View {
 
                 VStack {
                     NosToggle(isOn: $showOutOfNetworkWarning, labelText: .localizable.showOutOfNetworkWarnings)
-                    .onChange(of: showOutOfNetworkWarning) { _, newValue in
-                        userDefaults.set(newValue, forKey: showOutOfNetworkWarningKey)
-                    }
-                    
+                        .onChange(of: showOutOfNetworkWarning) { _, newValue in
+                            userDefaults.set(newValue, forKey: showOutOfNetworkWarningKey)
+                        }
+
                     HStack {
                         Text(.localizable.showOutOfNetworkWarningsDescription)
                             .foregroundColor(.secondaryTxt)
@@ -155,7 +155,7 @@ struct SettingsView: View {
                 showReportWarnings = userDefaults.object(forKey: showReportWarningsKey) as? Bool ?? true
                 showOutOfNetworkWarning = userDefaults.object(forKey: showOutOfNetworkWarningKey) as? Bool ?? true
             }
-            
+
             Section {
                 Text("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
                     .foregroundColor(.primaryTxt)
@@ -179,11 +179,13 @@ struct SettingsView: View {
                         do {
                             fileToShare = try await Zipper.zipDatabase(controller: persistenceController)
                         } catch {
-                            alert = AlertState(title: {
-                                TextState(String(localized: .localizable.error))
-                            }, message: {
-                                TextState(String(localized: .localizable.failedToShareDatabase))
-                            })
+                            alert = AlertState(
+                                title: {
+                                    TextState(String(localized: .localizable.error))
+                                },
+                                message: {
+                                    TextState(String(localized: .localizable.failedToShareDatabase))
+                                })
                         }
                     }
                 }
@@ -193,21 +195,23 @@ struct SettingsView: View {
                         do {
                             fileToShare = try await Zipper.zipLogs()
                         } catch {
-                            alert = AlertState(title: {
-                                TextState(String(localized: .localizable.error))
-                            }, message: {
-                                TextState(String(localized: .localizable.failedToExportLogs))
-                            })
+                            alert = AlertState(
+                                title: {
+                                    TextState(String(localized: .localizable.error))
+                                },
+                                message: {
+                                    TextState(String(localized: .localizable.failedToExportLogs))
+                                })
                         }
                     }
                 }
 
                 #if STAGING
-                stagingControls
+                    stagingControls
                 #endif
 
                 #if DEBUG
-                debugControls
+                    debugControls
                 #endif
             } header: {
                 Text(.localizable.debug)
@@ -218,7 +222,7 @@ struct SettingsView: View {
                     .padding(.vertical, 15)
             }
             .listRowGradientBackground()
-            
+
             ActionButton(
                 title: .localizable.deleteMyAccount,
                 font: .clarityBold(.title3),
@@ -254,7 +258,7 @@ struct SettingsView: View {
             analytics.showedSettings()
         }
     }
-    
+
     fileprivate func alertButtonTapped(_ action: AlertAction) async {
         switch action {
         case .logout:
@@ -271,66 +275,66 @@ struct SettingsView: View {
 
 // DEBUG builds will have everything that's in STAGING builds and more.
 #if STAGING || DEBUG
-extension SettingsView {
-    /// Whether the new moderation flow is enabled.
-    private var isNewModerationFlowEnabled: Binding<Bool> {
-        Binding<Bool>(
-            get: { featureFlags.isEnabled(.newModerationFlow) },
-            set: { featureFlags.setFeature(.newModerationFlow, enabled: $0) }
-        )
-    }
+    extension SettingsView {
+        /// Whether the new moderation flow is enabled.
+        private var isNewModerationFlowEnabled: Binding<Bool> {
+            Binding<Bool>(
+                get: { featureFlags.isEnabled(.newModerationFlow) },
+                set: { featureFlags.setFeature(.newModerationFlow, enabled: $0) }
+            )
+        }
 
-    /// A toggle for the new moderation flow that allows the user to turn the feature on or off.
-    private var newModerationFlowToggle: some View {
-        NosToggle(isOn: isNewModerationFlowEnabled, labelText: .localizable.enableNewModerationFlow)
+        /// A toggle for the new moderation flow that allows the user to turn the feature on or off.
+        private var newModerationFlowToggle: some View {
+            NosToggle(isOn: isNewModerationFlowEnabled, labelText: .localizable.enableNewModerationFlow)
+        }
     }
-}
 #endif
 
 #if STAGING
-extension SettingsView {
-    /// Controls that will appear when the app is built for STAGING.
-    @MainActor private var stagingControls: some View {
-        Group {
-            newModerationFlowToggle
-            deleteAccountToggle
+    extension SettingsView {
+        /// Controls that will appear when the app is built for STAGING.
+        @MainActor private var stagingControls: some View {
+            Group {
+                newModerationFlowToggle
+                deleteAccountToggle
+            }
         }
     }
-}
 #endif
 
 #if DEBUG
-extension SettingsView {
-    /// Controls that will appear when the app is built for DEBUG.
-    @MainActor private var debugControls: some View {
-        Group {
-            newModerationFlowToggle
-            Text(.localizable.sampleDataInstructions)
-                .foregroundColor(.primaryTxt)
-            Button(String(localized: .localizable.loadSampleData)) {
-                Task {
-                    do {
-                        try await persistenceController.loadSampleData(context: viewContext)
-                    } catch {
-                        print(error)
+    extension SettingsView {
+        /// Controls that will appear when the app is built for DEBUG.
+        @MainActor private var debugControls: some View {
+            Group {
+                newModerationFlowToggle
+                Text(.localizable.sampleDataInstructions)
+                    .foregroundColor(.primaryTxt)
+                Button(String(localized: .localizable.loadSampleData)) {
+                    Task {
+                        do {
+                            try await persistenceController.loadSampleData(context: viewContext)
+                        } catch {
+                            print(error)
+                        }
                     }
                 }
-            }
-            if let author = currentUser.author {
-                NavigationLink {
-                    PublishedEventsView(author: author)
-                } label: {
-                    Text(.localizable.allPublishedEvents)
+                if let author = currentUser.author {
+                    NavigationLink {
+                        PublishedEventsView(author: author)
+                    } label: {
+                        Text(.localizable.allPublishedEvents)
+                    }
                 }
             }
         }
     }
-}
 #endif
 
 #Preview {
     let previewData = PreviewData()
-    
+
     return NavigationStack {
         SettingsView()
     }

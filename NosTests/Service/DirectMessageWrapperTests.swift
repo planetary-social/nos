@@ -4,13 +4,13 @@ final class DirectMessageWrapperTests: XCTestCase {
     func testDirectMessageWrapper() throws {
         let senderKeyPair = KeyFixture.alice
         let receiverKeyPair = KeyFixture.bob
-        
+
         let wrappedDM = try DirectMessageWrapper.wrap(
             message: "Are you going to the party tonight? 🎉",
             senderKeyPair: senderKeyPair,
             receiverPubkey: receiverKeyPair.publicKeyHex
         )
-        
+
         XCTAssertEqual(wrappedDM.kind, EventKind.giftWrap.rawValue)
         XCTAssertEqual(wrappedDM.tags, [["p", receiverKeyPair.publicKeyHex]])
         XCTAssertGreaterThan(

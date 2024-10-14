@@ -5,9 +5,11 @@ import XCTest
 class EventProcessorIntegrationTests: CoreDataTestCase {
     // swiftlint:disable line_length
 
-    let sampleEventSignature = "31c710803d3b77cb2c61697c8e2a980a53ec66e980990ca34cc24f9018bf85bfd2b0669c1404f364de776a9d9ed31a5d6d32f5662ac77f2dc6b89c7762132d63"
+    let sampleEventSignature =
+        "31c710803d3b77cb2c61697c8e2a980a53ec66e980990ca34cc24f9018bf85bfd2b0669c1404f364de776a9d9ed31a5d6d32f5662ac77f2dc6b89c7762132d63"
     let sampleEventPubKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
-    let sampleEventContent = "Spent today on our company retreat talking a lot about Nostr. The team seems very keen to build something in this space. It’s exciting to be opening our minds to so many possibilities after being deep in the Scuttlebutt world for so long."
+    let sampleEventContent =
+        "Spent today on our company retreat talking a lot about Nostr. The team seems very keen to build something in this space. It’s exciting to be opening our minds to so many possibilities after being deep in the Scuttlebutt world for so long."
 
     // swiftlint:enable line_length
 
@@ -181,7 +183,8 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
         let context = persistenceController.viewContext
         let sampleRelay = "wss://nostr.lorentz.is"
         let sampleName = "Test Name"
-        let sampleContactListSignature = "a01fa191a0236ffe5ee1fbd9401cd7b1da7daad5e19a25962eb7ea4c9335522478bdff255f1de40ca6c98cdf8cf26aa1f5f1b6c263c5004b0b6dcdc12573cfd7" // swiftlint:disable:this line_length
+        let sampleContactListSignature =
+            "a01fa191a0236ffe5ee1fbd9401cd7b1da7daad5e19a25962eb7ea4c9335522478bdff255f1de40ca6c98cdf8cf26aa1f5f1b6c263c5004b0b6dcdc12573cfd7"  // swiftlint:disable:this line_length
 
         // Act
         let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: context)!
@@ -258,7 +261,7 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
     }
 
     // MARK: - Zap Receipt/Request parsing
-    
+
     /// When a zap receipt event is parsed, expect that its embedded zap request is also parsed.
     func testParseZapReceiptAndEmbeddedZapRequest() throws {
         // Arrange
@@ -266,33 +269,33 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
         let zapReceiptJSONEvent = try JSONDecoder().decode(JSONEvent.self, from: zapReceiptData)
 
         let context = persistenceController.viewContext
-        
+
         // Act
         try EventProcessor.parse(jsonEvent: zapReceiptJSONEvent, from: nil, in: context)
-        
+
         // Assert
-        
+
         // zap receipt
         let zapReceiptEventID = "9e722b2b62772f9f48c786e084038ffc039f5600bace1f068bcc2307a5de1553"
         let zapReceiptEvent = try XCTUnwrap(Event.find(by: zapReceiptEventID, context: context))
-        
+
         XCTAssertEqual(zapReceiptEvent.kind, EventKind.zapReceipt.rawValue)
-        
+
         let walletPubKey = "8b7cd4981e30ed2dd6b5ef1f816763453b282b3e44f41ef2a3da77ff5ef8d141"
         XCTAssertEqual(zapReceiptEvent.author?.hexadecimalPublicKey, walletPubKey)
         XCTAssertEqual(zapReceiptEvent.createdAt?.timeIntervalSince1970, 1_722_712_858)
-        
+
         // embedded zap request
         let zapRequestEventID = "6715260809f6f62ea82f8b213ca4cc0abd0426dc860f1c963c0f0207f9fadddb"
         let zapRequestEvent = try XCTUnwrap(Event.find(by: zapRequestEventID, context: context))
-        
+
         XCTAssertEqual(zapRequestEvent.kind, EventKind.zapRequest.rawValue)
-        
+
         let zapSenderPubKey = "2656d1495cccf384035a59cce13451c6f280a329f0d1b3bb6758b4830f67909c"
         XCTAssertEqual(zapRequestEvent.author?.hexadecimalPublicKey, zapSenderPubKey)
         XCTAssertEqual(zapRequestEvent.createdAt?.timeIntervalSince1970, 1_722_712_850)
     }
-    
+
     // MARK: - Expiration
 
     func testParseExpirationDate() throws {
@@ -341,12 +344,13 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
         let context = persistenceController.viewContext
 
         // Act & Assert
-        XCTAssertThrowsError(try EventProcessor.parse(
-            jsonEvent: jsonEvent,
-            from: nil,
-            in: context,
-            skipVerification: true
-        ))
+        XCTAssertThrowsError(
+            try EventProcessor.parse(
+                jsonEvent: jsonEvent,
+                from: nil,
+                in: context,
+                skipVerification: true
+            ))
     }
 
     // MARK: - Stub

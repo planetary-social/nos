@@ -2,13 +2,13 @@ import SwiftUI
 import SwiftUINavigation
 
 struct NosForm<Content: View>: View {
-    
+
     let content: Content
-    
+
     init(@ViewBuilder builder: () -> Content) {
         self.content = builder()
     }
-    
+
     var body: some View {
         VStack {
             ScrollView {
@@ -28,7 +28,7 @@ struct NosForm_Previews: PreviewProvider {
                 WithState(initialValue: "Alice") { text in
                     NosTextField(label: .localizable.url, text: text)
                 }
-            }   
-        }    
+            }
+        }
     }
 }

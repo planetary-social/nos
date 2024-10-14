@@ -2,7 +2,7 @@ import SwiftUI
 
 struct OnboardingNotOldEnoughView: View {
     @EnvironmentObject var state: OnboardingState
-    
+
     var body: some View {
         VStack {
             Text(.localizable.notOldEnoughTitle)

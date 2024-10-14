@@ -13,7 +13,7 @@ struct WizardSheetVStack<Content>: View where Content: View {
     init(@ViewBuilder content: @escaping () -> Content) {
         self.content = content
     }
-    
+
     var body: some View {
         ZStack {
             // Gradient border

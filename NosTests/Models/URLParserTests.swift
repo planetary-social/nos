@@ -12,7 +12,8 @@ class URLParserTests: XCTestCase {
 
     func testExtractURLs() throws {
         // swiftlint:disable line_length
-        let string = "Classifieds incoming... 👀\n\nhttps://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg"
+        let string =
+            "Classifieds incoming... 👀\n\nhttps://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg"
         let expectedString = "Classifieds incoming... 👀"
         // swiftlint:enable line_length
         let expectedURLs = [
@@ -53,22 +54,22 @@ class URLParserTests: XCTestCase {
 
     func testExtractURLsWithMultipleURLs() throws {
         let string = """
-        A few links...
+            A few links...
 
-        https://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg
-        nos.social
-        www.nostr.com/get-started
-        """
+            https://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg
+            nos.social
+            www.nostr.com/get-started
+            """
         let expectedString = """
-        A few links...
-        [nos.social](https://nos.social)
-        [nostr.com...](https://www.nostr.com/get-started)
-        """
+            A few links...
+            [nos.social](https://nos.social)
+            [nostr.com...](https://www.nostr.com/get-started)
+            """
 
         let expectedURLs = [
             URL(string: "https://nostr.build/i/2170fa01a69bca5ad0334430ccb993e41bb47eb15a4b4dbdfbee45585f63d503.jpg")!,
             URL(string: "https://nos.social")!,
-            URL(string: "https://www.nostr.com/get-started")
+            URL(string: "https://www.nostr.com/get-started"),
         ]
 
         // Act
@@ -104,7 +105,7 @@ class URLParserTests: XCTestCase {
         XCTAssertEqual(actualString, expectedString)
         XCTAssertEqual(actualURLs, expectedURLs)
     }
-    
+
     func testExtractURLsDoesNotIncludePeriodsInURLs() throws {
         // Arrange
         let string = "Welcome to nos.social. It's a place for humans"

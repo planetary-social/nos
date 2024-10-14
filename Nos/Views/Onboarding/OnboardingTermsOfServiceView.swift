@@ -6,10 +6,10 @@ struct OnboardingTermsOfServiceView: View {
     @Environment(CurrentUser.self) var currentUser
 
     @Dependency(\.crashReporting) private var crashReporting
-    
+
     /// Completion to be called when all onboarding steps are complete
     let completion: @MainActor () -> Void
-    
+
     var body: some View {
         VStack {
             Text(.localizable.termsOfServiceTitle)
@@ -64,10 +64,10 @@ struct OnboardingTermsOfServiceView: View {
 
 // swiftlint:disable line_length
 // We don't localize these for legal reasons
-fileprivate let termsOfService = """
+private let termsOfService = """
     Summary
     This top section summarizes the terms below. This summary is provided to help your understanding of the terms, but be sure to read the entire document, because when you agree to it, you are indicating you accept all of the terms, not just this summary.
-    
+
     Nos cloud services (the "Services") are a suite of services provided to you by Verse Communications Inc.
     The Services are provided "as is" and there are no warranties of any kind. There are significant limits on Verse's liability for any damages arising from your use of the Services.
     Terms of Service
@@ -147,5 +147,5 @@ fileprivate let termsOfService = """
 
     help@nos.social
     """
-    
+
 // swiftlint:enable line_length

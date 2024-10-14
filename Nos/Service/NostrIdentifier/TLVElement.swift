@@ -27,7 +27,7 @@ extension TLVElement {
         while offset + 1 < converted.count {
             let rawType = converted[offset]
             let length = Int(converted[offset + 1])
-            let value = converted.subdata(in: offset + 2 ..< offset + 2 + length)
+            let value = converted.subdata(in: offset + 2..<offset + 2 + length)
 
             if let type = TLVType(rawValue: rawType) {
                 let element = TLVElement(type: type, value: value)

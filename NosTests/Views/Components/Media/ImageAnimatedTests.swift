@@ -1,6 +1,6 @@
-import XCTest
 import SDWebImage
 import SDWebImageWebPCoder
+import XCTest
 
 final class ImageAnimatedTests: XCTestCase {
     func test_gif_isAnimated() throws {
@@ -9,8 +9,8 @@ final class ImageAnimatedTests: XCTestCase {
         let data = try Data(contentsOf: url)
 
         let image = try XCTUnwrap(UIImage(data: data))
-        XCTAssertFalse(image.sd_isAnimated) // ideally this would return true
-        XCTAssertNil(image.images) // ideally this would be non-nil
+        XCTAssertFalse(image.sd_isAnimated)  // ideally this would return true
+        XCTAssertNil(image.images)  // ideally this would be non-nil
 
         let sdImage = try XCTUnwrap(SDAnimatedImage(data: data))
         XCTAssertTrue(sdImage.sd_isAnimated)
@@ -32,8 +32,8 @@ final class ImageAnimatedTests: XCTestCase {
         let data = try Data(contentsOf: url)
 
         let image = try XCTUnwrap(UIImage(data: data))
-        XCTAssertFalse(image.sd_isAnimated) // ideally this would return true
-        XCTAssertNil(image.images) // ideally this would be non-nil
+        XCTAssertFalse(image.sd_isAnimated)  // ideally this would return true
+        XCTAssertNil(image.images)  // ideally this would be non-nil
 
         let sdImage = try XCTUnwrap(SDAnimatedImage(data: data))
         XCTAssertTrue(sdImage.sd_isAnimated)

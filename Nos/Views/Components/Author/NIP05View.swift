@@ -68,8 +68,8 @@ struct NIP05View: View {
                 .foregroundStyle(Color.primaryTxt)
         } else {
             Text(parts.username)
-                .foregroundStyle(Color.primaryTxt) +
-            Text("@" + parts.domain)
+                .foregroundStyle(Color.primaryTxt)
+                + Text("@" + parts.domain)
                 .foregroundStyle(Color.secondaryTxt)
         }
     }

@@ -1,6 +1,6 @@
-import SwiftUI
 import CoreData
 import Logger
+import SwiftUI
 
 struct ProfileHeader: View {
     @ObservedObject var author: Author
@@ -14,11 +14,11 @@ struct ProfileHeader: View {
 
     var followersRequest: FetchRequest<Follow>
     var followersResult: FetchedResults<Follow> { followersRequest.wrappedValue }
-    
+
     var followers: Followed {
         followersResult.map { $0 }
     }
-    
+
     @EnvironmentObject private var router: Router
 
     init(author: Author, selectedTab: Binding<ProfileFeedType>) {
@@ -40,9 +40,8 @@ struct ProfileHeader: View {
             guard let source = $0.source else {
                 return false
             }
-            return source.hasHumanFriendlyName == true &&
-                source != author &&
-                (currentUser.isFollowing(author: source) || currentUser.isBeingFollowedBy(author: source))
+            return source.hasHumanFriendlyName == true && source != author
+                && (currentUser.isFollowing(author: source) || currentUser.isBeingFollowedBy(author: source))
         }
     }
 
@@ -270,7 +269,7 @@ struct ProfileHeader: View {
 
 #Preview {
     var previewData = PreviewData()
-    
+
     return Group {
         // ProfileHeader(author: author)
         ProfileHeader(author: previewData.previewAuthor, selectedTab: .constant(.activity))
@@ -291,8 +290,9 @@ struct ProfileHeader: View {
         author.name = "Sebastian Heit"
         author.nip05 = "chardot@nostr.fan"
         // author.uns = "chardot"
-        author.about = "Go programmer working on Nos/Planetary. You can find me at various European events related to" +
-        " Chaos Computer Club, the hacker community and free software."
+        author.about =
+            "Go programmer working on Nos/Planetary. You can find me at various European events related to"
+            + " Chaos Computer Club, the hacker community and free software."
         let first = Author(context: previewContext)
         first.name = "Craig Nichols"
 
@@ -311,7 +311,7 @@ struct ProfileHeader: View {
 
         return author
     }
-    
+
     return Group {
         ProfileHeader(author: author, selectedTab: .constant(.activity))
     }
@@ -323,7 +323,7 @@ struct ProfileHeader: View {
 
 #Preview("UNS") {
     var previewData = PreviewData()
-    
+
     return Group {
         ProfileHeader(author: previewData.unsAuthor, selectedTab: .constant(.activity))
             .inject(previewData: previewData)

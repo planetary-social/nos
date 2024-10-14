@@ -1,11 +1,11 @@
-import SwiftUI
 import SDWebImageSwiftUI
+import SwiftUI
 
 struct SquareImage: View {
     var url: URL
-    
+
     var onTap: (() -> Void)?
-    
+
     var body: some View {
         Color.clear
             .aspectRatio(1, contentMode: .fit)

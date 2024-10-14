@@ -7,10 +7,10 @@ enum FeaturedAuthorCategory: CaseIterable {
     /// A special type of category that includes all other categories.
     case all
     /// A special type of category that includes all authors from the latest cohort.
-    case new // swiftlint:disable:this identifier_name
+    case new  // swiftlint:disable:this identifier_name
     case music
     case news
-    case art // swiftlint:disable:this identifier_name
+    case art  // swiftlint:disable:this identifier_name
     case activists
     case tech
     case health

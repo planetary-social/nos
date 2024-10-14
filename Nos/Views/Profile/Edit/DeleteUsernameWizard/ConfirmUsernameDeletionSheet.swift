@@ -9,7 +9,7 @@ struct ConfirmUsernameDeletionSheet: View {
 
     @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
-    
+
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.namesAPI) private var namesAPI
     @Dependency(\.analytics) private var analytics
@@ -124,7 +124,7 @@ struct ConfirmUsernameDeletionSheet: View {
 }
 
 /// The current state of the delete request.
-fileprivate enum DeleteState {
+private enum DeleteState {
     /// There is no request in progress yet
     case idle
 
@@ -151,7 +151,7 @@ fileprivate enum DeleteState {
     }
 }
 
-fileprivate enum DeleteError: LocalizedError {
+private enum DeleteError: LocalizedError {
     case notLoggedIn
     case unableToDelete(Error)
 

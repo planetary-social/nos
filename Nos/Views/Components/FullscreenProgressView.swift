@@ -2,12 +2,12 @@ import SwiftUI
 import SwiftUINavigation
 
 struct FullscreenProgressView: View {
-    
-    @Binding var isPresented: Bool 
+
+    @Binding var isPresented: Bool
 
     var text: String?
     var hideAfter: DispatchTime?
-    
+
     var body: some View {
         VStack {
             Spacer()

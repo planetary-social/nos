@@ -3,19 +3,19 @@ import Logger
 
 /// A view model for the RawEventView
 @MainActor protocol RawEventViewModel: ObservableObject {
-    
+
     /// The raw message to display in screen
     var rawMessage: String? { get }
-    
+
     /// A loading message that should be displayed when it is not nil
     var loadingMessage: String? { get }
-    
+
     /// An error message that should be displayed when it is not nil
     var errorMessage: String? { get }
-    
+
     /// Called when the user dismisses the shown error message. Should clear `errorMessage`.
     func didDismissError()
-    
+
     /// Called when the user taps on the Cancel button
     func didDismiss()
 }
@@ -26,11 +26,11 @@ import Logger
     private var note: Event
 
     @Published var rawMessage: String?
-    
+
     @Published var loadingMessage: String?
 
     @Published var errorMessage: String?
-    
+
     private var dismissHandler: () -> Void
 
     init(note: Event, dismissHandler: @escaping () -> Void) {
@@ -43,7 +43,7 @@ import Logger
         errorMessage = nil
         didDismiss()
     }
-    
+
     func didDismiss() {
         dismissHandler()
     }
@@ -63,7 +63,7 @@ import Logger
                     withJSONObject: note.jsonRepresentation ?? [:],
                     options: [.prettyPrinted]
                 )
-                rawMessage = String(decoding: data, as: UTF8.self) 
+                rawMessage = String(decoding: data, as: UTF8.self)
             } catch {
                 rawMessage = errorMessage
             }

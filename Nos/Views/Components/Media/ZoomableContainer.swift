@@ -27,7 +27,7 @@ struct ZoomableContainer<ContainerContent: View>: View {
     }
 }
 
-fileprivate struct ZoomableScrollView<ScrollViewContent: View>: UIViewRepresentable {
+private struct ZoomableScrollView<ScrollViewContent: View>: UIViewRepresentable {
     private var content: ScrollViewContent
     private let maxAllowedScale: CGFloat
 
@@ -49,7 +49,7 @@ fileprivate struct ZoomableScrollView<ScrollViewContent: View>: UIViewRepresenta
     func makeUIView(context: Context) -> UIScrollView {
         // Setup the UIScrollView
         let scrollView = UIScrollView()
-        scrollView.delegate = context.coordinator // for viewForZooming(in:)
+        scrollView.delegate = context.coordinator  // for viewForZooming(in:)
         scrollView.maximumZoomScale = maxAllowedScale
         scrollView.minimumZoomScale = 1
         scrollView.bouncesZoom = true
@@ -76,9 +76,9 @@ fileprivate struct ZoomableScrollView<ScrollViewContent: View>: UIViewRepresenta
         // Update the hosting controller's SwiftUI content
         context.coordinator.hostingController.rootView = content
 
-        if uiView.zoomScale > uiView.minimumZoomScale { // Scale out
+        if uiView.zoomScale > uiView.minimumZoomScale {  // Scale out
             uiView.setZoomScale(currentScale, animated: true)
-        } else if tapLocation != .zero { // Scale in to a specific point
+        } else if tapLocation != .zero {  // Scale in to a specific point
             uiView.zoom(to: zoomRect(for: uiView, scale: uiView.maximumZoomScale, center: tapLocation), animated: true)
             // Reset the location to prevent scaling to it in case of a negative scale (manual pinch)
             // Use the main thread to prevent unexpected behavior

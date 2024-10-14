@@ -1,7 +1,7 @@
+import Dependencies
 import Logger
 import SwiftUI
 import SwiftUINavigation
-import Dependencies
 
 struct NoteView: View {
     @EnvironmentObject private var relayService: RelayService
@@ -10,63 +10,62 @@ struct NoteView: View {
     @Dependency(\.analytics) private var analytics
 
     @State private var showReplyComposer = false
-    
+
     @State private var relaySubscriptions = SubscriptionCancellables()
-    
+
     @FocusState private var focusTextView: Bool
     @State private var showKeyboardOnAppear: Bool
-    
+
     var repliesRequest: FetchRequest<Event>
     /// All replies
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
-  
+
     @State private var directReplies: [Event] = []
-    
+
     func computeDirectReplies() async {
         directReplies = replies.filter { (reply: Event) in
             guard let eventReferences = reply.eventReferences.array as? [EventReference] else {
                 return false
             }
-            
+
             let containsRootMarker = eventReferences.contains(where: { (eventReference: EventReference) in
                 eventReference.type == .root
             })
-            
+
             let referencesNoteAsRoot = eventReferences.contains(where: { (eventReference: EventReference) in
                 eventReference.eventId == note.identifier && eventReference.type == .root
             })
-            
+
             let containsReplyMarker = eventReferences.contains(where: { (eventReference: EventReference) in
                 eventReference.type == .reply
             })
-            
+
             let referencesNoteAsReply = eventReferences.contains(where: { (eventReference: EventReference) in
                 eventReference.eventId == note.identifier && eventReference.type == .reply
             })
-            
+
             // This is sloppy, but I'm writing it anyway in a rush.
             // TODO: make sure there isn't a #[0] event reference this is referring to
             let referencesNoteTheDeprecatedWay = eventReferences.last?.eventId == note.identifier
-            
-            return (referencesNoteAsRoot && !containsReplyMarker) ||
-                referencesNoteAsReply ||
-                (!containsRootMarker && !containsReplyMarker && referencesNoteTheDeprecatedWay)
+
+            return (referencesNoteAsRoot && !containsReplyMarker) || referencesNoteAsReply
+                || (!containsRootMarker && !containsReplyMarker && referencesNoteTheDeprecatedWay)
         }
     }
-    
+
     init(note: Event, showKeyboard: Bool = false) {
         self.note = note
         self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note))
         _showKeyboardOnAppear = .init(initialValue: showKeyboard)
     }
-    
+
     var note: Event
-    
+
     func subscribeToReplies() {
         Task(priority: .userInitiated) {
             // Close out stale requests
             relaySubscriptions.removeAll()
-            
+
             let eTags = ([note.identifier] + replies.map { $0.identifier }).compactMap { $0 }
             let filter = Filter(
                 kinds: [.text, .like, .delete, .repost, .report, .label],
@@ -75,7 +74,7 @@ struct NoteView: View {
             )
             let subIDs = await relayService.fetchEvents(matching: filter)
             relaySubscriptions.append(subIDs)
-            
+
             // download reports for this user and the replies' authors
             guard let authorKey = note.author?.hexadecimalPublicKey else {
                 return
@@ -91,7 +90,7 @@ struct NoteView: View {
             )
         }
     }
-    
+
     var body: some View {
         GeometryReader { _ in
             VStack {
@@ -107,12 +106,14 @@ struct NoteView: View {
                             tapAction: { tappedEvent in tappedEvent.referencedNote().unwrap { router.push($0) } }
                         )
                         .padding(.top, 15)
-                        .sheet(isPresented: $showReplyComposer, content: {
-                            NoteComposer(replyTo: note, isPresented: $showReplyComposer)
-                                .environment(currentUser)
-                                .interactiveDismissDisabled()
-                        })
-                        
+                        .sheet(
+                            isPresented: $showReplyComposer,
+                            content: {
+                                NoteComposer(replyTo: note, isPresented: $showReplyComposer)
+                                    .environment(currentUser)
+                                    .interactiveDismissDisabled()
+                            })
+
                         ForEach(directReplies.reversed()) { event in
                             ThreadView(root: event, allReplies: replies.reversed())
                         }
@@ -147,19 +148,21 @@ struct NoteView: View {
             .toolbar {
                 if focusTextView {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            focusTextView = false
-                        }, label: {
-                            Text(.localizable.cancel)
-                                .foregroundColor(.primaryTxt)
-                        })
+                        Button(
+                            action: {
+                                focusTextView = false
+                            },
+                            label: {
+                                Text(.localizable.cancel)
+                                    .foregroundColor(.primaryTxt)
+                            })
                     }
                 }
             }
             .task {
                 await computeDirectReplies()
             }
-            .onChange(of: replies.count) { 
+            .onChange(of: replies.count) {
                 Task {
                     await computeDirectReplies()
                 }
@@ -168,14 +171,14 @@ struct NoteView: View {
     }
 }
 struct RepliesView_Previews: PreviewProvider {
-    
+
     static var previewData = PreviewData(currentUserKey: KeyFixture.alice)
     static var persistenceController = PersistenceController.preview
     static var previewContext = persistenceController.viewContext
     static var emptyRelayService = previewData.relayService
     static var router = Router()
     static var currentUser = previewData.currentUser
-    
+
     static var shortNote: Event {
         let note = Event(context: previewContext)
         note.kind = 1
@@ -184,7 +187,7 @@ struct RepliesView_Previews: PreviewProvider {
         note.author = user
         return note
     }
-    
+
     static var longNote: Event {
         let note = Event(context: previewContext)
         note.kind = 1
@@ -193,13 +196,13 @@ struct RepliesView_Previews: PreviewProvider {
         note.author = user
         return note
     }
-    
+
     static var user: Author {
         let author = Author(context: previewContext)
         author.hexadecimalPublicKey = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
         return author
     }
-    
+
     static var previews: some View {
         Group {
             VStack {

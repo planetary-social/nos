@@ -1,11 +1,11 @@
-import Foundation
 import CoreData
-import Logger
 import Dependencies
+import Foundation
+import Logger
 
 // swiftlint:disable type_body_length
 @Observable class CurrentUser: NSObject, NSFetchedResultsControllerDelegate {
-    
+
     @ObservationIgnored @Dependency(\.analytics) private var analytics
     @ObservationIgnored @Dependency(\.crashReporting) private var crashReporting
     @ObservationIgnored @Dependency(\.persistenceController) private var persistenceController
@@ -13,7 +13,7 @@ import Dependencies
     @ObservationIgnored @Dependency(\.relayService) var relayService
     @ObservationIgnored @Dependency(\.keychain) private var keychain
     @ObservationIgnored @Dependency(\.unsAPI) var unsAPI
-    
+
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
         if let privateKey = privateKeyHex, let keyPair = KeyPair.init(privateKeyHex: privateKey) {
@@ -21,17 +21,17 @@ import Dependencies
         }
         return nil
     }
-    
+
     func setKeyPair(_ newValue: KeyPair?) async {
         await setPrivateKeyHex(newValue?.privateKeyHex)
     }
-    
+
     private var _privateKeyHex: String?
-    
+
     var privateKeyHex: String? {
         _privateKeyHex
     }
-    
+
     @MainActor func setPrivateKeyHex(_ newValue: String?) async {
         guard let privateKeyHex = newValue else {
             let publicStatus = keychain.delete(key: keychain.keychainPrivateKey)
@@ -40,12 +40,12 @@ import Dependencies
             print("Deleted private key from keychain with status: \(publicStatus)")
             return
         }
-        
+
         guard let keyPair = KeyPair(privateKeyHex: privateKeyHex) else {
             Log.error("CurrentUser could not initialize KeyPair from privateKeyHex.")
             return
         }
-        
+
         let privateKeyData = Data(privateKeyHex.utf8)
         let status = keychain.save(key: keychain.keychainPrivateKey, data: privateKeyData)
         let hex = keyPair.publicKeyHex
@@ -54,27 +54,27 @@ import Dependencies
         _privateKeyHex = privateKeyHex
         analytics.identify(with: keyPair)
         crashReporting.identify(with: keyPair)
-        
+
         reset()
     }
-    
+
     var publicKeyHex: String? {
         keyPair?.publicKey.hex
     }
-    
+
     // swiftlint:disable implicitly_unwrapped_optional
     @MainActor var viewContext: NSManagedObjectContext!
     var backgroundContext: NSManagedObjectContext!
     var socialGraph: SocialGraphCache!
     // swiftlint:enable implicitly_unwrapped_optional
-    
+
     var subscriptions = SubscriptionCancellables()
 
     var onboardingRelays: [Relay] = []
 
     // TODO: prevent this from being accessed from contexts other than the view context. Or maybe just get rid of it.
     @MainActor var author: Author?
-    
+
     private var authorWatcher: NSFetchedResultsController<Author>?
 
     @MainActor override init() {
@@ -96,7 +96,7 @@ import Dependencies
             }
         }
     }
-    
+
     // TODO: this is fragile
     // Reset CurrentUser state
     @MainActor private func reset() {
@@ -104,7 +104,7 @@ import Dependencies
         subscriptions = []
         setUp()
     }
-    
+
     @MainActor private func setUp() {
         if let keyPair {
             do {
@@ -118,9 +118,9 @@ import Dependencies
                 )
                 authorWatcher?.delegate = self
                 try authorWatcher?.performFetch()
-                
+
                 socialGraph = SocialGraphCache(userKey: keyPair.publicKeyHex, context: backgroundContext)
-                
+
                 Task {
                     await subscribe()
                     // Listen for notifications
@@ -135,7 +135,7 @@ import Dependencies
             author = nil
         }
     }
-    
+
     @MainActor func createAccount() async throws {
         let keyPair = KeyPair()!
         let author = try Author.findOrCreate(by: keyPair.publicKeyHex, context: viewContext)
@@ -153,19 +153,19 @@ import Dependencies
 
         await followRecommendedAccounts()
     }
-    
+
     /// Follows the nos.social and Tagr-bot accounts. Should only be called when creating a new account.
     @MainActor private func followRecommendedAccounts() async {
         let recommendedAccounts = [
-            "npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch", // nos.social
-            "npub12m2t8433p7kmw22t0uzp426xn30lezv3kxcmxvvcrwt2y3hk4ejsvre68j" // Tagr-bot
+            "npub1pu3vqm4vzqpxsnhuc684dp2qaq6z69sf65yte4p39spcucv5lzmqswtfch",  // nos.social
+            "npub12m2t8433p7kmw22t0uzp426xn30lezv3kxcmxvvcrwt2y3hk4ejsvre68j",  // Tagr-bot
         ]
         for recommendedAccount in recommendedAccounts {
             do {
                 guard let publicKey = PublicKey(npub: recommendedAccount) else {
                     assertionFailure(
-                        "Could create public key for npub: \(recommendedAccount)\n" +
-                        "Fix this invalid npub in CurrentUser.followRecommendedAccounts()"
+                        "Could create public key for npub: \(recommendedAccount)\n"
+                            + "Fix this invalid npub in CurrentUser.followRecommendedAccounts()"
                     )
                     continue
                 }
@@ -177,21 +177,21 @@ import Dependencies
         }
     }
 
-    /// Subscribes to relays for important events concerning the current user like their latest contact list, 
+    /// Subscribes to relays for important events concerning the current user like their latest contact list,
     /// notifications, reports, mutes, zaps, etc.
     @MainActor func subscribe() async {
         guard let key = publicKeyHex, let author else {
             return
         }
-       
+
         // Close out stale requests
         subscriptions.removeAll()
-        
+
         // Always make a request for the latest contact list
         subscriptions.append(
             await relayService.requestContactList(for: key, since: author.lastUpdatedContactList)
         )
-        
+
         // Subscribe to important events we may not get incidentally while browsing the feed
         let latestReceivedEvent = try? viewContext.fetch(Event.lastReceived(for: author)).first
         let importantEventsFilter = Filter(
@@ -205,35 +205,36 @@ import Dependencies
             await relayService.fetchEvents(matching: importantEventsFilter)
         )
     }
-    
+
     private var friendMetadataTask: Task<Void, any Error>?
-    
+
     @MainActor func refreshFriendMetadata() {
         guard let publicKeyHex else {
             Log.info("Skipping refreshFriendMetadata because we have no logged in user.")
             return
         }
-        
+
         if let friendMetadataTask {
             friendMetadataTask.cancel()
         }
-        
+
         friendMetadataTask = Task.detached(priority: .background) { [weak self, publicKeyHex] in
             guard let backgroundContext = self?.backgroundContext else {
                 return
             }
-            
-            let followData = await self?.backgroundContext.perform {
-                let follows = try? Author.findOrCreate(
-                    by: publicKeyHex,
-                    context: backgroundContext
-                ).follows
-                return follows?
-                    .shuffled()
-                    .compactMap { $0.destination }
-                    .map { ($0.hexadecimalPublicKey, $0.lastUpdatedMetadata, $0.lastUpdatedContactList) }
-            } ?? [(String?, Date?, Date?)]()
-            
+
+            let followData =
+                await self?.backgroundContext.perform {
+                    let follows = try? Author.findOrCreate(
+                        by: publicKeyHex,
+                        context: backgroundContext
+                    ).follows
+                    return follows?
+                        .shuffled()
+                        .compactMap { $0.destination }
+                        .map { ($0.hexadecimalPublicKey, $0.lastUpdatedMetadata, $0.lastUpdatedContactList) }
+                } ?? [(String?, Date?, Date?)]()
+
             for followData in followData {
                 guard let followedKey = followData.0 else {
                     continue
@@ -262,14 +263,14 @@ import Dependencies
             }
         }
     }
-    
+
     /// You probably shouldn't use this. It's slow and blocks the main thread. Try to use `SocialGraphCache.follows(:)`
     /// instead.
     @MainActor func isFollowing(author profile: Author) -> Bool {
         guard let following = author?.follows as? Set<Follow>, let key = profile.hexadecimalPublicKey else {
             return false
         }
-        
+
         let followKeys = following.keys
         return followKeys.contains(key)
     }
@@ -284,9 +285,9 @@ import Dependencies
         let followKeys = following.keys
         return followKeys.contains(key)
     }
-    
+
     // MARK: - NSFetchedResultsControllerDelegate
-    
+
     @MainActor func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         author = controller.fetchedObjects?.first as? Author
     }
@@ -294,7 +295,7 @@ import Dependencies
 // swiftlint:enable type_body_length
 
 extension CurrentUser {
-    
+
     /// Logs the user out, deletes all their locally stored data, and updates the app state.
     /// - Parameter appController: The ``AppController`` for updating the app state.
     func logout(appController: AppController) async {
@@ -305,7 +306,7 @@ extension CurrentUser {
         appController.configureCurrentState()
         try? await persistenceController.deleteAll()
     }
-    
+
     /// Deletes the user's account by publishing a request to vanish and deleting all their
     /// locally stored data.
     /// - Parameter appController: The ``AppController`` for updating the app state.
@@ -315,11 +316,11 @@ extension CurrentUser {
     func deleteAccount(appController: AppController) async throws {
         try await publishAccountDeletedMetadata()
         try await publishRequestToVanish()
-        
+
         // Note: Publishing the empty follow list must be last before logout because
         //       it will remove the user's relays.
         try await publishEmptyFollowList()
-        
+
         await logout(appController: appController)
     }
 }

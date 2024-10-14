@@ -36,7 +36,7 @@ extension EventProcessorIntegrationTests {
         XCTAssertEqual(squareImageMetadata.dimensions, CGSize(width: 854, height: 854))
         XCTAssertEqual(squareImageMetadata.orientation, .landscape)
 
-        let portraitImageURL = 
+        let portraitImageURL =
             "https://image.nostr.build/2787ad495941dfb068fbff77f087513095a3f981f9697fcb9e51c052c6198090.jpg"
         let portraitImageMetadata = try XCTUnwrap(inlineMetadata[portraitImageURL])
         XCTAssertEqual(portraitImageMetadata.dimensions, CGSize(width: 1263, height: 3985))

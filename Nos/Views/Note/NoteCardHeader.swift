@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct NoteCardHeader: View {
-    
+
     @ObservedObject var note: Event
     @ObservedObject var author: Author
-    
+
     var body: some View {
         HStack(alignment: .center) {
             AuthorLabel(author: author, note: note)
