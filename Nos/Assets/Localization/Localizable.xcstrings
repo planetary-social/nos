@@ -21802,7 +21802,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "es tu nombre universal. \n\nHemos asociado tu perfil de Nostr con tu nombre universal, y hemos configurado tu nombre universal como nombre de usuario en tu perfil."
+            "value" : "es tu nombre universal.\u2028\n\nHemos asociado tu perfil de Nostr con tu nombre universal, y hemos configurado tu nombre universal como nombre de usuario en tu perfil."
           }
         },
         "fa" : {
