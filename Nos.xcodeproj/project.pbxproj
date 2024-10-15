@@ -1755,10 +1755,10 @@
 			isa = PBXGroup;
 			children = (
 				5B0D99022A94090A0039F0C5 /* DoubleTapToPopModifier.swift */,
-				03C7E7A12CB9CD0B0054624C /* PointDownEmojiTipViewStyle.swift */,
 				03C7E7972CB9C1600054624C /* InlineTipViewStyle.swift */,
 				C95D68A8299E709800429F86 /* LinearGradient+Planetary.swift */,
 				C95D68A4299E6E1E00429F86 /* PlaceholderModifier.swift */,
+				03C7E7A12CB9CD0B0054624C /* PointDownEmojiTipViewStyle.swift */,
 				C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */,
 				C9E37E0E2A1E7C32003D4B0A /* ReportMenuModifier.swift */,
 				C9A0DAE629C69FA000466635 /* Text+Gradient.swift */,
