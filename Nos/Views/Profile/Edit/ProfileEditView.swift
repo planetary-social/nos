@@ -23,7 +23,6 @@ struct ProfileEditView: View {
     @State private var avatarText: String = ""
     @State private var website: String = ""
     @State private var showNIP05Wizard = false
-    @State private var showUniversalNameWizard = false
     @State private var showConfirmationDialog = false
     @State private var saveError: SaveError?
     
@@ -82,16 +81,6 @@ struct ProfileEditView: View {
                 FormSeparator()
                 NosTextField(label: .localizable.website, text: $website)
             }
-            
-            HStack {
-                Text(.localizable.identityVerification)
-                    .font(.clarity(.semibold, textStyle: .headline))
-                    .foregroundColor(.primaryTxt)
-                    .padding(.top, 16)
-                
-                Spacer()
-            }
-            .padding(.horizontal, 13)
         }
         .sheet(isPresented: $showNIP05Wizard) {
             CreateUsernameWizard(isPresented: $showNIP05Wizard)
