@@ -179,6 +179,18 @@ class Analytics {
             "Discover Search Displayed Note"
         )
     }
+    
+    /// Call this when publishing a new contact list for the user. 
+    /// This is part of our solution to detect if Nos overwrites a user's contact list.
+    /// https://github.com/planetary-social/cleanstr/issues/51
+    func published(contactList: JSONEvent) {
+        let properties: [String: Any] = [
+            "date": contactList.createdAt, 
+            "identifier": contactList.identifier ?? "null"
+        ]
+        
+        track("Published Contact List", properties: properties)
+    }
 
     // MARK: - Relays
     
