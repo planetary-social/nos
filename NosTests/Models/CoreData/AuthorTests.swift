@@ -73,30 +73,6 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertTrue(author.hasNIP05)
     }
 
-    func test_hasUNS_false_when_uns_is_nil() throws {
-        let context = persistenceController.viewContext
-        let author = try Author.findOrCreate(by: "test", context: context)
-        author.uns = nil
-
-        XCTAssertFalse(author.hasUNS)
-    }
-
-    func test_hasUNS_false_when_uns_is_empty() throws {
-        let context = persistenceController.viewContext
-        let author = try Author.findOrCreate(by: "test", context: context)
-        author.uns = ""
-
-        XCTAssertFalse(author.hasUNS)
-    }
-
-    func test_hasUNS_true_when_uns_exists() throws {
-        let context = persistenceController.viewContext
-        let author = try Author.findOrCreate(by: "test", context: context)
-        author.uns = "me@example.com"
-
-        XCTAssertTrue(author.hasUNS)
-    }
-
     func test_nip05Parts() throws {
         let context = persistenceController.viewContext
         let author = try Author.findOrCreate(by: "test", context: context)

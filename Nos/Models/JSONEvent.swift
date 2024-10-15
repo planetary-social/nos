@@ -172,7 +172,6 @@ struct MetadataEventJSON: Codable {
     var displayName: String?
     var name: String?
     var nip05: String?
-    var uns: String?
     var about: String?
     var website: String?
     var picture: String?
@@ -182,7 +181,7 @@ struct MetadataEventJSON: Codable {
     }
     
     private enum CodingKeys: String, CodingKey {
-        case displayName = "display_name", name, nip05, uns = "uns_name", about, website, picture
+        case displayName = "display_name", name, nip05, about, website, picture
     }
     
     var dictionary: [String: String] {
@@ -190,7 +189,6 @@ struct MetadataEventJSON: Codable {
             "display_name": displayName ?? "",
             "name": name ?? "",
             "nip05": nip05 ?? "",
-            "uns_name": uns ?? "",
             "about": about ?? "",
             "website": website ?? "",
             "picture": picture ?? "",

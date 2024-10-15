@@ -238,44 +238,6 @@ class Analytics {
         track("Deleted NIP-05 Username")
     }
 
-    // MARK: UNS
-    
-    func showedUNSWizard() {
-        track("UNS Showed Wizard")
-    }
-    
-    func canceledUNSWizard() {
-        track("UNS Canceled Wizard")
-    }
-    
-    func completedUNSWizard() {
-        track("UNS Completed Wizard")
-    }
-    
-    func enteredUNSPhone() {
-        track("UNS Entered Phone")
-    }
-    
-    func enteredUNSCode() {
-        track("UNS Entered Code")
-    }
-    
-    func registeredUNSName() {
-        track("UNS Registered Name")
-    }
-    
-    func linkedUNSName() {
-        track("UNS Linked Name")
-    }
-    
-    func choseInvalidUNSName() {
-        track("UNS Invalid Name")
-    }
-    
-    func encounteredUNSError(_ error: Error?) {
-        track("UNS Error", properties: ["errorDescription": error?.localizedDescription ?? "null"])
-    }
-    
     // MARK: Message Actions
     
     func copiedNoteIdentifier() {

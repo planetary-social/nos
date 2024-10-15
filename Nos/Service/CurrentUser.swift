@@ -12,7 +12,6 @@ import Dependencies
     @ObservationIgnored @Dependency(\.pushNotificationService) private var pushNotificationService
     @ObservationIgnored @Dependency(\.relayService) var relayService
     @ObservationIgnored @Dependency(\.keychain) private var keychain
-    @ObservationIgnored @Dependency(\.unsAPI) var unsAPI
     
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
@@ -301,7 +300,6 @@ extension CurrentUser {
         await setKeyPair(nil)
         analytics.logout()
         crashReporting.logout()
-        unsAPI.logout()
         appController.configureCurrentState()
         try? await persistenceController.deleteAll()
     }
