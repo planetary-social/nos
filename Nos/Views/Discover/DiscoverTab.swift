@@ -38,7 +38,7 @@ struct DiscoverTab: View {
                         .padding(.horizontal, 12)
                         .padding(.bottom, 8)
                         .tipBackground(LinearGradient.horizontalAccentReversed)
-                        .tipViewStyle(.fakePopover)
+                        .tipViewStyle(.pointDownEmoji)
                 }
             }
             .searchable(

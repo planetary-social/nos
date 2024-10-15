@@ -1,7 +1,8 @@
 import TipKit
 
-/// A fake popover tip view style that has a pointing down emoji (👇) in the bottom left instead of the popover chevron.
-struct FakePopoverTipViewStyle: TipViewStyle {
+/// A popover tip view style that has a point down emoji (👇) in the bottom left in addition to the title and
+/// close button.
+struct PointDownEmojiTipViewStyle: TipViewStyle {
     func makeBody(configuration: TipViewStyle.Configuration) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top) {
@@ -28,6 +29,6 @@ struct FakePopoverTipViewStyle: TipViewStyle {
     }
 }
 
-extension TipViewStyle where Self == FakePopoverTipViewStyle {
-    static var fakePopover: Self { Self() }
+extension TipViewStyle where Self == PointDownEmojiTipViewStyle {
+    static var pointDownEmoji: Self { Self() }
 }
