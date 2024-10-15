@@ -946,6 +946,7 @@
 		C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoldenPostView.swift; sourceTree = "<group>"; };
 		C9CE5B132A0172CF008E198C /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseQueue.swift; sourceTree = "<group>"; };
+		C9D2839E2CB9B177007ADCB9 /* Nos 17.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 17.xcdatamodel"; sourceTree = "<group>"; };
 		C9D573482AB24B7300E06BB4 /* custom-xcassets.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; name = "custom-xcassets.stencil"; path = "Nos/Assets/SwiftGen Stencils/custom-xcassets.stencil"; sourceTree = SOURCE_ROOT; };
 		C9DC6CB92C1739AD00E1CFB3 /* View+HandleURLsInRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+HandleURLsInRouter.swift"; sourceTree = "<group>"; };
 		C9DEBFCE298941000078B43A /* Nos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nos.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3817,6 +3818,7 @@
 		C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C9D2839E2CB9B177007ADCB9 /* Nos 17.xcdatamodel */,
 				033B288D2C419E7600E325E8 /* Nos 16.xcdatamodel */,
 				5B810DD62B55BA44008FE8A9 /* Nos 15.xcdatamodel */,
 				5B960D2C2B34B1B900C52C45 /* Nos 14.xcdatamodel */,
@@ -3826,7 +3828,7 @@
 				C9C547562A4F1D1A006B0741 /* Nos 9.xcdatamodel */,
 				5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */,
 			);
-			currentVersion = 033B288D2C419E7600E325E8 /* Nos 16.xcdatamodel */;
+			currentVersion = C9D2839E2CB9B177007ADCB9 /* Nos 17.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
