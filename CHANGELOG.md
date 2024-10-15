@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Release Notes
+- Added a tag to published contact lists to help us detect the source of lost contact lists. [#51](https://github.com/planetary-social/cleanstr/issues/51)
+
+### Internal Changes
+
 ## [0.2.2] - 2024-10-11Z
 
 ### Release Notes
