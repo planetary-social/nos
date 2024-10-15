@@ -71,6 +71,7 @@ struct HomeFeedView: View {
                 TipView(welcomeTip)
                     .padding(.top, 20)
                     .padding(.horizontal, 16)
+                    .readabilityPadding()
                     .tipBackground(LinearGradient.horizontalAccentReversed)
                     .tipViewStyle(.inline)
 

@@ -1,6 +1,4 @@
 import SwiftUI
-import Dependencies
-import Logger
 
 class OnboardingState: ObservableObject {
     @Published var flow: OnboardingFlow = .createAccount
@@ -21,11 +19,11 @@ enum OnboardingStep {
     case onboardingStart
     case ageVerification
     case notOldEnough
-    case termsOfService
     case buildYourNetwork
     case login
 }
 
+/// The view that initializes the onboarding navigation stack and shows the first view.
 struct OnboardingView: View {
     @StateObject var state = OnboardingState()
     
@@ -47,9 +45,6 @@ struct OnboardingView: View {
                     case .notOldEnough:
                         OnboardingNotOldEnoughView()
                             .environmentObject(state)
-                    case .termsOfService:
-                        OnboardingTermsOfServiceView(completion: completion)
-                            .environmentObject(state)
                     case .login:
                         OnboardingLoginView(completion: completion)
                     case .buildYourNetwork:
@@ -63,5 +58,6 @@ struct OnboardingView: View {
 struct OnboardingView_Previews: PreviewProvider {
     static var previews: some View {
         OnboardingView {}
+            .inject(previewData: PreviewData())
     }
 }

@@ -293,7 +293,6 @@ extension SettingsView {
     @MainActor private var stagingControls: some View {
         Group {
             newModerationFlowToggle
-            deleteAccountToggle
         }
     }
 }
