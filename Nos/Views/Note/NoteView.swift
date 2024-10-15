@@ -99,7 +99,7 @@ struct NoteView: View {
         authors.formUnion(tenDirectReplies)
 
         let authorArray = Array(authors)
-        return authorArray.sortByMutualFollowees(with: currentAuthor)
+        return authorArray.sortedByMutualFollowees(with: currentAuthor)
     }
 
     func subscribeToReplies() {

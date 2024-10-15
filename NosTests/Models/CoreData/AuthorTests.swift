@@ -230,7 +230,7 @@ final class AuthorTests: CoreDataTestCase {
         let authors = [eve, carl, alice]
 
         // Act
-        let sortedAuthors = authors.sortByMutualFollowees(with: bob)
+        let sortedAuthors = authors.sortedByMutualFollowees(with: bob)
 
         // Assert
         XCTAssertEqual(sortedAuthors.map { $0.hexadecimalPublicKey }, ["alice", "eve", "carl"])

@@ -52,7 +52,7 @@ struct AuthorListView: View {
                 filteredAuthors = newValue
                 return
             }
-            let sortedAuthors = newValue.sortByMutualFollowees(with: currentAuthor)
+            let sortedAuthors = newValue.sortedByMutualFollowees(with: currentAuthor)
             filteredAuthors += sortedAuthors
 
             guard let relatedAuthors = relatedAuthors else { return }
