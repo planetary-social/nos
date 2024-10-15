@@ -73,9 +73,21 @@ struct DiscoverTab: View {
     }
 }
 
+/// A tip that's displayed on the Discover view after the user has followed three accounts.
 struct GoToFeedTip: Tip {
+    /// A TipKit Event that tracks the number of accounts that have been followed.
+    static let followedAccount = Tips.Event(id: "followedAccount")
+
     var title: Text {
         Text("goToYourFeed")
+    }
+
+    var rules: [Rule] {
+        // Define a rule based on the interaction.
+        #Rule(Self.followedAccount) {
+            // Set the conditions for when the tip displays.
+            $0.donations.count >= 3
+        }
     }
 }
 
