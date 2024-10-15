@@ -37,6 +37,7 @@ struct DiscoverTab: View {
                     TipView(goToFeedTip)
                         .padding(.horizontal, 12)
                         .padding(.bottom, 8)
+                        .readabilityPadding()
                         .tipBackground(LinearGradient.horizontalAccentReversed)
                         .tipViewStyle(.pointDownEmoji)
                 }
