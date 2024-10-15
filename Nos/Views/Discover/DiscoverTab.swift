@@ -78,15 +78,22 @@ struct GoToFeedTip: Tip {
     /// A TipKit Event that tracks the number of accounts that have been followed.
     static let followedAccount = Tips.Event(id: "followedAccount")
 
+    /// A TipKit Event that tracks how many times the Feed has been displayed.
+    static let viewedFeed = Tips.Event(id: "viewedFeed")
+
     var title: Text {
         Text("goToYourFeed")
     }
 
     var rules: [Rule] {
-        // Define a rule based on the interaction.
+        // Each rule here is combined using the logical AND, so all rules must return true for the tip to display.
+
         #Rule(Self.followedAccount) {
-            // Set the conditions for when the tip displays.
             $0.donations.count >= 3
+        }
+
+        #Rule(Self.viewedFeed) {
+            $0.donations.count < 2 // for whatever reason, HomeFeedView's onAppear is called before the user views it
         }
     }
 }
