@@ -27,7 +27,7 @@ struct AppView: View {
                         HomeTab(user: author)
                             .tabItem {
                                 VStack {
-                                    let text = Text(.localizable.homeFeed)
+                                    let text = Text("homeFeed")
                                     if $router.selectedTab.wrappedValue == .home {
                                         Image.tabIconHomeSelected
                                         text
@@ -56,7 +56,7 @@ struct AppView: View {
                     DiscoverTab()
                         .tabItem {
                             VStack {
-                                let text = Text(.localizable.discover)
+                                let text = Text("discover")
                                 if $router.selectedTab.wrappedValue == .discover {
                                     Image.tabIconEveryoneSelected
                                     text.foregroundColor(.primaryTxt)
@@ -74,7 +74,7 @@ struct AppView: View {
                         .tabItem {
                             VStack {
                                 Image.newPostButton
-                                Text(.localizable.post)
+                                Text("post")
                             }
                         }
                     .tag(AppDestination.noteComposer(nil))
@@ -82,7 +82,7 @@ struct AppView: View {
                     NotificationsView(user: currentUser.author)
                         .tabItem {
                             VStack {
-                                let text = Text(.localizable.notifications)
+                                let text = Text("notifications")
                                 if $router.selectedTab.wrappedValue == .notifications {
                                     Image.tabIconNotificationsSelected
                                     text.foregroundColor(.primaryTxt)
@@ -101,7 +101,7 @@ struct AppView: View {
                         ProfileTab(author: author, path: $router.profilePath)
                             .tabItem {
                                 VStack {
-                                    let text = Text(.localizable.profileTitle)
+                                    let text = Text("profileTitle")
                                     if $router.selectedTab.wrappedValue == .profile {
                                         Image.tabProfileSelected
                                         text.foregroundColor(.primaryTxt)

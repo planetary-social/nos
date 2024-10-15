@@ -19,7 +19,7 @@ struct UNSWizardChooseNameView: View {
                         .padding(20)
                         .padding(.top, 50)
                     
-                    Text(.localizable.chooseNameOrRegister)
+                    Text("chooseNameOrRegister")
                         .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
@@ -31,7 +31,7 @@ struct UNSWizardChooseNameView: View {
                 }
                 Spacer()
                 
-                BigActionButton(title: .localizable.next) {
+                BigActionButton("next") {
                     await submit()
                 }
                 .padding(.vertical, 31)

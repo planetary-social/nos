@@ -3,10 +3,10 @@ import SwiftUINavigation
 
 struct NosFormSection<Content: View>: View {
     
-    var label: LocalizedStringResource?
+    var label: LocalizedStringKey?
     let content: Content
     
-    init(label: LocalizedStringResource? = nil, @ViewBuilder builder: () -> Content) {
+    init(_ label: LocalizedStringKey? = nil, @ViewBuilder builder: () -> Content) {
         self.label = label
         self.content = builder()
     }
@@ -52,9 +52,9 @@ struct NosFormSection<Content: View>: View {
 struct NosFormSection_Previews: PreviewProvider {
     static var previews: some View {
         NosForm {
-            NosFormSection(label: .localizable.profilePicture) {
+            NosFormSection("profilePicture") {
                 WithState(initialValue: "Alice") { text in
-                    NosTextField(label: .localizable.url, text: text)
+                    NosTextField("url", text: text)
                 }
             }    
         }

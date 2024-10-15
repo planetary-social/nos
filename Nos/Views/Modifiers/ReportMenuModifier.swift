@@ -86,17 +86,17 @@ struct ReportMenuModifier: ViewModifier {
         // ReportCategory menu
             .confirmationDialog(unwrapping: $confirmationDialogState, action: processUserSelection)
             .alert(
-                String(localized: .localizable.confirmFlag),
+                String(localized: "confirmFlag"),
                 isPresented: $confirmReport,
                 actions: {
-                    Button(String(localized: .localizable.confirm)) {
+                    Button("confirm") {
                         publishReport(userSelection)
                         
                         if let author = reportedObject.author, !author.muted {
                             showMuteDialog = true
                         }
                     }
-                    Button(String(localized: .localizable.cancel), role: .cancel) {
+                    Button("cancel", role: .cancel) {
                         userSelection = nil
                     }
                 },
@@ -107,37 +107,37 @@ struct ReportMenuModifier: ViewModifier {
             )
         // Mute user menu
             .alert(
-                String(localized: .localizable.muteUser),
+                "muteUser",
                 isPresented: $showMuteDialog,
                 actions: {
                     if let author = reportedObject.author {
-                        Button(String(localized: .localizable.yes)) {
+                        Button("yes") {
                             Task {
                                 await mute(author: author)
                             }
                         }
-                        Button(String(localized: .localizable.no)) {}
+                        Button("no") {}
                     }
                 },
                 message: {
                     if let author = reportedObject.author {
-                        Text(.localizable.mutePrompt(author.safeName))
+                        Text(String.localizedStringWithFormat(String(localized: "mutePrompt"), author.safeName))
                     } else {
-                        Text(.localizable.error)
+                        Text("error")
                     }
                 }
             )
             .onChange(of: isPresented) { _, shouldPresent in
                 if shouldPresent {
-                    let message: LocalizedStringResource
+                    let message: String
                     if case .noteCategorySelected = userSelection {
-                        message = .localizable.reportContentMessage
+                        message = String(localized: "reportContentMessage")
                     } else {
-                        message = .localizable.flagUserMessage
+                        message = String(localized: "flagUserMessage")
                     }
                     confirmationDialogState = ConfirmationDialogState(
-                        title: TextState(String(localized: .localizable.reportContent)),
-                        message: TextState(String(localized: message)),
+                        title: TextState(String(localized: "reportContent")),
+                        message: TextState(message),
                         buttons: topLevelButtons()
                     )
                 }
@@ -161,8 +161,12 @@ struct ReportMenuModifier: ViewModifier {
         case .noteCategorySelected(let category):
             Task {
                 confirmationDialogState = ConfirmationDialogState(
-                    title: TextState(String(localized: .localizable.reportActionTitle(category.displayName))),
-                    message: TextState(String(localized: .localizable.reportActionTitle(category.displayName))),
+                    title: TextState(
+                        String.localizedStringWithFormat(String(localized: "reportActionTitle"), category.displayName)
+                    ),
+                    message: TextState(
+                        String.localizedStringWithFormat(String(localized: "reportActionTitle"), category.displayName)
+                    ),
                     buttons: [
                         ButtonState(action: .send(.sendToNos(category))) {
                             TextState("Send to Nos")
@@ -177,8 +181,12 @@ struct ReportMenuModifier: ViewModifier {
         case .authorCategorySelected(let category):
             Task {
                 confirmationDialogState = ConfirmationDialogState(
-                    title: TextState(String(localized: .localizable.reportActionTitle(category.displayName))),
-                    message: TextState(String(localized: .localizable.reportActionTitle(category.displayName))),
+                    title: TextState(
+                        String.localizedStringWithFormat(String(localized: "reportActionTitle"), category.displayName)
+                    ),
+                    message: TextState(
+                        String.localizedStringWithFormat(String(localized: "reportActionTitle"), category.displayName)
+                    ),
                     buttons: [
                         ButtonState(action: .send(.sendToNos(category))) {
                             TextState("Send to Nos")
@@ -228,17 +236,23 @@ struct ReportMenuModifier: ViewModifier {
             case .sendToNos(let category):
                 switch reportedObject {
                 case .note:
-                    return String(localized: .localizable.reportNoteSendToNosConfirmation(category.displayName))
+                    return String.localizedStringWithFormat(
+                        String(localized: "reportNoteSendToNosConfirmation"), category.displayName
+                    )
                 case .author:
-                    return String(localized: .localizable.reportAuthorSendToNosConfirmation)
+                    return String(localized: "reportAuthorSendToNosConfirmation")
                 }
                 
             case .flagPublicly(let category):
-                return String(localized: .localizable.reportFlagPubliclyConfirmation(category.displayName))
+                return String.localizedStringWithFormat(
+                    String(localized: "reportFlagPubliclyConfirmation"), category.displayName
+                )
                 
             case .noteCategorySelected(let category),
                 .authorCategorySelected(let category):
-                return String(localized: .localizable.reportFlagPubliclyConfirmation(category.displayName))
+                return String.localizedStringWithFormat(
+                    String(localized: "reportFlagPubliclyConfirmation"), category.displayName
+                )
             }
         }
     }
@@ -325,7 +339,7 @@ struct ReportMenuModifier: ViewModifier {
     }
     
     func getAlertMessage(for userSelection: UserSelection?, with reportedObject: ReportTarget) -> String {
-        userSelection?.confirmationAlertMessage(for: reportedObject) ?? String(localized: .localizable.error)
+        userSelection?.confirmationAlertMessage(for: reportedObject) ?? String(localized: "error")
     }
 }
 

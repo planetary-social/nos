@@ -58,14 +58,14 @@ struct UserFlagView: View {
                     categoryView
                 }
             }
-            .nosNavigationBar(title: .localizable.flagUserTitle)
+            .nosNavigationBar("flagUserTitle")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
                         dismiss()
                         resetSelections()
                     } label: {
-                        Text(.localizable.cancel)
+                        Text("cancel")
                             .foregroundColor(.primaryTxt)
                     }
                     .opacity(showSuccessView ? 0 : 1)
@@ -73,7 +73,7 @@ struct UserFlagView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     ActionButton(
-                        title: showSuccessView ? .localizable.done : .localizable.send,
+                        showSuccessView ? "done" : "send",
                         action: {
                             if showSuccessView {
                                 dismiss()
@@ -110,8 +110,8 @@ struct UserFlagView: View {
                             previousSelection: .constant(nil),
                             currentSelection: $selectedFlagOption,
                             options: flagCategories,
-                            title: String(localized: .localizable.flagUserCategoryTitle),
-                            subtitle: String(localized: .localizable.flagUserCategoryDescription)
+                            title: String(localized: "flagUserCategoryTitle"),
+                            subtitle: String(localized: "flagUserCategoryDescription")
                         )
 
                         if selectedFlagOption != nil {
@@ -119,7 +119,7 @@ struct UserFlagView: View {
                                 previousSelection: $selectedFlagOption,
                                 currentSelection: $selectedSendOption,
                                 options: FlagOption.flagUserSendOptions,
-                                title: String(localized: .localizable.flagSendTitle),
+                                title: String(localized: "flagSendTitle"),
                                 subtitle: nil
                             )
                             .id(sendSectionID)
@@ -131,7 +131,7 @@ struct UserFlagView: View {
                                 previousSelection: .constant(nil),
                                 currentSelection: $selectedVisibilityOption,
                                 options: FlagOption.flagUserVisibilityOptions,
-                                title: String(localized: .localizable.flagUserMuteCategoryTitle),
+                                title: String(localized: "flagUserMuteCategoryTitle"),
                                 subtitle: nil
                             )
                             .id(visibilitySectionID)

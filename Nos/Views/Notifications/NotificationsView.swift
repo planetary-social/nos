@@ -84,12 +84,12 @@ struct NotificationsView: View {
             }
             .overlay(Group {
                 if events.isEmpty {
-                    Text(.localizable.noNotifications)
+                    Text("noNotifications")
                 }
             })
             .background(Color.appBg)
             .padding(.top, 1)
-            .nosNavigationBar(title: .localizable.notifications)
+            .nosNavigationBar("notifications")
             .navigationBarItems(leading: SideMenuButton())
             .refreshable {
                 await subscribeToNewEvents()

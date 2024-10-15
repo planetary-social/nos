@@ -40,7 +40,7 @@ class NamesAPI {
             case .unexpected:
                 return "Unexpected"
             case .usernameNotAvailable:
-                return String(localized: .localizable.usernameAlreadyClaimed)
+                return String(localized: "usernameAlreadyClaimed")
             }
         }
     }

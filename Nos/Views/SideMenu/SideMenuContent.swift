@@ -19,8 +19,8 @@ struct SideMenuContent: View {
         Group {
             if let author = currentUser.author, author.needsMetadata == true {
                 ActionBanner(
-                    messageText: .localizable.completeProfileMessage,
-                    buttonText: .localizable.completeProfileButton,
+                    messageText: "completeProfileMessage",
+                    buttonText: "completeProfileButton",
                     buttonImage: .editProfile,
                     shouldButtonFillHorizontalSpace: true
                 ) {
@@ -66,22 +66,22 @@ struct SideMenuContent: View {
                 VStack(alignment: .leading, spacing: 0) {
                     profileHeader
                     SideMenuRow(
-                        title: .localizable.yourProfile,
+                        "yourProfile",
                         image: Image(systemName: "person.crop.circle"),
                         destination: .profile
                     )
-                    SideMenuRow(title: .localizable.settings, image: Image(systemName: "gear"), destination: .settings)
+                    SideMenuRow("settings", image: Image(systemName: "gear"), destination: .settings)
                     SideMenuRow(
-                        title: .localizable.relays,
+                        "relays",
                         image: Image(systemName: "antenna.radiowaves.left.and.right"),
                         destination: .relays
                     )
                     SideMenuRow(
-                        title: .localizable.about,
+                        "about",
                         image: Image(systemName: "questionmark.circle"),
                         destination: .about
                     )
-                    SideMenuRow(title: .localizable.contactUs, image: Image(systemName: "envelope.circle")) {
+                    SideMenuRow("contactUs", image: Image(systemName: "envelope.circle")) {
                         isShowingReportABugMailView = true
                     }
                     .disabled(!MFMailComposeViewController.canSendMail())
@@ -91,7 +91,7 @@ struct SideMenuContent: View {
                                 analytics.showedSupport()
                             }
                     }
-                    SideMenuRow(title: .localizable.shareNos, image: Image(systemName: "person.2.circle")) {
+                    SideMenuRow("shareNos", image: Image(systemName: "person.2.circle")) {
                         shareNosPressed = true
                     }
                     .sheet(isPresented: $shareNosPressed) {
@@ -123,21 +123,31 @@ struct SideMenuContent: View {
 
 struct SideMenuRow: View {
     
-    var title: LocalizedStringResource
-    var image: Image
+    let title: LocalizedStringKey
+    let image: Image
     var destination: SideMenu.Destination?
     var action: (() -> Void)?
     
     @EnvironmentObject private var router: Router
+    
+    init(
+        _ title: LocalizedStringKey,
+        image: Image,
+        destination: SideMenu.Destination? = nil,
+        action: (() -> Void)? = nil
+    ) {
+        self.title = title
+        self.image = image
+        self.destination = destination
+        self.action = action
+    }
     
     var body: some View {
         Button {
             if let destination {
                 router.sideMenuPath.append(destination)
             }
-            if let action {
-                action()
-            }
+            action?()
         } label: {
             HStack(alignment: .center) {
                 image

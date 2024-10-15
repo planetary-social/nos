@@ -14,7 +14,7 @@ struct UNSNameTakenView: View {
                         .padding(40)
                         .padding(.top, 50)
                     
-                    Text(.localizable.oops)
+                    Text("oops")
                         .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
@@ -22,14 +22,14 @@ struct UNSNameTakenView: View {
                         .padding(.top, 20)
                         .padding(.bottom, 3)
                     
-                    Text(.localizable.thatNameIsTaken)
+                    Text("thatNameIsTaken")
                         .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
                         .shadow(radius: 1, y: 1)
                         .padding(.bottom, 20)
                     
-                    Text(.localizable.tryAnotherName)
+                    Text("tryAnotherName")
                         .fontWeight(.medium)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.secondaryTxt)
@@ -41,7 +41,7 @@ struct UNSNameTakenView: View {
                 
                 Spacer()
                 
-                BigActionButton(title: .localizable.goBack) {
+                BigActionButton("goBack") {
                     switch controller.state {
                     case .nameTaken(let previousState):
                         controller.state = previousState

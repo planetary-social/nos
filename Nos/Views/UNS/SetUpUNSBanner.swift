@@ -2,8 +2,8 @@ import SwiftUI
 
 struct SetUpUNSBanner: View {
 
-    var text: LocalizedStringResource
-    var button: LocalizedStringResource
+    let text: LocalizedStringKey
+    let button: LocalizedStringKey
 
     var action: (() -> Void)?
 
@@ -27,7 +27,7 @@ struct SetUpUNSBanner: View {
                 
                 HStack {
                     ActionButton(
-                        title: button,
+                        button,
                         font: .clarity(.semibold, textStyle: .subheadline),
                         textColor: .unsBannerButtonTxt,
                         depthEffectColor: .unsBannerButtonEffect,
@@ -65,8 +65,8 @@ struct SetUpUNSBanner_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             SetUpUNSBanner(
-                text: .localizable.unsTagline,
-                button: .localizable.manageUniversalName
+                text: "unsTagline",
+                button: "manageUniversalName"
             )
             .padding(20)
         }

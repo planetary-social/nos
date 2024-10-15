@@ -27,7 +27,7 @@ struct NIP05View: View {
                 Button {
                     UIPasteboard.general.string = nip05
                 } label: {
-                    Text(.localizable.copy)
+                    Text("copy")
                 }
             } preview: {
                 Text(nip05)

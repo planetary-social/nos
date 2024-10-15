@@ -22,7 +22,7 @@ struct UNSVerifyCodeView: View {
                         .padding(40)
                         .padding(.top, 50)
                     
-                    Text(.localizable.verification)
+                    Text("verification")
                         .font(.clarityBold(.title))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primaryTxt)
@@ -30,7 +30,7 @@ struct UNSVerifyCodeView: View {
                     
                     let phoneString = controller.phoneNumber ?? "you."
                     HighlightedText(
-                        String(localized: .localizable.verificationDescription(phoneString)),
+                        String.localizedStringWithFormat(String(localized: "verificationDescription"), phoneString),
                         highlightedWord: phoneString,
                         highlight: LinearGradient(colors: [.primaryTxt], startPoint: .top, endPoint: .bottom),
                         textColor: .secondaryTxt,
@@ -49,7 +49,7 @@ struct UNSVerifyCodeView: View {
                     
                     Spacer()
                     
-                    BigActionButton(title: .localizable.submit) {
+                    BigActionButton("submit") {
                         await submit()
                     }
                     .padding(.bottom, 41)

@@ -23,7 +23,7 @@ struct UNSWizardTextField: View {
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
-                Button(String(localized: .localizable.done)) {
+                Button("done") {
                     hideKeyboard()
                 }
             }
