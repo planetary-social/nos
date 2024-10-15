@@ -895,6 +895,7 @@
 		C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTextEditor.swift; sourceTree = "<group>"; };
 		C9B71DC12A9003670031ED9F /* CrashReporting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReporting.swift; sourceTree = "<group>"; };
 		C9BAB09A2996FBA10003A84E /* EventProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventProcessor.swift; sourceTree = "<group>"; };
+		C9BB9FE32CBEFF560045DC5A /* Nos 18.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 18.xcdatamodel"; sourceTree = "<group>"; };
 		C9BD91882B61BBEF00FDA083 /* bad_contact_list.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = bad_contact_list.json; sourceTree = "<group>"; };
 		C9BD919A2B61C4FB00FDA083 /* RawNostrID+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RawNostrID+Random.swift"; sourceTree = "<group>"; };
 		C9C097222C13534800F78EC3 /* DatabaseCleanerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseCleanerTests.swift; sourceTree = "<group>"; };
@@ -3738,6 +3739,7 @@
 		C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C9BB9FE32CBEFF560045DC5A /* Nos 18.xcdatamodel */,
 				C9D2839E2CB9B177007ADCB9 /* Nos 17.xcdatamodel */,
 				033B288D2C419E7600E325E8 /* Nos 16.xcdatamodel */,
 				5B810DD62B55BA44008FE8A9 /* Nos 15.xcdatamodel */,
@@ -3748,7 +3750,7 @@
 				C9C547562A4F1D1A006B0741 /* Nos 9.xcdatamodel */,
 				5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */,
 			);
-			currentVersion = C9D2839E2CB9B177007ADCB9 /* Nos 17.xcdatamodel */;
+			currentVersion = C9BB9FE32CBEFF560045DC5A /* Nos 18.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
