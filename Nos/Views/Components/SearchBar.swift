@@ -17,6 +17,7 @@ struct SearchBar: View {
                             isSearching.wrappedValue = true // Set focus to the search bar when tapped
                         }
                         .focused(isSearching)
+                        .submitLabel(.search)
                     Spacer()
                 }
                 .padding(8)
