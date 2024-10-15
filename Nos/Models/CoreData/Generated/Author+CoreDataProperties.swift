@@ -20,9 +20,15 @@ extension Author {
     @NSManaged public var rawMetadata: Data?
     @NSManaged public var events: Set<Event>
     @NSManaged public var followers: Set<Follow>
+    
+    /// All follow notifications ("This user is now following you") where this Author is the follower. 
+    @NSManaged public var followNotifications: NSSet
     @NSManaged public var follows: Set<Follow>
     @NSManaged public var relays: Set<Relay>
-    @NSManaged public var notifications: Set<NosNotification>
+    
+    /// All notifications that should notify this Author if they are the logged in user.
+    /// The notifications are intended for the current author to be received.
+    @NSManaged public var incomingNotifications: Set<NosNotification>
 }
 
 // MARK: Generated accessors for events
@@ -71,6 +77,22 @@ extension Author {
 
     @objc(removeFollows:)
     @NSManaged public func removeFromFollows(_ values: NSSet)
+}
+
+// MARK: Generated accessors for followNotifications
+extension Author {
+    
+    @objc(addFollowNotificationsObject:)
+    @NSManaged public func addToFollowNotifications(_ value: NosNotification)
+    
+    @objc(removeFollowNotificationsObject:)
+    @NSManaged public func removeFromFollowNotifications(_ value: NosNotification)
+    
+    @objc(addFollowNotifications:)
+    @NSManaged public func addToFollowNotifications(_ values: NSSet)
+    
+    @objc(removeFollowNotifications:)
+    @NSManaged public func removeFromFollowNotifications(_ values: NSSet)
 }
 
 // MARK: Generated accessors for relays
