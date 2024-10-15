@@ -12,7 +12,7 @@ struct NoteTextEditor: View {
     
     var placeholder: LocalizedStringResource
 
-    /// The authors are referenced in a note / who replied under the note the user is replying if any.
+    /// The authors who are referenced in a note in addition to those who replied to the note, if any.
     var relatedAuthors: [Author]?
 
     init(

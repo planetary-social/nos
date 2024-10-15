@@ -426,7 +426,7 @@ extension Array where Element == Author {
     ///
     /// - Parameter currentAuthor: The current `Author` to compare the other author to.
     /// - Returns: A sorted array of `Author` objects, in descending order of mutual followees with the current author.
-    func sortByMutualFollowees(with currentAuthor: Author) -> [Author] {
+    func sortedByMutualFollowees(with currentAuthor: Author) -> [Author] {
         self
             .compactMap { author -> (Author, Int)? in
                 let mutualFollowees = currentAuthor.mutualFolloweesCount(comparedTo: author)
