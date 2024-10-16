@@ -202,6 +202,7 @@ struct SettingsView: View {
                         }
                     }
                 }
+
                 #if STAGING
                 stagingControls
                 #endif
@@ -209,16 +210,15 @@ struct SettingsView: View {
                 #if DEBUG
                 debugControls
                 #endif
+            } header: {
+                Text(.localizable.debug)
+                    .foregroundColor(.primaryTxt)
+                    .font(.clarity(.semibold, textStyle: .headline))
+                    .textCase(nil)
+                    .listRowInsets(EdgeInsets())
+                    .padding(.vertical, 15)
             }
-        header: {
-            Text(.localizable.debug)
-                .foregroundColor(.primaryTxt)
-                .font(.clarity(.semibold, textStyle: .headline))
-                .textCase(nil)
-                .listRowInsets(EdgeInsets())
-                .padding(.vertical, 15)
-            }
-        .listRowGradientBackground()
+            .listRowGradientBackground()
 
             ActionButton(
                 title: .localizable.deleteMyAccount,
