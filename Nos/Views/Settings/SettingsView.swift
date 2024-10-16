@@ -284,6 +284,19 @@ extension SettingsView {
     private var newModerationFlowToggle: some View {
         NosToggle(isOn: isNewModerationFlowEnabled, labelText: .localizable.enableNewModerationFlow)
     }
+
+    /// Whether the new onboarding flow is enabled.
+    private var isNewOnboardingFlowEnabled: Binding<Bool> {
+        Binding<Bool>(
+            get: { featureFlags.isEnabled(.newOnboardingFlow) },
+            set: { featureFlags.setFeature(.newOnboardingFlow, enabled: $0) }
+        )
+    }
+
+    /// A toggle for the new moderation flow that allows the user to turn the feature on or off.
+    private var newOnboardingFlowToggle: some View {
+        NosToggle(isOn: isNewOnboardingFlowEnabled, labelText: "New Onboarding Flow")
+    }
 }
 #endif
 
@@ -293,6 +306,7 @@ extension SettingsView {
     @MainActor private var stagingControls: some View {
         Group {
             newModerationFlowToggle
+            newOnboardingFlowToggle
         }
     }
 }
@@ -304,6 +318,7 @@ extension SettingsView {
     @MainActor private var debugControls: some View {
         Group {
             newModerationFlowToggle
+            newOnboardingFlowToggle
             Text(.localizable.sampleDataInstructions)
                 .foregroundColor(.primaryTxt)
             Button(String(localized: .localizable.loadSampleData)) {

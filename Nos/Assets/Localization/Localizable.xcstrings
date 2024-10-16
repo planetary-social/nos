@@ -4030,6 +4030,90 @@
         }
       }
     },
+    "createAccountButton" : {
+      "comment" : "The title of the button to create an account",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create Account"
+          }
+        }
+      }
+    },
+    "createAccountDescription" : {
+      "comment" : "The description on the create account screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We've simplified management of your account credentials. Nos uses public-private key encryption to verify your identity."
+          }
+        }
+      }
+    },
+    "createAccountDisplayName" : {
+      "comment" : "The label on the create account screen for display name",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display Name"
+          }
+        }
+      }
+    },
+    "createAccountHeadline" : {
+      "comment" : "The headline (title) on the create account screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Say goodbye to usernames and passwords!"
+          }
+        }
+      }
+    },
+    "createAccountPrivateKey" : {
+      "comment" : "The label on the create account screen for private key",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Key"
+          }
+        }
+      }
+    },
+    "createAccountPublicKey" : {
+      "comment" : "The label on the create account screen for public key",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Public Key"
+          }
+        }
+      }
+    },
+    "createAccountUsername" : {
+      "comment" : "The label on the create account screen for username",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Username"
+          }
+        }
+      }
+    },
     "dayAbbreviated" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -13785,7 +13869,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your **@username** is your identity in the Nos community.\u2028\nChoose a name that reflects you or your organization. Make it memorable and distinct!"
+            "value" : "Your **@username** is your identity in the Nos community. \nChoose a name that reflects you or your organization. Make it memorable and distinct!"
           }
         },
         "es" : {
@@ -18951,7 +19035,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Well done, you've successfully claimed your **@username**!\u2028\nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
+            "value" : "Well done, you've successfully claimed your **@username**! \nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
           }
         },
         "es" : {
