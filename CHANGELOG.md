@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Release Notes
+- Added a tip to the Feed to welcome first-time users and explain how the Feed works. [#1602](https://github.com/planetary-social/nos/issues/1602)
+- Removed integration with Universal Name Space [#1636](https://github.com/planetary-social/nos/issues/1636)
+
+### Internal Changes
+
 ## [0.2.2] - 2024-10-11Z
 
 ### Release Notes

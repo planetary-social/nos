@@ -10,7 +10,6 @@ extension CurrentUser {
             displayName: author.displayName,
             name: author.name,
             nip05: author.nip05,
-            uns: author.uns,
             about: author.about,
             website: author.website,
             picture: author.profilePhotoURL?.absoluteString
@@ -206,7 +205,6 @@ extension CurrentUser {
         author.website = nil
         author.nip05 = nil
         author.profilePhotoURL = nil
-        author.uns = nil
         author.rawMetadata = nil
         
         try viewContext.save()

@@ -14,6 +14,7 @@ struct NosForm<Content: View>: View {
             ScrollView {
                 content
                     .readabilityPadding()
+                    .padding(.bottom, 13)
             }
         }
         .frame(maxWidth: .infinity)
