@@ -48,22 +48,8 @@
 		<string>remote-notification</string>
 		<string>processing</string>
 	</array>
-	<key>UNS_API_KEY</key>
-	<string>$(UNS_API_KEY)</string>
-	<key>UNS_AUTH_CONNECTION_URL</key>
-	<string>$(UNS_AUTH_CONNECTION_URL)</string>
-	<key>UNS_CLIENT_ID</key>
-	<string>$(UNS_CLIENT_ID)</string>
-	<key>UNS_CLIENT_SECRET</key>
-	<string>$(UNS_CLIENT_SECRET)</string>
-	<key>UNS_CONNECTION_URL</key>
-	<string>$(UNS_CONNECTION_URL)</string>
-	<key>UNS_ORG_CODE</key>
-	<string>$(UNS_ORG_CODE)</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Nos uses the microphone when you are record a video from within the app.</string>
-	<key>WALLET_CONNECT_PROJECT_ID</key>
-	<string>$(WALLET_CONNECT_PROJECT_ID)</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.verse.nos.database-cleaner</string>

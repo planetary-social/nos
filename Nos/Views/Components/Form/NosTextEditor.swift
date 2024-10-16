@@ -11,6 +11,7 @@ struct NosTextEditor: View {
             TextEditor(text: $text)
                 .textInputAutocapitalization(.none)
                 .foregroundColor(.primaryTxt)
+                .scrollContentBackground(.hidden)
                 .autocorrectionDisabled()
         }
     }
@@ -22,7 +23,6 @@ struct NosTextEditor_Previews: PreviewProvider {
             NosFormSection(label: .localizable.profilePicture) {
                 WithState(initialValue: "Alice") { text in
                     NosTextEditor(label: .localizable.bio, text: text)
-                        .scrollContentBackground(.hidden)
                         .frame(maxHeight: 200)
                 }    
             }

@@ -173,7 +173,6 @@ extension Event {
                 newAuthor.profilePhotoURL = metadata.profilePhotoURL
                 newAuthor.website = metadata.website
                 newAuthor.nip05 = metadata.nip05
-                newAuthor.uns = metadata.uns
             } catch {
                 print("Failed to decode metaData event with ID \(String(describing: identifier))")
             }
