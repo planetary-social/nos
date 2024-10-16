@@ -631,11 +631,17 @@ extension RelayService {
         })
     }
     
-    func publishToAll(event: JSONEvent, signingKey: KeyPair, context: NSManagedObjectContext) async throws {
+    @discardableResult
+    func publishToAll(
+        event: JSONEvent, 
+        signingKey: KeyPair, 
+        context: NSManagedObjectContext
+    ) async throws -> JSONEvent {
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
         for socket in await subscriptionManager.sockets() {
             try await publish(from: socket, jsonEvent: signedEvent)
         }
+        return signedEvent
     }
     
     func publish(
