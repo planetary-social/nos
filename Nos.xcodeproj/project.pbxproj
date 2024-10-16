@@ -146,7 +146,6 @@
 		3F30020529C1FDD9003D4F8B /* OnboardingStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */; };
 		3F30020729C237AB003D4F8B /* OnboardingAgeVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020629C237AB003D4F8B /* OnboardingAgeVerificationView.swift */; };
 		3F30020929C23895003D4F8B /* OnboardingNotOldEnoughView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020829C23895003D4F8B /* OnboardingNotOldEnoughView.swift */; };
-		3F30020B29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020A29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift */; };
 		3F30020D29C382EB003D4F8B /* OnboardingLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F30020C29C382EB003D4F8B /* OnboardingLoginView.swift */; };
 		3F43C47629A9625700E896A0 /* AuthorReference+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */; };
 		3F60F42929B27D3E000D62C4 /* ThreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F60F42829B27D3E000D62C4 /* ThreadView.swift */; };
@@ -697,7 +696,6 @@
 		3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStartView.swift; sourceTree = "<group>"; };
 		3F30020629C237AB003D4F8B /* OnboardingAgeVerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingAgeVerificationView.swift; sourceTree = "<group>"; };
 		3F30020829C23895003D4F8B /* OnboardingNotOldEnoughView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNotOldEnoughView.swift; sourceTree = "<group>"; };
-		3F30020A29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTermsOfServiceView.swift; sourceTree = "<group>"; };
 		3F30020C29C382EB003D4F8B /* OnboardingLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingLoginView.swift; sourceTree = "<group>"; };
 		3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthorReference+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3F60F42829B27D3E000D62C4 /* ThreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadView.swift; sourceTree = "<group>"; };
@@ -952,6 +950,7 @@
 		C9CDBBA329A8FA2900C555C7 /* GoldenPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoldenPostView.swift; sourceTree = "<group>"; };
 		C9CE5B132A0172CF008E198C /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseQueue.swift; sourceTree = "<group>"; };
+		C9D2839E2CB9B177007ADCB9 /* Nos 17.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 17.xcdatamodel"; sourceTree = "<group>"; };
 		C9D573482AB24B7300E06BB4 /* custom-xcassets.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; name = "custom-xcassets.stencil"; path = "Nos/Assets/SwiftGen Stencils/custom-xcassets.stencil"; sourceTree = SOURCE_ROOT; };
 		C9DC6CB92C1739AD00E1CFB3 /* View+HandleURLsInRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+HandleURLsInRouter.swift"; sourceTree = "<group>"; };
 		C9DEBFCE298941000078B43A /* Nos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nos.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1488,7 +1487,6 @@
 				3F30020C29C382EB003D4F8B /* OnboardingLoginView.swift */,
 				3F30020829C23895003D4F8B /* OnboardingNotOldEnoughView.swift */,
 				3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */,
-				3F30020A29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift */,
 				3FB5E650299D28A200386527 /* OnboardingView.swift */,
 			);
 			path = Onboarding;
@@ -2317,7 +2315,6 @@
 				C98DC9BB2A795CAD004E5F0F /* ActionBanner.swift in Sources */,
 				038863DE2C6FF51500B09797 /* ZoomableContainer.swift in Sources */,
 				C9F204802AE029D90029A858 /* AppDestination.swift in Sources */,
-				3F30020B29C361C8003D4F8B /* OnboardingTermsOfServiceView.swift in Sources */,
 				C9C5475B2A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift in Sources */,
 				C98B8B4029FBF83B009789C8 /* NotificationCard.swift in Sources */,
 				5B834F672A83FB5C000C1432 /* ProfileKnownFollowersView.swift in Sources */,
@@ -3829,6 +3826,7 @@
 		C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C9D2839E2CB9B177007ADCB9 /* Nos 17.xcdatamodel */,
 				033B288D2C419E7600E325E8 /* Nos 16.xcdatamodel */,
 				5B810DD62B55BA44008FE8A9 /* Nos 15.xcdatamodel */,
 				5B960D2C2B34B1B900C52C45 /* Nos 14.xcdatamodel */,
@@ -3838,7 +3836,7 @@
 				C9C547562A4F1D1A006B0741 /* Nos 9.xcdatamodel */,
 				5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */,
 			);
-			currentVersion = 033B288D2C419E7600E325E8 /* Nos 16.xcdatamodel */;
+			currentVersion = C9D2839E2CB9B177007ADCB9 /* Nos 17.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
