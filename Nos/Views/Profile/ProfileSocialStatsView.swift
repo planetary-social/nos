@@ -44,7 +44,7 @@ struct ProfileSocialStatsView: View {
 
     private func tab(label: LocalizedStringKey, value: Int) -> some View {
         VStack {
-            Text(label)
+            Text("\(value)")
                 .font(.title3.bold())
                 .foregroundColor(.primaryTxt)
             Text(label)

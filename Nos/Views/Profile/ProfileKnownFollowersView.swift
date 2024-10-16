@@ -6,7 +6,7 @@ struct ProfileKnownFollowersView: View {
     var followers: [Follow]
 
     private func attributedText(from content: String) -> AttributedString {
-        let attributedString = AttributedString(content)
+        let attributedString = (try? AttributedString(markdown: content)) ?? AttributedString(content)
         let bold = InlinePresentationIntent.stronglyEmphasized.rawValue
         return attributedString.replacingAttributes(
             AttributeContainer(

@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Remove most usage of xcstringstool-generated strings to improve performance. [#1458](https://github.com/planetary-social/nos/issues/1458)
 
 ## [0.2.2] - 2024-10-11Z
 
@@ -21,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Build Your Network screen to onboarding to explain how the feed works. [#1600](https://github.com/planetary-social/nos/issues/1600)
 - Decreased the opacity on disabled buttons.
 - Added a Delete Account button to the Settings screen. [#80](https://github.com/planetary-social/nos/issues/80)
-- Remove most usage of xcstringstool-generated strings to improve performance. [#1458](https://github.com/planetary-social/nos/issues/1458)
 
 ### Internal Changes
 - Moved the database cleanup routine into a background execution task. [#1426](https://github.com/planetary-social/nos/issues/1426)
