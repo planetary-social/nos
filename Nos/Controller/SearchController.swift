@@ -48,7 +48,6 @@ class SearchController: ObservableObject {
     @Dependency(\.router) private var router
     @Dependency(\.relayService) private var relayService
     @Dependency(\.persistenceController) private var persistenceController
-    @Dependency(\.unsAPI) var unsAPI
     @Dependency(\.currentUser) var currentUser
     @Dependency(\.analytics) private var analytics
 
@@ -181,7 +180,7 @@ class SearchController: ObservableObject {
         }
     }
     
-    /// Searches the relays and UNS for the given query.
+    /// Searches the relays for the given query.
     /// - Parameter query: The string to search for.
     ///
     /// - Warning: SIDE EFFECT WARNING:
@@ -197,7 +196,6 @@ class SearchController: ObservableObject {
         Task {
             self.searchSubscriptions.removeAll()
             self.searchRelays(for: query)
-            self.searchUNS(for: query)
         }
     }
 
@@ -218,28 +216,6 @@ class SearchController: ObservableObject {
         }
     }
     
-    func searchUNS(for query: String) {
-        Task {
-            do {
-                let pubKeys = try await unsAPI.names(matching: query)
-                try Task.checkCancellation()
-                try await self.context.perform {
-                    for pubKey in pubKeys {
-                        let author = try Author.findOrCreate(by: pubKey, context: self.context)
-                        author.uns = query
-                    }
-                }
-                try self.context.saveIfNeeded()
-                for pubKey in pubKeys {
-                    try Task.checkCancellation()
-                    searchSubscriptions.append(await relayService.requestMetadata(for: pubKey, since: nil))
-                }
-            } catch {
-                Log.optional(error)
-            }
-        }
-    }
-
     func startSearchTimer() {
         timer?.invalidate()
 
@@ -260,7 +236,7 @@ class SearchController: ObservableObject {
     /// 
     /// Third, checks to see if `query` matches a note's public key and if so, shows the note.
     /// 
-    /// Finally, if all previous checks fail, searches the relays and UNS for the given query.
+    /// Finally, if all previous checks fail, searches the relays for the given query.
     func submitSearch(query: String) {
         searchSubscriptions.removeAll()
 

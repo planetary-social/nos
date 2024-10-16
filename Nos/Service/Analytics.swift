@@ -179,6 +179,18 @@ class Analytics {
             "Discover Search Displayed Note"
         )
     }
+    
+    /// Call this when publishing a new contact list for the user. 
+    /// This is part of our solution to detect if Nos overwrites a user's contact list.
+    /// https://github.com/planetary-social/cleanstr/issues/51
+    func published(contactList: JSONEvent) {
+        let properties: [String: Any] = [
+            "date": contactList.createdAt, 
+            "identifier": contactList.identifier ?? "null"
+        ]
+        
+        track("Published Contact List", properties: properties)
+    }
 
     // MARK: - Relays
     
@@ -238,44 +250,6 @@ class Analytics {
         track("Deleted NIP-05 Username")
     }
 
-    // MARK: UNS
-    
-    func showedUNSWizard() {
-        track("UNS Showed Wizard")
-    }
-    
-    func canceledUNSWizard() {
-        track("UNS Canceled Wizard")
-    }
-    
-    func completedUNSWizard() {
-        track("UNS Completed Wizard")
-    }
-    
-    func enteredUNSPhone() {
-        track("UNS Entered Phone")
-    }
-    
-    func enteredUNSCode() {
-        track("UNS Entered Code")
-    }
-    
-    func registeredUNSName() {
-        track("UNS Registered Name")
-    }
-    
-    func linkedUNSName() {
-        track("UNS Linked Name")
-    }
-    
-    func choseInvalidUNSName() {
-        track("UNS Invalid Name")
-    }
-    
-    func encounteredUNSError(_ error: Error?) {
-        track("UNS Error", properties: ["errorDescription": error?.localizedDescription ?? "null"])
-    }
-    
     // MARK: Message Actions
     
     func copiedNoteIdentifier() {
