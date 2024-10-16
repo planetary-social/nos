@@ -4887,6 +4887,17 @@
         }
       }
     },
+    "deleteAccountMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting your account will delete all your data from Nos servers and ask all your relays to do the same."
+          }
+        }
+      }
+    },
     "deleteMyAccount" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -19899,6 +19910,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "嘗試"
+          }
+        }
+      }
+    },
+    "typeDelete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type DELETE"
           }
         }
       }
