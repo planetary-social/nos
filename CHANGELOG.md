@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed integration with Universal Name Space [#1636](https://github.com/planetary-social/nos/issues/1636)
 
 ### Internal Changes
+- Removed new moderation feature flag. [#1646](https://github.com/planetary-social/nos/issues/1646)
 
 ## [0.2.2] - 2024-10-11Z
 
