@@ -42,8 +42,6 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        /// This ZStack is necessary to make the custom delete alert view overlay the main content
-        /// to mimic Apple's default AlertView
         Form {
             Section {
                 HStack {
