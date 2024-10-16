@@ -3,11 +3,7 @@ import Dependencies
 import SwiftUI
 
 /// Feature flags for enabling experimental or beta features.
-enum FeatureFlag {
-    /// Whether the new moderation flow should be enabled or not.
-    /// - Note: See [#1489](https://github.com/planetary-social/nos/issues/1489) for details on the new moderation flow.
-    case newModerationFlow
-}
+enum FeatureFlag: Hashable {}
 
 /// The set of feature flags used by the app.
 protocol FeatureFlags {
@@ -29,9 +25,7 @@ protocol FeatureFlags {
     private init() {}
 
     /// Feature flags and their values.
-    private var featureFlags: [FeatureFlag: Bool] = [
-        .newModerationFlow: false,
-    ]
+    private var featureFlags: [FeatureFlag: Bool] = [:]
 
     /// Returns true if the feature is enabled.
     func isEnabled(_ feature: FeatureFlag) -> Bool {

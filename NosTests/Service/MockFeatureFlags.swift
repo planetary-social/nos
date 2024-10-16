@@ -1,9 +1,7 @@
 /// A set of feature flag values used for testing that can be customized.
 class MockFeatureFlags: FeatureFlags {
     /// Mock feature flags and their values.
-    private var featureFlags: [FeatureFlag: Bool] = [
-        .newModerationFlow: false,
-    ]
+    private var featureFlags: [FeatureFlag: Bool] = [:]
 
     func isEnabled(_ feature: FeatureFlag) -> Bool {
         featureFlags[feature] ?? false
