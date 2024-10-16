@@ -27,9 +27,6 @@ struct ProfileEditView: View {
     @State private var saveError: SaveError?
     
     @State private var isUploadingPhoto = false
-    @State private var alert: AlertState<AlertAction>?
-    
-    fileprivate enum AlertAction {}
 
     private var showAlert: Binding<Bool> {
         Binding {
