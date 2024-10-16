@@ -81,7 +81,7 @@ struct BioSheet: View {
     var previewData = PreviewData()
 
     return Group {
-        BioSheet(author: previewData.unsAuthor)
+        BioSheet(author: previewData.eve)
             .inject(previewData: previewData)
             .padding()
             .background(Color.previewBg)
