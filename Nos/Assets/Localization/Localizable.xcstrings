@@ -592,6 +592,12 @@
             "state" : "translated",
             "value" : "By proceeding, I accept the [Terms of Service](https://nos.social/terms-of-service) and the [Privacy Policy](https://nos.social/privacy)"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al continuar, acepto los [Términos de servicio](https://nos.social/terms-of-service) y la [Política de privacidad](https://nos.social/privacy)"
+          }
         }
       }
     },
@@ -2204,6 +2210,12 @@
             "state" : "translated",
             "value" : "Build your network!"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Crea tu red!"
+          }
         }
       }
     },
@@ -2214,6 +2226,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your feed is only populated by accounts you follow. Nos does not use algorithms to control what you see."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu feed solo está formado por cuentas que sigues. Nos no usa algoritmos para controlar lo que ves."
           }
         }
       }
@@ -6878,6 +6896,12 @@
             "state" : "translated",
             "value" : "Find people"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encuentra gente"
+          }
         }
       }
     },
@@ -7588,6 +7612,12 @@
             "value" : "User is stealing someone else's identity."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El usuario está robando la identidad de otra persona."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7609,6 +7639,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Impersonation"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suplantación de identidad"
           }
         },
         "ko" : {
@@ -7687,6 +7723,12 @@
             "value" : "Mute This User?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Silenciar a este usuario?"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7708,6 +7750,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You won't see notes by this user anymore."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya no verás más notas de este usuario."
           }
         },
         "ko" : {
@@ -7733,6 +7781,12 @@
             "value" : "Mute"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silenciar"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7756,6 +7810,12 @@
             "value" : "The Nos moderation team will analyze the user for %@ and may publish a report from our Tagr-bot account, concealing your identity."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El equipo de moderación de Nos analizará la nota por contenido de %@ y podrá publicar un informe desde nuestra cuenta Tagr-bot, ocultando tu identidad."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7777,6 +7837,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Flag User"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reportar usuario"
           }
         },
         "zh-Hans" : {
@@ -8727,6 +8793,12 @@
             "value" : "GIF"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GIF"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8858,6 +8930,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feed"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Feed"
@@ -9341,6 +9419,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keep on helping us make Nostr a better place for everyone!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Sigue ayudándonos a hacer de Nostr un mejor lugar para todos!"
           }
         },
         "ko" : {
@@ -9976,6 +10060,12 @@
             "state" : "translated",
             "value" : "Log in with my account"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar sesión con mi cuenta"
+          }
         }
       }
     },
@@ -10327,6 +10417,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "min"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "min"
@@ -11355,6 +11451,12 @@
             "state" : "translated",
             "value" : "I'm new to Nostr"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soy nuevo en Nostr"
+          }
         }
       }
     },
@@ -11492,6 +11594,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NIP-05"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "NIP-05"
@@ -11733,6 +11841,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No"
@@ -12165,6 +12279,12 @@
             "value" : "Nos"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12192,6 +12312,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nos does not use algorithms to populate your feed. Notes appear in reverse chronological order based on publish time and date."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos no usa algoritmos para generar tu feed. Las notas aparecen en orden cronológico inverso, basado en la fecha y hora de publicación."
           }
         }
       }
@@ -13659,7 +13785,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your **@username** is your identity in the Nos community. \nChoose a name that reflects you or your organization. Make it memorable and distinct!"
+            "value" : "Your **@username** is your identity in the Nos community.\u2028\nChoose a name that reflects you or your organization. Make it memorable and distinct!"
           }
         },
         "es" : {
@@ -14889,6 +15015,12 @@
             "value" : "Relay"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relay"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15085,6 +15217,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relays"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Relays"
@@ -17279,6 +17417,12 @@
             "value" : "Software"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Software"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17486,6 +17630,12 @@
             "value" : "Spam"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spam"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17658,6 +17808,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stories"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stories"
@@ -18101,6 +18257,12 @@
             "value" : "Thanks for your tag."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gracias por tu etiqueta."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18491,6 +18653,12 @@
             "value" : "URL"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18783,7 +18951,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Well done, you've successfully claimed your **@username**! \nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
+            "value" : "Well done, you've successfully claimed your **@username**!\u2028\nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
           }
         },
         "es" : {
@@ -19529,6 +19697,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Welcome to your feed!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Bienvenido a tu feed!"
           }
         }
       }
