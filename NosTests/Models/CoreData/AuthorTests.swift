@@ -229,7 +229,7 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertEqual(events.count, 0)
     }
     
-    @MainActor func test_outOfNetwork_givenCircleOfFollows() throws {
+    @MainActor func test_orphaned_givenCircleOfFollows() throws {
         // Arrange
         let alice = try Author.findOrCreate(by: "alice", context: testContext)
         let bob   = try Author.findOrCreate(by: "bob", context: testContext)
@@ -246,9 +246,26 @@ final class AuthorTests: CoreDataTestCase {
         try testContext.saveIfNeeded()
         
         // Act 
-        let authors = try testContext.fetch(Author.outOfNetwork(for: alice))
+        let authors = try testContext.fetch(Author.orphaned(for: alice))
         
         // Assert
         XCTAssertEqual(authors, [eve])
+    }
+    
+    @MainActor func test_orphaned_givenNoFollows() throws {
+        // Arrange
+        let alice = try Author.findOrCreate(by: "alice", context: testContext)
+        let bob   = try Author.findOrCreate(by: "bob", context: testContext)
+        let carl  = try Author.findOrCreate(by: "carl", context: testContext)
+        let eve   = try Author.findOrCreate(by: "eve", context: testContext)
+        
+        // Act
+        try testContext.saveIfNeeded()
+        
+        // Act 
+        let authors = try testContext.fetch(Author.orphaned(for: alice))
+        
+        // Assert
+        XCTAssertEqual(authors, [eve, carl, bob])
     }
 }
