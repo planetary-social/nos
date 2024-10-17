@@ -631,11 +631,17 @@ extension RelayService {
         })
     }
     
-    func publishToAll(event: JSONEvent, signingKey: KeyPair, context: NSManagedObjectContext) async throws {
+    @discardableResult
+    func publishToAll(
+        event: JSONEvent, 
+        signingKey: KeyPair, 
+        context: NSManagedObjectContext
+    ) async throws -> JSONEvent {
         let signedEvent = try await signAndSave(event: event, signingKey: signingKey, in: context)
         for socket in await subscriptionManager.sockets() {
             try await publish(from: socket, jsonEvent: signedEvent)
         }
+        return signedEvent
     }
     
     func publish(
@@ -897,7 +903,7 @@ extension RelayService: WebSocketDelegate {
     }
 }
 
-// MARK: NIP-05 and UNS Support
+// MARK: NIP-05 Support
 extension RelayService {
     
     /// Takes a NIP-05 or Mastodon username and tries to fetch the associated Nostr public key.
@@ -982,12 +988,6 @@ extension RelayService {
     func socket(from url: URL?) async -> WebSocket? {
         guard let url else { return nil }
         return await subscriptionManager.socket(for: url)
-    }
-    
-    func unsURL(from unsIdentifier: String) -> URL? {
-        let urlString = "https://universalname.space/profile/\(unsIdentifier)"
-        guard let url = URL(string: urlString) else { return nil }
-        return url
     }
 }
 

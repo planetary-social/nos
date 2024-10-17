@@ -8,17 +8,17 @@ import UIKit
 /// in the .init method of a View. Because of this you must call the async function
 /// `loadContent()` to populate the `content` variable because it relies on some
 ///  database queries.
-class NotificationViewModel: ObservableObject, Identifiable {
+@Observable final class NotificationViewModel: Identifiable {
     let noteID: RawEventID
     let authorProfilePhotoURL: URL?
     let actionText: AttributedString
-    @Published var content: AttributedString?
+    private(set) var content: AttributedString?
     let date: Date
     
     var id: RawEventID {
         noteID
     }
-    
+
     /// Generates a notification request that can be sent to the UNNotificationCenter to display a banner notification.
     /// You probably want to call `loadContent(in:)` before accessing this.
     var notificationCenterRequest: UNNotificationRequest {
@@ -30,8 +30,8 @@ class NotificationViewModel: ObservableObject, Identifiable {
         content.userInfo = ["eventID": id]
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         return UNNotificationRequest(
-            identifier: noteID, 
-            content: content, 
+            identifier: noteID,
+            content: content,
             trigger: trigger
         )
     }
@@ -42,7 +42,7 @@ class NotificationViewModel: ObservableObject, Identifiable {
             let user = coreDataModel.user else {
             return nil
         }
-        
+
         self.init(note: note, user: user)
     }
     
@@ -85,7 +85,7 @@ class NotificationViewModel: ObservableObject, Identifiable {
     /// Populates the `content` variable. This is not done at init in order to keep
     /// it synchronous for use in a View.
     @MainActor @discardableResult func loadContent(in context: NSManagedObjectContext) async -> AttributedString? {
-        content = await Event.attributedContent(noteID: id, context: context)
+        content = await Event.attributedContent(noteID: noteID, context: context)
         return content
     }
 }
