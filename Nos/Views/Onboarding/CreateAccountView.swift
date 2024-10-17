@@ -4,41 +4,50 @@ import SwiftUI
 /// The Create Account view in the onboarding.
 struct CreateAccountView: View {
     @Environment(OnboardingState.self) private var state
-
+    @Environment(CurrentUser.self) var currentUser
+    
     @Dependency(\.crashReporting) private var crashReporting
-    @Dependency(\.currentUser) private var currentUser
 
     var body: some View {
-        GeometryReader { geometry in
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("👋")
-                        .font(.system(size: 60))
-                    Text("createAccountHeadline")
-                        .font(.clarityBold(.title))
-                        .foregroundStyle(Color.primaryTxt)
-                    Text("createAccountDescription")
-                        .font(.body)
-                        .foregroundStyle(Color.secondaryTxt)
-                    Spacer()
-                    NumberedStepsView()
-                        .padding(.horizontal, 10)
-                    Spacer()
-                    BigActionButton(title: "createAccountButton") {
-                        do {
-                            try await currentUser.createAccount()
-                        } catch {
-                            crashReporting.report(error)
-                        }
-                        state.step = .buildYourNetwork
-                    }
+        ZStack {
+            Color.appBg
+                .ignoresSafeArea()
+            ViewThatFits(in: .vertical) {
+                createAccountStack
+
+                ScrollView {
+                    createAccountStack
                 }
-                .padding(40)
-                .frame(minHeight: geometry.size.height)
             }
         }
-        .background(Color.appBg)
         .navigationBarHidden(true)
+    }
+
+    var createAccountStack: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text("👋")
+                .font(.system(size: 60))
+            Text("createAccountHeadline")
+                .font(.clarityBold(.title))
+                .foregroundStyle(Color.primaryTxt)
+            Text("createAccountDescription")
+                .font(.body)
+                .foregroundStyle(Color.secondaryTxt)
+                .padding(.bottom, 10)
+            NumberedStepsView()
+                .padding(.horizontal, 10)
+            Spacer()
+            BigActionButton(title: "createAccountButton") {
+                do {
+                    try await currentUser.createAccount()
+                } catch {
+                    crashReporting.report(error)
+                }
+                state.step = .buildYourNetwork
+            }
+        }
+        .padding(40)
+        .readabilityPadding()
     }
 }
 
@@ -102,4 +111,5 @@ fileprivate struct ConnectingLine: Shape {
 #Preview {
     CreateAccountView()
         .environment(OnboardingState())
+        .inject(previewData: PreviewData())
 }
