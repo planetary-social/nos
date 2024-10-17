@@ -8897,6 +8897,18 @@
         }
       }
     },
+    "goToYourFeed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go to your Feed to see notes from your connections."
+          }
+        }
+      }
+    },
+
     "homeFeed" : {
       "extractionState" : "manual",
       "localizations" : {
