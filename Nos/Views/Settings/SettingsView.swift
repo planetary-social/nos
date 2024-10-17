@@ -247,26 +247,28 @@ struct SettingsView: View {
             analytics.showedSettings()
         }
         .overlay {
-            if showDeleteConfirmationAlert {
-                /// Adds a translucent background overlay to the view's man content
-                Color.actionSheetOverlay.opacity(0.5)
-                    .ignoresSafeArea()
-
-                DeleteConfirmationView(
-                    requiredText: String(localized: "delete").uppercased(),
-                    onDelete: {
-                        Task {
-                            await alertButtonTapped(.deleteAccount)
+            ZStack {
+                if showDeleteConfirmationAlert {
+                    /// Adds a translucent background overlay to the view's man content
+                    Color.actionSheetOverlay.opacity(0.5)
+                        .ignoresSafeArea()
+                    
+                    DeleteConfirmationView(
+                        requiredText: String(localized: "delete").uppercased(),
+                        onDelete: {
+                            Task {
+                                await alertButtonTapped(.deleteAccount)
+                            }
+                            showDeleteConfirmationAlert = false
+                        },
+                        onCancel: {
+                            showDeleteConfirmationAlert = false
                         }
-                        showDeleteConfirmationAlert = false
-                    },
-                    onCancel: {
-                        showDeleteConfirmationAlert = false
-                    }
-                )
-                .transition(.opacity)
-                .animation(.easeInOut(duration: 0.3), value: showDeleteConfirmationAlert)
-            }
+                    )
+                }
+            }                    
+            .transition(.opacity)
+            .animation(.easeInOut(duration: 0.2), value: showDeleteConfirmationAlert)
         }
     }
 
