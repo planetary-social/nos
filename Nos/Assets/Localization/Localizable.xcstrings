@@ -4054,62 +4054,14 @@
         }
       }
     },
-    "createAccountDisplayName" : {
-      "comment" : "The label on the create account screen for display name",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Display Name"
-          }
-        }
-      }
-    },
     "createAccountHeadline" : {
-      "comment" : "The headline (title) on the create account screen",
+      "comment" : "headline for the create account screen",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Say goodbye to usernames and passwords!"
-          }
-        }
-      }
-    },
-    "createAccountPrivateKey" : {
-      "comment" : "The label on the create account screen for private key",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Private Key"
-          }
-        }
-      }
-    },
-    "createAccountPublicKey" : {
-      "comment" : "The label on the create account screen for public key",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Public Key"
-          }
-        }
-      }
-    },
-    "createAccountUsername" : {
-      "comment" : "The label on the create account screen for username",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Username"
           }
         }
       }
@@ -5233,6 +5185,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "顯示名"
+          }
+        }
+      }
+    },
+    "displayNameHeadline" : {
+      "comment" : "headline for the display name screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display Name"
           }
         }
       }
@@ -14094,6 +14058,18 @@
         }
       }
     },
+    "privateKeyHeadline" : {
+      "comment" : "headline for the private key screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Key"
+          }
+        }
+      }
+    },
     "privateKeyPlaceholder" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -14529,6 +14505,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "公鑰"
+          }
+        }
+      }
+    },
+    "publicKeyHeadline" : {
+      "comment" : "headline for the public key screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Public Key"
           }
         }
       }
@@ -18989,6 +18977,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "做得好，你已成功認領你的**@用戶名**！\n\n你可以與 Nostr 和 Fediverse 社群中的其他人分享此名稱，以便輕鬆找到你。"
+          }
+        }
+      }
+    },
+    "usernameHeadline" : {
+      "comment" : "headline for the username screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Username"
           }
         }
       }

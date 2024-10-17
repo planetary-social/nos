@@ -47,10 +47,10 @@ struct CreateAccountView: View {
 fileprivate struct NumberedStepsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 50) {
-            NumberedStepView(index: 1, label: "createAccountPrivateKey")
-            NumberedStepView(index: 2, label: "createAccountPublicKey")
-            NumberedStepView(index: 3, label: "createAccountDisplayName")
-            NumberedStepView(index: 4, label: "createAccountUsername")
+            NumberedStepView(index: 1, label: "privateKeyHeadline")
+            NumberedStepView(index: 2, label: "publicKeyHeadline")
+            NumberedStepView(index: 3, label: "displayNameHeadline")
+            NumberedStepView(index: 4, label: "usernameHeadline")
         }
         .background(
             ConnectingLine()
