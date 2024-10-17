@@ -4,9 +4,9 @@ import SwiftUI
 /// The Age Verification view in the onboarding.
 struct OnboardingAgeVerificationView: View {
     @Environment(OnboardingState.self) private var state
+    @Environment(CurrentUser.self) var currentUser
 
     @Dependency(\.crashReporting) private var crashReporting
-    @Dependency(\.currentUser) private var currentUser
     @Dependency(\.featureFlags) private var featureFlags
 
     var body: some View {

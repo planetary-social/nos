@@ -4,17 +4,19 @@ import SwiftUI
 /// The Create Account view in the onboarding.
 struct CreateAccountView: View {
     @Environment(OnboardingState.self) private var state
-
+    @Environment(CurrentUser.self) var currentUser
+    
     @Dependency(\.crashReporting) private var crashReporting
-    @Dependency(\.currentUser) private var currentUser
 
     var body: some View {
         ZStack {
             Color.appBg
                 .ignoresSafeArea()
-            GeometryReader { geometry in
+            ViewThatFits(in: .vertical) {
+                createAccountStack
+
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
+                    createAccountStack
                         Text("👋")
                             .font(.system(size: 60))
                         Text("createAccountHeadline")
@@ -43,6 +45,33 @@ struct CreateAccountView: View {
             .readabilityPadding()
         }
         .navigationBarHidden(true)
+    }
+
+    var createAccountStack: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text("👋")
+                .font(.system(size: 60))
+            Text("createAccountHeadline")
+                .font(.clarityBold(.title))
+                .foregroundStyle(Color.primaryTxt)
+            Text("createAccountDescription")
+                .font(.body)
+                .foregroundStyle(Color.secondaryTxt)
+                .padding(.bottom, 10)
+            NumberedStepsView()
+                .padding(.horizontal, 10)
+            Spacer()
+            BigActionButton(title: "createAccountButton") {
+                do {
+                    try await currentUser.createAccount()
+                } catch {
+                    crashReporting.report(error)
+                }
+                state.step = .buildYourNetwork
+            }
+        }
+        .padding(40)
+        .readabilityPadding()
     }
 }
 
@@ -106,4 +135,5 @@ fileprivate struct ConnectingLine: Shape {
 #Preview {
     CreateAccountView()
         .environment(OnboardingState())
+        .inject(previewData: PreviewData())
 }
