@@ -16,7 +16,6 @@ struct CreateAccountView: View {
                         .font(.system(size: 60))
                     Text("createAccountHeadline")
                         .font(.clarityBold(.title))
-                        .bold()
                         .foregroundStyle(Color.primaryTxt)
                     Text("createAccountDescription")
                         .font(.body)
