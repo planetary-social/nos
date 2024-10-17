@@ -3,7 +3,12 @@ import Dependencies
 import SwiftUI
 
 /// Feature flags for enabling experimental or beta features.
-enum FeatureFlag: Hashable {}
+enum FeatureFlag {
+    /// Whether the new onboarding flow should be enabled or not.
+    /// - Note: See [Figma](https://www.figma.com/design/6MeujQUXzC1AuviHEHCs0J/Nos---In-Progress?node-id=9221-8504)
+    ///         for the new flow.
+    case newOnboardingFlow
+}
 
 /// The set of feature flags used by the app.
 protocol FeatureFlags {
@@ -25,7 +30,9 @@ protocol FeatureFlags {
     private init() {}
 
     /// Feature flags and their values.
-    private var featureFlags: [FeatureFlag: Bool] = [:]
+    private var featureFlags: [FeatureFlag: Bool] = [
+        .newOnboardingFlow: false
+    ]
 
     /// Returns true if the feature is enabled.
     func isEnabled(_ feature: FeatureFlag) -> Bool {

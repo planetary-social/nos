@@ -43,7 +43,7 @@ class Analytics {
     func completedOnboarding() {
         track("Completed Onboarding")
     }
-    
+
     func showedHome() {
         track("Home Tab Tapped")
     }
@@ -232,7 +232,7 @@ class Analytics {
         track("Push Notification Registration Failed", properties: ["reason": reason])
     }
     
-    // MARK: NIP-05 Usernames
+    // MARK: - NIP-05 Usernames
 
     func showedNIP05Wizard() {
         track("Showed NIP-05 Wizard")
@@ -250,8 +250,8 @@ class Analytics {
         track("Deleted NIP-05 Username")
     }
 
-    // MARK: Message Actions
-    
+    // MARK: - Message Actions
+
     func copiedNoteIdentifier() {
         track("Copied Note Identifier")
     }
@@ -276,7 +276,8 @@ class Analytics {
         track("Liked Note")
     }
 
-    // MARK: Uploads
+    // MARK: - Uploads
+
     func selectedUploadFromCamera() {
         track("Selected Upload From Camera")
     }

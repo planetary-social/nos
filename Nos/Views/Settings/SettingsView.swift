@@ -29,6 +29,7 @@ struct SettingsView: View {
     @State private var showReportWarnings = true
     @State private var showOutOfNetworkWarning = true
     @State private var copyButtonState: CopyButtonState = .copy
+    @State private var showDeleteConfirmationAlert = false
 
     fileprivate enum AlertAction {
         case logout
@@ -82,7 +83,7 @@ struct SettingsView: View {
                     .fixedSize(horizontal: true, vertical: false)
                     .padding(.vertical, 5)
                 }
-                
+
                 ActionButton(title: .localizable.logout) {
                     alert = AlertState(
                         title: { TextState(String(localized: .localizable.logout)) },
@@ -93,7 +94,7 @@ struct SettingsView: View {
                         },
                         message: { TextState(String(localized: .localizable.backUpYourKeyWarning)) }
                     )
-                }        
+                }
                 .padding(.vertical, 5)
             } header: {
                 VStack(alignment: .leading, spacing: 10) {
@@ -111,14 +112,14 @@ struct SettingsView: View {
                 .padding(.bottom, 20)
             }
             .listRowGradientBackground()
-            
+
             Section {
                 VStack {
                     NosToggle(isOn: $showReportWarnings, labelText: .localizable.useReportsFromFollows)
-                    .onChange(of: showReportWarnings) { _, newValue in
-                        userDefaults.set(newValue, forKey: showReportWarningsKey)
-                    }
-                    
+                        .onChange(of: showReportWarnings) { _, newValue in
+                            userDefaults.set(newValue, forKey: showReportWarningsKey)
+                        }
+
                     HStack {
                         Text(.localizable.useReportsFromFollowsDescription)
                             .foregroundColor(.secondaryTxt)
@@ -130,10 +131,10 @@ struct SettingsView: View {
 
                 VStack {
                     NosToggle(isOn: $showOutOfNetworkWarning, labelText: .localizable.showOutOfNetworkWarnings)
-                    .onChange(of: showOutOfNetworkWarning) { _, newValue in
-                        userDefaults.set(newValue, forKey: showOutOfNetworkWarningKey)
-                    }
-                    
+                        .onChange(of: showOutOfNetworkWarning) { _, newValue in
+                            userDefaults.set(newValue, forKey: showOutOfNetworkWarningKey)
+                        }
+
                     HStack {
                         Text(.localizable.showOutOfNetworkWarningsDescription)
                             .foregroundColor(.secondaryTxt)
@@ -155,7 +156,7 @@ struct SettingsView: View {
                 showReportWarnings = userDefaults.object(forKey: showReportWarningsKey) as? Bool ?? true
                 showOutOfNetworkWarning = userDefaults.object(forKey: showOutOfNetworkWarningKey) as? Bool ?? true
             }
-            
+
             Section {
                 Text("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
                     .foregroundColor(.primaryTxt)
@@ -218,7 +219,7 @@ struct SettingsView: View {
                     .padding(.vertical, 15)
             }
             .listRowGradientBackground()
-            
+
             ActionButton(
                 title: .localizable.deleteMyAccount,
                 font: .clarityBold(.title3),
@@ -227,15 +228,7 @@ struct SettingsView: View {
                 backgroundGradient: .verticalAccentSecondary,
                 shouldFillHorizontalSpace: true
             ) {
-                alert = AlertState(
-                    title: { TextState(String(localized: .localizable.deleteAccount)) },
-                    actions: {
-                        ButtonState(role: .destructive, action: .send(.deleteAccount)) {
-                            TextState(String(localized: .localizable.delete))
-                        }
-                    },
-                    message: { TextState(String(localized: .localizable.deleteAccountDescription)) }
-                )
+                showDeleteConfirmationAlert = true
             }
             .clipShape(Capsule())
             .listRowBackground(Color.clear)
@@ -253,8 +246,32 @@ struct SettingsView: View {
             privateKeyString = currentUser.keyPair?.nsec ?? ""
             analytics.showedSettings()
         }
+        .overlay {
+            ZStack {
+                if showDeleteConfirmationAlert {
+                    /// Adds a translucent background overlay to the view's man content
+                    Color.actionSheetOverlay.opacity(0.5)
+                        .ignoresSafeArea()
+                    
+                    DeleteConfirmationView(
+                        requiredText: String(localized: "delete").uppercased(),
+                        onDelete: {
+                            Task {
+                                await alertButtonTapped(.deleteAccount)
+                            }
+                            showDeleteConfirmationAlert = false
+                        },
+                        onCancel: {
+                            showDeleteConfirmationAlert = false
+                        }
+                    )
+                }
+            }                    
+            .transition(.opacity)
+            .animation(.easeInOut(duration: 0.2), value: showDeleteConfirmationAlert)
+        }
     }
-    
+
     fileprivate func alertButtonTapped(_ action: AlertAction) async {
         switch action {
         case .logout:
@@ -271,15 +288,29 @@ struct SettingsView: View {
 
 // DEBUG builds will have everything that's in STAGING builds and more.
 #if STAGING || DEBUG
-extension SettingsView {}
+extension SettingsView {
+    /// Whether the new onboarding flow is enabled.
+    private var isNewOnboardingFlowEnabled: Binding<Bool> {
+        Binding<Bool>(
+            get: { featureFlags.isEnabled(.newOnboardingFlow) },
+            set: { featureFlags.setFeature(.newOnboardingFlow, enabled: $0) }
+        )
+    }
+
+    /// A toggle for the new moderation flow that allows the user to turn the feature on or off.
+    private var newOnboardingFlowToggle: some View {
+        NosToggle(isOn: isNewOnboardingFlowEnabled, labelText: "New Onboarding Flow")
+    }
+}
 #endif
 
 #if STAGING
 extension SettingsView {
     /// Controls that will appear when the app is built for STAGING.
     @MainActor private var stagingControls: some View {
-        // To be replaced by featureflag toggle views.
-        EmptyView()
+        Group {
+            newOnboardingFlowToggle
+        }
     }
 }
 #endif
@@ -289,6 +320,7 @@ extension SettingsView {
     /// Controls that will appear when the app is built for DEBUG.
     @MainActor private var debugControls: some View {
         Group {
+            newOnboardingFlowToggle
             Text(.localizable.sampleDataInstructions)
                 .foregroundColor(.primaryTxt)
             Button(String(localized: .localizable.loadSampleData)) {
