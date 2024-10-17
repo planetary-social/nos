@@ -209,7 +209,7 @@ extension FeaturedAuthor {
 extension FeaturedAuthor {
     static let cohort5 = [
         FeaturedAuthor(
-            name: "kindness project bot ",
+            name: "kindness project bot",
             npub: "npub1r8yz465alvfnykhkfula8kxxeas2z75hats0tymw8yv3kp0p4a5qp6phl8",
             categories: [.health]
         ),
@@ -439,7 +439,7 @@ extension FeaturedAuthor {
             categories: [.random]
         ),
         FeaturedAuthor(
-            name: "WaveLake",
+            name: "Wavlake",
             npub: "npub1yfg0d955c2jrj2080ew7pa4xrtj7x7s7umt28wh0zurwmxgpyj9shwv6vg",
             categories: [.music]
         ),

@@ -17,11 +17,11 @@ enum FeaturedAuthorCategory: CaseIterable {
     case lifestyle
     case music
     case news
-    case newzealand
+    case nzAustralia
     case photography
     case politics
     case random
-    case scifi
+    case sciFi
     case sports
     case tech
 
