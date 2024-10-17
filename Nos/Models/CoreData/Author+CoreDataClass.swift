@@ -57,14 +57,6 @@ import Logger
         nip05?.hasSuffix("@mostr.pub") == true
     }
 
-    var hasUNS: Bool {
-        if let uns, !uns.isEmpty {
-            return true
-        } else {
-            return false
-        }
-    }
-
     var nip05Parts: (username: String, domain: String)? {
         guard let nip05 else {
             return nil
@@ -158,7 +150,7 @@ import Logger
     class func find(named name: String, context: NSManagedObjectContext) throws -> [Author] {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(
-            format: "name CONTAINS[cd] %@ OR displayName CONTAINS[cd] %@ OR uns CONTAINS[cd] %@", name, name, name
+            format: "name CONTAINS[cd] %@ OR displayName CONTAINS[cd] %@", name, name
         )
         let authors = try context.fetch(fetchRequest)
         return authors

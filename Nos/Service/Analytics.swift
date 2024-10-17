@@ -43,7 +43,7 @@ class Analytics {
     func completedOnboarding() {
         track("Completed Onboarding")
     }
-    
+
     func showedHome() {
         track("Home Tab Tapped")
     }
@@ -179,6 +179,18 @@ class Analytics {
             "Discover Search Displayed Note"
         )
     }
+    
+    /// Call this when publishing a new contact list for the user. 
+    /// This is part of our solution to detect if Nos overwrites a user's contact list.
+    /// https://github.com/planetary-social/cleanstr/issues/51
+    func published(contactList: JSONEvent) {
+        let properties: [String: Any] = [
+            "date": contactList.createdAt, 
+            "identifier": contactList.identifier ?? "null"
+        ]
+        
+        track("Published Contact List", properties: properties)
+    }
 
     // MARK: - Relays
     
@@ -220,7 +232,7 @@ class Analytics {
         track("Push Notification Registration Failed", properties: ["reason": reason])
     }
     
-    // MARK: NIP-05 Usernames
+    // MARK: - NIP-05 Usernames
 
     func showedNIP05Wizard() {
         track("Showed NIP-05 Wizard")
@@ -238,46 +250,8 @@ class Analytics {
         track("Deleted NIP-05 Username")
     }
 
-    // MARK: UNS
-    
-    func showedUNSWizard() {
-        track("UNS Showed Wizard")
-    }
-    
-    func canceledUNSWizard() {
-        track("UNS Canceled Wizard")
-    }
-    
-    func completedUNSWizard() {
-        track("UNS Completed Wizard")
-    }
-    
-    func enteredUNSPhone() {
-        track("UNS Entered Phone")
-    }
-    
-    func enteredUNSCode() {
-        track("UNS Entered Code")
-    }
-    
-    func registeredUNSName() {
-        track("UNS Registered Name")
-    }
-    
-    func linkedUNSName() {
-        track("UNS Linked Name")
-    }
-    
-    func choseInvalidUNSName() {
-        track("UNS Invalid Name")
-    }
-    
-    func encounteredUNSError(_ error: Error?) {
-        track("UNS Error", properties: ["errorDescription": error?.localizedDescription ?? "null"])
-    }
-    
-    // MARK: Message Actions
-    
+    // MARK: - Message Actions
+
     func copiedNoteIdentifier() {
         track("Copied Note Identifier")
     }
@@ -302,7 +276,8 @@ class Analytics {
         track("Liked Note")
     }
 
-    // MARK: Uploads
+    // MARK: - Uploads
+
     func selectedUploadFromCamera() {
         track("Selected Upload From Camera")
     }
