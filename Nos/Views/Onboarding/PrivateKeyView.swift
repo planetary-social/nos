@@ -4,7 +4,7 @@ import SwiftUI
 /// The Private Key view in the onboarding.
 struct PrivateKeyView: View {
     @Environment(OnboardingState.self) private var state
-    @Dependency(\.currentUser) private var currentUser
+    @Environment(CurrentUser.self) var currentUser
 
     @State private var privateKeyString = ""
     @State private var copyButtonState: CopyButtonState = .copy
