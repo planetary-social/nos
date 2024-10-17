@@ -9,29 +9,42 @@ struct BuildYourNetworkView: View {
     private let padding: CGFloat = 40
 
     var body: some View {
-        GeometryReader { geometry in
-            VStack(alignment: .leading, spacing: 20) {
-                Text("🔍")
-                    .font(.system(size: 60))
-                Text("buildYourNetwork")
-                    .font(.clarityBold(.title))
-                    .foregroundStyle(Color.primaryTxt)
-                Text("buildYourNetworkDescription")
-                    .foregroundStyle(Color.secondaryTxt)
-                Image.network
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: geometry.size.width)
-                    .offset(x: -padding)
-                Spacer()
-                BigActionButton(title: "findPeople") {
-                    completion()
+        ZStack {
+            Color.appBg
+                .ignoresSafeArea()
+            ViewThatFits(in: .vertical) {
+                buildYourNetworkStack
+
+                ScrollView {
+                    buildYourNetworkStack
                 }
             }
-            .padding(padding)
-            .background(Color.appBg)
-            .navigationBarHidden(true)
         }
+        .navigationBarHidden(true)
+    }
+
+    @MainActor var buildYourNetworkStack: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text("🔍")
+                .font(.system(size: 60))
+            Text("buildYourNetwork")
+                .font(.clarityBold(.title))
+                .foregroundStyle(Color.primaryTxt)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("buildYourNetworkDescription")
+                .foregroundStyle(Color.secondaryTxt)
+                .fixedSize(horizontal: false, vertical: true)
+            Image.network
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(.horizontal, -padding)
+            Spacer()
+            BigActionButton(title: "findPeople") {
+                completion()
+            }
+        }
+        .padding(padding)
+        .readabilityPadding()
     }
 }
 

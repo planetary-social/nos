@@ -43,7 +43,7 @@ struct CreateAccountView: View {
                 } catch {
                     crashReporting.report(error)
                 }
-                state.step = .buildYourNetwork
+                state.step = .privateKey
             }
         }
         .padding(40)
