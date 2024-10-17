@@ -1,6 +1,6 @@
 import SwiftUI
 
-@Observable class OnboardingState {
+@Observable final class OnboardingState {
     var flow: OnboardingFlow = .createAccount
     var step: OnboardingStep = .onboardingStart {
         didSet {
