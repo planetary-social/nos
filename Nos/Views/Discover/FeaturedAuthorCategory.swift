@@ -8,27 +8,43 @@ enum FeaturedAuthorCategory: CaseIterable {
     case all
     /// A special type of category that includes all authors from the latest cohort.
     case new // swiftlint:disable:this identifier_name
+    case activists
+    case art // swiftlint:disable:this identifier_name
+    case espanol
+    case food
+    case gaming
+    case health
+    case lifestyle
     case music
     case news
-    case art // swiftlint:disable:this identifier_name
-    case activists
-    case tech
-    case health
-    case gaming
+    case newzealand
+    case photography
+    case politics
+    case random
+    case scifi
     case sports
+    case tech
 
     var text: LocalizedStringResource {
         switch self {
         case .all: LocalizedStringResource.localizable.featuredAuthorCategoryAll
         case .new: LocalizedStringResource.localizable.featuredAuthorCategoryNew
+        case .activists: LocalizedStringResource.localizable.featuredAuthorCategoryActivists
+        case .art: LocalizedStringResource.localizable.featuredAuthorCategoryArt
+        case .espanol: "featuredAuthorCategoryEspanol"
+        case .food: "featuredAuthorCategoryFood"
+        case .gaming: LocalizedStringResource.localizable.featuredAuthorCategoryGaming
+        case .health: LocalizedStringResource.localizable.featuredAuthorCategoryHealth
+        case .lifestyle: "featuredAuthorCategoryLifestyle"
         case .music: LocalizedStringResource.localizable.featuredAuthorCategoryMusic
         case .news: LocalizedStringResource.localizable.featuredAuthorCategoryNews
-        case .art: LocalizedStringResource.localizable.featuredAuthorCategoryArt
-        case .activists: LocalizedStringResource.localizable.featuredAuthorCategoryActivists
-        case .gaming: LocalizedStringResource.localizable.featuredAuthorCategoryGaming
+        case .newzealand: "featuredAuthorCategoryNewzealand"
+        case .photography: "featuredAuthorCategoryPhotography"
+        case .politics: "featuredAuthorCategoryPolitics"
+        case .random: "featuredAuthorCategoryRandom"
+        case .scifi: "featuredAuthorCategoryScifi"
         case .sports: LocalizedStringResource.localizable.featuredAuthorCategorySports
         case .tech: LocalizedStringResource.localizable.featuredAuthorCategoryTech
-        case .health: LocalizedStringResource.localizable.featuredAuthorCategoryHealth
         }
     }
 
@@ -37,7 +53,7 @@ enum FeaturedAuthorCategory: CaseIterable {
         case .all:
             FeaturedAuthor.all
         case .new:
-            FeaturedAuthor.cohort4
+            FeaturedAuthor.selectNew
         default:
             FeaturedAuthor.all.filter { $0.categories.contains(self) }
         }
