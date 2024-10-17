@@ -74,12 +74,6 @@ struct HomeFeedView: View {
                     .readabilityPadding()
                     .tipBackground(LinearGradient.horizontalAccentReversed)
                     .tipViewStyle(.inline)
-                    .onAppear {
-                        analytics.displayedWelcomeToFeedTip()
-                    }
-                    .onDisappear {
-                        analytics.dismissedWelcomeToFeedTip()
-                    }
 
                 PagedNoteListView(
                     refreshController: $refreshController,

@@ -276,24 +276,6 @@ class Analytics {
         track("Liked Note")
     }
 
-    // MARK: - Tips
-
-    func dismissedGoToFeedTip() {
-        track("Go to Feed Tip Dismissed")
-    }
-
-    func displayedGoToFeedTip() {
-        track("Go to Feed Tip Displayed")
-    }
-
-    func dismissedWelcomeToFeedTip() {
-        track("Welcome to Feed Tip Dismissed")
-    }
-
-    func displayedWelcomeToFeedTip() {
-        track("Welcome to Feed Tip Displayed")
-    }
-
     // MARK: - Uploads
 
     func selectedUploadFromCamera() {

@@ -42,12 +42,6 @@ struct DiscoverTab: View {
                         .readabilityPadding()
                         .tipBackground(LinearGradient.horizontalAccentReversed)
                         .tipViewStyle(.pointDownEmoji)
-                        .onAppear {
-                            analytics.displayedGoToFeedTip()
-                        }
-                        .onDisappear {
-                            analytics.dismissedGoToFeedTip()
-                        }
                 }
             }
             .searchable(
