@@ -489,7 +489,7 @@ public class Event: NosManagedObject, VerifiableEvent {
         
         return nil
     }
-    
+
     /// This tracks which relays this event is deleted on. Hide posts with deletedOn.count > 0
     func trackDelete(on relay: Relay, context: NSManagedObjectContext) throws {
         if EventKind(rawValue: kind) == .delete, let eTags = allTags as? [[String]] {
@@ -551,7 +551,24 @@ public class Event: NosManagedObject, VerifiableEvent {
         
         return SubscriptionCancellable(cancellables: cancellables, relayService: relayService)
     }
-    
+
+    /// Gets a list of `Author` objects based on the current `authorReferences`
+    /// by using their public keys in the provided context.
+    ///
+    /// - Parameter context: The `NSManagedObjectContext` used to find or create `Author` objects.
+    /// - Returns: An array of `Author` objects that correspond to the `authorReferences`.
+    func loadAuthorsFromReferences(in context: NSManagedObjectContext) -> [Author] {
+        var authors: [Author] = []
+        authorReferences.forEach { reference in
+            if let reference = reference as? AuthorReference,
+            let pubKey = reference.pubkey,
+            let author = try? Author.findOrCreate(by: pubKey, context: context) {
+                authors.append(author)
+            }
+        }
+        return authors
+    }
+
     var webLink: String {
         if let bech32NoteID {
             return "https://njump.me/\(bech32NoteID)"
