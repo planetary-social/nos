@@ -6,7 +6,7 @@ import Dependencies
 // swiftlint:disable type_body_length
 @Observable class CurrentUser: NSObject, NSFetchedResultsControllerDelegate {
     
-    @ObservationIgnored @Dependency(\.analytics) private var analytics
+    @ObservationIgnored @Dependency(\.analytics) var analytics
     @ObservationIgnored @Dependency(\.crashReporting) private var crashReporting
     @ObservationIgnored @Dependency(\.persistenceController) private var persistenceController
     @ObservationIgnored @Dependency(\.pushNotificationService) private var pushNotificationService

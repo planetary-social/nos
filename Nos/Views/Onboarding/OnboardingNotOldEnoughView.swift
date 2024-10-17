@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct OnboardingNotOldEnoughView: View {
-    @EnvironmentObject var state: OnboardingState
+    @Environment(OnboardingState.self) private var state
     
     var body: some View {
         VStack {
