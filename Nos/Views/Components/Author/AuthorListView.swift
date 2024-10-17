@@ -6,7 +6,6 @@ struct AuthorListView: View {
     @Binding var isPresented: Bool
     
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(CurrentUser.self) private var currentUser
 
     @StateObject private var searchController = SearchController(searchOrigin: .mentions)
 
@@ -46,15 +45,11 @@ struct AuthorListView: View {
             filteredAuthors = relatedAuthors
         }
         .onChange(of: searchController.authorResults) { _, newValue in
+            // Empty the array, so the search result can be at the top of the related authors.
             filteredAuthors = []
-
-            guard let currentAuthor = currentUser.author else {
-                filteredAuthors = newValue
-                return
-            }
-            let sortedAuthors = newValue.sortedByMutualFollowees(with: currentAuthor)
-            filteredAuthors += sortedAuthors
-
+            // Add search result first.
+            filteredAuthors += newValue
+            // Add related authors to the end of the search result.
             guard let relatedAuthors = relatedAuthors else { return }
             filteredAuthors += relatedAuthors
         }

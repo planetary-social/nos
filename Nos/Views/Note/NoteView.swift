@@ -65,13 +65,12 @@ struct NoteView: View {
     
     var note: Event
 
-    /// Retrieves a list of authors associated with the current note and sorts them 
-    /// by the number of mutual followees with the current author.
+    /// Retrieves a list of authors associated with the current note, including the
+    /// rootNote if any and any author referenced in a note.
     ///
-    /// - Returns: A sorted array of `Author` objects, in descending order of mutual followees with the current author.
+    /// - Returns: An array of `Author` objects.
     private func sortedAuthorsByMutualFollowees() -> [Author] {
         var authors: Set<Author> = []
-        guard let currentAuthor = currentUser.author else { return Array(authors) }
 
         // Include the author of the root note
         if let rootNoteAuthor = note.rootNote()?.author {
@@ -98,8 +97,7 @@ struct NoteView: View {
         let tenDirectReplies = directReplies.compactMap { $0.author }.prefix(10)
         authors.formUnion(tenDirectReplies)
 
-        let authorArray = Array(authors)
-        return authorArray.sortedByMutualFollowees(with: currentAuthor)
+        return Array(authors)
     }
 
     func subscribeToReplies() {
