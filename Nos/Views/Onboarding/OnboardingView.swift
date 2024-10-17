@@ -20,6 +20,7 @@ enum OnboardingStep {
     case ageVerification
     case notOldEnough
     case createAccount
+    case privateKey
     case buildYourNetwork
     case login
 }
@@ -48,6 +49,9 @@ struct OnboardingView: View {
                             .environment(state)
                     case .createAccount:
                         CreateAccountView()
+                            .environment(state)
+                    case .privateKey:
+                        PrivateKeyView()
                             .environment(state)
                     case .login:
                         OnboardingLoginView(completion: completion)

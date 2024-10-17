@@ -9,35 +9,39 @@ struct CreateAccountView: View {
     @Dependency(\.currentUser) private var currentUser
 
     var body: some View {
-        GeometryReader { geometry in
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("👋")
-                        .font(.system(size: 60))
-                    Text("createAccountHeadline")
-                        .font(.clarityBold(.title))
-                        .foregroundStyle(Color.primaryTxt)
-                    Text("createAccountDescription")
-                        .font(.body)
-                        .foregroundStyle(Color.secondaryTxt)
-                    Spacer()
-                    NumberedStepsView()
-                        .padding(.horizontal, 10)
-                    Spacer()
-                    BigActionButton(title: "createAccountButton") {
-                        do {
-                            try await currentUser.createAccount()
-                        } catch {
-                            crashReporting.report(error)
+        ZStack {
+            Color.appBg
+                .ignoresSafeArea()
+            GeometryReader { geometry in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        Text("👋")
+                            .font(.system(size: 60))
+                        Text("createAccountHeadline")
+                            .font(.clarityBold(.title))
+                            .foregroundStyle(Color.primaryTxt)
+                        Text("createAccountDescription")
+                            .font(.body)
+                            .foregroundStyle(Color.secondaryTxt)
+                        Spacer()
+                        NumberedStepsView()
+                            .padding(.horizontal, 10)
+                        Spacer()
+                        BigActionButton(title: "createAccountButton") {
+                            do {
+                                try await currentUser.createAccount()
+                            } catch {
+                                crashReporting.report(error)
+                            }
+                            state.step = .privateKey
                         }
-                        state.step = .buildYourNetwork
                     }
+                    .padding(40)
+                    .frame(minHeight: geometry.size.height)
                 }
-                .padding(40)
-                .frame(minHeight: geometry.size.height)
             }
+            .readabilityPadding()
         }
-        .background(Color.appBg)
         .navigationBarHidden(true)
     }
 }

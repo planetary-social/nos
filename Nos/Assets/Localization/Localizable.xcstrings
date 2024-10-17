@@ -3757,6 +3757,18 @@
         }
       }
     },
+    "copyPrivateKey" : {
+      "comment" : "title for the button that copies the private key",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy private key"
+          }
+        }
+      }
+    },
     "copyQRLink" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -11426,6 +11438,7 @@
       }
     },
     "next" : {
+      "comment" : "title for a button that moves to the next step",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -14058,6 +14071,18 @@
         }
       }
     },
+    "privateKeyDescription" : {
+      "comment" : "a description for the private key screen explaining what a private key is",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your private key is the only login you need for Nos. It is stored in your device keychain. Similar to a password, you should not share it. \n\n**Important!** You should save it somewhere else as well because there is no recovery mechanism if you lose your device."
+          }
+        }
+      }
+    },
     "privateKeyHeadline" : {
       "comment" : "headline for the private key screen in onboarding",
       "extractionState" : "manual",
@@ -14066,6 +14091,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Private Key"
+          }
+        }
+      }
+    },
+    "privateKeyNsecParenthetical" : {
+      "comment" : "the word \"nsec\" in parentheses in English. \"nsec\" should not be translated, but the parentheses may",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(nsec)"
           }
         }
       }
