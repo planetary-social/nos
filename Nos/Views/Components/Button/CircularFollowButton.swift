@@ -32,6 +32,7 @@ struct CircularFollowButton: View {
                     } else {
                         try await currentUser.follow(author: author)
                         analytics.followed(author)
+                        GoToFeedTip.followedAccount.sendDonation()
                     }
                 } catch {
                     crashReporting.report(error)
