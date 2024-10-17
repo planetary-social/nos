@@ -9,28 +9,35 @@ struct CreateAccountView: View {
     @Dependency(\.currentUser) private var currentUser
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text("👋")
-                .font(.system(size: 60))
-            Text("createAccountHeadline")
-                .font(.clarityBold(.title))
-                .foregroundStyle(Color.primaryTxt)
-            Text("createAccountDescription")
-                .foregroundStyle(Color.secondaryTxt)
-            Spacer()
-            NumberedStepsView()
-                .padding(.horizontal, 10)
-            Spacer()
-            BigActionButton(title: "createAccountButton") {
-                do {
-                    try await currentUser.createAccount()
-                } catch {
-                    crashReporting.report(error)
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("👋")
+                        .font(.system(size: 60))
+                    Text("createAccountHeadline")
+                        .font(.title)
+                        .bold()
+                        .foregroundStyle(Color.primaryTxt)
+                    Text("createAccountDescription")
+                        .font(.body)
+                        .foregroundStyle(Color.secondaryTxt)
+                    Spacer()
+                    NumberedStepsView()
+                        .padding(.horizontal, 10)
+                    Spacer()
+                    BigActionButton(title: "createAccountButton") {
+                        do {
+                            try await currentUser.createAccount()
+                        } catch {
+                            crashReporting.report(error)
+                        }
+                        state.step = .buildYourNetwork
+                    }
                 }
-                state.step = .buildYourNetwork
+                .padding(40)
+                .frame(minHeight: geometry.size.height)
             }
         }
-        .padding(40)
         .background(Color.appBg)
         .navigationBarHidden(true)
     }
@@ -47,7 +54,7 @@ fileprivate struct NumberedStepsView: View {
         }
         .background(
             ConnectingLine()
-                .offset(x: 5)
+                .offset(x: 8)
                 .stroke(Color.profileDividerShadow, lineWidth: 4),
             alignment: .leading
         )
@@ -64,6 +71,7 @@ fileprivate struct NumberedStepView: View {
             Text(index, format: .number)
                 .font(.clarityBold(.headline))
                 .foregroundStyle(Color.primaryTxt)
+                .frame(width: 16)
                 .background(
                     Circle()
                         .fill(Color.profileDividerShadow)
