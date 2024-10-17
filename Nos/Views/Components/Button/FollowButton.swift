@@ -27,7 +27,7 @@ struct FollowButton: View {
     var body: some View {
         let following = currentUser.isFollowing(author: author)
         ActionButton(
-            title: following ? .localizable.unfollow : .localizable.follow,
+            following ? "unfollow" : "follow",
             font: .clarity(.bold, textStyle: .subheadline),
             image: image(for: following),
             shouldFillHorizontalSpace: shouldFillHorizontalSpace

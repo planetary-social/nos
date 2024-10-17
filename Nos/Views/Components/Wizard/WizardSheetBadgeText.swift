@@ -6,14 +6,15 @@ import SwiftUI
 /// This Text was implemented to be re-used in the wizards that set-up and delete usernames in EditProfile screen.
 struct WizardSheetBadgeText: View {
 
-    private var localizedStringResource: LocalizedStringResource
+    private var localizedStringKey: LocalizedStringKey
 
-    init(_ localizedStringResource: LocalizedStringResource) {
-        self.localizedStringResource = localizedStringResource
+    init(_ localizedStringKey: LocalizedStringKey) {
+        self.localizedStringKey = localizedStringKey
     }
 
     var body: some View {
-        Text(String(localized: localizedStringResource).uppercased())
+        Text(localizedStringKey)
+            .textCase(.uppercase)
             .padding(.horizontal, 6)
             .padding(.vertical, 5)
             .font(.clarity(.bold, textStyle: .footnote))
@@ -26,5 +27,5 @@ struct WizardSheetBadgeText: View {
 }
 
 #Preview {
-    WizardSheetBadgeText(LocalizedStringResource(stringLiteral: "Hello"))
+    WizardSheetBadgeText("Hello")
 }

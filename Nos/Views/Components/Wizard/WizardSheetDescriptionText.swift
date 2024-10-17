@@ -39,11 +39,11 @@ struct WizardSheetDescriptionText: View {
     }
 
     init(
-        markdown localizedStringResource: LocalizedStringResource,
+        markdown: AttributedString,
         tint: Color = .primaryTxt
     ) {
         self.init(
-            AttributedString(localized: localizedStringResource),
+            markdown,
             tint: tint
         )
     }
@@ -60,6 +60,6 @@ struct WizardSheetDescriptionText: View {
     VStack(spacing: 10) {
         WizardSheetDescriptionText(LocalizedStringResource(stringLiteral: "Hello"))
         WizardSheetDescriptionText(LocalizedStringResource(stringLiteral: "Hello **Martin**"))
-        WizardSheetDescriptionText(markdown: LocalizedStringResource(stringLiteral: "Hello **Martin**"))
+        WizardSheetDescriptionText(markdown: AttributedString("Hello **Martin**"))
     }
 }

@@ -30,7 +30,7 @@ struct SearchBar: View {
                     text = "" // Clear the search text
                     isSearching.wrappedValue = false // Remove focus from the search bar
                 }, label: {
-                    Text(.localizable.clear)
+                    Text("clear")
                         .foregroundLinearGradient(.horizontalAccent)
                 })
                 .transition(.move(edge: .trailing))

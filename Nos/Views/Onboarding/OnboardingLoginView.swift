@@ -34,17 +34,17 @@ struct OnboardingLoginView: View {
         VStack {
             Form {
                 Section {
-                    SecureField(String(localized: .localizable.privateKeyPlaceholder), text: $privateKeyString)
+                    SecureField(String(localized: "privateKeyPlaceholder"), text: $privateKeyString)
                         .foregroundColor(.primaryTxt)
                 } header: {
-                    Text(.localizable.pasteYourSecretKey)
+                    Text("pasteYourSecretKey")
                         .foregroundColor(.primaryTxt)
                         .fontWeight(.heavy)
                 }
                 .listRowGradientBackground()
             }
             if !privateKeyString.isEmpty {
-                BigActionButton(title: .localizable.login) {
+                BigActionButton("login") {
                     if let keyPair = KeyPair(nsec: privateKeyString) {
                         await importKey(keyPair)
                     } else if let keyPair = KeyPair(privateKeyHex: privateKeyString) {
@@ -59,11 +59,11 @@ struct OnboardingLoginView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
-        .nosNavigationBar(title: .localizable.login)
+        .nosNavigationBar("login")
         .alert(isPresented: $showError) {
             Alert(
-                title: Text(.localizable.invalidKey),
-                message: Text(.localizable.couldNotReadPrivateKeyMessage)
+                title: Text("invalidKey"),
+                message: Text("couldNotReadPrivateKeyMessage")
             )
         }
     }

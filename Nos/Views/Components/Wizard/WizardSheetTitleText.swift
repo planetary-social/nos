@@ -6,14 +6,14 @@ import SwiftUI
 /// This View was implemented to be re-used in the wizards that set-up and delete usernames in EditProfile screen.
 struct WizardSheetTitleText: View {
     
-    private var localizedStringResource: LocalizedStringResource
+    private var localizedStringKey: LocalizedStringKey
 
-    init(_ localizedStringResource: LocalizedStringResource) {
-        self.localizedStringResource = localizedStringResource
+    init(_ localizedStringKey: LocalizedStringKey) {
+        self.localizedStringKey = localizedStringKey
     }
 
     var body: some View {
-        Text(localizedStringResource)
+        Text(localizedStringKey)
             .font(.clarityBold(.title))
             .foregroundStyle(Color.primaryTxt)
     }
@@ -21,6 +21,6 @@ struct WizardSheetTitleText: View {
 
 #Preview {
     VStack(spacing: 10) {
-        WizardSheetTitleText(LocalizedStringResource(stringLiteral: "Hello"))
+        WizardSheetTitleText("Hello")
     }
 }

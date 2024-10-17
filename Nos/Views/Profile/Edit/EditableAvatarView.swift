@@ -78,13 +78,17 @@ struct EditableAvatarView: View {
             urlString = url.absoluteString
         } catch {
             alert = AlertState(title: {
-                TextState(String(localized: .imagePicker.errorUploadingFile))
+                TextState(String(localized: "errorUploadingFile", table: "ImagePicker"))
             }, message: {
                 if case let FileStorageAPIClientError.uploadFailed(message) = error,
                     let message {
-                    TextState(String(localized: .imagePicker.errorUploadingFileWithMessage(message)))
+                    TextState(
+                        String.localizedStringWithFormat(
+                            String(localized: "errorUploadingFileWithMessage", table: "ImagePicker"), message
+                        )
+                    )
                 } else {
-                    TextState(String(localized: .imagePicker.errorUploadingFileMessage))
+                    TextState(String(localized: "errorUploadingFileMessage", table: "ImagePicker"))
                 }
             })
         }

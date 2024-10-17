@@ -3,11 +3,16 @@ import SwiftUINavigation
 
 struct NosTextEditor: View {
     
-    var label: LocalizedStringResource
+    var label: LocalizedStringKey
     @Binding var text: String
     
+    init(_ label: LocalizedStringKey, text: Binding<String>) {
+        self.label = label
+        self._text = text
+    }
+    
     var body: some View {
-        NosFormField(label: label) { 
+        NosFormField(label) {
             TextEditor(text: $text)
                 .textInputAutocapitalization(.none)
                 .foregroundColor(.primaryTxt)
@@ -20,11 +25,11 @@ struct NosTextEditor: View {
 struct NosTextEditor_Previews: PreviewProvider {
     static var previews: some View {
         NosForm {
-            NosFormSection(label: .localizable.profilePicture) {
+            NosFormSection("profilePicture") {
                 WithState(initialValue: "Alice") { text in
-                    NosTextEditor(label: .localizable.bio, text: text)
+                    NosTextEditor("bio", text: text)
                         .frame(maxHeight: 200)
-                }    
+                }
             }
         }
     }

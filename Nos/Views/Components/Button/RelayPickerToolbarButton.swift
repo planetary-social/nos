@@ -4,16 +4,15 @@ struct RelayPickerToolbarButton: ToolbarContent {
     
     @Binding var selectedRelay: Relay?
     @Binding var isPresenting: Bool
-    var defaultSelection: LocalizedStringResource
     var action: () -> Void
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
     var title: String {
         if let selectedRelay {
-            return selectedRelay.host ?? String(localized: .localizable.error)
+            return selectedRelay.host ?? String(localized: "error")
         } else {
-            return String(localized: defaultSelection)
+            return String(localized: "allMyRelays")
         }
     }
     
@@ -79,22 +78,21 @@ struct RelayPickerToolbarButton_Previews: PreviewProvider {
                         ToolbarItem(placement: .navigationBarLeading) {
                             Button {}
                             label: {
-                                Text(.localizable.cancel)
+                                Text("cancel")
                                     .foregroundColor(.secondaryTxt)
                             }
                         }
                         RelayPickerToolbarButton(
                             selectedRelay: selectedRelay, 
-                            isPresenting: isPresented, 
-                            defaultSelection: .localizable.allMyRelays
+                            isPresenting: isPresented
                         ) {}
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            ActionButton(title: .localizable.post, action: {})
+                            ActionButton("post")
                                 .frame(height: 22)
                                 .padding(.bottom, 3)
                         }
                     }
-                    .navigationBarTitle(String(localized: .localizable.discover), displayMode: .inline)
+                    .navigationBarTitle("discover", displayMode: .inline)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
                 }

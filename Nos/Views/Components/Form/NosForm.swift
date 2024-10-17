@@ -25,9 +25,9 @@ struct NosForm<Content: View>: View {
 struct NosForm_Previews: PreviewProvider {
     static var previews: some View {
         NosForm {
-            NosFormSection(label: .localizable.profilePicture) {
+            NosFormSection("profilePicture") {
                 WithState(initialValue: "Alice") { text in
-                    NosTextField(label: .localizable.url, text: text)
+                    NosTextField("url", text: text)
                 }
             }   
         }    

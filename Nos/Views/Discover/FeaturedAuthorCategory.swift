@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 /// Categories of featured authors on the Discover tab.
 /// - Note: The order of cases in this enum determines the order in which categories are displayed
@@ -17,18 +18,18 @@ enum FeaturedAuthorCategory: CaseIterable {
     case gaming
     case sports
 
-    var text: LocalizedStringResource {
+    var text: LocalizedStringKey {
         switch self {
-        case .all: LocalizedStringResource.localizable.featuredAuthorCategoryAll
-        case .new: LocalizedStringResource.localizable.featuredAuthorCategoryNew
-        case .music: LocalizedStringResource.localizable.featuredAuthorCategoryMusic
-        case .news: LocalizedStringResource.localizable.featuredAuthorCategoryNews
-        case .art: LocalizedStringResource.localizable.featuredAuthorCategoryArt
-        case .activists: LocalizedStringResource.localizable.featuredAuthorCategoryActivists
-        case .gaming: LocalizedStringResource.localizable.featuredAuthorCategoryGaming
-        case .sports: LocalizedStringResource.localizable.featuredAuthorCategorySports
-        case .tech: LocalizedStringResource.localizable.featuredAuthorCategoryTech
-        case .health: LocalizedStringResource.localizable.featuredAuthorCategoryHealth
+        case .all: "featuredAuthorCategoryAll"
+        case .new: "featuredAuthorCategoryNew"
+        case .music: "featuredAuthorCategoryMusic"
+        case .news: "featuredAuthorCategoryNews"
+        case .art: "featuredAuthorCategoryArt"
+        case .activists: "featuredAuthorCategoryActivists"
+        case .gaming: "featuredAuthorCategoryGaming"
+        case .sports: "featuredAuthorCategorySports"
+        case .tech: "featuredAuthorCategoryTech"
+        case .health: "featuredAuthorCategoryHealth"
         }
     }
 

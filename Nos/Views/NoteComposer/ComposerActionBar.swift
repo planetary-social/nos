@@ -51,7 +51,7 @@ struct ComposerActionBar: View {
                 backArrow
                 ScrollView(.horizontal) {
                     HStack {
-                        Text(.localizable.noteDisappearsIn)
+                        Text("noteDisappearsIn")
                             .font(.clarityRegular(.caption))
                             .foregroundColor(.secondaryTxt)
                             .transition(.move(edge: .trailing))
@@ -119,7 +119,7 @@ struct ComposerActionBar: View {
                 .frame(minWidth: 44, minHeight: 44)
         }
         .padding(.leading, 8)
-        .accessibilityLabel(Text(.localizable.attachMedia))
+        .accessibilityLabel(Text("attachMedia"))
     }
 
     /// Expiration Time
@@ -135,7 +135,7 @@ struct ComposerActionBar: View {
                         self.expirationTime = $0 ? option.timeInterval : nil
                     })
                 )
-                .accessibilityLabel(Text(.localizable.expirationDate))
+                .accessibilityLabel(Text("expirationDate"))
                 .padding(12)
             } else {
                 Button {
@@ -152,7 +152,7 @@ struct ComposerActionBar: View {
     /// Preview Toggle
     private var previewToggle: some View {
         Group {
-            Text(.localizable.preview)
+            Text("preview")
                 .padding(.horizontal, 10)
                 .foregroundColor(Color.secondaryTxt)
             NosToggle(isOn: $showPreview)
@@ -202,31 +202,37 @@ struct ComposerActionBar: View {
     private func createAlert(
         for error: Error
     ) -> AlertState<ComposerActionBar.AlertAction> {
-        var title = String(localized: .imagePicker.errorUploadingFile)
+        var title = String(localized: "errorUploadingFile", table: "ImagePicker")
         var message: String
         var buttons: [ButtonState<ComposerActionBar.AlertAction>] = [
             .default(
-                TextState(String(localized: .localizable.ok)),
+                TextState(String(localized: "ok")),
                 action: .send(.cancel)
             )
         ]
 
         if case let FileStorageAPIClientError.fileTooBig(errorMessage) = error, let errorMessage {
-            title = String(localized: .imagePicker.errorUploadingFileExceedsSizeLimit)
-            message = String(localized: .imagePicker.errorUploadingFileExceedsLimit(errorMessage))
+            title = String(localized: "errorUploadingFileExceedsSizeLimit", table: "ImagePicker")
+            message = String.localizedStringWithFormat(
+                String(localized: "errorUploadingFileExceedsLimit", table: "ImagePicker"),
+                errorMessage
+            )
             buttons = [
                 .cancel(
-                    TextState(String(localized: .localizable.cancel)), action: .send(.cancel)
+                    TextState(String(localized: "cancel")), action: .send(.cancel)
                 ),
                 .default(
-                    TextState(String(localized: .imagePicker.getAccount)),
+                    TextState(String(localized: "getAccount", table: "ImagePicker")),
                     action: .send(.getAccount)
                 )
             ]
         } else if case let FileStorageAPIClientError.uploadFailed(errorMessage) = error, let errorMessage {
-            message = String(localized: .imagePicker.errorUploadingFileWithMessage(errorMessage))
+            message = String.localizedStringWithFormat(
+                String(localized: "errorUploadingFileWithMessage", table: "ImagePicker"),
+                errorMessage
+            )
         } else {
-            message = String(localized: .imagePicker.errorUploadingFileMessage)
+            message = String(localized: "errorUploadingFileMessage", table: "ImagePicker")
         }
 
         return AlertState(

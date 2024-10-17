@@ -4,11 +4,7 @@ import Foundation
 /// Vocabulary from [NIP-56] and [NIP-69](https://github.com/nostr-protocol/nips/pull/457).
 struct ReportCategory: Identifiable, Equatable {
     /// A localized human readable description of the reason/category. Should be short enough to fit in an action menu.
-    var displayName: String {
-        String(localized: name)
-    }
-    
-    var name: LocalizedStringResource
+    var displayName: String
     
     /// The machine-readable code corresponding to this category.
     var code: String
@@ -47,31 +43,31 @@ enum NIP56Code: String {
 
 extension ReportCategory {
     static let coarseLanguage = ReportCategory(
-        name: .moderation.coarseLanguage,
+        displayName: String(localized: "coarseLanguage", table: "Moderation"),
         code: "CL",
         nip56Code: .profanity
     )
     
     static let likelyToCauseHarm = ReportCategory(
-        name: .moderation.likelyToCauseHarm,
+        displayName: String(localized: "likelyToCauseHarm", table: "Moderation"),
         code: "HC",
         nip56Code: .other
     )
 
     static let harassment = ReportCategory(
-        name: .moderation.harassment,
+        displayName: String(localized: "harassment", table: "Moderation"),
         code: "IL-har",
         nip56Code: .profanity
     )
 
     static let intoleranceAndHate = ReportCategory(
-        name: .moderation.intoleranceAndHate,
+        displayName: String(localized: "intoleranceAndHate", table: "Moderation"),
         code: "IH",
         nip56Code: .other
     )
     
     static let illegal = ReportCategory(
-        name: .moderation.illegal,
+        displayName: String(localized: "illegal", table: "Moderation"),
         code: "IL",
         nip56Code: .illegal,
         subCategories: [
@@ -87,19 +83,19 @@ extension ReportCategory {
     )
 
     static let nsfw = ReportCategory(
-        name: .moderation.nsfw,
+        displayName: String(localized: "nsfw", table: "Moderation"),
         code: "NW",
         nip56Code: .nudity
     )
     
     static let impersonation = ReportCategory(
-        name: .moderation.impersonation,
+        displayName: String(localized: "impersonation", table: "Moderation"),
         code: "IM",
         nip56Code: .impersonation
     )
 
     static let nudity = ReportCategory(
-        name: .moderation.nudityAndSex,
+        displayName: String(localized: "nudityAndSex", table: "Moderation"),
         code: "NS",
         nip56Code: .nudity,
         subCategories: [
@@ -110,7 +106,7 @@ extension ReportCategory {
     )
     
     static let pornography = ReportCategory(
-        name: .moderation.pornography,
+        displayName: String(localized: "pornography", table: "Moderation"),
         code: "PN",
         nip56Code: .nudity,
         subCategories: [
@@ -123,10 +119,14 @@ extension ReportCategory {
         ]
     )
     
-    static let spam = ReportCategory(name: .moderation.spam, code: "SP", nip56Code: .spam)
+    static let spam = ReportCategory(
+        displayName: String(localized: "spam", table: "Moderation"),
+        code: "SP",
+        nip56Code: .spam
+    )
 
     static let violence = ReportCategory(
-        name: .moderation.violence,
+        displayName: String(localized: "violence", table: "Moderation"),
         code: "VI",
         nip56Code: .other,
         subCategories: [
@@ -135,7 +135,11 @@ extension ReportCategory {
         ]
     )
 
-    static let other = ReportCategory(name: .moderation.other, code: "NA", nip56Code: .other)
+    static let other = ReportCategory(
+        displayName: String(localized: "other", table: "Moderation"),
+        code: "NA",
+        nip56Code: .other
+    )
 }
 
 extension ReportCategory {
@@ -174,115 +178,115 @@ extension ReportCategory {
 
 enum ReportSubCategoryType {
     static let copyrightViolation = ReportCategory(
-        name: .moderation.copyrightViolation,
+        displayName: String(localized: "copyrightViolation", table: "Moderation"),
         code: "IL-cop",
         nip56Code: .illegal
     )
     
     static let childSexualAbuse = ReportCategory(
-        name: .moderation.childSexualAbuse,
+        displayName: String(localized: "childSexualAbuse", table: "Moderation"),
         code: "IL-csa",
         nip56Code: .illegal
     )
     static let drugRelatedCrime = ReportCategory(
-        name: .moderation.drugRelatedCrime,
+        displayName: String(localized: "drugRelatedCrime", table: "Moderation"),
         code: "IL-drg",
         nip56Code: .illegal
     )
     
     static let fraudAndScams = ReportCategory(
-        name: .moderation.fraudAndScams,
+        displayName: String(localized: "fraudAndScams", table: "Moderation"),
         code: "IL-frd",
         nip56Code: .illegal
     )
     
     static let harassmentStalkingOrDoxxing = ReportCategory(
-        name: .moderation.harassmentStalkingOrDoxxing,
+        displayName: String(localized: "harassmentStalkingOrDoxxing", table: "Moderation"),
         code: "IL-har",
         nip56Code: .illegal
     )
     
     static let prostitution = ReportCategory(
-        name: .moderation.prostitution,
+        displayName: String(localized: "prostitution", table: "Moderation"),
         code: "IL-swk",
         nip56Code: .illegal
     )
     
     static let impersonation = ReportCategory(
-        name: .moderation.impersonation,
+        displayName: String(localized: "impersonation", table: "Moderation"),
         code: "IL-idt",
         nip56Code: .illegal
     )
     
     static let malware = ReportCategory(
-        name: .moderation.malware,
+        displayName: String(localized: "malware", table: "Moderation"),
         code: "IL-mal",
         nip56Code: .illegal
     )
     
     static let casualNudity = ReportCategory(
-        name: .moderation.casualNudity,
+        displayName: String(localized: "casualNudity", table: "Moderation"),
         code: "NS-nud",
         nip56Code: .nudity
     )
     
     static let erotica = ReportCategory(
-        name: .moderation.erotica,
+        displayName: String(localized: "erotica", table: "Moderation"),
         code: "NS-ero",
         nip56Code: .nudity
     )
     
     // swiftlint:disable:next identifier_name
     static let sex = ReportCategory(
-        name: .moderation.sex,
+        displayName: String(localized: "sex", table: "Moderation"),
         code: "NS-sex",
         nip56Code: .nudity
     )
     
     static let heterosexualPorn = ReportCategory(
-        name: .moderation.heterosexualPorn,
+        displayName: String(localized: "heterosexualPorn", table: "Moderation"),
         code: "PN-het",
         nip56Code: .nudity
     )
     
     static let gayMalePorn = ReportCategory(
-        name: .moderation.gayMalePorn,
+        displayName: String(localized: "gayMalePorn", table: "Moderation"),
         code: "PN-gay",
         nip56Code: .nudity
     )
     
     static let lesbianPorn = ReportCategory(
-        name: .moderation.lesbianPorn,
+        displayName: String(localized: "lesbianPorn", table: "Moderation"),
         code: "PN-les",
         nip56Code: .nudity
     )
     
     static let bisexualPorn = ReportCategory(
-        name: .moderation.bisexualPorn,
+        displayName: String(localized: "bisexualPorn", table: "Moderation"),
         code: "PN-bis",
         nip56Code: .nudity
     )
     
     static let transsexualPorn = ReportCategory(
-        name: .moderation.transsexualPorn,
+        displayName: String(localized: "transsexualPorn", table: "Moderation"),
         code: "PN-trn",
         nip56Code: .nudity
     )
     
     static let genderFluidNonBinaryPorn = ReportCategory(
-        name: .moderation.genderFluidNonBinaryPorn,
+        displayName: String(localized: "genderFluidNonBinaryPorn", table: "Moderation"),
         code: "PN-fnb",
         nip56Code: .nudity
     )
     
     static let violenceTowardsAHumanBeing = ReportCategory(
-        name: .moderation.violenceTowardsAHumanBeing,
+        displayName: String(localized: "violenceTowardsAHumanBeing", table: "Moderation"),
         code: "VI-hum",
         nip56Code: .other
     )
     
     static let violenceTowardsASentientAnimal = ReportCategory(
-        name: .moderation.violenceTowardsASentientAnimal,
+        displayName: String(localized: "violenceTowardsASentientAnimal", table: "Moderation"),
         code: "VI-ani",
         nip56Code: .other
     )

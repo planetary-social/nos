@@ -64,17 +64,17 @@ struct RepliesLabel: View {
         case .discussion:
             if avatars.isEmpty {
                 return AttributedString(
-                    String(localized: .reply.joinTheDiscussion),
+                    String(localized: "joinTheDiscussion", table: "Reply"),
                     attributes: AttributeContainer(
                         [NSAttributedString.Key.foregroundColor: UIColor.primaryTxt]
                     )
                 )
             } else {
-                return AttributedString(String(localized: .reply.inDiscussion))
+                return AttributedString(localized: "inDiscussion", table: "Reply")
             }
         case .count:
             let count = replies.count
-            let string = String(localized: .reply.replies(count))
+            let string = String.localizedStringWithFormat(String(localized: "replies", table: "Reply"), count)
             do {
                 var attributed = try AttributedString(markdown: string)
                 if let range = attributed.range(of: "\(count)") {

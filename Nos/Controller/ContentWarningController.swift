@@ -47,7 +47,7 @@ enum ContentWarningType {
     
     /// The name of the first author in the list of reports
     private var firstAuthorSafeName: String {
-        authorNames.first ?? String(localized: .localizable.unknownAuthor)
+        authorNames.first ?? String(localized: "unknownAuthor")
     }
     
     /// The string explaining the reason(s) for the reports.
@@ -57,7 +57,7 @@ enum ContentWarningType {
             .sorted()
             .joined(separator: ", ")
         if reasons.isEmpty {
-            return String(localized: .localizable.error)
+            return String(localized: "error")
         } else {
             return reasons
         }

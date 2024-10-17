@@ -22,7 +22,7 @@ struct MutesView: View {
             .padding(.top)
         }
         .background(Color.appBg)
-        .nosNavigationBar(title: .localizable.mutedUsers)
+        .nosNavigationBar("mutedUsers")
     }
 }
 

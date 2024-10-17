@@ -4,11 +4,11 @@ import SwiftUINavigation
 struct NosFormField<Control: View>: View {
 
     let control: Control
-    let label: LocalizedStringResource
+    let label: LocalizedStringKey
     @FocusState private var focus: Bool
 
     init(
-        label: LocalizedStringResource,
+        _ label: LocalizedStringKey,
         @ViewBuilder builder: () -> Control
     ) {
         self.label = label
@@ -25,7 +25,7 @@ struct NosFormField<Control: View>: View {
             }
             
             control
-                .accessibilityLabel(String(localized: label))
+                .accessibilityLabel(label)
                 .focused($focus)
         }
         .padding(16)
@@ -39,9 +39,9 @@ struct NosFormField<Control: View>: View {
 struct NosFormField_Previews: PreviewProvider {
     static var previews: some View {
         NosForm {
-            NosFormSection(label: .localizable.profileTitle) {
+            NosFormSection("profileTitle") {
                 WithState(initialValue: "") { text in
-                    NosFormField(label: .localizable.about) {
+                    NosFormField("about") {
                         TextField("", text: text)
                             .textInputAutocapitalization(.none)
                             .foregroundColor(.primaryTxt)

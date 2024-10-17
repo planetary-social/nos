@@ -59,7 +59,7 @@ struct ImageButton: View {
             ZStack {
                 Color.clear
 
-                Text(.localizable.gifButton)
+                Text("gifButton")
                     .font(.title)
                     .foregroundStyle(Color.primaryTxt)
                     .padding()

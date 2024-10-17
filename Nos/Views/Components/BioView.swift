@@ -89,7 +89,8 @@ struct BioView: View {
                 }
             if shouldShowReadMore {
                 ZStack(alignment: .center) {
-                    Text(String(localized: .localizable.readMore).uppercased())
+                    Text("readMore")
+                        .textCase(.uppercase)
                         .font(.clarityRegular(.caption))
                         .foregroundColor(.secondaryTxt)
                         .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))

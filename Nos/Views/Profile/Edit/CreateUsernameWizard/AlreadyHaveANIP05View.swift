@@ -17,7 +17,7 @@ struct AlreadyHaveANIP05View: View {
             Button {
                 isPresented = false
             } label: {
-                Text(.localizable.cancel)
+                Text("cancel")
                     .font(.clarity(.medium, textStyle: .body))
                     .foregroundStyle(Color.primaryTxt)
                     .padding(.vertical, 20)
@@ -25,8 +25,8 @@ struct AlreadyHaveANIP05View: View {
             }
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
-                    WizardSheetTitleText(.localizable.linkYourNIP05Title)
-                    WizardSheetDescriptionText(markdown: .localizable.linkYourNIP05Description)
+                    WizardSheetTitleText("linkYourNIP05Title")
+                    WizardSheetDescriptionText(markdown: AttributedString(localized: "linkYourNIP05Description"))
                     HStack {
                         UsernameTextField(usernameObserver: usernameObserver)
                             .onChange(of: usernameObserver.debouncedText) { _, newValue in
@@ -68,11 +68,11 @@ struct AlreadyHaveANIP05View: View {
                             ProgressView()
                                 .frame(height: .zero)
                                 .tint(Color.white)
-                            Text(.localizable.next)
+                            Text("next")
                                 .hidden()
                         }
                     } else {
-                        Text(.localizable.next)
+                        Text("next")
                     }
                 }
                 .buttonStyle(BigActionButtonStyle())
@@ -83,7 +83,7 @@ struct AlreadyHaveANIP05View: View {
     }
 
     private var unableToLinkUsernameText: some View {
-        WizardSheetDescriptionText(markdown: .localizable.nip05LinkFailed, tint: .red)
+        WizardSheetDescriptionText(markdown: AttributedString(localized: "nip05LinkFailed"), tint: .red)
             .font(.clarity(.medium, textStyle: .subheadline))
             .lineSpacing(3)
     }
@@ -154,10 +154,10 @@ fileprivate struct UsernameTextField: View {
     var body: some View {
         TextField(
             text: $usernameObserver.text,
-            prompt: SwiftUI.Text(verbatim: String(localized: .localizable.nip05Example))
+            prompt: SwiftUI.Text(verbatim: String(localized: "nip05Example"))
                 .foregroundStyle(Color.secondaryTxt)
         ) {
-            SwiftUI.Text(verbatim: String(localized: .localizable.nip05Example))
+            SwiftUI.Text(verbatim: String(localized: "nip05Example"))
                 .foregroundStyle(Color.primaryTxt)
         }
         .focused($usernameFieldIsFocused)

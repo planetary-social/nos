@@ -59,19 +59,19 @@ struct RepostButton: View {
             .padding(.vertical, 12)
         }
         .disabled(tapped)
-        .confirmationDialog(String(localized: .localizable.repost), isPresented: $shouldConfirmRepost) {
-            Button(String(localized: .localizable.repost)) {
+        .confirmationDialog("repost", isPresented: $shouldConfirmRepost) {
+            Button("repost") {
                 Task { await repostNote() }
             }
-            Button(String(localized: .localizable.quote)) {
+            Button("quote") {
                 showQuotedNoteComposer = true
             }
-            Button(String(localized: .localizable.cancel), role: .cancel) {
+            Button("cancel", role: .cancel) {
                 tapped = false
             }
         }
-        .confirmationDialog(String(localized: .localizable.deleteRepost), isPresented: $shouldConfirmDelete) {
-            Button(String(localized: .localizable.deleteRepost), role: .destructive) {
+        .confirmationDialog("deleteRepost", isPresented: $shouldConfirmDelete) {
+            Button("deleteRepost", role: .destructive) {
                 Task { await deleteReposts() }
             }
         }
