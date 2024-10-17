@@ -18,7 +18,6 @@ extension Author {
     @NSManaged public var nip05: String?
     @NSManaged public var profilePhotoURL: URL?
     @NSManaged public var rawMetadata: Data?
-    @NSManaged public var uns: String?
     @NSManaged public var events: Set<Event>
     @NSManaged public var followers: Set<Follow>
     

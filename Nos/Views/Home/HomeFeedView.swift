@@ -2,6 +2,7 @@ import SwiftUI
 import CoreData
 import Combine
 import Dependencies
+import TipKit
 
 struct HomeFeedView: View {
     
@@ -21,6 +22,9 @@ struct HomeFeedView: View {
     static let staticLoadTime: TimeInterval = 2
 
     let user: Author
+    
+    /// A tip to display at the top of the feed.
+    let welcomeTip = WelcomeToFeedTip()
 
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay? 
@@ -63,25 +67,34 @@ struct HomeFeedView: View {
 
     var body: some View {
         ZStack {
-            PagedNoteListView(
-                refreshController: $refreshController,
-                databaseFilter: homeFeedFetchRequest,
-                relayFilter: homeFeedFilter,
-                relay: selectedRelay,
-                managedObjectContext: viewContext,
-                tab: .home,
-                header: {
-                    EmptyView()
-                },
-                emptyPlaceholder: {
-                    VStack {
-                        Text("noEvents")
-                            .padding()
+            VStack(spacing: 8) {
+                TipView(welcomeTip)
+                    .padding(.top, 20)
+                    .padding(.horizontal, 16)
+                    .readabilityPadding()
+                    .tipBackground(LinearGradient.horizontalAccentReversed)
+                    .tipViewStyle(.inline)
+
+                PagedNoteListView(
+                    refreshController: $refreshController,
+                    databaseFilter: homeFeedFetchRequest,
+                    relayFilter: homeFeedFilter,
+                    relay: selectedRelay,
+                    managedObjectContext: viewContext,
+                    tab: .home,
+                    header: {
+                        EmptyView()
+                    },
+                    emptyPlaceholder: {
+                        VStack {
+                            Text("noEvents")
+                                .padding()
+                        }
+                        .frame(minHeight: 300)
                     }
-                    .frame(minHeight: 300)
-                }
-            )
-            .padding(0)
+                )
+                .padding(0)
+            }
 
             NewNotesButton(fetchRequest: FetchRequest(fetchRequest: newNotesRequest)) {
                 refreshController.startRefresh = true

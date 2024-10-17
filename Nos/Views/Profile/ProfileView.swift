@@ -230,15 +230,6 @@ struct ProfileView: View {
     .inject(previewData: previewData)
 }
 
-#Preview("UNS") {
-    var previewData = PreviewData()
-    
-    return NavigationStack {
-        ProfileView(author: previewData.eve)
-    }
-    .inject(previewData: previewData)
-}
-
 #Preview("Logged in User") {
     
     @Dependency(\.persistenceController) var persistenceController 

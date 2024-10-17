@@ -21,18 +21,12 @@ struct ProfileEditView: View {
     @State private var displayNameText: String = ""
     @State private var bioText: String = ""
     @State private var avatarText: String = ""
-    @State private var unsText: String = ""
     @State private var website: String = ""
     @State private var showNIP05Wizard = false
-    @State private var showUniversalNameWizard = false
-    @State private var unsController = UNSWizardController()
     @State private var showConfirmationDialog = false
     @State private var saveError: SaveError?
     
     @State private var isUploadingPhoto = false
-    @State private var alert: AlertState<AlertAction>?
-    
-    fileprivate enum AlertAction {}
 
     private var showAlert: Binding<Bool> {
         Binding {
@@ -84,34 +78,7 @@ struct ProfileEditView: View {
                 FormSeparator()
                 NosTextField("website", text: $website)
             }
-            
-            HStack {
-                Text("identityVerification")
-                    .font(.clarity(.semibold, textStyle: .headline))
-                    .foregroundColor(.primaryTxt)
-                    .padding(.top, 16)
-                
-                Spacer()
-            }
-            .padding(.horizontal, 13)
-            
-            if unsText.isEmpty {
-                SetUpUNSBanner(
-                    text: "unsTagline",
-                    button: "manageUniversalName"
-                ) {
-                    showUniversalNameWizard = true
-                }
-                .padding(13)
-            } else {
-                NosFormSection {
-                    NosTextField("universalName", text: $unsText)
-                }
-            }
         }
-        .sheet(isPresented: $showUniversalNameWizard, content: {
-            UNSWizard(controller: unsController, isPresented: $showUniversalNameWizard)
-        })
         .sheet(isPresented: $showNIP05Wizard) {
             CreateUsernameWizard(isPresented: $showNIP05Wizard)
         }
@@ -120,13 +87,6 @@ struct ProfileEditView: View {
                 author: author,
                 isPresented: $showConfirmationDialog
             )
-        }
-        .onChange(of: showUniversalNameWizard) { _, newValue in
-            if !newValue {
-                unsText = currentUser.author?.uns ?? ""
-                unsController = UNSWizardController()
-                author.willChangeValue(for: \Author.uns) // Trigger ProfileView to load USBC balance
-            }
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
@@ -170,7 +130,6 @@ struct ProfileEditView: View {
         bioText = author.about ?? ""
         avatarText = author.profilePhotoURL?.absoluteString ?? ""
         website = author.website ?? ""
-        unsText = author.uns ?? ""
     }
     
     private func save() async {
@@ -178,7 +137,6 @@ struct ProfileEditView: View {
         author.about = bioText
         author.profilePhotoURL = URL(string: avatarText)
         author.website = website
-        author.uns = unsText
         do {
             try viewContext.save()
             try await currentUser.publishMetadata()

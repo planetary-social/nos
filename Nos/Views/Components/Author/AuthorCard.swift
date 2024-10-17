@@ -49,11 +49,7 @@ struct AuthorCard: View {
                                     NIP05View(author: author)
                                         .font(.clarity(.regular))
                                         .lineLimit(1)
-                                } else if author.hasUNS {
-                                    UNSNameView(author: author)
-                                        .font(.clarity(.regular))
-                                        .lineLimit(1)
-                                }
+                                } 
                             }
 
                             Spacer()
@@ -101,7 +97,6 @@ struct AuthorCard: View {
     
     return VStack {
         AuthorCard(author: previewData.alice)
-        AuthorCard(author: previewData.unsAuthor, showsFollowButton: false)
         AuthorCard(author: previewData.bob)
     }
     .padding()
