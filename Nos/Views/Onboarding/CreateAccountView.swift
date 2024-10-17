@@ -55,7 +55,7 @@ fileprivate struct NumberedStepsView: View {
         .background(
             ConnectingLine()
                 .offset(x: 8)
-                .stroke(Color.profileDividerShadow, lineWidth: 4),
+                .stroke(Color.numberedStepBackground, lineWidth: 4),
             alignment: .leading
         )
     }
@@ -74,7 +74,7 @@ fileprivate struct NumberedStepView: View {
                 .frame(width: 16)
                 .background(
                     Circle()
-                        .fill(Color.profileDividerShadow)
+                        .fill(Color.numberedStepBackground)
                         .frame(width: 30, height: 30)
                 )
 
