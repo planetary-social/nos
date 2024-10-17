@@ -19,7 +19,6 @@ struct CreateAccountView: View {
                     createAccountStack
                 }
             }
-            .readabilityPadding()
         }
         .navigationBarHidden(true)
     }
@@ -44,7 +43,7 @@ struct CreateAccountView: View {
                 } catch {
                     crashReporting.report(error)
                 }
-                state.step = .buildYourNetwork
+                state.step = .privateKey
             }
         }
         .padding(40)

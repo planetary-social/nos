@@ -12,31 +12,39 @@ struct BuildYourNetworkView: View {
         ZStack {
             Color.appBg
                 .ignoresSafeArea()
-            GeometryReader { geometry in
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("🔍")
-                        .font(.system(size: 60))
-                    Text("buildYourNetwork")
-                        .font(.clarityBold(.title))
-                        .foregroundStyle(Color.primaryTxt)
-                    Text("buildYourNetworkDescription")
-                        .foregroundStyle(Color.secondaryTxt)
-                    Image.network
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: geometry.size.width)
-                        .offset(x: -padding)
-                        .ignoresSafeArea()
-                    Spacer()
-                    BigActionButton(title: "findPeople") {
-                        completion()
-                    }
+            ViewThatFits(in: .vertical) {
+                buildYourNetworkStack
+
+                ScrollView {
+                    buildYourNetworkStack
                 }
-                .padding(padding)
             }
-            .readabilityPadding()
         }
         .navigationBarHidden(true)
+    }
+
+    @MainActor var buildYourNetworkStack: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text("🔍")
+                .font(.system(size: 60))
+            Text("buildYourNetwork")
+                .font(.clarityBold(.title))
+                .foregroundStyle(Color.primaryTxt)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("buildYourNetworkDescription")
+                .foregroundStyle(Color.secondaryTxt)
+                .fixedSize(horizontal: false, vertical: true)
+            Image.network
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(.horizontal, -padding)
+            Spacer()
+            BigActionButton(title: "findPeople") {
+                completion()
+            }
+        }
+        .padding(padding)
+        .readabilityPadding()
     }
 }
 

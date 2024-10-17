@@ -13,35 +13,40 @@ struct PrivateKeyView: View {
         ZStack {
             Color.appBg
                 .ignoresSafeArea()
-            GeometryReader { geometry in
+            ViewThatFits(in: .vertical) {
+                privateKeyStack
+
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        LargeNumberView(1)
-                        HStack(alignment: .firstTextBaseline) {
-                            Text("privateKeyHeadline")
-                                .font(.clarityBold(.title))
-                                .foregroundStyle(Color.primaryTxt)
-                            Text("privateKeyNsecParenthetical")
-                                .font(.clarityRegular(.title2))
-                                .foregroundStyle(Color.secondaryTxt)
-                        }
-                        PrivateKeyDescription()
-                        BorderedPrivateKey(privateKeyString: $privateKeyString, copyButtonState: $copyButtonState)
-                        Spacer()
-                        BigActionButton(title: "next") {
-                            state.step = .buildYourNetwork
-                        }
-                    }
-                    .padding(40)
-                    .frame(minHeight: geometry.size.height)
+                    privateKeyStack
                 }
             }
             .onAppear {
                 privateKeyString = currentUser.keyPair?.nsec ?? ""
             }
-            .readabilityPadding()
         }
         .navigationBarHidden(true)
+    }
+
+    var privateKeyStack: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            LargeNumberView(1)
+            HStack(alignment: .firstTextBaseline) {
+                Text("privateKeyHeadline")
+                    .font(.clarityBold(.title))
+                    .foregroundStyle(Color.primaryTxt)
+                Text("privateKeyNsecParenthetical")
+                    .font(.clarityRegular(.title2))
+                    .foregroundStyle(Color.secondaryTxt)
+            }
+            PrivateKeyDescription()
+            BorderedPrivateKey(privateKeyString: $privateKeyString, copyButtonState: $copyButtonState)
+            Spacer()
+            BigActionButton(title: "next") {
+                state.step = .buildYourNetwork
+            }
+        }
+        .padding(40)
+        .readabilityPadding()
     }
 }
 
