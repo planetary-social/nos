@@ -15,14 +15,7 @@ struct ActionButton: View {
     var padding = EdgeInsets(top: 8, leading: 13, bottom: 8, trailing: 13)
     var textColor = Color.white
     var depthEffectColor = Color.actionPrimaryDepthEffect
-    var backgroundGradient = LinearGradient(
-        colors: [
-            Color.actionPrimaryGradientTop,
-            Color.actionPrimaryGradientBottom
-        ],
-        startPoint: .bottomLeading,
-        endPoint: .topTrailing
-    )
+    var backgroundGradient = LinearGradient.diagonalAccent2
     var textShadow = true
     /// A flag used to fill the available horizontal space (centering the
     /// contents) or to fit the horizontal space to the contents of the action
@@ -39,14 +32,7 @@ struct ActionButton: View {
         padding: EdgeInsets = EdgeInsets(top: 8, leading: 13, bottom: 8, trailing: 13),
         textColor: SwiftUI.Color = Color.white,
         depthEffectColor: Color = Color.actionPrimaryDepthEffect,
-        backgroundGradient: LinearGradient = LinearGradient(
-            colors: [
-                Color.actionPrimaryGradientTop,
-                Color.actionPrimaryGradientBottom
-            ],
-            startPoint: .bottomLeading,
-            endPoint: .topTrailing
-        ),
+        backgroundGradient: LinearGradient = LinearGradient.diagonalAccent2,
         textShadow: Bool = true,
         shouldFillHorizontalSpace: Bool = false,
         action: (() async -> Void)? = nil,
@@ -74,14 +60,7 @@ struct ActionButton: View {
         padding: EdgeInsets = EdgeInsets(top: 8, leading: 13, bottom: 8, trailing: 13),
         textColor: Color = Color.white,
         depthEffectColor: Color = Color.actionPrimaryDepthEffect,
-        backgroundGradient: LinearGradient = LinearGradient(
-            colors: [
-                Color.actionPrimaryGradientTop,
-                Color.actionPrimaryGradientBottom
-            ],
-            startPoint: .bottomLeading,
-            endPoint: .topTrailing
-        ),
+        backgroundGradient: LinearGradient = LinearGradient.diagonalAccent2,
         textShadow: Bool = true,
         shouldFillHorizontalSpace: Bool = false,
         action: (() async -> Void)? = nil,
