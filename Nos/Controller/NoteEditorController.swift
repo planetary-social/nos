@@ -1,3 +1,4 @@
+import Dependencies
 import Foundation
 import SwiftUI
 import UIKit
@@ -8,6 +9,8 @@ import UIKit
 /// To use: instantiate and pass into a `NoteTextEditor` view. You can retrieve the typed text via the `text` property
 /// when the user indicates they are ready to post it.  
 @Observable class NoteEditorController: NSObject, UITextViewDelegate {
+
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
 
     /// The height that fits all entered text. This value will be updated by `NoteUITextViewRepresentable` 
     /// automatically, and should be used to set the frame of `NoteUITextViewRepresentable` from SwiftUI. This is done 
@@ -75,6 +78,7 @@ import UIKit
         ///  Check if `@` was appended and show the mentionsAutoComplete list.
         guard text == "@" else { return }
         showMentionsAutocomplete = true
+        analytics.openedMentions()
     }
     
     /// Appends the given URL and adds the default link styling attributes. Will append a space before the link 
@@ -231,11 +235,13 @@ import UIKit
     private func checkForMentionsAutocomplete(in textView: UITextView, at range: NSRange) -> Bool {
         if textView.text.count == 0 {
             showMentionsAutocomplete = true
+            analytics.openedMentions()
             return true
         } else {
             let lastCharacter = (textView.text as NSString).character(at: max(range.location - 1, 0))
             if let scalar = UnicodeScalar(lastCharacter), CharacterSet.whitespacesAndNewlines.contains(scalar) {
                 showMentionsAutocomplete = true
+                analytics.openedMentions()
                 return true
             }
         }

@@ -297,4 +297,8 @@ class Analytics {
     func cancelledUploadSourceSelection() {
         track("Cancelled Upload Source Selection")
     }
+
+    func openedMentions() {
+        track("Mentions Opened")
+    }
 }
