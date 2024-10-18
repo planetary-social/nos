@@ -22,7 +22,7 @@ struct NewNotesButton: View {
         } else {
             VStack {
                 SecondaryActionButton(
-                    title: .localizable.newNotesAvailable,
+                    "newNotesAvailable",
                     font: .clarity(.semibold, textStyle: .footnote),
                     action: action
                 )

@@ -8,7 +8,7 @@ import SwiftUINavigation
 /// category and optionally mute the respective author.
 struct ReportMenuModifier: ViewModifier {
     @Binding var isPresented: Bool
-    
+
     var reportedObject: ReportTarget
 
     @State private var selectedFlagOption: FlagOption?
@@ -62,7 +62,7 @@ struct ReportMenuModifier: ViewModifier {
                 }
         }
     }
-    
+
     func mute(author: Author) async {
         do {
             try await author.mute(viewContext: viewContext)

@@ -44,7 +44,7 @@ struct DiscoverContentsView: View {
                         FullscreenProgressView(
                             isPresented: .constant(true),
                             text: searchController.state == .stillLoading ?
-                            String(localized: .localizable.notFindingResults) : nil
+                            String(localized: "notFindingResults") : nil
                         )
                     case .results:
                         ScrollView {

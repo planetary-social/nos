@@ -1,9 +1,34 @@
 import SwiftUI
 
-struct NosNavigationBarModifier: ViewModifier {
+fileprivate struct NosNavigationBarModifier: ViewModifier {
     
-    var title: AttributedString
+    let titleKey: LocalizedStringKey
+    
+    init(_ titleKey: LocalizedStringKey) {
+        self.titleKey = titleKey
+    }
 
+    func body(content: Content) -> some View {
+        content
+            .navigationBarTitle(titleKey, displayMode: .inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(titleKey)
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primaryTxt)
+                        .tint(.primaryTxt)
+                        .allowsHitTesting(false)
+                }
+            }
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+    }
+}
+
+fileprivate struct AttributedNavigationBarModifier: ViewModifier {
+    let title: AttributedString
+    
     func body(content: Content) -> some View {
         content
             .navigationBarTitle(String(title.characters), displayMode: .inline)
@@ -23,11 +48,11 @@ struct NosNavigationBarModifier: ViewModifier {
 }
 
 extension View {
-    func nosNavigationBar(title: LocalizedStringResource) -> some View {
-        self.modifier(NosNavigationBarModifier(title: AttributedString(localized: title)))
+    func nosNavigationBar(_ title: LocalizedStringKey) -> some View {
+        self.modifier(NosNavigationBarModifier(title))
     }
     func nosNavigationBar(title: AttributedString) -> some View {
-        self.modifier(NosNavigationBarModifier(title: title))
+        self.modifier(AttributedNavigationBarModifier(title: title))
     }
 }
 
@@ -40,7 +65,7 @@ extension View {
         }
         .frame(maxWidth: .infinity)
         .background(Color.appBg)
-        .nosNavigationBar(title: .localizable.homeFeed)
+        .nosNavigationBar("homeFeed")
     }
 }
 
@@ -53,6 +78,6 @@ extension View {
         }
         .frame(maxWidth: .infinity)
         .background(Color.appBg)
-        .nosNavigationBar(title: LocalizedStringResource(stringLiteral: "me@nos.social"))
+        .nosNavigationBar(LocalizedStringKey(stringLiteral: "me@nos.social"))
     }
 }

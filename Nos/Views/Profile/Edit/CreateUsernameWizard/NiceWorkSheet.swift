@@ -60,12 +60,12 @@ struct NiceWorkSheet: View {
                     .font(.clarity(.regular, textStyle: .callout))
                     .foregroundStyle(Color.primaryTxt)
             case .connected:
-                WizardSheetTitleText(.localizable.niceWork)
-                WizardSheetDescriptionText(.localizable.nip05Connected)
+                WizardSheetTitleText("niceWork")
+                WizardSheetDescriptionText("nip05Connected")
 
                 Spacer(minLength: 0)
 
-                Button(String(localized: LocalizedStringResource.localizable.done)) {
+                Button("done") {
                     isPresented = false
                 }
                 .buttonStyle(BigActionButtonStyle())
@@ -76,7 +76,7 @@ struct NiceWorkSheet: View {
             Button {
                 isPresented = false
             } label: {
-                SwiftUI.Text(.localizable.ok)
+                SwiftUI.Text("ok")
             }
         }
         .task {
