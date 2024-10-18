@@ -1,3 +1,4 @@
+import Dependencies
 import SwiftUI
 
 /// The state of onboarding, tracking the flow, steps, and success or failure of a few specific tasks.
@@ -44,7 +45,9 @@ enum OnboardingStep {
 /// The view that initializes the onboarding navigation stack and shows the first view.
 struct OnboardingView: View {
     @State var state = OnboardingState()
-    
+
+    @Dependency(\.featureFlags) private var featureFlags
+
     /// Completion to be called when all onboarding steps are complete
     let completion: @MainActor () -> Void
     
@@ -58,8 +61,13 @@ struct OnboardingView: View {
                         OnboardingStartView()
                             .environment(state)
                     case .ageVerification:
-                        OnboardingAgeVerificationView()
-                            .environment(state)
+                        if featureFlags.isEnabled(.newOnboardingFlow) {
+                            AgeVerificationView()
+                                .environment(state)
+                        } else {
+                            OnboardingAgeVerificationView()
+                                .environment(state)
+                        }
                     case .notOldEnough:
                         OnboardingNotOldEnoughView()
                             .environment(state)

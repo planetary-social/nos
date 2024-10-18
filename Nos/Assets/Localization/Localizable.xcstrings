@@ -1046,6 +1046,30 @@
         }
       }
     },
+    "ageVerificationDescription" : {
+      "comment" : "description for the age verification screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For legal reasons, we need to make sure you're over this age to use Nos."
+          }
+        }
+      }
+    },
+    "ageVerificationHeadline" : {
+      "comment" : "headline for the age verification screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you over 16 years old?"
+          }
+        }
+      }
+    },
     "ageVerificationSubtitle" : {
       "extractionState" : "manual",
       "localizations" : {
