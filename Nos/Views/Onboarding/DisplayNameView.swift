@@ -65,7 +65,7 @@ struct DisplayNameView: View {
     }
 
     func nextStep() {
-        state.step = .buildYourNetwork
+        state.step = .username
     }
 
     /// Saves the display name locally and publishes the event to relays. Sets `saveError` if it fails.
