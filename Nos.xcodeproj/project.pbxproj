@@ -86,6 +86,7 @@
 		0383CD842C76799D007DB0E4 /* LinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E181462C754BA300886CC6 /* LinkView.swift */; };
 		038863DE2C6FF51500B09797 /* ZoomableContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038863DD2C6FF51500B09797 /* ZoomableContainer.swift */; };
 		038863DF2C6FF51500B09797 /* ZoomableContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038863DD2C6FF51500B09797 /* ZoomableContainer.swift */; };
+		038EF09D2CC16D640031F7F2 /* PrivateKeyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038EF09C2CC16D640031F7F2 /* PrivateKeyView.swift */; };
 		039389232CA4985C00698978 /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 039389222CA4985C00698978 /* SDWebImageWebPCoder */; };
 		0393892D2CA4987000698978 /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 0393892C2CA4987000698978 /* SDWebImageWebPCoder */; };
 		0393893D2CA49CE000698978 /* fonts-animated.gif in Resources */ = {isa = PBXBuildFile; fileRef = 0393893C2CA49CE000698978 /* fonts-animated.gif */; };
@@ -101,6 +102,7 @@
 		03C49AC02C938A9C00502321 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 03C49ABF2C938A9C00502321 /* SwiftSoup */; };
 		03C49AC22C938DE100502321 /* SoupOpenGraphParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C49AC12C938DE100502321 /* SoupOpenGraphParser.swift */; };
 		03C49AC32C938DE100502321 /* SoupOpenGraphParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C49AC12C938DE100502321 /* SoupOpenGraphParser.swift */; };
+		03C5DBC52CC19044009A9E0E /* LargeNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DBC42CC19044009A9E0E /* LargeNumberView.swift */; };
 		03C68C522C94D8400037DC59 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 03C68C512C94D8400037DC59 /* SwiftSoup */; };
 		03C7E7922CB9C0B30054624C /* WelcomeToFeedTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C7E7912CB9C0AF0054624C /* WelcomeToFeedTip.swift */; };
 		03C7E7982CB9C16C0054624C /* InlineTipViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C7E7972CB9C1600054624C /* InlineTipViewStyle.swift */; };
@@ -639,6 +641,7 @@
 		038196F62CA36797002A94E3 /* elmo-animated.webp */ = {isa = PBXFileReference; lastKnownFileType = file; path = "elmo-animated.webp"; sourceTree = "<group>"; };
 		038196F82CA367C4002A94E3 /* ImageAnimatedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAnimatedTests.swift; sourceTree = "<group>"; };
 		038863DD2C6FF51500B09797 /* ZoomableContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableContainer.swift; sourceTree = "<group>"; };
+		038EF09C2CC16D640031F7F2 /* PrivateKeyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateKeyView.swift; sourceTree = "<group>"; };
 		0393893C2CA49CE000698978 /* fonts-animated.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "fonts-animated.gif"; sourceTree = "<group>"; };
 		039C961E2C480F4100A8EB39 /* unsupported_kinds.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = unsupported_kinds.json; sourceTree = "<group>"; };
 		039C96282C48321E00A8EB39 /* long_form_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = long_form_data.json; sourceTree = "<group>"; };
@@ -650,6 +653,7 @@
 		03B4E6AB2C125D13006E5F59 /* FileStorageUploadResponseJSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileStorageUploadResponseJSONTests.swift; sourceTree = "<group>"; };
 		03B4E6AD2C125D61006E5F59 /* FileStorageUploadResponseJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileStorageUploadResponseJSON.swift; sourceTree = "<group>"; };
 		03C49AC12C938DE100502321 /* SoupOpenGraphParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoupOpenGraphParser.swift; sourceTree = "<group>"; };
+		03C5DBC42CC19044009A9E0E /* LargeNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeNumberView.swift; sourceTree = "<group>"; };
 		03C7E7912CB9C0AF0054624C /* WelcomeToFeedTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeToFeedTip.swift; sourceTree = "<group>"; };
 		03C7E7972CB9C1600054624C /* InlineTipViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineTipViewStyle.swift; sourceTree = "<group>"; };
 		03C7E7A12CB9CD0B0054624C /* PointDownEmojiTipViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointDownEmojiTipViewStyle.swift; sourceTree = "<group>"; };
@@ -1459,11 +1463,13 @@
 			children = (
 				030FECAA2CB5E0B900820014 /* BuildYourNetworkView.swift */,
 				039F09582CC051EE00FEEC81 /* CreateAccountView.swift */,
+				03C5DBC42CC19044009A9E0E /* LargeNumberView.swift */,
 				3F30020629C237AB003D4F8B /* OnboardingAgeVerificationView.swift */,
 				3F30020C29C382EB003D4F8B /* OnboardingLoginView.swift */,
 				3F30020829C23895003D4F8B /* OnboardingNotOldEnoughView.swift */,
 				3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */,
 				3FB5E650299D28A200386527 /* OnboardingView.swift */,
+				038EF09C2CC16D640031F7F2 /* PrivateKeyView.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -2418,6 +2424,7 @@
 				5B6136382C2F408E00ADD9C3 /* RepliesLabel.swift in Sources */,
 				03C7E7982CB9C16C0054624C /* InlineTipViewStyle.swift in Sources */,
 				C9ADB13D29929B540075E7F8 /* Bech32.swift in Sources */,
+				03C5DBC52CC19044009A9E0E /* LargeNumberView.swift in Sources */,
 				C95D68A1299E6D3E00429F86 /* BioView.swift in Sources */,
 				5BE281CA2AE2CCEB00880466 /* HomeTab.swift in Sources */,
 				03C49AC22C938DE100502321 /* SoupOpenGraphParser.swift in Sources */,
@@ -2448,6 +2455,7 @@
 				C92F01582AC4D6F700972489 /* NosTextField.swift in Sources */,
 				C9C2B77C29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
 				C9DEC003298945150078B43A /* String+Lorem.swift in Sources */,
+				038EF09D2CC16D640031F7F2 /* PrivateKeyView.swift in Sources */,
 				C97A1C8B29E45B4E009D9E8D /* RawEventController.swift in Sources */,
 				C9DEC0632989541F0078B43A /* Bundle+Current.swift in Sources */,
 				C93EC2F429C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,
