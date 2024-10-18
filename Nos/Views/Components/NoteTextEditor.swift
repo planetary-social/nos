@@ -10,12 +10,9 @@ struct NoteTextEditor: View {
     /// The smallest size of EditableNoteText
     var minHeight: CGFloat
     
-    var placeholder: LocalizedStringResource
-    
-    init(controller: Binding<NoteEditorController>, minHeight: CGFloat, placeholder: LocalizedStringResource) {
+    init(controller: Binding<NoteEditorController>, minHeight: CGFloat) {
         self._controller = controller
         self.minHeight = minHeight
-        self.placeholder = placeholder
     }
     
     var body: some View {
@@ -45,13 +42,11 @@ struct NoteTextEditor: View {
     
     var previewData = PreviewData()
     @State var controller = NoteEditorController()
-    let placeholder: LocalizedStringResource = .localizable.newNotePlaceholder
     
     return NavigationStack {
         NoteTextEditor(
             controller: $controller,
-            minHeight: 500,
-            placeholder: placeholder
+            minHeight: 500
         )
         Spacer()
     }

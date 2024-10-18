@@ -41,7 +41,7 @@ struct PrivateKeyView: View {
             PrivateKeyDescription()
             BorderedPrivateKey(privateKeyString: $privateKeyString, copyButtonState: $copyButtonState)
             Spacer()
-            BigActionButton(title: "next") {
+            BigActionButton("next") {
                 state.step = .buildYourNetwork
             }
         }

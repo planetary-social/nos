@@ -169,7 +169,7 @@ struct ProfileHeader: View {
                             )
                         } else {
                             ActionButton(
-                                title: .localizable.editProfile,
+                                "editProfile",
                                 font: .clarity(.bold, textStyle: .subheadline),
                                 depthEffectColor: .actionSecondaryDepthEffect,
                                 backgroundGradient: LinearGradient.verticalAccentSecondary,
@@ -207,7 +207,7 @@ struct ProfileHeader: View {
             NavigationView {
                 BioSheet(author: author)
                     .background(Color.bioBgGradientBottom)
-                    .nosNavigationBar(title: .localizable.profileTitle)
+                    .nosNavigationBar("profileTitle")
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
@@ -233,7 +233,7 @@ struct ProfileHeader: View {
                     Image.profilePosts
                         .renderingMode(.template)
                         .foregroundColor(color)
-                    Text(.localizable.notes)
+                    Text("notes")
                         .font(.subheadline.weight(.medium))
                         .foregroundColor(color)
                     Spacer()
@@ -250,7 +250,7 @@ struct ProfileHeader: View {
                     Image.profileFeed
                         .renderingMode(.template)
                         .foregroundColor(color)
-                    Text(.localizable.activity)
+                    Text("activity")
                         .foregroundColor(color)
                         .font(.subheadline.weight(.medium))
                     Spacer()

@@ -3,9 +3,9 @@ import SwiftUI
 /// A large colorful banner with a message and action button.
 struct ActionBanner: View {
     
-    var messageText: LocalizedStringResource
+    var messageText: LocalizedStringKey
     var messageImage: Image?
-    var buttonText: LocalizedStringResource
+    var buttonText: LocalizedStringKey
     var buttonImage: Image?
     var shouldButtonFillHorizontalSpace: Bool
     var action: (() -> Void)?
@@ -37,7 +37,7 @@ struct ActionBanner: View {
                 }
                 HStack {
                     ActionButton(
-                        title: buttonText,
+                        buttonText,
                         font: .clarity(.semibold, textStyle: .subheadline),
                         image: buttonImage,
                         textColor: .actionBannerButtonTxt,
@@ -101,9 +101,9 @@ struct ActionBanner_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             ActionBanner(
-                messageText: .localizable.completeProfileMessage,
+                messageText: "completeProfileMessage",
                 messageImage: Image.atSymbol,
-                buttonText: .localizable.completeProfileButton,
+                buttonText: "completeProfileButton",
                 shouldButtonFillHorizontalSpace: true
             )
             .padding(20)
