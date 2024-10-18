@@ -3,18 +3,26 @@ import Logger
 
 /// A view similar to `TextEditor` for composing Nostr notes. Supports autocomplete of mentions.
 struct NoteTextEditor: View {
-    
+
     /// A controller for the entered text.
     @Binding private var controller: NoteEditorController
-    
+
     /// The smallest size of EditableNoteText
     var minHeight: CGFloat
-    
-    init(controller: Binding<NoteEditorController>, minHeight: CGFloat) {
+
+    /// The authors who are referenced in a note in addition to those who replied to the note, if any.
+    var relatedAuthors: [Author]
+
+    init(
+        controller: Binding<NoteEditorController>,
+        minHeight: CGFloat,
+        relatedAuthors: [Author] = []
+    ) {
         self._controller = controller
         self.minHeight = minHeight
+        self.relatedAuthors = relatedAuthors
     }
-    
+
     var body: some View {
         NoteUITextViewRepresentable(
             controller: controller,
@@ -26,10 +34,13 @@ struct NoteTextEditor: View {
         .background { Color.appBg }
         .sheet(isPresented: $controller.showMentionsAutocomplete) {
             NavigationStack {
-                AuthorListView(isPresented: $controller.showMentionsAutocomplete) { [weak controller] author in
+                AuthorListView(
+                    isPresented: $controller.showMentionsAutocomplete,
+                    relatedAuthors: relatedAuthors
+                ) { [weak controller] author in
                     /// Guard against double presses
                     guard let controller, controller.showMentionsAutocomplete else { return }
-                    
+
                     controller.insertMention(of: author)
                     controller.showMentionsAutocomplete = false
                 }
@@ -39,19 +50,20 @@ struct NoteTextEditor: View {
 }
 
 #Preview {
-    
+
     var previewData = PreviewData()
     @State var controller = NoteEditorController()
-    
+
     return NavigationStack {
         NoteTextEditor(
             controller: $controller,
-            minHeight: 500
+            minHeight: 500,
+            relatedAuthors: []
         )
         Spacer()
     }
     .inject(previewData: previewData)
-    .onAppear { 
+    .onAppear {
         _ = previewData.alice
     }
 }

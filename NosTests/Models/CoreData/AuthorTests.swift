@@ -121,7 +121,7 @@ final class AuthorTests: CoreDataTestCase {
 
         XCTAssertEqual(author.formattedNIP05, expected)
     }
-    
+
     func test_weblink_with_nos_social_NIP05() throws {
         let context = persistenceController.viewContext
         let author = try Author.findOrCreate(by: "test", context: context)
