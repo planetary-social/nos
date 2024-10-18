@@ -249,7 +249,7 @@ extension FeaturedAuthor {
         ),
         FeaturedAuthor(
             name: "J",
-            npub: "npub1fv9u4drq4hdrr7k45vn0krqy7mkgy8ajf059m0wq8szvcrsjlsrs8tdz3p",
+            npub: "npub1e9wyz20lawvze2fkn3yh0fq8mux9drrrqearn44v4es482qm6vtqp85h90",
             categories: [.food, .random]
         ),
         FeaturedAuthor(
