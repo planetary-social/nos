@@ -25,12 +25,14 @@ struct DisplayNameView: View {
             }
         }
         .navigationBarHidden(true)
-        .alert("errorConnecting", isPresented: $showError) {
+        .alert("", isPresented: $showError) {
             Button {
                 nextStep()
             } label: {
                 Text("skipForNow")
             }
+        } message: {
+            Text("errorConnecting")
         }
     }
 
@@ -79,6 +81,7 @@ struct DisplayNameView: View {
         do {
             try viewContext.save()
             try await currentUser.publishMetadata()
+            state.displayNameSucceeded = true
             nextStep()
         } catch {
             crashReporting.report(error)

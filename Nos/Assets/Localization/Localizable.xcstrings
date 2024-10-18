@@ -601,6 +601,30 @@
         }
       }
     },
+    "accountPartialSuccessDescription" : {
+      "comment" : "description for the account success screen when something isn't quite right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The app couldn't save your chosen Display Name or Username. You can set these up later in your Profile."
+          }
+        }
+      }
+    },
+    "accountPartialSuccessHeadline" : {
+      "comment" : "headline for the account success screen when something isn't quite right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You've finished setting up your account, but..."
+          }
+        }
+      }
+    },
     "accountsIFollow" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -650,6 +674,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "我關注的賬戶"
+          }
+        }
+      }
+    },
+    "accountSuccessDescription" : {
+      "comment" : "description for the account success screen when everything is right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now that you know who you are on Nostr, let’s find other people to follow!"
+          }
+        }
+      }
+    },
+    "accountSuccessHeadline" : {
+      "comment" : "headline for the account success screen when everything is right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You've finished setting up your account!"
           }
         }
       }

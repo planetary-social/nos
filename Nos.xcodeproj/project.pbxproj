@@ -99,6 +99,7 @@
 		039C961F2C480F4100A8EB39 /* unsupported_kinds.json in Resources */ = {isa = PBXBuildFile; fileRef = 039C961E2C480F4100A8EB39 /* unsupported_kinds.json */; };
 		039C96292C48321E00A8EB39 /* long_form_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 039C96282C48321E00A8EB39 /* long_form_data.json */; };
 		039F09592CC051FF00FEEC81 /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 039F09582CC051EE00FEEC81 /* CreateAccountView.swift */; };
+		03A241BD2CC2F458007EA31B /* AccountSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A241BC2CC2F458007EA31B /* AccountSuccessView.swift */; };
 		03A3AA3B2C5028FF008FE153 /* PublicKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A3AA3A2C5028FF008FE153 /* PublicKeyTests.swift */; };
 		03A743452CC048C700893CAE /* GoToFeedTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A743442CC048C700893CAE /* GoToFeedTip.swift */; };
 		03B4E6A22C125CA1006E5F59 /* nostr_build_nip96_upload_response.json in Resources */ = {isa = PBXBuildFile; fileRef = 03B4E6A12C125CA1006E5F59 /* nostr_build_nip96_upload_response.json */; };
@@ -658,6 +659,7 @@
 		039C961E2C480F4100A8EB39 /* unsupported_kinds.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = unsupported_kinds.json; sourceTree = "<group>"; };
 		039C96282C48321E00A8EB39 /* long_form_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = long_form_data.json; sourceTree = "<group>"; };
 		039F09582CC051EE00FEEC81 /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
+		03A241BC2CC2F458007EA31B /* AccountSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSuccessView.swift; sourceTree = "<group>"; };
 		03A3AA3A2C5028FF008FE153 /* PublicKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeyTests.swift; sourceTree = "<group>"; };
 		03A743442CC048C700893CAE /* GoToFeedTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoToFeedTip.swift; sourceTree = "<group>"; };
 		03AB2F7D2BF6609500B73DB1 /* UnitTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UnitTests.xctestplan; sourceTree = "<group>"; };
@@ -1482,6 +1484,7 @@
 		3FB5E64F299D288E00386527 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				03A241BC2CC2F458007EA31B /* AccountSuccessView.swift */,
 				030FECAA2CB5E0B900820014 /* BuildYourNetworkView.swift */,
 				039F09582CC051EE00FEEC81 /* CreateAccountView.swift */,
 				030E570C2CC2A05B00A4A51E /* DisplayNameView.swift */,
@@ -2495,6 +2498,7 @@
 				5BCA95D22C8A5F0D00A52D1A /* PreviewEventRepository.swift in Sources */,
 				C95D68A6299E6F9E00429F86 /* ProfileHeader.swift in Sources */,
 				0365CD872C4016A200622A1A /* EventKind.swift in Sources */,
+				03A241BD2CC2F458007EA31B /* AccountSuccessView.swift in Sources */,
 				C9BAB09B2996FBA10003A84E /* EventProcessor.swift in Sources */,
 				C9B5C78E2C24AF650070445B /* MockRelaySubscriptionManager.swift in Sources */,
 				C960C57129F3236200929990 /* LikeButton.swift in Sources */,

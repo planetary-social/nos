@@ -22,7 +22,6 @@ struct UsernameView: View {
 
     @State private var username = ""
     @State private var usernameState: UsernameViewState = .idle
-    @State private var saveError: SaveProfileError?
 
     private var showAlert: Binding<Bool> {
         Binding {
@@ -57,12 +56,14 @@ struct UsernameView: View {
             }
         }
         .navigationBarHidden(true)
-        .alert("errorConnecting", isPresented: showAlert) {
+        .alert("", isPresented: showAlert) {
             Button {
                 nextStep()
             } label: {
                 Text("skipForNow")
             }
+        } message: {
+            Text("errorConnecting")
         }
     }
 
@@ -119,7 +120,7 @@ struct UsernameView: View {
     }
 
     func nextStep() {
-        state.step = .buildYourNetwork
+        state.step = .accountSuccess
     }
 
     /// Checks whether the username is available and saves it. Updates `usernameState` based on the result.
@@ -170,6 +171,7 @@ struct UsernameView: View {
                 relays: relays
             )
             usernameState = .claimed
+            state.usernameSucceeded = true
             nextStep()
         } catch {
             crashReporting.report(error)
