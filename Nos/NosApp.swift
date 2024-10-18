@@ -34,7 +34,7 @@ struct NosApp: App {
                 .environmentObject(router)
                 .environment(appController)
                 .environment(currentUser)
-                .environmentObject(pushNotificationService)
+                .environment(pushNotificationService)
                 .onOpenURL { DeepLinkService.handle($0, router: router) }
                 .onChange(of: scenePhase) { _, newPhase in
                     switch newPhase {

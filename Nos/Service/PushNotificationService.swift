@@ -8,13 +8,13 @@ import Combine
 /// A class that abstracts our interactions with push notification infrastructure and iOS permissions. It can handle
 /// UNUserNotificationCenterDelegate callbacks for receiving and displaying notifications, and it watches the db for
 /// all new events and creates `NosNotification`s and displays them when appropriate.
-@MainActor class PushNotificationService: 
-    NSObject, ObservableObject, NSFetchedResultsControllerDelegate, UNUserNotificationCenterDelegate {
+@MainActor @Observable class PushNotificationService:
+    NSObject, NSFetchedResultsControllerDelegate, UNUserNotificationCenterDelegate {
     
     // MARK: - Public Properties
     
     /// The number of unread notifications that should be displayed as a badge
-    @Published var badgeCount = 0
+    private(set) var badgeCount = 0
 
     private let showPushNotificationsAfterKey = "PushNotificationService.notificationCutoff"
 
@@ -40,22 +40,20 @@ import Combine
     
     // MARK: - Private Properties
     
-    @Dependency(\.relayService) private var relayService
-    @Dependency(\.persistenceController) private var persistenceController
-    @Dependency(\.router) private var router
-    @Dependency(\.analytics) private var analytics
-    @Dependency(\.crashReporting) private var crashReporting
-    @Dependency(\.userDefaults) private var userDefaults
-    @Dependency(\.currentUser) private var currentUser
+    @ObservationIgnored @Dependency(\.relayService) private var relayService
+    @ObservationIgnored @Dependency(\.persistenceController) private var persistenceController
+    @ObservationIgnored @Dependency(\.router) private var router
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+    @ObservationIgnored @Dependency(\.crashReporting) private var crashReporting
+    @ObservationIgnored @Dependency(\.userDefaults) private var userDefaults
+    @ObservationIgnored @Dependency(\.currentUser) private var currentUser
     
     private var notificationWatcher: NSFetchedResultsController<Event>?
     private var relaySubscription: SubscriptionCancellable?
     private var currentAuthor: Author? 
-    private lazy var modelContext: NSManagedObjectContext = {
-        persistenceController.newBackgroundContext()
-    }()
+    @ObservationIgnored private lazy var modelContext = persistenceController.newBackgroundContext()
     
-    private lazy var registrar = PushNotificationRegistrar()
+    @ObservationIgnored private lazy var registrar = PushNotificationRegistrar()
     
     // MARK: - Setup
     
