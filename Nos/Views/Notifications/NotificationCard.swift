@@ -6,7 +6,7 @@ struct NotificationCard: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var relayService: RelayService
+    @Environment(RelayService.self) private var relayService
     @Dependency(\.persistenceController) private var persistenceController
     
     let viewModel: NotificationViewModel

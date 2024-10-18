@@ -223,7 +223,7 @@ struct NoteCard_Previews: PreviewProvider {
             }
         }
         .environment(\.managedObjectContext, previewData.previewContext)
-        .environmentObject(previewData.relayService)
+        .environment(previewData.relayService)
         .environmentObject(previewData.router)
         .environment(previewData.currentUser)
         .padding()

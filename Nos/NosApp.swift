@@ -30,7 +30,7 @@ struct NosApp: App {
         WindowGroup {
             AppView()
                 .environment(\.managedObjectContext, persistenceController.viewContext)
-                .environmentObject(relayService)
+                .environment(relayService)
                 .environmentObject(router)
                 .environment(appController)
                 .environment(currentUser)

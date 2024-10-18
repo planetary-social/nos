@@ -226,7 +226,7 @@ struct AppView_Previews: PreviewProvider {
     static var previews: some View {
         AppView()
             .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
+            .environment(relayService)
             .environmentObject(router)
             .environment(loggedInAppController)
             .environment(currentUser)
@@ -234,7 +234,7 @@ struct AppView_Previews: PreviewProvider {
 
         AppView()
             .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
+            .environment(relayService)
             .environmentObject(router)
             .environment(AppController())
             .environment(currentUser)
@@ -242,7 +242,7 @@ struct AppView_Previews: PreviewProvider {
 
         AppView()
             .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
+            .environment(relayService)
             .environmentObject(routerWithSideMenuOpened)
             .environment(AppController())
             .environment(currentUser)
