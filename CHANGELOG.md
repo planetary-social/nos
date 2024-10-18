@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a tip to the Feed to welcome first-time users and explain how the Feed works. [#1602](https://github.com/planetary-social/nos/issues/1602)
 - Added a tag to published contact lists to help us detect the source of lost contact lists. [cleanstr#51](https://github.com/planetary-social/cleanstr/issues/51)
 - Removed integration with Universal Name Space [#1636](https://github.com/planetary-social/nos/issues/1636)
+- Added new authors and categories to the Discover tab. [#1592](https://github.com/planetary-social/nos/issues/1592)
 
 ### Internal Changes
 - Migrate ObservableObject to @Observable where possible [#1458](https://github.com/planetary-social/nos/issues/1458)
@@ -32,7 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Build Your Network screen to onboarding to explain how the feed works. [#1600](https://github.com/planetary-social/nos/issues/1600)
 - Decreased the opacity on disabled buttons.
 - Added a Delete Account button to the Settings screen. [#80](https://github.com/planetary-social/nos/issues/80)
-- Added new authors and categories to the Discover tab. [#1592](https://github.com/planetary-social/nos/issues/1592)
 
 ### Internal Changes
 - Moved the database cleanup routine into a background execution task. [#1426](https://github.com/planetary-social/nos/issues/1426)

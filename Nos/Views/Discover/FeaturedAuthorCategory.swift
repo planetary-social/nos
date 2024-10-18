@@ -38,11 +38,11 @@ enum FeaturedAuthorCategory: CaseIterable {
         case .lifestyle: "featuredAuthorCategoryLifestyle"
         case .music: LocalizedStringResource.localizable.featuredAuthorCategoryMusic
         case .news: LocalizedStringResource.localizable.featuredAuthorCategoryNews
-        case .newzealand: "featuredAuthorCategoryNewzealand"
+        case .nzAustralia: "featuredAuthorCategoryNewzealand"
         case .photography: "featuredAuthorCategoryPhotography"
         case .politics: "featuredAuthorCategoryPolitics"
         case .random: "featuredAuthorCategoryRandom"
-        case .scifi: "featuredAuthorCategoryScifi"
+        case .sciFi: "featuredAuthorCategoryScifi"
         case .sports: LocalizedStringResource.localizable.featuredAuthorCategorySports
         case .tech: LocalizedStringResource.localizable.featuredAuthorCategoryTech
         }
@@ -53,7 +53,7 @@ enum FeaturedAuthorCategory: CaseIterable {
         case .all:
             FeaturedAuthor.all
         case .new:
-            FeaturedAuthor.selectNew
+            FeaturedAuthor.selectedNewAuthors
         default:
             FeaturedAuthor.all.filter { $0.categories.contains(self) }
         }
