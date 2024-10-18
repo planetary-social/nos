@@ -65,7 +65,7 @@ struct DisplayNameView: View {
                 prompt: Text("displayNamePlaceholder")
                     .foregroundStyle(Color.textFieldPlaceholder)
             )
-                .textInputAutocapitalization(.none)
+                .textInputAutocapitalization(.never)
                 .foregroundStyle(Color.primaryTxt)
                 .fontWeight(.bold)
                 .autocorrectionDisabled()
@@ -91,7 +91,7 @@ struct DisplayNameView: View {
         do {
             try viewContext.save()
             try await currentUser.publishMetadata()
-            state.step = .buildYourNetwork
+            state.step = .username
         } catch CurrentUserError.errorWhilePublishingToRelays {
             saveError = SaveProfileError.unableToPublishChanges
         } catch {

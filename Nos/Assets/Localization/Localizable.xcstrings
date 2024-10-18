@@ -19111,6 +19111,18 @@
         }
       }
     },
+    "usernameDescription" : {
+      "comment" : "a description for the username screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is an easy to share alternative to your public key and allows people to search for you on Nos."
+          }
+        }
+      }
+    },
     "usernameHeadline" : {
       "comment" : "headline for the username screen in onboarding",
       "extractionState" : "manual",
@@ -19119,6 +19131,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Username"
+          }
+        }
+      }
+    },
+    "usernameNIP05Parenthetical" : {
+      "comment" : "the word \"NIP-05\" in parentheses in English. \"NIP-05\" should not be translated, but the parentheses may",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(NIP-05)"
+          }
+        }
+      }
+    },
+    "usernameNotAvailable" : {
+      "comment" : "error text to display when the username is unavailable",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This username is not available."
+          }
+        }
+      }
+    },
+    "usernamePlaceholder" : {
+      "comment" : "placeholder text for the username field in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "username"
           }
         }
       }
