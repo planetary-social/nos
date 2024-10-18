@@ -25,7 +25,7 @@ struct DisplayNameView: View {
             }
         }
         .navigationBarHidden(true)
-        .alert("displayNameError", isPresented: $showError) {
+        .alert("errorConnecting", isPresented: $showError) {
             Button {
                 nextStep()
             } label: {

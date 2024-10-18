@@ -8,7 +8,7 @@ fileprivate enum UsernameViewState {
     case loading
     case verificationFailed
     case claimed
-    case claimFailed
+    case errorAlert
 }
 
 /// The Username view in the onboarding.
@@ -26,9 +26,9 @@ struct UsernameView: View {
 
     private var showAlert: Binding<Bool> {
         Binding {
-            saveError != nil
+            usernameState == .errorAlert
         } set: { _ in
-            saveError = nil
+            usernameState = .idle
         }
     }
 
@@ -57,19 +57,11 @@ struct UsernameView: View {
             }
         }
         .navigationBarHidden(true)
-        .alert(isPresented: showAlert, error: saveError) {
+        .alert("errorConnecting", isPresented: showAlert) {
             Button {
-                saveError = nil
-                Task {
-                    await save()
-                }
+                nextStep()
             } label: {
-                Text("retry")
-            }
-            Button {
-                saveError = nil
-            } label: {
-                Text("cancel")
+                Text("skipForNow")
             }
         }
     }
@@ -111,7 +103,7 @@ struct UsernameView: View {
             }
             Spacer()
             BigActionButton("next") {
-                await next()
+                await verifyAndSave()
             }
             .disabled(nextButtonDisabled)
         }
@@ -126,12 +118,16 @@ struct UsernameView: View {
             .foregroundStyle(Color.error)
     }
 
+    func nextStep() {
+        state.step = .buildYourNetwork
+    }
+
     /// Checks whether the username is available and saves it. Updates `usernameState` based on the result.
-    func next() async {
+    func verifyAndSave() async {
         usernameState = .loading
 
         guard !username.isEmpty, let keyPair = currentUser.keyPair else {
-            usernameState = .claimFailed
+            usernameState = .errorAlert
             return
         }
 
@@ -157,8 +153,7 @@ struct UsernameView: View {
 
         guard let author = await currentUser.author,
             let keyPair = currentUser.keyPair else {
-            saveError = SaveProfileError.unexpectedError
-            usernameState = .claimFailed
+            usernameState = .errorAlert
             return
         }
 
@@ -175,14 +170,10 @@ struct UsernameView: View {
                 relays: relays
             )
             usernameState = .claimed
-            state.step = .buildYourNetwork
-        } catch CurrentUserError.errorWhilePublishingToRelays {
-            saveError = SaveProfileError.unableToPublishChanges
-            usernameState = .claimFailed
+            nextStep()
         } catch {
             crashReporting.report(error)
-            saveError = SaveProfileError.unexpectedError
-            usernameState = .claimFailed
+            usernameState = .errorAlert
         }
     }
 }

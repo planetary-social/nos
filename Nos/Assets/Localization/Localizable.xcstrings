@@ -5236,18 +5236,6 @@
         }
       }
     },
-    "displayNameError" : {
-      "comment" : "error message for when we can't set the display name in onboarding",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "There is a problem connecting to the servers. You can skip for now and visit your Profile to update later."
-          }
-        }
-      }
-    },
     "displayNameHeadline" : {
       "comment" : "headline for the display name screen in onboarding",
       "extractionState" : "manual",
@@ -5778,6 +5766,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "錯誤"
+          }
+        }
+      }
+    },
+    "errorConnecting" : {
+      "comment" : "error message for when we can't set the display name or username in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There is a problem connecting to the servers. You can skip for now and visit your Profile to update later."
           }
         }
       }
