@@ -31,7 +31,7 @@ struct FeaturedAuthor {
 
 extension FeaturedAuthor {
     /// All featured authors that should appear on the Discover tab.
-    static let all = cohort4 + cohort3 + cohort2 + cohort1 + additionalAuthors
+    static let all = cohort5 + cohort4 + cohort3 + cohort2 + cohort1 + additionalAuthors
 }
 
 extension FeaturedAuthor {
@@ -46,186 +46,86 @@ extension FeaturedAuthor {
             name: "Edward Snowden",
             npub: "npub1sn0wdenkukak0d9dfczzeacvhkrgz92ak56egt7vdgzn8pv2wfqqhrjdv9",
             categories: [.activists, .tech]
-        ),
+        )
     ]
 }
 
 extension FeaturedAuthor {
-    static let cohort1 = [
+    static let selectedNewAuthors = [
         FeaturedAuthor(
-            name: "Miguel Almodo",
-            npub: "npub1ajt9gp0prf4xrp4j07j9rghlcyukahncs0fw5ywr977jccued9nqrcc0cs",
-            categories: [.activists]
+            name: "NOICE",
+            npub: "npub1v02emwxjn2lznkmnszltjy4c7cqzxuejkmye0zeqs62wf0shpahswdmwuj",
+            categories: [.art, .photography]
         ),
         FeaturedAuthor(
-            name: "The Conversation",
-            npub: "npub1uuxnz0sq60thc098xfxqst7wnw77l0sm3r8nn48yspuvz4ecprksxdahzv",
-            categories: [.news]
+            name: "Wellington Chinese History",
+            npub: "npub1fdyax3st9gcqj7zhqres3fw9pf7qrkukppv3fs7w2mcjcsqyrxjqcgcxcn",
+            categories: [.nzAustralia]
         ),
         FeaturedAuthor(
-            name: "Ainsley Costello",
-            npub: "npub13qrrw2h4z52m7jh0spefrwtysl4psfkfv6j4j672se5hkhvtyw7qu0almy",
-            categories: [.music]
+            name: "Ignacio",
+            npub: "npub1wptpq88jyjv6nwwltqx0exhxsg8zt0dcm4uwvtcxn80hxk2r66hswdm8rf",
+            categories: [.lifestyle, .espanol]
         ),
         FeaturedAuthor(
-            name: "Chris Liss",
-            npub: "npub1dwhr8j9uy6ju2uu39t6tj6mw76gztr4rwdd6jr9qtkdh5crjwt5q2nqfxe",
-            categories: [.sports]
+            name: "Greenpeace Atoearoa",
+            npub: "npub1mn78z9rssfq2yjqdwsa3h4qwu6zpw4xku9ppfldkde4ycwnpch4qhmcssl",
+            categories: [.activists, .nzAustralia]
         ),
         FeaturedAuthor(
-            name: "Alicia Stockman",
-            npub: "npub1l3y60kjywvrrln5ftse553h2ltg53sm3zy55grvlncd78x3k5uqsmw8dff",
-            categories: [.music]
+            name: "Bill Bennett",
+            npub: "npub1gpcxn339ap3r9tju2uy6d5k8rmud7f8kr579w7zv54qyevgz9xsqdtr4us",
+            categories: [.news, .nzAustralia]
         ),
         FeaturedAuthor(
-            name: "Judson McKinney and the Wanderers",
-            npub: "npub1jvt2hacqqzvwjkum30mlvmy52jer4p4crfh0veqstpk58rr9e7ms2fwh74",
-            categories: [.music]
+            name: "The Spinoff",
+            npub: "npub1qngl40pxy06k3hrqp4ltkn4p5yacen7u93du58v4tamf73tzaqhs6dfy8g",
+            categories: [.news, .nzAustralia]
         ),
         FeaturedAuthor(
-            name: "Onigirl",
-            npub: "npub18jvyjwpmm65g8v9azmlvu8knd5m7xlxau08y8vt75n53jtkpz2ys6mqqu3",
+            name: "Dan Selvin",
+            npub: "npub16jjukmhnvflj92dv2jr8z6udfhzyyuyf3mckmf6afws9w4xdhhzs745kmv",
+            categories: [.news, .nzAustralia]
+        ),
+        FeaturedAuthor(
+            name: "Nacho",
+            npub: "npub1daajnadf0f0s7uz3yftur8434rtz2s949gkdpx7uyeapm9rlt0qq9q8w5z",
+            categories: [.lifestyle]
+        ),
+        FeaturedAuthor(
+            name: "Emma Cook",
+            npub: "npub18pl5kgxl47e5pssxl9q38m2v7ez477gw3nz220jz2vslnjreqq8s2yxl9m",
+            categories: [.art, .nzAustralia]
+        ),
+        FeaturedAuthor(
+            name: "Jack Yan",
+            npub: "npub179lhhjz30t3n4utkkn26qzgmpx44v9s5qdtwjs5686px8ulw7dfszxmfgp",
+            categories: [.news, .nzAustralia]
+        ),
+        FeaturedAuthor(
+            name: "Lucire",
+            npub: "npub1l4s4mtt96znwu3plfeyupk37y63xfapw5e7kjn7uavuw02lvav5q3ngc3s",
+            categories: [.news, .nzAustralia]
+        ),
+        FeaturedAuthor(
+            name: "Ian Griffin",
+            npub: "npub19p6edn6lvz9dmegm7s8vyz9w5w0ejzgztke8rcswxgmqr35h8feszt36jc",
+            categories: [.sciFi, .nzAustralia]
+        ),
+        FeaturedAuthor(
+            name: "Morvin",
+            npub: "npub1030nmrre84tzpq2de535pd6up2x74c32n6r5xsw2kf0zf58j333sxssyu7",
             categories: [.art]
         ),
         FeaturedAuthor(
-            name: "Black in Aquatics",
-            npub: "npub1ee852umhw26afdfwgf90cky9ufaythwyarttqu59lazcrx56z0tsmx3mkz",
-            categories: [.sports]
+            name: "David Hood",
+            npub: "npub12aew64q5lsxpcc98lskha0564gtjn30cw7vdueqnyj06xjqxtmksahdrlg",
+            categories: [.nzAustralia, .news]
         ),
         FeaturedAuthor(
-            name: "Global Sports Central",
-            npub: "npub1qspus6smkn8mcdxg5jflh50s69vdgtwsd5p74gmjpzp2qekn5duqfv5afj",
-            categories: [.news, .sports]
-        ),
-        FeaturedAuthor(
-            name: "Alastair Thompson",
-            npub: "npub157pk8t8njtnldqzankrk2syzmkp6qtrv2ewgq3fnuc4k78dr797shfngev",
-            categories: [.news]
-        ),
-    ]
-}
-
-extension FeaturedAuthor {
-    static let cohort2 = [
-        FeaturedAuthor(
-            name: "Lou",
-            npub: "npub1rr3678k7ajms2sht0cqqeawy86sdd5ahn6akfj8zex9ng82zuh0sz8nywd",
-            categories: [.gaming]
-        ),
-        FeaturedAuthor(
-            name: "We Distribute",
-            npub: "npub1w9wuqc3s6lr25c4sgj52werj3tngvt43qrccqrher4wvn7tjm32s2ck403",
-            categories: [.news, .tech]
-        ),
-        FeaturedAuthor(
-            name: "Simon Howard",
-            npub: "npub1rt5h26ukmqsqa29ggt0h98tq2skgqr85f3znhwxule4z4pjhhd3qzs5k94",
-            categories: [.music]
-        ),
-        FeaturedAuthor(
-            name: "BTCPhoto",
-            npub: "npub1vjl6n2llukcc6pe3am2hkwqh8twzh2ymlp7pdrdfq5tlqg08y26sd7ygzx",
-            categories: [.art]
-        ),
-        FeaturedAuthor(
-            name: "Sam Hain",
-            npub: "npub1df47g7a39usamq83aula72zdz23fx9xw5rrfmd0v6p9t20n5u0ss2eqez9",
-            categories: [.art]
-        ),
-        FeaturedAuthor(
-            name: "Joanna",
-            npub: "npub1a2a85jwde32zjsjk02ujasydqc3t2w9rfgfe97amm0r4d9mepfxsxf3fnn",
-            categories: [.activists, .health]
-        ),
-        FeaturedAuthor(
-            name: "Josh Brown",
-            npub: "npub1yl8jc6znttslcpj3p6p8vuq98awu6w0xh4lqtu0lkjr772kpx4ysfqvz34",
-            categories: [.art]
-        ),
-    ]
-}
-
-extension FeaturedAuthor {
-    static let cohort3 = [
-        FeaturedAuthor(
-            name: "INPC",
-            npub: "npub1q33jywkl8r0e5g48lvrenxnr3lw59kzrw4e7p0cecslqzwc56eesjymqu0",
-            categories: [.music]
-        ),
-        FeaturedAuthor(
-            name: "Mama Ganush",
-            npub: "npub1lq9lx5mh2m3pvdnckcta7h7h07qexa3gxvyakdzt73lqp3prt3jqx9pa2e",
-            categories: [.activists]
-        ),
-        FeaturedAuthor(
-            name: "Fight for the Future",
-            npub: "npub1jcwuf0dh5vqsq44qavygqwjfecawf53fmx7gadlcdtuexz0548hqy4jyrz",
-            categories: [.activists, .tech]
-        ),
-        FeaturedAuthor(
-            name: "Z Network",
-            npub: "npub1xm0rvnpw52nh7tk59ntly55w74rmd2cqvt3kg5zxrzz3rlssvspsk0gs6s",
-            categories: [.news, .activists]
-        ),
-        FeaturedAuthor(
-            name: "Z Network Chomsky",
-            npub: "npub1a7mxreazql8ld0csdzk7wk6a5xjzcg7h632q78u3008lyr32lxks5t4ske",
-            categories: [.activists]
-        ),
-        FeaturedAuthor(
-            name: "Patrick Boehler",
-            npub: "npub1n8gvnx827tdl46ke406sjx0t5ey4mrtptux766ejp9y2ff8cc3uqe4ufd0",
-            categories: [.news, .tech]
-        ),
-        FeaturedAuthor(
-            name: "JSTR",
-            npub: "npub1vpdlxsc8dr4m580d43vj4ka0e6wmstzzxhvcermllhh5m9ytnhdq6wnaem",
-            categories: [.music]
-        ),
-    ]
-}
-
-extension FeaturedAuthor {
-    static let cohort4 = [
-        FeaturedAuthor(
-            name: "NDP Media",
-            npub: "npub1ks7de0smt2v3aytrdsfh927sgml3666459mj9ghd7tvg3t42x9gqyvwjqf",
-            categories: [.news]
-        ),
-        FeaturedAuthor(
-            name: "Revolution Z",
-            npub: "npub1j4sumq8pyplks5nhchyhzmw72dyemkyv2fv50vwau5fhf2qa7zusq3tlyh",
-            categories: [.news, .activists]
-        ),
-        FeaturedAuthor(
-            name: "Existing Sprinkles",
-            npub: "npub1f5kc2agn63ecv2ua4909z9ahgmr2x9263na36jh6r908ql0926jq3nvk2u",
-            categories: [.art]
-        ),
-        FeaturedAuthor(
-            name: "MuckRock",
-            npub: "npub1u5nfvj4dzzmrcf9n5kptl26w7kfhc4vml0ll8svvhrv5jz2es46sl0vv2r",
-            categories: [.news]
-        ),
-        FeaturedAuthor(
-            name: "ArchJourney",
-            npub: "npub1qhjxfxpjm7udr0agr6nuhuwf9383e4g9907g64r9hf6y4fh6t6uqpcp36k",
-            categories: [.art]
-        ),
-        FeaturedAuthor(
-            name: "Neigsendoig Cocules",
-            npub: "npub1372csjhjv35sxcqm90ca2d0cfxsl6xku7j6hhswynwdy9m7zl98scn950w",
-            categories: [.music]
-        ),
-        FeaturedAuthor(
-            name: "Lexie Bean",
-            npub: "npub1s8c5mk68qn0erxrx5waqz7xxk39x5xx2367879eqcv270tqs4tvsf5ewgf",
-            categories: [.activists]
-        ),
-        FeaturedAuthor(
-            name: "Protest.net",
-            npub: "npub1z3thwmwasmp787zvk2aaq5qdjtjdkl637p52nph4flv668973c8qaz2du7",
-            categories: [.activists]
-        ),
+            name: "Kris Sowersby",
+            npub: "npub1t6n8u5sa80m6sx53m7uge6afktek4me982wvclr3xe5tfeyg34fslkxqcz",
+            categories: [.art, .nzAustralia]
+        )
     ]
 }

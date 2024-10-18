@@ -146,6 +146,11 @@
 		045EDD052CAC025700B67964 /* ScrollViewProxy+Animate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045EDD042CAC025700B67964 /* ScrollViewProxy+Animate.swift */; };
 		0496D6312C975E6900D29375 /* FlagOptionPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0496D6302C975E6900D29375 /* FlagOptionPicker.swift */; };
 		04C9D7272CBF09C200EAAD4D /* TextField+PlaceHolderStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C9D7262CBF09C200EAAD4D /* TextField+PlaceHolderStyle.swift */; };
+		04C9D7912CC29D5000EAAD4D /* FeaturedAuthor+Cohort1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C9D7902CC29D5000EAAD4D /* FeaturedAuthor+Cohort1.swift */; };
+		04C9D7932CC29D8300EAAD4D /* FeaturedAuthor+Cohort2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C9D7922CC29D8300EAAD4D /* FeaturedAuthor+Cohort2.swift */; };
+		04C9D7952CC29E0A00EAAD4D /* FeaturedAuthor+Cohort3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C9D7942CC29E0A00EAAD4D /* FeaturedAuthor+Cohort3.swift */; };
+		04C9D7972CC29E4A00EAAD4D /* FeaturedAuthor+Cohort4.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C9D7962CC29E4A00EAAD4D /* FeaturedAuthor+Cohort4.swift */; };
+		04C9D7992CC29EDD00EAAD4D /* FeaturedAuthor+Cohort5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C9D7982CC29EDD00EAAD4D /* FeaturedAuthor+Cohort5.swift */; };
 		04F16AA72CBDBD91003AD693 /* DeleteConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F16AA62CBDBD91003AD693 /* DeleteConfirmationView.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
@@ -696,6 +701,11 @@
 		045EDD042CAC025700B67964 /* ScrollViewProxy+Animate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScrollViewProxy+Animate.swift"; sourceTree = "<group>"; };
 		0496D6302C975E6900D29375 /* FlagOptionPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagOptionPicker.swift; sourceTree = "<group>"; };
 		04C9D7262CBF09C200EAAD4D /* TextField+PlaceHolderStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextField+PlaceHolderStyle.swift"; sourceTree = "<group>"; };
+		04C9D7902CC29D5000EAAD4D /* FeaturedAuthor+Cohort1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeaturedAuthor+Cohort1.swift"; sourceTree = "<group>"; };
+		04C9D7922CC29D8300EAAD4D /* FeaturedAuthor+Cohort2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeaturedAuthor+Cohort2.swift"; sourceTree = "<group>"; };
+		04C9D7942CC29E0A00EAAD4D /* FeaturedAuthor+Cohort3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeaturedAuthor+Cohort3.swift"; sourceTree = "<group>"; };
+		04C9D7962CC29E4A00EAAD4D /* FeaturedAuthor+Cohort4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeaturedAuthor+Cohort4.swift"; sourceTree = "<group>"; };
+		04C9D7982CC29EDD00EAAD4D /* FeaturedAuthor+Cohort5.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeaturedAuthor+Cohort5.swift"; sourceTree = "<group>"; };
 		04F16AA62CBDBD91003AD693 /* DeleteConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteConfirmationView.swift; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
@@ -1583,6 +1593,11 @@
 				65BD8DC02BDAF2C300802039 /* DiscoverContentsView.swift */,
 				65BD8DBE2BDAF2C300802039 /* DiscoverTab.swift */,
 				030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */,
+				04C9D7902CC29D5000EAAD4D /* FeaturedAuthor+Cohort1.swift */,
+				04C9D7922CC29D8300EAAD4D /* FeaturedAuthor+Cohort2.swift */,
+				04C9D7942CC29E0A00EAAD4D /* FeaturedAuthor+Cohort3.swift */,
+				04C9D7962CC29E4A00EAAD4D /* FeaturedAuthor+Cohort4.swift */,
+				04C9D7982CC29EDD00EAAD4D /* FeaturedAuthor+Cohort5.swift */,
 				65BD8DBF2BDAF2C300802039 /* FeaturedAuthorCategory.swift */,
 				03A743442CC048C700893CAE /* GoToFeedTip.swift */,
 			);
@@ -2380,16 +2395,19 @@
 				65D066992BD558690011C5CD /* DirectMessageWrapper.swift in Sources */,
 				504454702C90728500251A7E /* Event+Hydration.swift in Sources */,
 				659B27242BD9CB4500BEA6CC /* VerifiableEvent.swift in Sources */,
+				04C9D7932CC29D8300EAAD4D /* FeaturedAuthor+Cohort2.swift in Sources */,
 				C9C2B77F29E0731600548B4A /* AsyncTimer.swift in Sources */,
 				A32B6C7329A6BE9B00653FF5 /* FollowsView.swift in Sources */,
 				3F30020D29C382EB003D4F8B /* OnboardingLoginView.swift in Sources */,
 				C9A25B3D29F174D200B39534 /* ReadabilityPadding.swift in Sources */,
+				04C9D7952CC29E0A00EAAD4D /* FeaturedAuthor+Cohort3.swift in Sources */,
 				C9DFA972299BF9E8006929C1 /* CompactNoteView.swift in Sources */,
 				C9AC31AD2A55E0BD00A94E5A /* NotificationViewModel.swift in Sources */,
 				0326347A2C10C57A00E489B5 /* FileStorageAPIClient.swift in Sources */,
 				030E56CA2CC1BC6200A4A51E /* PublicKeyView.swift in Sources */,
 				C9EE3E632A053910008A7491 /* ExpirationTimeOption.swift in Sources */,
 				03C7E7A22CB9CD150054624C /* PointDownEmojiTipViewStyle.swift in Sources */,
+				04C9D7972CC29E4A00EAAD4D /* FeaturedAuthor+Cohort4.swift in Sources */,
 				C9A0DAE029C697A100466635 /* AboutView.swift in Sources */,
 				0496D6312C975E6900D29375 /* FlagOptionPicker.swift in Sources */,
 				04F16AA72CBDBD91003AD693 /* DeleteConfirmationView.swift in Sources */,
@@ -2484,6 +2502,7 @@
 				03E181472C754BA300886CC6 /* LinkView.swift in Sources */,
 				C90352BA2C1235CD000A5993 /* NosNavigationDestination.swift in Sources */,
 				03D1B4282C3C1A5D001778CD /* NostrIdentifier.swift in Sources */,
+				04C9D7992CC29EDD00EAAD4D /* FeaturedAuthor+Cohort5.swift in Sources */,
 				DC5F203F2A6AE24200F8D73F /* ImagePickerButton.swift in Sources */,
 				5B79F5EB2B97B5E9002DA9BE /* ConfirmUsernameDeletionSheet.swift in Sources */,
 				C9032C2E2BAE31ED001F4EC6 /* ProfileFeedType.swift in Sources */,
@@ -2491,6 +2510,7 @@
 				C92F01582AC4D6F700972489 /* NosTextField.swift in Sources */,
 				C9C2B77C29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
 				C9DEC003298945150078B43A /* String+Lorem.swift in Sources */,
+				04C9D7912CC29D5000EAAD4D /* FeaturedAuthor+Cohort1.swift in Sources */,
 				038EF09D2CC16D640031F7F2 /* PrivateKeyView.swift in Sources */,
 				C97A1C8B29E45B4E009D9E8D /* RawEventController.swift in Sources */,
 				C9DEC0632989541F0078B43A /* Bundle+Current.swift in Sources */,
