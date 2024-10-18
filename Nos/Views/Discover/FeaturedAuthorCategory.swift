@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 /// Categories of featured authors on the Discover tab.
 /// - Note: The order of cases in this enum determines the order in which categories are displayed
@@ -25,26 +26,26 @@ enum FeaturedAuthorCategory: CaseIterable {
     case sports
     case tech
 
-    var text: LocalizedStringResource {
+    var text: LocalizedStringKey {
         switch self {
-        case .all: LocalizedStringResource.localizable.featuredAuthorCategoryAll
-        case .new: LocalizedStringResource.localizable.featuredAuthorCategoryNew
-        case .activists: LocalizedStringResource.localizable.featuredAuthorCategoryActivists
-        case .art: LocalizedStringResource.localizable.featuredAuthorCategoryArt
+        case .all: "featuredAuthorCategoryAll"
+        case .new: "featuredAuthorCategoryNew"
+        case .activists: "featuredAuthorCategoryActivists"
+        case .art: "featuredAuthorCategoryArt"
         case .espanol: "featuredAuthorCategoryEspanol"
         case .food: "featuredAuthorCategoryFood"
-        case .gaming: LocalizedStringResource.localizable.featuredAuthorCategoryGaming
-        case .health: LocalizedStringResource.localizable.featuredAuthorCategoryHealth
+        case .gaming: "featuredAuthorCategoryGaming"
+        case .health: "featuredAuthorCategoryHealth"
         case .lifestyle: "featuredAuthorCategoryLifestyle"
-        case .music: LocalizedStringResource.localizable.featuredAuthorCategoryMusic
-        case .news: LocalizedStringResource.localizable.featuredAuthorCategoryNews
+        case .music: "featuredAuthorCategoryNews"
+        case .news: "featuredAuthorCategoryNews"
         case .nzAustralia: "featuredAuthorCategoryNewzealand"
         case .photography: "featuredAuthorCategoryPhotography"
         case .politics: "featuredAuthorCategoryPolitics"
         case .random: "featuredAuthorCategoryRandom"
         case .sciFi: "featuredAuthorCategoryScifi"
-        case .sports: LocalizedStringResource.localizable.featuredAuthorCategorySports
-        case .tech: LocalizedStringResource.localizable.featuredAuthorCategoryTech
+        case .sports: "featuredAuthorCategorySports"
+        case .tech: "featuredAuthorCategoryTech"
         }
     }
 

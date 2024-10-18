@@ -37,7 +37,7 @@ struct CreateAccountView: View {
             NumberedStepsView()
                 .padding(.horizontal, 10)
             Spacer()
-            BigActionButton(title: "createAccountButton") {
+            BigActionButton("createAccountButton") {
                 do {
                     try await currentUser.createAccount()
                 } catch {

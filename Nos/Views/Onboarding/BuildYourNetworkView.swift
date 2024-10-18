@@ -24,7 +24,7 @@ struct BuildYourNetworkView: View {
                     .frame(width: geometry.size.width)
                     .offset(x: -padding)
                 Spacer()
-                BigActionButton(title: "findPeople") {
+                BigActionButton("findPeople") {
                     completion()
                 }
             }
