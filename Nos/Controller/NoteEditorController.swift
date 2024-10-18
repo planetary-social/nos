@@ -1,3 +1,4 @@
+import Dependencies
 import Foundation
 import SwiftUI
 import UIKit
@@ -9,6 +10,8 @@ import UIKit
 /// when the user indicates they are ready to post it.  
 @Observable class NoteEditorController: NSObject, UITextViewDelegate {
 
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+
     /// The height that fits all entered text. This value will be updated by `NoteUITextViewRepresentable` 
     /// automatically, and should be used to set the frame of `NoteUITextViewRepresentable` from SwiftUI. This is done 
     /// to work around some incompatibilities between UIKit and SwiftUI where the UITextView won't expand properly.
@@ -16,8 +19,14 @@ import UIKit
     
     /// A variable that controls whether the mention autocomplete window should be shown. This window is triggered
     /// by typing an '@' symbol and allows the user to search for another user to mention in their note.
-    var showMentionsAutocomplete = false
-    
+    var showMentionsAutocomplete = false {
+        didSet {
+            if showMentionsAutocomplete {
+                analytics.mentionsAutocompleteOpened()
+            }
+        }
+    }
+
     /// The view the user will use for editing. Should only be set by ``NoteTextEditor/NoteUITextViewRepresentable``.
     var textView: UITextView? {
         didSet {

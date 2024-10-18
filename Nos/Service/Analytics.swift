@@ -161,8 +161,8 @@ class Analytics {
     }
 
     /// Tracks when the user submits a search on the Mentions screen.
-    func searchedMentions() {
-        track("Mentions Search Started")
+    func mentionsAutocompleteCharactersEntered() {
+        track("Mentions Autocomplete Characters Entered")
     }
 
     /// Tracks when the user taps on a search result on the Discover screen.
@@ -296,5 +296,9 @@ class Analytics {
     
     func cancelledUploadSourceSelection() {
         track("Cancelled Upload Source Selection")
+    }
+
+    func mentionsAutocompleteOpened() {
+        track("Mentions Autocomplete Opened")
     }
 }
