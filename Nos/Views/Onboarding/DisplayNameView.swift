@@ -25,7 +25,7 @@ struct DisplayNameView: View {
             }
         }
         .navigationBarHidden(true)
-        .alert("displayNameError", isPresented: $showError) {
+        .alert("errorConnecting", isPresented: $showError) {
             Button {
                 nextStep()
             } label: {
@@ -49,7 +49,7 @@ struct DisplayNameView: View {
                 prompt: Text("displayNamePlaceholder")
                     .foregroundStyle(Color.textFieldPlaceholder)
             )
-                .textInputAutocapitalization(.none)
+                .textInputAutocapitalization(.never)
                 .foregroundStyle(Color.primaryTxt)
                 .fontWeight(.bold)
                 .autocorrectionDisabled()
@@ -65,7 +65,7 @@ struct DisplayNameView: View {
     }
 
     func nextStep() {
-        state.step = .buildYourNetwork
+        state.step = .username
     }
 
     /// Saves the display name locally and publishes the event to relays. Sets `showError` if it fails.
