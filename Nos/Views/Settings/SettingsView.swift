@@ -284,19 +284,6 @@ struct SettingsView: View {
 // DEBUG builds will have everything that's in STAGING builds and more.
 #if STAGING || DEBUG
 extension SettingsView {
-    /// Whether the new moderation flow is enabled.
-    private var isNewModerationFlowEnabled: Binding<Bool> {
-        Binding<Bool>(
-            get: { featureFlags.isEnabled(.newModerationFlow) },
-            set: { featureFlags.setFeature(.newModerationFlow, enabled: $0) }
-        )
-    }
-
-    /// A toggle for the new moderation flow that allows the user to turn the feature on or off.
-    private var newModerationFlowToggle: some View {
-        NosToggle("enableNewModerationFlow", isOn: isNewModerationFlowEnabled)
-    }
-
     /// Whether the new onboarding flow is enabled.
     private var isNewOnboardingFlowEnabled: Binding<Bool> {
         Binding<Bool>(
@@ -317,7 +304,6 @@ extension SettingsView {
     /// Controls that will appear when the app is built for STAGING.
     @MainActor private var stagingControls: some View {
         Group {
-            newModerationFlowToggle
             newOnboardingFlowToggle
         }
     }
@@ -329,7 +315,6 @@ extension SettingsView {
     /// Controls that will appear when the app is built for DEBUG.
     @MainActor private var debugControls: some View {
         Group {
-            newModerationFlowToggle
             newOnboardingFlowToggle
             Text("sampleDataInstructions")
                 .foregroundColor(.primaryTxt)
