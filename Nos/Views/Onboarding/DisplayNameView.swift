@@ -10,15 +10,7 @@ struct DisplayNameView: View {
     @Dependency(\.crashReporting) private var crashReporting
 
     @State private var displayName = ""
-    @State private var saveError: SaveProfileError?
-
-    private var showAlert: Binding<Bool> {
-        Binding {
-            saveError != nil
-        } set: { _ in
-            saveError = nil
-        }
-    }
+    @State private var showError: Bool = false
 
     var body: some View {
         ZStack {
@@ -33,19 +25,11 @@ struct DisplayNameView: View {
             }
         }
         .navigationBarHidden(true)
-        .alert(isPresented: showAlert, error: saveError) {
+        .alert("displayNameError", isPresented: $showError) {
             Button {
-                saveError = nil
-                Task {
-                    await save()
-                }
+                nextStep()
             } label: {
-                Text("retry")
-            }
-            Button {
-                saveError = nil
-            } label: {
-                Text("cancel")
+                Text("skipForNow")
             }
         }
     }
@@ -79,11 +63,15 @@ struct DisplayNameView: View {
         .padding(40)
         .readabilityPadding()
     }
-    
+
+    func nextStep() {
+        state.step = .buildYourNetwork
+    }
+
     /// Saves the display name locally and publishes the event to relays. Sets `saveError` if it fails.
     func save() async {
         guard let author = await currentUser.author else {
-            saveError = SaveProfileError.unexpectedError
+            showError = true
             return
         }
 
@@ -91,12 +79,10 @@ struct DisplayNameView: View {
         do {
             try viewContext.save()
             try await currentUser.publishMetadata()
-            state.step = .username
-        } catch CurrentUserError.errorWhilePublishingToRelays {
-            saveError = SaveProfileError.unableToPublishChanges
+            nextStep()
         } catch {
             crashReporting.report(error)
-            saveError = SaveProfileError.unexpectedError
+            showError = true
         }
     }
 }
