@@ -5236,6 +5236,18 @@
         }
       }
     },
+    "displayNameError" : {
+      "comment" : "error message for when we can't set the display name in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There is a problem connecting to the servers. You can skip for now and visit your Profile to update later."
+          }
+        }
+      }
+    },
     "displayNameHeadline" : {
       "comment" : "headline for the display name screen in onboarding",
       "extractionState" : "manual",
@@ -17512,6 +17524,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "將我的朋友的朋友圈之外的用戶的筆記隱藏在內容警告後面。"
+          }
+        }
+      }
+    },
+    "skipForNow" : {
+      "comment" : "button title that allows the user to skip this for now",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip for now"
           }
         }
       }
