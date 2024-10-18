@@ -22,7 +22,6 @@ struct UsernameView: View {
 
     @State private var username = ""
     @State private var usernameState: UsernameViewState = .idle
-    @State private var saveError: SaveProfileError?
 
     private var showAlert: Binding<Bool> {
         Binding {
