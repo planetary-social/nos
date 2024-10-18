@@ -39,20 +39,15 @@ struct PrivateKeyView: View {
                     .foregroundStyle(Color.secondaryTxt)
             }
             PrivateKeyDescription()
-            BorderedPrivateKey(privateKeyString: $privateKeyString, copyButtonState: $copyButtonState)
+            CopyKeyView("copyPrivateKey", keyString: $privateKeyString, copyButtonState: $copyButtonState)
             Spacer()
             BigActionButton("next") {
-                state.step = .buildYourNetwork
+                state.step = .publicKey
             }
         }
         .padding(40)
         .readabilityPadding()
     }
-}
-
-fileprivate enum CopyButtonState {
-    case copy
-    case copied
 }
 
 fileprivate struct PrivateKeyDescription: View {
@@ -70,40 +65,6 @@ fileprivate struct PrivateKeyDescription: View {
         return Text(attributedString)
             .font(.body)
             .foregroundStyle(Color.secondaryTxt)
-    }
-}
-
-fileprivate struct BorderedPrivateKey: View {
-    @Binding var privateKeyString: String
-    @Binding var copyButtonState: CopyButtonState
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text(privateKeyString)
-            HStack {
-                if copyButtonState == .copy {
-                    Image.copyIcon
-                        .frame(width: 20, height: 20)
-                } else {
-                    Image(systemName: "checkmark")
-                        .frame(width: 20, height: 20)
-                }
-                Button {
-                    UIPasteboard.general.string = privateKeyString
-                    copyButtonState = .copied
-                    Task { @MainActor in
-                        try await Task.sleep(for: .seconds(10))
-                        copyButtonState = .copy
-                    }
-                } label: {
-                    Text(copyButtonState == .copy ? "copyPrivateKey" : "copied")
-                }
-                Spacer()
-            }
-            .foregroundStyle(Color.actionTertiary)
-        }
-        .padding()
-        .withStyledBorder()
     }
 }
 

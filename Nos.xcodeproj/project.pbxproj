@@ -16,6 +16,9 @@
 		0304D0B22C9B731F001D16C7 /* MockOpenGraphService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */; };
 		0304D0B32C9B731F001D16C7 /* MockOpenGraphService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */; };
 		030AE4292BE3D63C004DEE02 /* FeaturedAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */; };
+		030E56CA2CC1BC6200A4A51E /* PublicKeyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030E56C92CC1BC6200A4A51E /* PublicKeyView.swift */; };
+		030E56E42CC1BF2900A4A51E /* CopyButtonState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030E56E32CC1BF2900A4A51E /* CopyButtonState.swift */; };
+		030E56F32CC2836D00A4A51E /* CopyKeyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030E56F22CC2836D00A4A51E /* CopyKeyView.swift */; };
 		030FECAB2CB5E0B900820014 /* BuildYourNetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030FECAA2CB5E0B900820014 /* BuildYourNetworkView.swift */; };
 		0314CF742C9C7DD00001A53B /* youTube_fortnight_short.html in Resources */ = {isa = PBXBuildFile; fileRef = 0314CF732C9C7DD00001A53B /* youTube_fortnight_short.html */; };
 		0314D5AC2C7D31060002E7F4 /* MediaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0314D5AB2C7D31060002E7F4 /* MediaService.swift */; };
@@ -589,6 +592,9 @@
 		0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGraphMetatdata.swift; sourceTree = "<group>"; };
 		0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOpenGraphService.swift; sourceTree = "<group>"; };
 		030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedAuthor.swift; sourceTree = "<group>"; };
+		030E56C92CC1BC6200A4A51E /* PublicKeyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeyView.swift; sourceTree = "<group>"; };
+		030E56E32CC1BF2900A4A51E /* CopyButtonState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyButtonState.swift; sourceTree = "<group>"; };
+		030E56F22CC2836D00A4A51E /* CopyKeyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyKeyView.swift; sourceTree = "<group>"; };
 		030FECAA2CB5E0B900820014 /* BuildYourNetworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildYourNetworkView.swift; sourceTree = "<group>"; };
 		0314CF732C9C7DD00001A53B /* youTube_fortnight_short.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = youTube_fortnight_short.html; sourceTree = "<group>"; };
 		0314D5AB2C7D31060002E7F4 /* MediaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaService.swift; sourceTree = "<group>"; };
@@ -1054,6 +1060,15 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
+		030E56E52CC2835A00A4A51E /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				030E56F22CC2836D00A4A51E /* CopyKeyView.swift */,
+				03C5DBC42CC19044009A9E0E /* LargeNumberView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		0315B5ED2C7E44FD0020E707 /* Media */ = {
 			isa = PBXGroup;
 			children = (
@@ -1463,13 +1478,14 @@
 			children = (
 				030FECAA2CB5E0B900820014 /* BuildYourNetworkView.swift */,
 				039F09582CC051EE00FEEC81 /* CreateAccountView.swift */,
-				03C5DBC42CC19044009A9E0E /* LargeNumberView.swift */,
 				3F30020629C237AB003D4F8B /* OnboardingAgeVerificationView.swift */,
 				3F30020C29C382EB003D4F8B /* OnboardingLoginView.swift */,
 				3F30020829C23895003D4F8B /* OnboardingNotOldEnoughView.swift */,
 				3F30020429C1FDD9003D4F8B /* OnboardingStartView.swift */,
 				3FB5E650299D28A200386527 /* OnboardingView.swift */,
 				038EF09C2CC16D640031F7F2 /* PrivateKeyView.swift */,
+				030E56C92CC1BC6200A4A51E /* PublicKeyView.swift */,
+				030E56E52CC2835A00A4A51E /* Components */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -1542,6 +1558,7 @@
 				C92F01502AC4D67B00972489 /* Form */,
 				03C8B4902C6D061900A07CCD /* Media */,
 				03618B1E2C825F0900BCBC55 /* Wizard */,
+				030E56E32CC1BF2900A4A51E /* CopyButtonState.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -2322,6 +2339,7 @@
 				502B6C3D2C9462A400446316 /* PushNotificationRegistrar.swift in Sources */,
 				5B6EB48E29EDBE0E006E750C /* NoteParser.swift in Sources */,
 				C9F84C23298DC7B900C6714D /* SettingsView.swift in Sources */,
+				030E56E42CC1BF2900A4A51E /* CopyButtonState.swift in Sources */,
 				03E711812C936DD1000B6F96 /* OpenGraphParser.swift in Sources */,
 				03C8B4962C6D065900A07CCD /* ImageViewer.swift in Sources */,
 				5B79F6092B98AC33002DA9BE /* ClaimYourUniqueIdentitySheet.swift in Sources */,
@@ -2352,6 +2370,7 @@
 				C9DFA972299BF9E8006929C1 /* CompactNoteView.swift in Sources */,
 				C9AC31AD2A55E0BD00A94E5A /* NotificationViewModel.swift in Sources */,
 				0326347A2C10C57A00E489B5 /* FileStorageAPIClient.swift in Sources */,
+				030E56CA2CC1BC6200A4A51E /* PublicKeyView.swift in Sources */,
 				C9EE3E632A053910008A7491 /* ExpirationTimeOption.swift in Sources */,
 				03C7E7A22CB9CD150054624C /* PointDownEmojiTipViewStyle.swift in Sources */,
 				C9A0DAE029C697A100466635 /* AboutView.swift in Sources */,
@@ -2490,6 +2509,7 @@
 				5B834F692A83FC7F000C1432 /* ProfileSocialStatsView.swift in Sources */,
 				045EDD052CAC025700B67964 /* ScrollViewProxy+Animate.swift in Sources */,
 				CD09A74629A50F750063464F /* SideMenuContent.swift in Sources */,
+				030E56F32CC2836D00A4A51E /* CopyKeyView.swift in Sources */,
 				C9DFA971299BF8CD006929C1 /* NoteView.swift in Sources */,
 				037071272C90C5FA00BEAEC4 /* OpenGraphService.swift in Sources */,
 				C974652E2A3B86600031226F /* NoteCardHeader.swift in Sources */,

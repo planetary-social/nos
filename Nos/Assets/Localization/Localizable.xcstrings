@@ -3769,6 +3769,18 @@
         }
       }
     },
+    "copyPublicKey" : {
+      "comment" : "title for the button that copies the public key",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy public key"
+          }
+        }
+      }
+    },
     "copyQRLink" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -14539,6 +14551,18 @@
         }
       }
     },
+    "publicKeyDescription" : {
+      "comment" : "a description for the public key screen explaining what a public key is",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is your public identifier that does not change. Public keys can be shared."
+          }
+        }
+      }
+    },
     "publicKeyHeadline" : {
       "comment" : "headline for the public key screen in onboarding",
       "extractionState" : "manual",
@@ -14547,6 +14571,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Public Key"
+          }
+        }
+      }
+    },
+    "publicKeyNpubParenthetical" : {
+      "comment" : "the word \"npub\" in parentheses in English. \"npub\" should not be translated, but the parentheses may",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(npub)"
           }
         }
       }

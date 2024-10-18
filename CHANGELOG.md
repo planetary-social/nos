@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Increase build settings timeout in fastlane. [#1662](https://github.com/planetary-social/nos/pull/1662)
 - Removed new moderation feature flag. [#1646](https://github.com/planetary-social/nos/issues/1646)
 - Added the Private Key onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1595](https://github.com/planetary-social/nos/issues/1595)
+- Added the Public Key onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1596](https://github.com/planetary-social/nos/issues/1596)
 
 ## [0.2.2] - 2024-10-11Z
 
