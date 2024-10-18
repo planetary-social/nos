@@ -22,7 +22,7 @@ struct NoteView: View {
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
 
     /// The authors who are referenced in a note in addition to those who replied to the note, if any.
-    @State private var relatedAuthors: [Author]?
+    @State private var relatedAuthors: [Author] = []
     @State private var directReplies: [Event] = []
     
     func computeDirectReplies() async {
@@ -69,7 +69,7 @@ struct NoteView: View {
     /// rootNote if any and any author referenced in a note.
     ///
     /// - Returns: An array of `Author` objects.
-    private func sortedAuthorsByMutualFollowees() -> [Author] {
+    private func computeRelatedAuthors() -> [Author] {
         var authors: Set<Author> = []
 
         // Include the author of the root note
@@ -156,7 +156,7 @@ struct NoteView: View {
                         })
                         .onChange(of: showReplyComposer) { _, newValue in
                             if newValue {
-                                relatedAuthors = sortedAuthorsByMutualFollowees()
+                                relatedAuthors = computeRelatedAuthors()
                             }
                         }
 

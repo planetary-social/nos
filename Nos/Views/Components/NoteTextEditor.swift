@@ -11,12 +11,12 @@ struct NoteTextEditor: View {
     var minHeight: CGFloat
 
     /// The authors who are referenced in a note in addition to those who replied to the note, if any.
-    var relatedAuthors: [Author]?
+    var relatedAuthors: [Author]
 
     init(
         controller: Binding<NoteEditorController>,
         minHeight: CGFloat,
-        relatedAuthors: [Author]? = nil
+        relatedAuthors: [Author] = []
     ) {
         self._controller = controller
         self.minHeight = minHeight

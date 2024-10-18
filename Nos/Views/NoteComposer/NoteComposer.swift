@@ -52,13 +52,13 @@ struct NoteComposer: View {
     @State private var quotedNote: Event?
 
     /// The authors who are referenced in a note in addition to those who replied to the note, if any.
-    var relatedAuthors: [Author]?
+    var relatedAuthors: [Author]
 
     init(
         initialContents: String? = nil,
         replyTo: Event? = nil,
         quotedNoteID: RawEventID? = nil,
-        relatedAuthors: [Author]? = nil,
+        relatedAuthors: [Author] = [],
         isPresented: Binding<Bool>
     ) {
         _isPresented = isPresented
