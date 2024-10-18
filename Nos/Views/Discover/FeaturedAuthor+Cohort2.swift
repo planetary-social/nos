@@ -35,7 +35,7 @@ extension FeaturedAuthor {
         FeaturedAuthor(
             name: "Josh Brown",
             npub: "npub1yl8jc6znttslcpj3p6p8vuq98awu6w0xh4lqtu0lkjr772kpx4ysfqvz34",
-            categories: [.art]
+            categories: [.photography]
         ),
     ]
 }

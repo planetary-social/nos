@@ -6656,7 +6656,7 @@
         }
       }
     },
-    "featuredAuthorCategoryNewzealand" : {
+    "featuredAuthorCategoryNZAustralia" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -6700,7 +6700,7 @@
         }
       }
     },
-    "featuredAuthorCategoryScifi" : {
+    "featuredAuthorCategorySciFi" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {

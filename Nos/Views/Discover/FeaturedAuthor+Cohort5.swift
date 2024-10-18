@@ -153,7 +153,7 @@ extension FeaturedAuthor {
             categories: [.lifestyle]
         ),
         FeaturedAuthor(
-            name: "Cory doctorow",
+            name: "Cory Doctorow",
             npub: "npub1yxzkmtuyctjw2pffp6e9uvyrkp29hrqra2tm3xp3z9707z06muxsg75qvv",
             categories: [.tech, .activists]
         ),
@@ -241,6 +241,11 @@ extension FeaturedAuthor {
             name: "Angela",
             npub: "npub19vvkfwy9mcluhvehw7r56p4stsj5lmx4v9g3vgkwsm3arpgef8aqsrt562",
             categories: [.random]
+        ),
+        FeaturedAuthor(
+            name: "Nela",
+            npub: "npub1fv9u4drq4hdrr7k45vn0krqy7mkgy8ajf059m0wq8szvcrsjlsrs8tdz3p",
+            categories: [.art, .random]
         ),
         FeaturedAuthor(
             name: "J",
