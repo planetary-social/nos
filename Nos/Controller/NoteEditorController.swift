@@ -19,8 +19,14 @@ import UIKit
     
     /// A variable that controls whether the mention autocomplete window should be shown. This window is triggered
     /// by typing an '@' symbol and allows the user to search for another user to mention in their note.
-    var showMentionsAutocomplete = false
-    
+    var showMentionsAutocomplete = false {
+        didSet {
+            if showMentionsAutocomplete {
+                analytics.mentionsAutocompleteOpened()
+            }
+        }
+    }
+
     /// The view the user will use for editing. Should only be set by ``NoteTextEditor/NoteUITextViewRepresentable``.
     var textView: UITextView? {
         didSet {
@@ -78,7 +84,6 @@ import UIKit
         ///  Check if `@` was appended and show the mentionsAutoComplete list.
         guard text == "@" else { return }
         showMentionsAutocomplete = true
-        analytics.openedMentions()
     }
     
     /// Appends the given URL and adds the default link styling attributes. Will append a space before the link 
@@ -235,13 +240,11 @@ import UIKit
     private func checkForMentionsAutocomplete(in textView: UITextView, at range: NSRange) -> Bool {
         if textView.text.count == 0 {
             showMentionsAutocomplete = true
-            analytics.openedMentions()
             return true
         } else {
             let lastCharacter = (textView.text as NSString).character(at: max(range.location - 1, 0))
             if let scalar = UnicodeScalar(lastCharacter), CharacterSet.whitespacesAndNewlines.contains(scalar) {
                 showMentionsAutocomplete = true
-                analytics.openedMentions()
                 return true
             }
         }
