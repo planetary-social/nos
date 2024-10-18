@@ -56,12 +56,14 @@ struct UsernameView: View {
             }
         }
         .navigationBarHidden(true)
-        .alert("errorConnecting", isPresented: showAlert) {
+        .alert("", isPresented: showAlert) {
             Button {
                 nextStep()
             } label: {
                 Text("skipForNow")
             }
+        } message: {
+            Text("errorConnecting")
         }
     }
 
