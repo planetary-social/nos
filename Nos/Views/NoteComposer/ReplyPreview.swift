@@ -28,7 +28,7 @@ struct ReplyPreview: View {
                 Text(currentUser.author?.safeName ?? "")
                     .foregroundColor(.primaryTxt)
                     .bold()
-                Text(String(localized: .localizable.now))
+                Text("now")
                     .foregroundColor(.secondaryTxt)
                 Spacer()
             }

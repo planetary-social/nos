@@ -12,15 +12,15 @@ enum AppDestination: Hashable, Equatable {
     var destinationString: String {
         switch self {
         case .home:
-            return String(localized: .localizable.homeFeed)
+            return String(localized: "homeFeed")
         case .discover:
-            return String(localized: .localizable.discover)
+            return String(localized: "discover")
         case .notifications:
-            return String(localized: .localizable.notifications)
+            return String(localized: "notifications")
         case .noteComposer:
-            return String(localized: .localizable.newNote)
+            return String(localized: "newNote")
         case .profile:
-            return String(localized: .localizable.profileTitle)
+            return String(localized: "profileTitle")
         }
     }
     

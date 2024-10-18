@@ -5,7 +5,7 @@ import SwiftUI
 import SwiftUINavigation
 
 struct NoteComposer: View {
-    
+
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var relayService: RelayService
     @Environment(CurrentUser.self) var currentUser
@@ -18,18 +18,18 @@ struct NoteComposer: View {
     @State private var editingController = NoteEditorController()
 
     /// The height of the NoteTextEditor that fits all entered text.
-    /// This value will be updated by NoteTextEditor automatically, and should be used to set its frame from SwiftUI. 
-    /// This is done to work around some incompatibilities between UIKit and SwiftUI where the UITextView won't expand 
+    /// This value will be updated by NoteTextEditor automatically, and should be used to set its frame from SwiftUI.
+    /// This is done to work around some incompatibilities between UIKit and SwiftUI where the UITextView won't expand
     /// properly.
     @State private var scrollViewHeight: CGFloat = 0
 
     @State var expirationTime: TimeInterval?
-    
+
     @State private var alert: AlertState<Never>?
-    
+
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay?
-    
+
     /// Shows a note preview above the composer.
     @State private var showNotePreview = false
 
@@ -41,13 +41,13 @@ struct NoteComposer: View {
 
     var initialContents: String?
     @Binding var isPresented: Bool
-    
+
     /// The note that the user is replying to, if any.
     private var replyToNote: Event?
-    
+
     /// The id of a note the user is quoting, if any.
     private let quotedNoteID: RawEventID?
-    
+
     /// The quoted note, if any.
     @State private var quotedNote: Event?
 
@@ -67,16 +67,16 @@ struct NoteComposer: View {
         self.quotedNoteID = quotedNoteID
         self.relatedAuthors = relatedAuthors
     }
-    
+
     /// The minimum height of the NoteTextEditor.
-    /// 
+    ///
     /// We do this because editor won't expand to fill available space when it's in a ScrollView.
     /// And we need it to because people try to tap below the text field bounds to paste if it doesn't
     /// fill the screen. We remove this minimum in the case that a user is quote-reposting another note.
     var minimumEditorHeight: CGFloat {
         quotedNote == nil ? max(scrollViewHeight - 12, 0) : 0
     }
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -91,7 +91,6 @@ struct NoteComposer: View {
                                     NoteTextEditor(
                                         controller: $editingController,
                                         minHeight: minimumEditorHeight,
-                                        placeholder: .localizable.newNotePlaceholder,
                                         relatedAuthors: relatedAuthors
                                     )
                                     .padding(10)
@@ -118,7 +117,7 @@ struct NoteComposer: View {
                                 .onAppear {
                                     Task {
                                         try await Task.sleep(for: .seconds(0.5))
-                                        withAnimation(.easeInOut(duration: 0.25)) { 
+                                        withAnimation(.easeInOut(duration: 0.25)) {
                                             proxy.scrollTo(0, anchor: nil)
                                         }
                                     }
@@ -126,10 +125,10 @@ struct NoteComposer: View {
                             }
                         }
                         .onChange(of: geometry.size.height) { _, newValue in
-                            scrollViewHeight = newValue 
+                            scrollViewHeight = newValue
                         }
                     }
-                    
+
                     composerActionBar
                 }
                 .onChange(of: showNotePreview) { _, newValue in
@@ -162,7 +161,7 @@ struct NoteComposer: View {
                 if isUploadingImage {
                     FullscreenProgressView(
                         isPresented: .constant(true),
-                        text: String(localized: .imagePicker.uploading)
+                        text: String(localized: "uploading", table: "ImagePicker")
                     )
                 }
 
@@ -180,7 +179,7 @@ struct NoteComposer: View {
                 if showRelayPicker, let author = currentUser.author {
                     RelayPicker(
                         selectedRelay: $selectedRelay,
-                        defaultSelection: String(localized: .localizable.allMyRelays),
+                        defaultSelection: String(localized: "allMyRelays"),
                         author: author,
                         isPresented: $showRelayPicker
                     )
@@ -192,14 +191,13 @@ struct NoteComposer: View {
                 }
             }
             .background(Color.appBg)
-            .navigationBarTitle(String(localized: .localizable.newNote), displayMode: .inline)
+            .navigationBarTitle(String(localized: "newNote"), displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
             .toolbar {
                 RelayPickerToolbarButton(
                     selectedRelay: $selectedRelay,
-                    isPresenting: $showRelayPicker,
-                    defaultSelection: .localizable.allMyRelays
+                    isPresenting: $showRelayPicker
                 ) {
                     withAnimation {
                         showRelayPicker.toggle()
@@ -211,10 +209,10 @@ struct NoteComposer: View {
                     isPresented = false
                 }
                 label: {
-                    Text(.localizable.cancel)
+                    Text("cancel")
                         .foregroundColor(.primaryTxt)
                 },
-                trailing: ActionButton(title: .localizable.post, action: postAction)
+                trailing: ActionButton("post", action: postAction)
                     .frame(height: 22)
                     .disabled(!isPostEnabled)
                     .padding(.bottom, 3)
@@ -271,18 +269,18 @@ struct NoteComposer: View {
     private func postAction() async {
         guard currentUser.keyPair != nil, let author = currentUser.author else {
             alert = AlertState(title: {
-                TextState(String(localized: .localizable.error))
+                TextState(String(localized: "error"))
             }, message: {
-                TextState(String(localized: .localizable.youNeedToEnterAPrivateKeyBeforePosting))
+                TextState(String(localized: "youNeedToEnterAPrivateKeyBeforePosting"))
             })
             return
         }
         if let relay = selectedRelay {
             guard expirationTime == nil || relay.supportedNIPs?.contains(40) == true else {
                 alert = AlertState(title: {
-                    TextState(String(localized: .localizable.error))
+                    TextState(String(localized: "error"))
                 }, message: {
-                    TextState(String(localized: .localizable.relayDoesNotSupportNIP40))
+                    TextState(String(localized: "relayDoesNotSupportNIP40"))
                 })
                 return
             }
@@ -291,15 +289,15 @@ struct NoteComposer: View {
                 let relays = try await Relay.find(supporting: 40, for: author, context: viewContext)
                 if relays.isEmpty {
                     alert = AlertState(title: {
-                        TextState(String(localized: .localizable.error))
+                        TextState(String(localized: "error"))
                     }, message: {
-                        TextState(String(localized: .localizable.anyRelaysSupportingNIP40))
+                        TextState(String(localized: "anyRelaysSupportingNIP40"))
                     })
                     return
                 }
             } catch {
                 alert = AlertState(title: {
-                    TextState(String(localized: .localizable.error))
+                    TextState(String(localized: "error"))
                 }, message: {
                     TextState(error.localizedDescription)
                 })
@@ -311,12 +309,12 @@ struct NoteComposer: View {
         }
         isPresented = false
     }
-    
+
     private func loadQuotedNote() {
         guard let quotedNoteID else {
             return
         }
-        
+
         quotedNote = try? Event.findOrCreateStubBy(
             id: quotedNoteID,
             context: persistenceController.viewContext
@@ -326,7 +324,7 @@ struct NoteComposer: View {
     private var isPostEnabled: Bool {
         !isUploadingImage && (!editingController.isEmpty || quotedNote?.bech32NoteID.isEmptyOrNil == false)
     }
-    
+
     private var postText: AttributedString {
         var text = editingController.text ?? ""
         if let noteLink = quotedNote?.bech32NoteID {

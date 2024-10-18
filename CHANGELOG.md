@@ -15,10 +15,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a tip to the Feed to welcome first-time users and explain how the Feed works. [#1602](https://github.com/planetary-social/nos/issues/1602)
 - Added a tag to published contact lists to help us detect the source of lost contact lists. [cleanstr#51](https://github.com/planetary-social/cleanstr/issues/51)
 - Removed integration with Universal Name Space [#1636](https://github.com/planetary-social/nos/issues/1636)
+- Remove most usage of xcstringstool-generated strings to improve performance. [#1458](https://github.com/planetary-social/nos/issues/1458)
 
 ### Internal Changes
 - Migrate ObservableObject to @Observable where possible [#1458](https://github.com/planetary-social/nos/issues/1458)
 - Added the Create Account onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1594](https://github.com/planetary-social/nos/issues/1594)
+- Increase build settings timeout in fastlane. [#1662](https://github.com/planetary-social/nos/pull/1662)
+- Removed new moderation feature flag. [#1646](https://github.com/planetary-social/nos/issues/1646)
+- Added the Private Key onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1595](https://github.com/planetary-social/nos/issues/1595)
+- Added the Public Key onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1596](https://github.com/planetary-social/nos/issues/1596)
+- Added the Display Name onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1597](https://github.com/planetary-social/nos/issues/1597)
+- Added the Username onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1598](https://github.com/planetary-social/nos/issues/1598)
+- Added the Account Success onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1599](https://github.com/planetary-social/nos/issues/1599)
+- Updated the Age Verification onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1651](https://github.com/planetary-social/nos/issues/1651)
 
 ## [0.2.2] - 2024-10-11Z
 

@@ -14,6 +14,18 @@ extension Font {
         )
     }
 
+    static func clarity(
+        _ fontWeight: Font.Weight,
+        size: CGFloat,
+        textStyle: Font.TextStyle
+    ) -> Font {
+        .custom(
+            fontWeight.clarityFontName,
+            size: size,
+            relativeTo: textStyle
+        )
+    }
+
     static func clarityRegular(_ textStyle: Font.TextStyle) -> Font {
         clarity(.regular, textStyle: textStyle)
     }

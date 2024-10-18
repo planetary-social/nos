@@ -24,7 +24,7 @@ struct ProfileEditView: View {
     @State private var website: String = ""
     @State private var showNIP05Wizard = false
     @State private var showConfirmationDialog = false
-    @State private var saveError: SaveError?
+    @State private var saveError: SaveProfileError?
     
     @State private var isUploadingPhoto = false
 
@@ -47,15 +47,15 @@ struct ProfileEditView: View {
             )
             .padding(.top, 16)
             
-            NosFormSection(label: .localizable.profilePicture) {
-                NosTextField(label: .localizable.url, text: $avatarText)
+            NosFormSection("profilePicture") {
+                NosTextField("url", text: $avatarText)
                     #if os(iOS)
                     .keyboardType(.URL)
                     #endif
             }
             
-            NosFormSection(label: .localizable.basicInfo) {
-                NosTextField(label: .localizable.displayName, text: $displayNameText)
+            NosFormSection("basicInfo") {
+                NosTextField("displayName", text: $displayNameText)
                 FormSeparator()
                 if author.hasNosNIP05 {
                     NosNIP05Field(
@@ -73,10 +73,10 @@ struct ProfileEditView: View {
                     )
                 }
                 FormSeparator()
-                NosTextEditor(label: .localizable.bio, text: $bioText)
+                NosTextEditor("bio", text: $bioText)
                     .frame(maxHeight: 200)
                 FormSeparator()
-                NosTextField(label: .localizable.website, text: $website)
+                NosTextField("website", text: $website)
             }
         }
         .sheet(isPresented: $showNIP05Wizard) {
@@ -90,14 +90,14 @@ struct ProfileEditView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
-        .nosNavigationBar(title: .localizable.profileTitle)
+        .nosNavigationBar("profileTitle")
         .navigationBarBackButtonHidden()
         .navigationBarItems(
-            leading: Button(String(localized: .localizable.cancel), action: { 
+            leading: Button("cancel", action: { 
                 router.pop()
             }),
             trailing:
-                ActionButton(title: .localizable.done) {
+                ActionButton("done") {
                     await save()
                 }
                 .disabled(isUploadingPhoto)
@@ -110,12 +110,12 @@ struct ProfileEditView: View {
                     await save()
                 }
             } label: {
-                Text(.localizable.retry)
+                Text("retry")
             }
             Button {
                 saveError = nil
             } label: {
-                Text(.localizable.cancel)
+                Text("cancel")
             }
         }
         .id(author)
@@ -144,24 +144,10 @@ struct ProfileEditView: View {
             // Go back to profile page
             router.pop()
         } catch CurrentUserError.errorWhilePublishingToRelays {
-            saveError = SaveError.unableToPublishChanges
+            saveError = SaveProfileError.unableToPublishChanges
         } catch {
             crashReporting.report(error)
-            saveError = SaveError.unexpectedError
-        }
-    }
-
-    enum SaveError: LocalizedError {
-        case unexpectedError
-        case unableToPublishChanges
-
-        var errorDescription: String? {
-            switch self {
-            case .unexpectedError:
-                return "Something unexpected happened"
-            case .unableToPublishChanges:
-                return "We were unable to publish your changes in the network"
-            }
+            saveError = SaveProfileError.unexpectedError
         }
     }
 }
@@ -172,7 +158,7 @@ fileprivate struct NosNIP05Field: View {
     @Binding var showConfirmationDialog: Bool
 
     var body: some View {
-        NosFormField(label: .localizable.username) {
+        NosFormField("username") {
             VStack(alignment: .leading) {
                 HStack(spacing: 0) {
                     Group {
@@ -207,7 +193,7 @@ fileprivate struct NosNIP05Field: View {
                     Text(Image(systemName: "exclamationmark.triangle"))
                         .foregroundStyle(Color.nip05FieldTextForeground) +
                     Text(" ") +
-                    Text(.localizable.usernameWarningMessage)
+                    Text("usernameWarningMessage")
                         .foregroundStyle(Color.secondaryTxt)
                 )
                 .font(.footnote)
@@ -225,9 +211,7 @@ fileprivate struct NIP05Field: View {
     @Binding var showConfirmationDialog: Bool
     
     var body: some View {
-        NosFormField(
-            label: .localizable.username
-        ) {
+        NosFormField("username") {
             VStack {
                 HStack {
                     Text(nip05)
@@ -258,7 +242,7 @@ fileprivate struct NIP05Field: View {
                     Text(Image(systemName: "exclamationmark.triangle"))
                         .foregroundStyle(Color.nip05FieldTextForeground) +
                     Text(" ") +
-                    Text(.localizable.usernameWarningMessage)
+                    Text("usernameWarningMessage")
                         .foregroundStyle(Color.secondaryTxt)
                 )
                 .font(.footnote)
@@ -275,11 +259,11 @@ fileprivate struct NosNIP05Banner: View {
     @Binding var showNIP05Wizard: Bool
 
     var body: some View {
-        NosFormField(label: .localizable.username) {
+        NosFormField("username") {
             ActionBanner(
-                messageText: .localizable.claimYourUsernameText,
+                messageText: "claimYourUsernameText",
                 messageImage: .atSymbol,
-                buttonText: .localizable.claimYourUsernameButton,
+                buttonText: "claimYourUsernameButton",
                 shouldButtonFillHorizontalSpace: false
             ) {
                 showNIP05Wizard = true

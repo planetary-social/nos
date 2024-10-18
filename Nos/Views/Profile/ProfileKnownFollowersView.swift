@@ -5,8 +5,8 @@ struct ProfileKnownFollowersView: View {
     var knownFollowers: [Follow]
     var followers: [Follow]
 
-    private func attributedText(from stringResource: LocalizedStringResource) -> AttributedString {
-        let attributedString = AttributedString(localized: stringResource)
+    private func attributedText(from content: String) -> AttributedString {
+        let attributedString = (try? AttributedString(markdown: content)) ?? AttributedString(content)
         let bold = InlinePresentationIntent.stronglyEmphasized.rawValue
         return attributedString.replacingAttributes(
             AttributeContainer(
@@ -27,13 +27,17 @@ struct ProfileKnownFollowersView: View {
                 if followers.count > 2 {
                     Text(
                         attributedText(
-                            from: .localizable.followedByTwoAndOthers(first.safeName, second.safeName)
+                            from: String.localizedStringWithFormat(
+                                String(localized: "followedByTwoAndOthers"), first.safeName, second.safeName
+                            )
                         )
                     )
                 } else {
                     Text(
                         attributedText(
-                            from: .localizable.followedByTwo(first.safeName, second.safeName)
+                            from: String.localizedStringWithFormat(
+                                String(localized: "followedByTwo"), first.safeName, second.safeName
+                            )
                         )
                     )
                 }
@@ -42,13 +46,17 @@ struct ProfileKnownFollowersView: View {
                 if followers.count > 1 {
                     Text(
                         attributedText(
-                            from: .localizable.followedByOneAndOthers(first.safeName)
+                            from: String.localizedStringWithFormat(
+                                String(localized: "followedByOneAndOthers"), first.safeName
+                            )
                         )
                     )
                 } else {
                     Text(
                         attributedText(
-                            from: .localizable.followedByOne(first.safeName)
+                            from: String.localizedStringWithFormat(
+                                String(localized: "followedByOne"), first.safeName
+                            )
                         )
                     )
                 }

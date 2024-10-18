@@ -3,14 +3,12 @@ import Logger
 
 /// A view similar to `TextEditor` for composing Nostr notes. Supports autocomplete of mentions.
 struct NoteTextEditor: View {
-    
+
     /// A controller for the entered text.
     @Binding private var controller: NoteEditorController
-    
+
     /// The smallest size of EditableNoteText
     var minHeight: CGFloat
-    
-    var placeholder: LocalizedStringResource
 
     /// The authors who are referenced in a note in addition to those who replied to the note, if any.
     var relatedAuthors: [Author]?
@@ -18,15 +16,13 @@ struct NoteTextEditor: View {
     init(
         controller: Binding<NoteEditorController>,
         minHeight: CGFloat,
-        placeholder: LocalizedStringResource,
         relatedAuthors: [Author]? = nil
     ) {
         self._controller = controller
         self.minHeight = minHeight
-        self.placeholder = placeholder
         self.relatedAuthors = relatedAuthors
     }
-    
+
     var body: some View {
         NoteUITextViewRepresentable(
             controller: controller,
@@ -44,7 +40,7 @@ struct NoteTextEditor: View {
                 ) { [weak controller] author in
                     /// Guard against double presses
                     guard let controller, controller.showMentionsAutocomplete else { return }
-                    
+
                     controller.insertMention(of: author)
                     controller.showMentionsAutocomplete = false
                 }
@@ -54,22 +50,20 @@ struct NoteTextEditor: View {
 }
 
 #Preview {
-    
+
     var previewData = PreviewData()
     @State var controller = NoteEditorController()
-    let placeholder: LocalizedStringResource = .localizable.newNotePlaceholder
-    
+
     return NavigationStack {
         NoteTextEditor(
             controller: $controller,
             minHeight: 500,
-            placeholder: placeholder,
             relatedAuthors: []
         )
         Spacer()
     }
     .inject(previewData: previewData)
-    .onAppear { 
+    .onAppear {
         _ = previewData.alice
     }
 }

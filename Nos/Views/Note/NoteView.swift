@@ -168,7 +168,7 @@ struct NoteView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(.top, 1)
-                .nosNavigationBar(title: .localizable.thread)
+                .nosNavigationBar("thread")
                 .onAppear {
                     subscribeToReplies()
                 }
@@ -197,7 +197,7 @@ struct NoteView: View {
                         Button(action: {
                             focusTextView = false
                         }, label: {
-                            Text(.localizable.cancel)
+                            Text("cancel")
                                 .foregroundColor(.primaryTxt)
                         })
                     }

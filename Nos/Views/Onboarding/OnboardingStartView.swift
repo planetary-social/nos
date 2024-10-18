@@ -23,7 +23,7 @@ struct OnboardingStartView: View {
                 Spacer()
 
                 Group {
-                    BigActionButton(title: "newToNostr") {
+                    BigActionButton("newToNostr") {
                         state.flow = .createAccount
                         state.step = .ageVerification
                     }
