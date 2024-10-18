@@ -5509,35 +5509,6 @@
         }
       }
     },
-    "enableNewModerationFlow" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable new moderation flow"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activar nuevo flujo de moderación"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "새로운 모더레이션 흐름 활성화"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启用新审核流程"
-          }
-        }
-      }
-    },
     "enterCode" : {
       "extractionState" : "manual",
       "localizations" : {
