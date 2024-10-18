@@ -84,7 +84,7 @@ class ReportPublisher {
             pubKey: pubKey,
             kind: .report,
             tags: [],
-            content: String(localized: .localizable.reportEventContent(category.displayName))
+            content: String.localizedStringWithFormat(String(localized: "reportEventContent"), category.displayName)
         )
         
         let nip56Reason = category.nip56Code.rawValue

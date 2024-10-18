@@ -23,7 +23,7 @@ struct BuildYourNetworkView: View {
         .navigationBarHidden(true)
     }
 
-    @MainActor var buildYourNetworkStack: some View {
+    var buildYourNetworkStack: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text("🔍")
                 .font(.system(size: 60))
@@ -39,7 +39,7 @@ struct BuildYourNetworkView: View {
                 .aspectRatio(contentMode: .fit)
                 .padding(.horizontal, -padding)
             Spacer()
-            BigActionButton(title: "findPeople") {
+            BigActionButton("findPeople") { @MainActor in
                 completion()
             }
         }

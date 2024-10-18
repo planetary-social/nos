@@ -36,11 +36,8 @@ struct ImagePickerButton<Label>: View where Label: View {
     }
 
     private var settingsAlertTitle: String {
-        String(
-            localized: .imagePicker.permissionsRequired(
-                String(localized: LocalizedStringResource.imagePicker.camera)
-            )
-        )
+        let format = String(localized: "permissionsRequired", table: "ImagePicker")
+        return String.localizedStringWithFormat(format, String(localized: "camera", table: "ImagePicker"))
     }
 
     var body: some View {
@@ -50,7 +47,7 @@ struct ImagePickerButton<Label>: View where Label: View {
             label()
         }
         .confirmationDialog(
-            String(localized: .localizable.select),
+            "select",
             isPresented: $showConfirmationDialog,
             titleVisibility: .hidden
         ) {
@@ -86,11 +83,11 @@ struct ImagePickerButton<Label>: View where Label: View {
                     imagePickerSource = .camera
                 }
             }
-            Button(String(localized: .imagePicker.selectFrom)) {
+            Button(String(localized: "selectFrom", table: "ImagePicker")) {
                 analytics.selectedUploadFromPhotoLibrary()
                 imagePickerSource = .photoLibrary
             }
-            Button(String(localized: .localizable.cancel), role: .cancel) {
+            Button("cancel", role: .cancel) {
                 analytics.cancelledUploadSourceSelection()
                 showConfirmationDialog = false
             }
@@ -99,16 +96,16 @@ struct ImagePickerButton<Label>: View where Label: View {
             settingsAlertTitle,
             isPresented: $showSettingsAlert,
             actions: {
-                Button(String(localized: .localizable.settings)) {
+                Button("settings") {
                     showSettingsAlert = false
                     self.router.openOSSettings()
                 }
-                Button(String(localized: .localizable.cancel)) {
+                Button("cancel") {
                     showSettingsAlert = false
                 }
             },
             message: {
-                Text(.imagePicker.openSettingsMessage)
+                Text("openSettingsMessage", tableName: "ImagePicker")
             }
         )
         .sheet(isPresented: showImagePicker) {
@@ -123,7 +120,10 @@ struct ImagePickerButton<Label>: View where Label: View {
     }
     
     private var cameraButtonTitle: String {
-        String(localized: mediaTypes.contains(.movie) ? .imagePicker.takePhotoOrVideo : .imagePicker.takePhoto)
+        String(
+            localized: mediaTypes.contains(.movie) ? "takePhotoOrVideo" : "takePhoto",
+            table: "ImagePicker"
+        )
     }
     
     /// Called when a user chooses an image or video.

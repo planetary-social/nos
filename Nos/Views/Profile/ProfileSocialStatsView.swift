@@ -23,7 +23,7 @@ struct ProfileSocialStatsView: View {
                     )
                 )
             } label: {
-                tab(label: .localizable.following, value: author.follows.count)
+                tab(label: "following", value: author.follows.count)
             }
             spacer
             Button {
@@ -34,7 +34,7 @@ struct ProfileSocialStatsView: View {
                     )
                 )
             } label: {
-                tab(label: .localizable.relays, value: author.relays.count)
+                tab(label: "relays", value: author.relays.count)
             }
             spacer
         }
@@ -42,12 +42,13 @@ struct ProfileSocialStatsView: View {
         .padding(.vertical, 9)
     }
 
-    private func tab(label: LocalizedStringResource, value: Int) -> some View {
+    private func tab(label: LocalizedStringKey, value: Int) -> some View {
         VStack {
             Text("\(value)")
                 .font(.title3.bold())
                 .foregroundColor(.primaryTxt)
-            Text(String(localized: label).lowercased())
+            Text(label)
+                .textCase(.lowercase)
                 .font(.footnote)
                 .dynamicTypeSize(...DynamicTypeSize.xLarge)
                 .foregroundColor(.secondaryTxt)

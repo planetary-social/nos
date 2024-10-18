@@ -43,7 +43,7 @@ struct PublicKeyView: View {
                 .foregroundStyle(Color.secondaryTxt)
             CopyKeyView("copyPublicKey", keyString: $publicKeyString, copyButtonState: $copyButtonState)
             Spacer()
-            BigActionButton(title: "next") {
+            BigActionButton("next") {
                 state.step = .buildYourNetwork
             }
         }

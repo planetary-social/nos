@@ -33,8 +33,8 @@ struct ConfirmUsernameDeletionSheet: View {
     var body: some View {
         WizardSheetVStack {
             Spacer(minLength: 40)
-            WizardSheetTitleText(.localizable.deleteUsernameConfirmation)
-            WizardSheetDescriptionText(markdown: .localizable.deleteUsernameDescription)
+            WizardSheetTitleText("deleteUsernameConfirmation")
+            WizardSheetDescriptionText(markdown: AttributedString(localized: "deleteUsernameDescription"))
 
             Spacer(minLength: 0)
 
@@ -43,7 +43,7 @@ struct ConfirmUsernameDeletionSheet: View {
                     await deleteUsername()
                 }
             } label: {
-                let label = Text(.localizable.deleteUsername)
+                let label = Text("deleteUsername")
                 if isDeleting {
                     ZStack {
                         ProgressView()
@@ -60,7 +60,7 @@ struct ConfirmUsernameDeletionSheet: View {
             Button {
                 isPresented = false
             } label: {
-                Text(.localizable.cancel)
+                Text("cancel")
                     .font(.clarity(.medium, textStyle: .footnote))
             }
             .frame(maxWidth: .infinity)
@@ -73,7 +73,7 @@ struct ConfirmUsernameDeletionSheet: View {
             Button {
                 isPresented = false
             } label: {
-                Text(.localizable.ok)
+                Text("ok")
             }
         }
     }

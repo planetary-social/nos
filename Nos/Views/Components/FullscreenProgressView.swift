@@ -45,6 +45,6 @@ struct FullscreenProgressView: View {
 #Preview("Long text") {
     FullscreenProgressView(
         isPresented: .constant(true),
-        text: String(localized: .localizable.notFindingResults)
+        text: String(localized: "notFindingResults")
     )
 }

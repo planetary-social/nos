@@ -17,9 +17,9 @@ struct PublishedEventsView: View {
         List {
             ForEach(events) { event in
                 Section {
-                    Text("id: \(event.identifier ?? String(localized: .localizable.error))")
+                    Text("id: \(event.identifier ?? String(localized: "error"))")
                     Text("kind: \(event.kind)")
-                    Text("content: \(event.content ?? String(localized: .localizable.error))")
+                    Text("content: \(event.content ?? String(localized: "error"))")
                     if let tags = event.allTags as? [[String]] {
                         ForEach(tags, id: \.self) { tag in
                             Text("tag: \(tag.joined(separator: ", "))")
@@ -31,7 +31,7 @@ struct PublishedEventsView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
-        .nosNavigationBar(title: .localizable.allPublishedEvents)
+        .nosNavigationBar("allPublishedEvents")
     }
 }
 

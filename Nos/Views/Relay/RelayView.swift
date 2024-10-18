@@ -40,7 +40,7 @@ struct RelayView: View {
     var body: some View {
         List {
             Section {
-                Text(.localizable.relaysImportantMessage)
+                Text("relaysImportantMessage")
                     .font(.clarity(.semibold))
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -54,11 +54,11 @@ struct RelayView: View {
                             NavigationLink {
                                 RelayDetailView(relay: relay)
                             } label: {
-                                Text(relay.host ?? String(localized: .localizable.error))
+                                Text(relay.host ?? String(localized: "error"))
                                     .foregroundColor(.primaryTxt)
                             }
                         } else {
-                            Text(relay.host ?? String(localized: .localizable.error))
+                            Text(relay.host ?? String(localized: "error"))
                                 .foregroundColor(.primaryTxt)
                                 .textSelection(.enabled)
                         }
@@ -84,11 +84,11 @@ struct RelayView: View {
                 }
                 
                 if author.relays.count == 0, editable {
-                    Text(.localizable.noRelaysMessage)
+                    Text("noRelaysMessage")
                 }
             } header: {
                 if editable {
-                    Text(.localizable.relays)
+                    Text("relays")
                         .foregroundColor(.primaryTxt)
                         .font(.clarity(.semibold, textStyle: .headline))
                         .padding(.bottom, 15)
@@ -120,7 +120,7 @@ struct RelayView: View {
                         }
                     }
                 } header: {
-                    Text(.localizable.recommendedRelays)
+                    Text("recommendedRelays")
                         .foregroundColor(.primaryTxt)
                         .font(.clarity(.semibold, textStyle: .headline))
                         .padding(.vertical, 15)
@@ -133,14 +133,14 @@ struct RelayView: View {
             if editable {
                 Section {
                     HStack {
-                        TextField(String(localized: .localizable.relayAddressPlaceholder), text: $newRelayAddress)
+                        TextField("relayAddressPlaceholder", text: $newRelayAddress)
                             .foregroundColor(.primaryTxt)
                             .autocorrectionDisabled()
                             #if os(iOS)
                             .textInputAutocapitalization(.never)
                             .keyboardType(.URL)
                             #endif
-                        SecondaryActionButton(title: .localizable.save) {
+                        SecondaryActionButton("save") {
                             addRelay()
                             Task {
                                 await currentUser.subscribe()
@@ -149,7 +149,7 @@ struct RelayView: View {
                         }
                     }
                 } header: {
-                    Text(.localizable.addRelay)
+                    Text("addRelay")
                         .foregroundColor(.primaryTxt)
                         .font(.clarity(.semibold, textStyle: .headline))
                         .padding(.vertical, 15)
@@ -171,7 +171,7 @@ struct RelayView: View {
                 #endif
             }
         }
-        .nosNavigationBar(title: .localizable.relays)
+        .nosNavigationBar("relays")
         .onAppear {
             analytics.showedRelays()
         }
@@ -197,16 +197,16 @@ struct RelayView: View {
                 analytics.added(relay)
                 newRelayAddress = ""
             } catch {
-                var errorMessage: LocalizedStringResource
+                let errorMessage: String
                 if error as? RelayError == RelayError.invalidAddress {
-                    errorMessage = .localizable.invalidURLError
+                    errorMessage = String(localized: "invalidURLError")
                 } else {
-                    errorMessage = .localizable.saveRelayError
+                    errorMessage = String(localized: "saveRelayError")
                 }
                 alert = AlertState(title: {
-                    TextState(String(localized: .localizable.error))
+                    TextState(String(localized: "error"))
                 }, message: {
-                    TextState(String(localized: errorMessage))
+                    TextState(errorMessage)
                 })
             }
         }

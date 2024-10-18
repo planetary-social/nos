@@ -47,7 +47,7 @@ struct DiscoverTab: View {
             .searchable(
                 text: $searchController.query, 
                 placement: .toolbar, 
-                prompt: Text(.localizable.searchBar)
+                prompt: Text("searchBar")
             )
             .autocorrectionDisabled()
             .onSubmit(of: .search) {
@@ -68,7 +68,7 @@ struct DiscoverTab: View {
                     analytics.showedDiscover()
                 }
             }
-            .nosNavigationBar(title: .localizable.discover)
+            .nosNavigationBar("discover")
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
             .navigationBarItems(leading: SideMenuButton())
