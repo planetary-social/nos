@@ -79,6 +79,7 @@ struct DisplayNameView: View {
         do {
             try viewContext.save()
             try await currentUser.publishMetadata()
+            state.displayNameSucceeded = true
             nextStep()
         } catch {
             crashReporting.report(error)

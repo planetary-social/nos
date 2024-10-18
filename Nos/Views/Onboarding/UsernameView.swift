@@ -119,7 +119,7 @@ struct UsernameView: View {
     }
 
     func nextStep() {
-        state.step = .buildYourNetwork
+        state.step = .accountSuccess
     }
 
     /// Checks whether the username is available and saves it. Updates `usernameState` based on the result.
@@ -170,6 +170,7 @@ struct UsernameView: View {
                 relays: relays
             )
             usernameState = .claimed
+            state.usernameSucceeded = true
             nextStep()
         } catch {
             crashReporting.report(error)
