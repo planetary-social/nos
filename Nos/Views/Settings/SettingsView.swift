@@ -36,11 +36,6 @@ struct SettingsView: View {
         case deleteAccount
     }
 
-    fileprivate enum CopyButtonState {
-        case copy
-        case copied
-    }
-
     var body: some View {
         Form {
             Section {
