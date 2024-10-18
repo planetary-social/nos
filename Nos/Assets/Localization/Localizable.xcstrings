@@ -5224,6 +5224,18 @@
         }
       }
     },
+    "displayNameDescription" : {
+      "comment" : "a description for the display name screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is how others will see you when they view your notes. You can always change it."
+          }
+        }
+      }
+    },
     "displayNameHeadline" : {
       "comment" : "headline for the display name screen in onboarding",
       "extractionState" : "manual",
@@ -5232,6 +5244,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Display Name"
+          }
+        }
+      }
+    },
+    "displayNamePlaceholder" : {
+      "comment" : "placeholder text for the display name field in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your display name"
           }
         }
       }

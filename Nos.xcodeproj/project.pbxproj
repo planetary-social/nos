@@ -19,6 +19,8 @@
 		030E56CA2CC1BC6200A4A51E /* PublicKeyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030E56C92CC1BC6200A4A51E /* PublicKeyView.swift */; };
 		030E56E42CC1BF2900A4A51E /* CopyButtonState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030E56E32CC1BF2900A4A51E /* CopyButtonState.swift */; };
 		030E56F32CC2836D00A4A51E /* CopyKeyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030E56F22CC2836D00A4A51E /* CopyKeyView.swift */; };
+		030E570D2CC2A05B00A4A51E /* DisplayNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030E570C2CC2A05B00A4A51E /* DisplayNameView.swift */; };
+		030E571B2CC2ADDB00A4A51E /* SaveProfileError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030E571A2CC2ADDB00A4A51E /* SaveProfileError.swift */; };
 		030FECAB2CB5E0B900820014 /* BuildYourNetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030FECAA2CB5E0B900820014 /* BuildYourNetworkView.swift */; };
 		0314CF742C9C7DD00001A53B /* youTube_fortnight_short.html in Resources */ = {isa = PBXBuildFile; fileRef = 0314CF732C9C7DD00001A53B /* youTube_fortnight_short.html */; };
 		0314D5AC2C7D31060002E7F4 /* MediaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0314D5AB2C7D31060002E7F4 /* MediaService.swift */; };
@@ -595,6 +597,8 @@
 		030E56C92CC1BC6200A4A51E /* PublicKeyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeyView.swift; sourceTree = "<group>"; };
 		030E56E32CC1BF2900A4A51E /* CopyButtonState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyButtonState.swift; sourceTree = "<group>"; };
 		030E56F22CC2836D00A4A51E /* CopyKeyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyKeyView.swift; sourceTree = "<group>"; };
+		030E570C2CC2A05B00A4A51E /* DisplayNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayNameView.swift; sourceTree = "<group>"; };
+		030E571A2CC2ADDB00A4A51E /* SaveProfileError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveProfileError.swift; sourceTree = "<group>"; };
 		030FECAA2CB5E0B900820014 /* BuildYourNetworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildYourNetworkView.swift; sourceTree = "<group>"; };
 		0314CF732C9C7DD00001A53B /* youTube_fortnight_short.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = youTube_fortnight_short.html; sourceTree = "<group>"; };
 		0314D5AB2C7D31060002E7F4 /* MediaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaService.swift; sourceTree = "<group>"; };
@@ -1478,6 +1482,7 @@
 			children = (
 				030FECAA2CB5E0B900820014 /* BuildYourNetworkView.swift */,
 				039F09582CC051EE00FEEC81 /* CreateAccountView.swift */,
+				030E570C2CC2A05B00A4A51E /* DisplayNameView.swift */,
 				3F30020629C237AB003D4F8B /* OnboardingAgeVerificationView.swift */,
 				3F30020C29C382EB003D4F8B /* OnboardingLoginView.swift */,
 				3F30020829C23895003D4F8B /* OnboardingNotOldEnoughView.swift */,
@@ -1658,6 +1663,7 @@
 				502B6C3C2C9462A400446316 /* PushNotificationRegistrar.swift */,
 				C936B4612A4CB01C00DF1EB9 /* PushNotificationService.swift */,
 				C9A8015D2BD0177D006E29B2 /* ReportPublisher.swift */,
+				030E571A2CC2ADDB00A4A51E /* SaveProfileError.swift */,
 				5B8805192A21027C00E21F06 /* SHA256Key.swift */,
 				C9B678E029EEC41000303F33 /* SocialGraphCache.swift */,
 				C9F64D8B29ED840700563F2B /* Zipper.swift */,
@@ -2351,6 +2357,7 @@
 				C92E7F6D2C4EFF9B00B80638 /* WebSocketState.swift in Sources */,
 				C95D68AB299E710F00429F86 /* Color+Hex.swift in Sources */,
 				037975EA2C0E695A00ADDF37 /* MockFeatureFlags.swift in Sources */,
+				030E571B2CC2ADDB00A4A51E /* SaveProfileError.swift in Sources */,
 				C94A5E182A72C84200B6EC5D /* ReportCategory.swift in Sources */,
 				C9A8015E2BD0177D006E29B2 /* ReportPublisher.swift in Sources */,
 				C9F0BB6B29A503D6000547FC /* PublicKey.swift in Sources */,
@@ -2549,6 +2556,7 @@
 				C905B0772A619E99009B8A78 /* LPLinkViewRepresentable.swift in Sources */,
 				C95D68A7299E6FF000429F86 /* KeyFixture.swift in Sources */,
 				0304D0B22C9B731F001D16C7 /* MockOpenGraphService.swift in Sources */,
+				030E570D2CC2A05B00A4A51E /* DisplayNameView.swift in Sources */,
 				C94437E629B0DB83004D8C86 /* NotificationsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

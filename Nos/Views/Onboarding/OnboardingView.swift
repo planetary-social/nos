@@ -22,6 +22,7 @@ enum OnboardingStep {
     case createAccount
     case privateKey
     case publicKey
+    case displayName
     case buildYourNetwork
     case login
 }
@@ -56,6 +57,9 @@ struct OnboardingView: View {
                             .environment(state)
                     case .publicKey:
                         PublicKeyView()
+                            .environment(state)
+                    case .displayName:
+                        DisplayNameView()
                             .environment(state)
                     case .login:
                         OnboardingLoginView(completion: completion)

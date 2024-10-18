@@ -44,7 +44,7 @@ struct PublicKeyView: View {
             CopyKeyView("copyPublicKey", keyString: $publicKeyString, copyButtonState: $copyButtonState)
             Spacer()
             BigActionButton("next") {
-                state.step = .buildYourNetwork
+                state.step = .displayName
             }
         }
         .padding(40)

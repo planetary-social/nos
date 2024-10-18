@@ -24,7 +24,7 @@ struct ProfileEditView: View {
     @State private var website: String = ""
     @State private var showNIP05Wizard = false
     @State private var showConfirmationDialog = false
-    @State private var saveError: SaveError?
+    @State private var saveError: SaveProfileError?
     
     @State private var isUploadingPhoto = false
 
@@ -144,24 +144,10 @@ struct ProfileEditView: View {
             // Go back to profile page
             router.pop()
         } catch CurrentUserError.errorWhilePublishingToRelays {
-            saveError = SaveError.unableToPublishChanges
+            saveError = SaveProfileError.unableToPublishChanges
         } catch {
             crashReporting.report(error)
-            saveError = SaveError.unexpectedError
-        }
-    }
-
-    enum SaveError: LocalizedError {
-        case unexpectedError
-        case unableToPublishChanges
-
-        var errorDescription: String? {
-            switch self {
-            case .unexpectedError:
-                return "Something unexpected happened"
-            case .unableToPublishChanges:
-                return "We were unable to publish your changes in the network"
-            }
+            saveError = SaveProfileError.unexpectedError
         }
     }
 }
