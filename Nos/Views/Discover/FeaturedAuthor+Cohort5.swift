@@ -261,6 +261,11 @@ extension FeaturedAuthor {
             name: "Nacho",
             npub: "npub1daajnadf0f0s7uz3yftur8434rtz2s949gkdpx7uyeapm9rlt0qq9q8w5z",
             categories: [.lifestyle]
+        ),
+        FeaturedAuthor(
+            name: "Morvin",
+            npub: "npub1030nmrre84tzpq2de535pd6up2x74c32n6r5xsw2kf0zf58j333sxssyu7",
+            categories: [.art]
         )
     ]
 }

@@ -113,6 +113,11 @@ extension FeaturedAuthor {
             categories: [.sciFi, .nzAustralia]
         ),
         FeaturedAuthor(
+            name: "Morvin",
+            npub: "npub1030nmrre84tzpq2de535pd6up2x74c32n6r5xsw2kf0zf58j333sxssyu7",
+            categories: [.art]
+        ),
+        FeaturedAuthor(
             name: "David Hood",
             npub: "npub12aew64q5lsxpcc98lskha0564gtjn30cw7vdueqnyj06xjqxtmksahdrlg",
             categories: [.nzAustralia, .news]
