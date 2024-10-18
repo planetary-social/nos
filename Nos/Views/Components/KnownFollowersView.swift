@@ -25,7 +25,7 @@ struct KnownFollowersView: View {
     
     /// The text that will be displayed alongside the avatars listing some of the displayedAuthor's names
     var followText: Text {
-        let stringResource: LocalizedStringResource
+        let followString: String
         let authors = self.displayedAuthors
         switch authors.count {
         case 0: 
@@ -34,24 +34,24 @@ struct KnownFollowersView: View {
             guard let name = authors[safe: 0]?.safeName else {
                 return Text("")
             }
-            stringResource = LocalizedStringResource.localizable.followedByOne(name)
+            followString = String.localizedStringWithFormat(String(localized: "followedByOne"), name)
         case 2:
             guard let firstName = authors[safe: 0]?.safeName,
                 let secondName = authors[safe: 1]?.safeName else {
                 return Text("")
             }
-            stringResource = LocalizedStringResource.localizable.followedByTwo(firstName, secondName)
+            followString = String.localizedStringWithFormat(String(localized: "followedByTwo"), firstName, secondName)
         default:
             guard let firstName = authors[safe: 0]?.safeName,
                 let secondName = authors[safe: 1]?.safeName else {
                 return Text("")
             }
-            stringResource = LocalizedStringResource.localizable.followedByTwoAndMore(
-                firstName, secondName, knownFollowers.count - 2
+            followString = String.localizedStringWithFormat(
+                String(localized: "followedByTwoAndMore"), firstName, secondName, knownFollowers.count - 2
             )
         }
 
-        let attributedString = AttributedString(localized: stringResource)
+        let attributedString = (try? AttributedString(markdown: followString)) ?? AttributedString(followString)
             .replacingAttributes(
                 AttributeContainer(
                     [.inlinePresentationIntent: InlinePresentationIntent.stronglyEmphasized.rawValue]

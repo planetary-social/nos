@@ -57,11 +57,11 @@ struct HomeFeedView: View {
         return filter
     }
     
-    var navigationBarTitle: LocalizedStringResource {
+    var navigationBarTitle: LocalizedStringKey {
         if let relayName = selectedRelay?.host {
-            LocalizedStringResource(stringLiteral: relayName)
+            LocalizedStringKey(stringLiteral: relayName)
         } else {
-            .localizable.accountsIFollow
+            "accountsIFollow"
         }
     }
 
@@ -87,7 +87,7 @@ struct HomeFeedView: View {
                     },
                     emptyPlaceholder: {
                         VStack {
-                            Text(.localizable.noEvents)
+                            Text("noEvents")
                                 .padding()
                         }
                         .frame(minHeight: 300)
@@ -110,7 +110,7 @@ struct HomeFeedView: View {
             if showRelayPicker {
                 RelayPicker(
                     selectedRelay: $selectedRelay,
-                    defaultSelection: String(localized: .localizable.accountsIFollow),
+                    defaultSelection: String(localized: "accountsIFollow"),
                     author: user,
                     isPresented: $showRelayPicker
                 )
@@ -145,13 +145,13 @@ struct HomeFeedView: View {
                 } label: {
                     Image(systemName: "line.3.horizontal.decrease.circle")
                         .foregroundStyle(Color.secondaryTxt)
-                        .accessibilityLabel(Text(.localizable.filter))
+                        .accessibilityLabel(Text("filter"))
                 }
                 .frame(minWidth: 40, minHeight: 40)
             }
         }
         .padding(.top, 1)
-        .nosNavigationBar(title: navigationBarTitle)
+        .nosNavigationBar(navigationBarTitle)
         .onAppear {
             if router.selectedTab == .home {
                 isVisible = true

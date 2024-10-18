@@ -65,11 +65,9 @@ struct ProfileView: View {
     }
 
     private var title: AttributedString {
-        let prefix = isShowingLoggedInUser ?
-            String(localized: LocalizedStringResource.localizable.yourProfile) :
-            String(localized: LocalizedStringResource.localizable.profileTitle)
+        let prefix = String(localized: isShowingLoggedInUser ? "yourProfile" : "profileTitle")
         if author.muted {
-            let suffix = "(\(String(localized: .localizable.muted).lowercased()))"
+            let suffix = "(\(String(localized: "muted").lowercased()))"
             var attributedString = AttributedString("\(prefix) \(suffix)")
             if let range = attributedString.range(of: suffix) {
                 attributedString[range].foregroundColor = Color.secondaryTxt
@@ -97,11 +95,11 @@ struct ProfileView: View {
                     },
                     emptyPlaceholder: {
                         VStack {
-                            Text(.localizable.noEventsOnProfile)
+                            Text("noEventsOnProfile")
                                 .padding()
                                 .readabilityPadding()
                             
-                            SecondaryActionButton(title: .localizable.tapToRefresh) {
+                            SecondaryActionButton("tapToRefresh") {
                                 refreshController.startRefresh = true
                             }
                         }
@@ -125,10 +123,10 @@ struct ProfileView: View {
             MutesView()
         }
         .navigationDestination(for: FollowsDestination.self) { destination in
-            FollowsView(title: .localizable.follows, authors: destination.follows)
+            FollowsView("follows", authors: destination.follows)
         }
         .navigationDestination(for: FollowersDestination.self) { destination in
-            FollowsView(title: .localizable.mutualFriends, authors: destination.followers)
+            FollowsView("mutualFriends", authors: destination.followers)
         }
         .navigationDestination(for: RelaysDestination.self) { destination in
             RelayView(author: destination.author, editable: false)
@@ -148,11 +146,11 @@ struct ProfileView: View {
                         }
                     )
                     .reportMenu($showingReportMenu, reportedObject: .author(author))
-                    .confirmationDialog(String(localized: .localizable.share), isPresented: $showingOptions) {
-                        Button(String(localized: .localizable.copyUserIdentifier)) {
+                    .confirmationDialog("share", isPresented: $showingOptions) {
+                        Button("copyUserIdentifier") {
                             UIPasteboard.general.string = author.publicKey?.npub ?? ""
                         }
-                        Button(String(localized: .localizable.copyLink)) {
+                        Button("copyLink") {
                             UIPasteboard.general.string = author.webLink
                         }
                         if isShowingLoggedInUser {
@@ -161,7 +159,7 @@ struct ProfileView: View {
                                     router.push(EditProfileDestination(profile: author))
                                 },
                                 label: {
-                                    Text(.localizable.editProfile)
+                                    Text("editProfile")
                                 }
                             )
                             Button(
@@ -169,18 +167,18 @@ struct ProfileView: View {
                                     router.push(MutesDestination())
                                 },
                                 label: {
-                                    Text(.localizable.mutedUsers)
+                                    Text("mutedUsers")
                                 }
                             )
                         } else {
                             if author.muted {
-                                Button(String(localized: .localizable.unmuteUser)) {
+                                Button("unmuteUser") {
                                     Task {
                                         do {
                                             try await author.unmute(viewContext: viewContext)
                                         } catch {
                                             alert = AlertState(title: {
-                                                TextState(String(localized: .localizable.error))
+                                                TextState(String(localized: "error"))
                                             }, message: {
                                                 TextState(error.localizedDescription)
                                             })
@@ -188,13 +186,13 @@ struct ProfileView: View {
                                     }
                                 }
                             } else {
-                                Button(String(localized: .localizable.mute)) {
+                                Button("mute") {
                                     Task { @MainActor in
                                         do {
                                             try await author.mute(viewContext: viewContext)
                                         } catch {
                                             alert = AlertState(title: {
-                                                TextState(String(localized: .localizable.error))
+                                                TextState(String(localized: "error"))
                                             }, message: {
                                                 TextState(error.localizedDescription)
                                             })
@@ -203,7 +201,7 @@ struct ProfileView: View {
                                 }
                             }
                             
-                            Button(String(localized: .localizable.flagUser)) {
+                            Button("flagUser") {
                                 showingReportMenu = true
                             }
                         }

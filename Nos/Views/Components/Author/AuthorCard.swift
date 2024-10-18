@@ -55,7 +55,7 @@ struct AuthorCard: View {
                             Spacer()
 
                             if author.muted {
-                                Text(.localizable.muted)
+                                Text("muted")
                                     .font(.subheadline)
                                     .foregroundColor(Color.secondaryTxt)
                             }

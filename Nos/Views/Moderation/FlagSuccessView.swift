@@ -9,12 +9,12 @@ struct FlagSuccessView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(height: 116)
 
-            Text(String(localized: .localizable.thanksForTag))
+            Text("thanksForTag")
                 .foregroundColor(.primaryTxt)
                 .font(.title2)
                 .padding(.horizontal, 25)
 
-            Text(String(localized: .localizable.keepOnHelpingUs))
+            Text("keepOnHelpingUs")
                 .padding(.horizontal, 25)
                 .foregroundColor(.secondaryTxt)
                 .multilineTextAlignment(.center)
