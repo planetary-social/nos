@@ -601,6 +601,30 @@
         }
       }
     },
+    "accountPartialSuccessDescription" : {
+      "comment" : "description for the account success screen when something isn't quite right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The app couldn't save your chosen Display Name or Username. You can set these up later in your Profile."
+          }
+        }
+      }
+    },
+    "accountPartialSuccessHeadline" : {
+      "comment" : "headline for the account success screen when something isn't quite right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You've finished setting up your account, but..."
+          }
+        }
+      }
+    },
     "accountsIFollow" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -650,6 +674,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "我關注的賬戶"
+          }
+        }
+      }
+    },
+    "accountSuccessDescription" : {
+      "comment" : "description for the account success screen when everything is right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now that you know who you are on Nostr, let’s find other people to follow!"
+          }
+        }
+      }
+    },
+    "accountSuccessHeadline" : {
+      "comment" : "headline for the account success screen when everything is right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You've finished setting up your account!"
           }
         }
       }
@@ -3757,6 +3805,30 @@
         }
       }
     },
+    "copyPrivateKey" : {
+      "comment" : "title for the button that copies the private key",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy private key"
+          }
+        }
+      }
+    },
+    "copyPublicKey" : {
+      "comment" : "title for the button that copies the public key",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy public key"
+          }
+        }
+      }
+    },
     "copyQRLink" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5200,6 +5272,18 @@
         }
       }
     },
+    "displayNameDescription" : {
+      "comment" : "a description for the display name screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is how others will see you when they view your notes. You can always change it."
+          }
+        }
+      }
+    },
     "displayNameHeadline" : {
       "comment" : "headline for the display name screen in onboarding",
       "extractionState" : "manual",
@@ -5208,6 +5292,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Display Name"
+          }
+        }
+      }
+    },
+    "displayNamePlaceholder" : {
+      "comment" : "placeholder text for the display name field in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your display name"
           }
         }
       }
@@ -5509,35 +5605,6 @@
         }
       }
     },
-    "enableNewModerationFlow" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable new moderation flow"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activar nuevo flujo de moderación"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "새로운 모더레이션 흐름 활성화"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启用新审核流程"
-          }
-        }
-      }
-    },
     "enterCode" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5718,6 +5785,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "錯誤"
+          }
+        }
+      }
+    },
+    "errorConnecting" : {
+      "comment" : "error message for when we can't set the display name or username in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There is a problem connecting to the servers. You can skip for now and visit your Profile to update later."
           }
         }
       }
@@ -11536,6 +11615,7 @@
       }
     },
     "next" : {
+      "comment" : "title for a button that moves to the next step",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -14168,6 +14248,18 @@
         }
       }
     },
+    "privateKeyDescription" : {
+      "comment" : "a description for the private key screen explaining what a private key is",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your private key is the only login you need for Nos. It is stored in your device keychain. Similar to a password, you should not share it. \n\n**Important!** You should save it somewhere else as well because there is no recovery mechanism if you lose your device."
+          }
+        }
+      }
+    },
     "privateKeyHeadline" : {
       "comment" : "headline for the private key screen in onboarding",
       "extractionState" : "manual",
@@ -14176,6 +14268,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Private Key"
+          }
+        }
+      }
+    },
+    "privateKeyNsecParenthetical" : {
+      "comment" : "the word \"nsec\" in parentheses in English. \"nsec\" should not be translated, but the parentheses may",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(nsec)"
           }
         }
       }
@@ -14619,6 +14723,18 @@
         }
       }
     },
+    "publicKeyDescription" : {
+      "comment" : "a description for the public key screen explaining what a public key is",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is your public identifier that does not change. Public keys can be shared."
+          }
+        }
+      }
+    },
     "publicKeyHeadline" : {
       "comment" : "headline for the public key screen in onboarding",
       "extractionState" : "manual",
@@ -14627,6 +14743,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Public Key"
+          }
+        }
+      }
+    },
+    "publicKeyNpubParenthetical" : {
+      "comment" : "the word \"npub\" in parentheses in English. \"npub\" should not be translated, but the parentheses may",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(npub)"
           }
         }
       }
@@ -17507,6 +17635,18 @@
         }
       }
     },
+    "skipForNow" : {
+      "comment" : "button title that allows the user to skip this for now",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip for now"
+          }
+        }
+      }
+    },
     "software" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -19102,6 +19242,18 @@
         }
       }
     },
+    "usernameDescription" : {
+      "comment" : "a description for the username screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is an easy to share alternative to your public key and allows people to search for you on Nos."
+          }
+        }
+      }
+    },
     "usernameHeadline" : {
       "comment" : "headline for the username screen in onboarding",
       "extractionState" : "manual",
@@ -19110,6 +19262,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Username"
+          }
+        }
+      }
+    },
+    "usernameNIP05Parenthetical" : {
+      "comment" : "the word \"NIP-05\" in parentheses in English. \"NIP-05\" should not be translated, but the parentheses may",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(NIP-05)"
+          }
+        }
+      }
+    },
+    "usernameNotAvailable" : {
+      "comment" : "error text to display when the username is unavailable",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This username is not available."
+          }
+        }
+      }
+    },
+    "usernamePlaceholder" : {
+      "comment" : "placeholder text for the username field in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "username"
           }
         }
       }

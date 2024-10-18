@@ -8,13 +8,9 @@ import SwiftUINavigation
 /// category and optionally mute the respective author.
 struct ReportMenuModifier: ViewModifier {
     @Binding var isPresented: Bool
-    
+
     var reportedObject: ReportTarget
-    
-    @State private var userSelection: UserSelection?
-    @State private var confirmReport = false
-    @State private var showMuteDialog = false
-    @State private var confirmationDialogState: ConfirmationDialogState<UserSelection>?
+
     @State private var selectedFlagOption: FlagOption?
     @State private var selectedFlagSendOption: FlagOption?
     @State private var selectedVisibilityOption: FlagOption?
@@ -24,18 +20,6 @@ struct ReportMenuModifier: ViewModifier {
     @Dependency(\.featureFlags) private var featureFlags
 
     func body(content: Content) -> some View {
-        Group {
-            if featureFlags.isEnabled(.newModerationFlow) {
-                newModerationFlow(content: content)
-            } else {
-                oldModerationFlow(content: content)
-            }
-        }
-    }
-
-    /// Displays the moderation flow based on the reported object type. The old flow is still displayed for the author.
-    @ViewBuilder
-    private func newModerationFlow(content: Content) -> some View {
         switch reportedObject {
         case .note:
             content
@@ -44,11 +28,11 @@ struct ReportMenuModifier: ViewModifier {
                         ContentFlagView(
                             selectedFlagOptionCategory: $selectedFlagOption,
                             selectedSendOptionCategory: $selectedFlagSendOption,
-                            showSuccessView: $showFlagSuccessView, 
+                            showSuccessView: $showFlagSuccessView,
                             flagTarget: reportedObject,
                             sendAction: {
                                 if let selectCategory = selectedFlagOption?.category {
-                                    publishReportForNewModerationFlow(selectCategory)
+                                    publishReport(selectCategory)
                                     showFlagSuccessView = true
                                 }
                             }
@@ -63,11 +47,11 @@ struct ReportMenuModifier: ViewModifier {
                             selectedFlagOption: $selectedFlagOption,
                             selectedSendOption: $selectedFlagSendOption,
                             selectedVisibilityOption: $selectedVisibilityOption,
-                            showSuccessView: $showFlagSuccessView, 
+                            showSuccessView: $showFlagSuccessView,
                             flagTarget: reportedObject,
                             sendAction: {
                                 let selectCategory = selectedVisibilityOption?.category ?? .visibility(.dontMute)
-                                publishReportForNewModerationFlow(selectCategory)
+                                publishReport(selectCategory)
                                 Task {
                                     await muteUserIfNeeded()
                                     showFlagSuccessView = true
@@ -79,130 +63,6 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
 
-    // swiftlint:disable function_body_length
-    @ViewBuilder
-    func oldModerationFlow(content: Content) -> some View {
-        content
-        // ReportCategory menu
-            .confirmationDialog(unwrapping: $confirmationDialogState, action: processUserSelection)
-            .alert(
-                String(localized: "confirmFlag"),
-                isPresented: $confirmReport,
-                actions: {
-                    Button("confirm") {
-                        publishReport(userSelection)
-                        
-                        if let author = reportedObject.author, !author.muted {
-                            showMuteDialog = true
-                        }
-                    }
-                    Button("cancel", role: .cancel) {
-                        userSelection = nil
-                    }
-                },
-                message: {
-                    let text = getAlertMessage(for: userSelection, with: reportedObject)
-                    Text(text)
-                }
-            )
-        // Mute user menu
-            .alert(
-                "muteUser",
-                isPresented: $showMuteDialog,
-                actions: {
-                    if let author = reportedObject.author {
-                        Button("yes") {
-                            Task {
-                                await mute(author: author)
-                            }
-                        }
-                        Button("no") {}
-                    }
-                },
-                message: {
-                    if let author = reportedObject.author {
-                        Text(String.localizedStringWithFormat(String(localized: "mutePrompt"), author.safeName))
-                    } else {
-                        Text("error")
-                    }
-                }
-            )
-            .onChange(of: isPresented) { _, shouldPresent in
-                if shouldPresent {
-                    let message: String
-                    if case .noteCategorySelected = userSelection {
-                        message = String(localized: "reportContentMessage")
-                    } else {
-                        message = String(localized: "flagUserMessage")
-                    }
-                    confirmationDialogState = ConfirmationDialogState(
-                        title: TextState(String(localized: "reportContent")),
-                        message: TextState(message),
-                        buttons: topLevelButtons()
-                    )
-                }
-            }
-            .onChange(of: confirmationDialogState) { _, newValue in
-                if newValue == nil {
-                    isPresented = false
-                }
-            }
-    }
-    // swiftlint:enable function_body_length
-
-    func processUserSelection(_ userSelection: UserSelection?) {
-        self.userSelection = userSelection
-        
-        guard let userSelection else {
-            return
-        }
-        
-        switch userSelection {
-        case .noteCategorySelected(let category):
-            Task {
-                confirmationDialogState = ConfirmationDialogState(
-                    title: TextState(
-                        String.localizedStringWithFormat(String(localized: "reportActionTitle"), category.displayName)
-                    ),
-                    message: TextState(
-                        String.localizedStringWithFormat(String(localized: "reportActionTitle"), category.displayName)
-                    ),
-                    buttons: [
-                        ButtonState(action: .send(.sendToNos(category))) {
-                            TextState("Send to Nos")
-                        },
-                        ButtonState(action: .send(.flagPublicly(category))) {
-                            TextState("Flag Publicly")
-                        }
-                    ]
-                )
-            }
-            
-        case .authorCategorySelected(let category):
-            Task {
-                confirmationDialogState = ConfirmationDialogState(
-                    title: TextState(
-                        String.localizedStringWithFormat(String(localized: "reportActionTitle"), category.displayName)
-                    ),
-                    message: TextState(
-                        String.localizedStringWithFormat(String(localized: "reportActionTitle"), category.displayName)
-                    ),
-                    buttons: [
-                        ButtonState(action: .send(.sendToNos(category))) {
-                            TextState("Send to Nos")
-                        },
-                        ButtonState(action: .send(.flagPublicly(category))) {
-                            TextState("Flag Publicly")
-                        }
-                    ]
-                )
-            }
-            
-        case .sendToNos, .flagPublicly:
-            confirmReport = true
-        }
-    }
-    
     func mute(author: Author) async {
         do {
             try await author.mute(viewContext: viewContext)
@@ -223,72 +83,16 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
 
-    /// An enum to simplify the user selection through the sequence of connected
-    /// dialogs
-    enum UserSelection: Equatable {
-        case noteCategorySelected(ReportCategory)
-        case authorCategorySelected(ReportCategory)
-        case sendToNos(ReportCategory)
-        case flagPublicly(ReportCategory)
-        
-        func confirmationAlertMessage(for reportedObject: ReportTarget) -> String {
-            switch self {
-            case .sendToNos(let category):
-                switch reportedObject {
-                case .note:
-                    return String.localizedStringWithFormat(
-                        String(localized: "reportNoteSendToNosConfirmation"), category.displayName
-                    )
-                case .author:
-                    return String(localized: "reportAuthorSendToNosConfirmation")
-                }
-                
-            case .flagPublicly(let category):
-                return String.localizedStringWithFormat(
-                    String(localized: "reportFlagPubliclyConfirmation"), category.displayName
-                )
-                
-            case .noteCategorySelected(let category),
-                .authorCategorySelected(let category):
-                return String.localizedStringWithFormat(
-                    String(localized: "reportFlagPubliclyConfirmation"), category.displayName
-                )
-            }
-        }
-    }
-    
-    /// List of the top-level report categories we care about.
-    func topLevelButtons() -> [ButtonState<UserSelection>] {
-        switch reportedObject {
-        case .note:
-            ReportCategory.noteCategories.map { category in
-                let userSelection = UserSelection.noteCategorySelected(category)
-                
-                return ButtonState(action: .send(userSelection)) {
-                    TextState(verbatim: category.displayName)
-                }
-            }
-        case .author:
-            ReportCategory.authorCategories.map { category in
-                let userSelection = UserSelection.authorCategorySelected(category)
-                
-                return ButtonState(action: .send(userSelection)) {
-                    TextState(verbatim: category.displayName)
-                }
-            }
-        }
-    }
-
-    /// Publishes a report based on the categories the user selected for the new moderation flow.
-    private func publishReportForNewModerationFlow(_ selectedCategory: FlagCategory) {
+    /// Publishes a report based on the category the user selected.
+    private func publishReport(_ selectedCategory: FlagCategory) {
         if case .privacy(let privacyCategory) = selectedFlagSendOption?.category, privacyCategory == .sendToNos {
-            sendToNosForNewModerationFlow(selectedCategory)
+            sendToNos(selectedCategory)
         } else {
-            flagPubliclyForNewModerationFlow(selectedCategory)
+            flagPublicly(selectedCategory)
         }
     }
 
-    private func sendToNosForNewModerationFlow(_ selectedCategory: FlagCategory) {
+    private func sendToNos(_ selectedCategory: FlagCategory) {
         if case .report(let reportCategory) = selectedCategory {
             // Call the publisher with the extracted ReportCategory
             ReportPublisher().publishPrivateReport(
@@ -299,7 +103,7 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
 
-    private func flagPubliclyForNewModerationFlow(_ selectedCategory: FlagCategory) {
+    private func flagPublicly(_ selectedCategory: FlagCategory) {
         if case .report(let reportCategory) = selectedCategory {
             ReportPublisher().publishPublicReport(
                 for: reportedObject,
@@ -307,39 +111,6 @@ struct ReportMenuModifier: ViewModifier {
                 context: viewContext
             )
         }
-    }
-
-    /// Publishes a report based on user input for the old moderation flow.
-    func publishReport(_ userSelection: UserSelection?) {
-        switch userSelection {
-        case .sendToNos(let selectedCategory):
-            sendToNos(selectedCategory)
-        case .flagPublicly(let selectedCategory):
-            flagPublicly(selectedCategory)
-        case .noteCategorySelected, .authorCategorySelected, .none:
-            // This would be a dev error
-            Log.error("Invalid user selection")
-        }
-    }
-    
-    func sendToNos(_ selectedCategory: ReportCategory) {
-        ReportPublisher().publishPrivateReport(
-            for: reportedObject,
-            category: selectedCategory,
-            context: viewContext
-        )
-    }
-    
-    func flagPublicly(_ selectedCategory: ReportCategory) {
-        ReportPublisher().publishPublicReport(
-            for: reportedObject,
-            category: selectedCategory,
-            context: viewContext
-        )
-    }
-    
-    func getAlertMessage(for userSelection: UserSelection?, with reportedObject: ReportTarget) -> String {
-        userSelection?.confirmationAlertMessage(for: reportedObject) ?? String(localized: "error")
     }
 }
 
