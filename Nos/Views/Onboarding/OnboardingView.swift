@@ -1,5 +1,6 @@
 import SwiftUI
 
+/// The state of onboarding, tracking the flow, steps, and success or failure of a few specific tasks.
 @Observable final class OnboardingState {
     var flow: OnboardingFlow = .createAccount
     var step: OnboardingStep = .onboardingStart {
@@ -8,6 +9,17 @@ import SwiftUI
         }
     }
     var path = NavigationPath()
+    
+    /// Whether the user succeeded in setting their display name
+    var displayNameSucceeded = false
+
+    /// Whether the user succeeded in setting their username
+    var usernameSucceeded = false
+    
+    /// Whether the user succeeded in all steps of onboarding
+    var allStepsSucceeded: Bool {
+        displayNameSucceeded && usernameSucceeded
+    }
 }
 
 enum OnboardingFlow {
@@ -20,6 +32,11 @@ enum OnboardingStep {
     case ageVerification
     case notOldEnough
     case createAccount
+    case privateKey
+    case publicKey
+    case displayName
+    case username
+    case accountSuccess
     case buildYourNetwork
     case login
 }
@@ -48,6 +65,21 @@ struct OnboardingView: View {
                             .environment(state)
                     case .createAccount:
                         CreateAccountView()
+                            .environment(state)
+                    case .privateKey:
+                        PrivateKeyView()
+                            .environment(state)
+                    case .publicKey:
+                        PublicKeyView()
+                            .environment(state)
+                    case .displayName:
+                        DisplayNameView()
+                            .environment(state)
+                    case .username:
+                        UsernameView()
+                            .environment(state)
+                    case .accountSuccess:
+                        AccountSuccessView()
                             .environment(state)
                     case .login:
                         OnboardingLoginView(completion: completion)

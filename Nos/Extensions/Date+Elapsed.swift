@@ -76,7 +76,7 @@ extension Date {
                     return formattedDate
                 }
             } else {
-                return String(localized: .localizable.now)
+                return String(localized: "now")
             }
         }
 

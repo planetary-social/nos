@@ -11,24 +11,24 @@ struct OnboardingAgeVerificationView: View {
 
     var body: some View {
         VStack {
-            Text(.localizable.ageVerificationTitle)
+            Text("ageVerificationTitle")
                 .multilineTextAlignment(.center)
                 .padding(.top, 92)
                 .padding(.bottom, 20)
                 .padding(.horizontal, 77.5)
                 .font(.custom("ClarityCity-Bold", size: 34, relativeTo: .largeTitle))
                 .foregroundStyle(LinearGradient.diagonalAccent2.blendMode(.normal))
-            Text(.localizable.ageVerificationSubtitle)
+            Text("ageVerificationSubtitle")
                 .foregroundColor(.secondaryTxt)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 44.5)
             Spacer()
             HStack {
-                BigActionButton(title: .localizable.no) {
+                BigActionButton("no") {
                     state.step = .notOldEnough
                 }
                 Spacer(minLength: 15)
-                BigActionButton(title: .localizable.yes) {
+                BigActionButton("yes") {
                     if state.flow == .loginToExistingAccount {
                         state.step = .login
                     } else {

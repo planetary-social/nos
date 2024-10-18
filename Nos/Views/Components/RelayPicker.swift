@@ -88,9 +88,9 @@ struct RelayPickerRow: View {
     
     var title: String {
         if let relay {
-            return relay.host ?? String(localized: .localizable.error)
+            return relay.host ?? String(localized: "error")
         } else {
-            return defaultSelection ?? String(localized: .localizable.error)
+            return defaultSelection ?? String(localized: "error")
         }
     }
     
@@ -161,7 +161,7 @@ struct RelayPickerRow: View {
     
     return RelayPicker(
         selectedRelay: $selectedRelay,
-        defaultSelection: String(localized: .localizable.allMyRelays),
+        defaultSelection: String(localized: "allMyRelays"),
         author: previewData.alice,
         isPresented: .constant(true)
     )
@@ -187,7 +187,7 @@ struct RelayPickerRow: View {
     
     return RelayPicker(
         selectedRelay: $selectedRelay,
-        defaultSelection: String(localized: .localizable.allMyRelays),
+        defaultSelection: String(localized: "allMyRelays"),
         author: previewData.alice,
         isPresented: .constant(true)
     )

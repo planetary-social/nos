@@ -34,14 +34,14 @@ struct ContentFlagView: View {
                     categoryView
                 }
             }
-            .nosNavigationBar(title: .localizable.flagContent)
+            .nosNavigationBar("flagContent")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
                         dismiss()
                         resetSelections()
                     } label: {
-                        Text(.localizable.cancel)
+                        Text("cancel")
                             .foregroundColor(.primaryTxt)
                     }
                     .opacity(showSuccessView ? 0 : 1)
@@ -49,7 +49,7 @@ struct ContentFlagView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     ActionButton(
-                        title: showSuccessView ? .localizable.done : .localizable.send,
+                        showSuccessView ? "done" : "send",
                         action: {
                             if showSuccessView {
                                 dismiss()
@@ -84,8 +84,8 @@ struct ContentFlagView: View {
                             previousSelection: .constant(nil),
                             currentSelection: $selectedFlagOptionCategory,
                             options: flagCategories,
-                            title: String(localized: .localizable.flagContentCategoryTitle),
-                            subtitle: String(localized: .localizable.flagContentCategoryDescription)
+                            title: String(localized: "flagContentCategoryTitle"),
+                            subtitle: String(localized: "flagContentCategoryDescription")
                         )
 
                         if selectedFlagOptionCategory != nil {
@@ -93,7 +93,7 @@ struct ContentFlagView: View {
                                 previousSelection: $selectedFlagOptionCategory,
                                 currentSelection: $selectedSendOptionCategory,
                                 options: FlagOption.flagContentSendOptions,
-                                title: String(localized: .localizable.flagSendTitle),
+                                title: String(localized: "flagSendTitle"),
                                 subtitle: nil
                             )
                             .id(sendSectionID)
