@@ -61,6 +61,7 @@ struct DisplayNameView: View {
             BigActionButton("next") {
                 await save()
             }
+            .disabled(displayName.isEmpty)
         }
         .padding(40)
         .readabilityPadding()

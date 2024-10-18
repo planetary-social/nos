@@ -100,6 +100,7 @@
 		039C96292C48321E00A8EB39 /* long_form_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 039C96282C48321E00A8EB39 /* long_form_data.json */; };
 		039F09592CC051FF00FEEC81 /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 039F09582CC051EE00FEEC81 /* CreateAccountView.swift */; };
 		03A241BD2CC2F458007EA31B /* AccountSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A241BC2CC2F458007EA31B /* AccountSuccessView.swift */; };
+		03A241D32CC3056F007EA31B /* AgeVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A241D22CC3056F007EA31B /* AgeVerificationView.swift */; };
 		03A3AA3B2C5028FF008FE153 /* PublicKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A3AA3A2C5028FF008FE153 /* PublicKeyTests.swift */; };
 		03A743452CC048C700893CAE /* GoToFeedTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A743442CC048C700893CAE /* GoToFeedTip.swift */; };
 		03B4E6A22C125CA1006E5F59 /* nostr_build_nip96_upload_response.json in Resources */ = {isa = PBXBuildFile; fileRef = 03B4E6A12C125CA1006E5F59 /* nostr_build_nip96_upload_response.json */; };
@@ -660,6 +661,7 @@
 		039C96282C48321E00A8EB39 /* long_form_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = long_form_data.json; sourceTree = "<group>"; };
 		039F09582CC051EE00FEEC81 /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
 		03A241BC2CC2F458007EA31B /* AccountSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSuccessView.swift; sourceTree = "<group>"; };
+		03A241D22CC3056F007EA31B /* AgeVerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeVerificationView.swift; sourceTree = "<group>"; };
 		03A3AA3A2C5028FF008FE153 /* PublicKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeyTests.swift; sourceTree = "<group>"; };
 		03A743442CC048C700893CAE /* GoToFeedTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoToFeedTip.swift; sourceTree = "<group>"; };
 		03AB2F7D2BF6609500B73DB1 /* UnitTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UnitTests.xctestplan; sourceTree = "<group>"; };
@@ -1485,6 +1487,7 @@
 			isa = PBXGroup;
 			children = (
 				03A241BC2CC2F458007EA31B /* AccountSuccessView.swift */,
+				03A241D22CC3056F007EA31B /* AgeVerificationView.swift */,
 				030FECAA2CB5E0B900820014 /* BuildYourNetworkView.swift */,
 				039F09582CC051EE00FEEC81 /* CreateAccountView.swift */,
 				030E570C2CC2A05B00A4A51E /* DisplayNameView.swift */,
@@ -2531,6 +2534,7 @@
 				C9CF23172A38A58B00EBEC31 /* ParseQueue.swift in Sources */,
 				C98A32272A05795E00E3FA13 /* Task+Timeout.swift in Sources */,
 				030036AB2C5D872B002C71F5 /* NewNotesButton.swift in Sources */,
+				03A241D32CC3056F007EA31B /* AgeVerificationView.swift in Sources */,
 				C9B708BB2A13BE41006C613A /* NoteTextEditor.swift in Sources */,
 				C9E37E0F2A1E7C32003D4B0A /* ReportMenuModifier.swift in Sources */,
 				C95D68A5299E6E1E00429F86 /* PlaceholderModifier.swift in Sources */,
