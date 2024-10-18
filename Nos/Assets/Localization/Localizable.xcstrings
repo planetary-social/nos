@@ -4030,6 +4030,42 @@
         }
       }
     },
+    "createAccountButton" : {
+      "comment" : "The title of the button to create an account",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create Account"
+          }
+        }
+      }
+    },
+    "createAccountDescription" : {
+      "comment" : "The description on the create account screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We've simplified management of your account credentials. Nos uses public-private key encryption to verify your identity."
+          }
+        }
+      }
+    },
+    "createAccountHeadline" : {
+      "comment" : "headline for the create account screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Say goodbye to usernames and passwords!"
+          }
+        }
+      }
+    },
     "dayAbbreviated" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4386,6 +4422,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "删除您的帐户将从 Nos 服务器中删除您的所有数据，并要求您的所有中继执行同样的操作。"
+          }
+        }
+      }
+    },
+    "deleteAccountMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting your account will delete all your data from Nos servers and ask all your relays to do the same."
           }
         }
       }
@@ -5153,6 +5200,18 @@
         }
       }
     },
+    "displayNameHeadline" : {
+      "comment" : "headline for the display name screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display Name"
+          }
+        }
+      }
+    },
     "done" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5446,89 +5505,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "編輯個人檔案"
-          }
-        }
-      }
-    },
-    "enableAccountDeletion" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable account deletion"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activar eliminación de cuenta"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "계정 삭제 활성화"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启用账户删除"
-          }
-        }
-      }
-    },
-    "enableNewMediaDisplay" : {
-      "comment" : "Setting for new media feature flag",
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neue Mediendarstellung aktivieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable new media display"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activar nuevo visor de medios"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activer l'affichage des nouveaux médias"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "새로운 미디어 디스플레이 사용"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Washa onyesho jipya la midia"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启用新的媒体显示"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "啓用新的媒體顯示"
           }
         }
       }
@@ -8916,6 +8892,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "返回"
+          }
+        }
+      }
+    },
+    "goToYourFeed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go to your Feed to see notes from your connections."
           }
         }
       }
@@ -13785,7 +13772,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your **@username** is your identity in the Nos community.\u2028\nChoose a name that reflects you or your organization. Make it memorable and distinct!"
+            "value" : "Your **@username** is your identity in the Nos community. \nChoose a name that reflects you or your organization. Make it memorable and distinct!"
           }
         },
         "es" : {
@@ -14089,6 +14076,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "私鑰"
+          }
+        }
+      }
+    },
+    "privateKeyHeadline" : {
+      "comment" : "headline for the private key screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Key"
           }
         }
       }
@@ -14528,6 +14527,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "公鑰"
+          }
+        }
+      }
+    },
+    "publicKeyHeadline" : {
+      "comment" : "headline for the public key screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Public Key"
           }
         }
       }
@@ -18419,6 +18430,17 @@
         }
       }
     },
+    "typeDelete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type Delete"
+          }
+        }
+      }
+    },
     "unfollow" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -18951,7 +18973,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Well done, you've successfully claimed your **@username**!\u2028\nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
+            "value" : "Well done, you've successfully claimed your **@username**! \nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
           }
         },
         "es" : {
@@ -18988,6 +19010,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "做得好，你已成功認領你的**@用戶名**！\n\n你可以與 Nostr 和 Fediverse 社群中的其他人分享此名稱，以便輕鬆找到你。"
+          }
+        }
+      }
+    },
+    "usernameHeadline" : {
+      "comment" : "headline for the username screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Username"
           }
         }
       }

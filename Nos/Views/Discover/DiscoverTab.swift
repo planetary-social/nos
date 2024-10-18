@@ -2,8 +2,9 @@ import SwiftUI
 import Combine
 import CoreData
 import Dependencies
+import TipKit
 
-struct DiscoverTab: View {    
+struct DiscoverTab: View {
     // MARK: - Properties
     
     @EnvironmentObject private var router: Router
@@ -20,6 +21,8 @@ struct DiscoverTab: View {
 
     @State var predicate: NSPredicate = .false
 
+    let goToFeedTip = GoToFeedTip()
+
     // MARK: - View
     
     var body: some View {
@@ -29,6 +32,17 @@ struct DiscoverTab: View {
                     featuredAuthorCategory: .all,
                     searchController: searchController
                 )
+
+                VStack {
+                    Spacer()
+                    
+                    TipView(goToFeedTip)
+                        .padding(.horizontal, 12)
+                        .padding(.bottom, 8)
+                        .readabilityPadding()
+                        .tipBackground(LinearGradient.horizontalAccentReversed)
+                        .tipViewStyle(.pointDownEmoji)
+                }
             }
             .searchable(
                 text: $searchController.query, 

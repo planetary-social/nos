@@ -154,13 +154,14 @@ struct HomeFeedView: View {
         .nosNavigationBar(navigationBarTitle)
         .onAppear {
             if router.selectedTab == .home {
-                isVisible = true 
+                isVisible = true
             }
         }
         .onDisappear { isVisible = false }
         .onChange(of: isVisible) { 
             if isVisible {
                 analytics.showedHome()
+                GoToFeedTip.viewedFeed.sendDonation()
             }
         }
     }

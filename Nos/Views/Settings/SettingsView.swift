@@ -29,6 +29,7 @@ struct SettingsView: View {
     @State private var showReportWarnings = true
     @State private var showOutOfNetworkWarning = true
     @State private var copyButtonState: CopyButtonState = .copy
+    @State private var showDeleteConfirmationAlert = false
 
     fileprivate enum AlertAction {
         case logout
@@ -93,7 +94,7 @@ struct SettingsView: View {
                         },
                         message: { TextState(String(localized: "backUpYourKeyWarning")) }
                     )
-                }        
+                }
                 .padding(.vertical, 5)
             } header: {
                 VStack(alignment: .leading, spacing: 10) {
@@ -111,13 +112,13 @@ struct SettingsView: View {
                 .padding(.bottom, 20)
             }
             .listRowGradientBackground()
-            
+
             Section {
                 VStack {
                     NosToggle("useReportsFromFollows", isOn: $showReportWarnings)
-                    .onChange(of: showReportWarnings) { _, newValue in
-                        userDefaults.set(newValue, forKey: showReportWarningsKey)
-                    }
+                        .onChange(of: showReportWarnings) { _, newValue in
+                            userDefaults.set(newValue, forKey: showReportWarningsKey)
+                        }
                     
                     HStack {
                         Text("useReportsFromFollowsDescription")
@@ -127,12 +128,12 @@ struct SettingsView: View {
                     }
                 }
                 .padding(.bottom, 8)
-
+                
                 VStack {
                     NosToggle("showOutOfNetworkWarnings", isOn: $showOutOfNetworkWarning)
-                    .onChange(of: showOutOfNetworkWarning) { _, newValue in
-                        userDefaults.set(newValue, forKey: showOutOfNetworkWarningKey)
-                    }
+                        .onChange(of: showOutOfNetworkWarning) { _, newValue in
+                            userDefaults.set(newValue, forKey: showOutOfNetworkWarningKey)
+                        }
                     
                     HStack {
                         Text("showOutOfNetworkWarningsDescription")
@@ -155,7 +156,7 @@ struct SettingsView: View {
                 showReportWarnings = userDefaults.object(forKey: showReportWarningsKey) as? Bool ?? true
                 showOutOfNetworkWarning = userDefaults.object(forKey: showOutOfNetworkWarningKey) as? Bool ?? true
             }
-            
+
             Section {
                 Text("\(String(localized: "appVersion")) \(Bundle.current.versionAndBuild)")
                     .foregroundColor(.primaryTxt)
@@ -218,7 +219,7 @@ struct SettingsView: View {
                     .padding(.vertical, 15)
             }
             .listRowGradientBackground()
-            
+
             ActionButton(
                 "deleteMyAccount",
                 font: .clarityBold(.title3),
@@ -227,15 +228,7 @@ struct SettingsView: View {
                 backgroundGradient: .verticalAccentSecondary,
                 shouldFillHorizontalSpace: true
             ) {
-                alert = AlertState(
-                    title: { TextState(String(localized: "deleteAccount")) },
-                    actions: {
-                        ButtonState(role: .destructive, action: .send(.deleteAccount)) {
-                            TextState(String(localized: "delete"))
-                        }
-                    },
-                    message: { TextState(String(localized: "deleteAccountDescription")) }
-                )
+                showDeleteConfirmationAlert = true
             }
             .clipShape(Capsule())
             .listRowBackground(Color.clear)
@@ -253,8 +246,32 @@ struct SettingsView: View {
             privateKeyString = currentUser.keyPair?.nsec ?? ""
             analytics.showedSettings()
         }
+        .overlay {
+            ZStack {
+                if showDeleteConfirmationAlert {
+                    /// Adds a translucent background overlay to the view's man content
+                    Color.actionSheetOverlay.opacity(0.5)
+                        .ignoresSafeArea()
+                    
+                    DeleteConfirmationView(
+                        requiredText: String(localized: "delete").uppercased(),
+                        onDelete: {
+                            Task {
+                                await alertButtonTapped(.deleteAccount)
+                            }
+                            showDeleteConfirmationAlert = false
+                        },
+                        onCancel: {
+                            showDeleteConfirmationAlert = false
+                        }
+                    )
+                }
+            }                    
+            .transition(.opacity)
+            .animation(.easeInOut(duration: 0.2), value: showDeleteConfirmationAlert)
+        }
     }
-    
+
     fileprivate func alertButtonTapped(_ action: AlertAction) async {
         switch action {
         case .logout:
@@ -284,6 +301,19 @@ extension SettingsView {
     private var newModerationFlowToggle: some View {
         NosToggle("enableNewModerationFlow", isOn: isNewModerationFlowEnabled)
     }
+
+    /// Whether the new onboarding flow is enabled.
+    private var isNewOnboardingFlowEnabled: Binding<Bool> {
+        Binding<Bool>(
+            get: { featureFlags.isEnabled(.newOnboardingFlow) },
+            set: { featureFlags.setFeature(.newOnboardingFlow, enabled: $0) }
+        )
+    }
+
+    /// A toggle for the new moderation flow that allows the user to turn the feature on or off.
+    private var newOnboardingFlowToggle: some View {
+        NosToggle("New Onboarding Flow", isOn: isNewOnboardingFlowEnabled)
+    }
 }
 #endif
 
@@ -293,6 +323,7 @@ extension SettingsView {
     @MainActor private var stagingControls: some View {
         Group {
             newModerationFlowToggle
+            newOnboardingFlowToggle
         }
     }
 }
@@ -304,6 +335,7 @@ extension SettingsView {
     @MainActor private var debugControls: some View {
         Group {
             newModerationFlowToggle
+            newOnboardingFlowToggle
             Text("sampleDataInstructions")
                 .foregroundColor(.primaryTxt)
             Button("loadSampleData") {

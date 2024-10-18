@@ -1,13 +1,13 @@
 import SwiftUI
 
-class OnboardingState: ObservableObject {
-    @Published var flow: OnboardingFlow = .createAccount
-    @Published var step: OnboardingStep = .onboardingStart {
+@Observable final class OnboardingState {
+    var flow: OnboardingFlow = .createAccount
+    var step: OnboardingStep = .onboardingStart {
         didSet {
             path.append(step)
         }
     }
-    @Published var path = NavigationPath()
+    var path = NavigationPath()
 }
 
 enum OnboardingFlow {
@@ -19,13 +19,14 @@ enum OnboardingStep {
     case onboardingStart
     case ageVerification
     case notOldEnough
+    case createAccount
     case buildYourNetwork
     case login
 }
 
 /// The view that initializes the onboarding navigation stack and shows the first view.
 struct OnboardingView: View {
-    @StateObject var state = OnboardingState()
+    @State var state = OnboardingState()
     
     /// Completion to be called when all onboarding steps are complete
     let completion: @MainActor () -> Void
@@ -33,18 +34,21 @@ struct OnboardingView: View {
     var body: some View {
         NavigationStack(path: $state.path) {
             OnboardingStartView()
-                .environmentObject(state)
+                .environment(state)
                 .navigationDestination(for: OnboardingStep.self) { step in
                     switch step {
                     case .onboardingStart:
                         OnboardingStartView()
-                            .environmentObject(state)
+                            .environment(state)
                     case .ageVerification:
                         OnboardingAgeVerificationView()
-                            .environmentObject(state)
+                            .environment(state)
                     case .notOldEnough:
                         OnboardingNotOldEnoughView()
-                            .environmentObject(state)
+                            .environment(state)
+                    case .createAccount:
+                        CreateAccountView()
+                            .environment(state)
                     case .login:
                         OnboardingLoginView(completion: completion)
                     case .buildYourNetwork:
