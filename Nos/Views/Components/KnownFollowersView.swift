@@ -51,7 +51,7 @@ struct KnownFollowersView: View {
             )
         }
 
-        let attributedString = AttributedString(followString)
+        let attributedString = (try? AttributedString(markdown: followString)) ?? AttributedString(followString)
             .replacingAttributes(
                 AttributeContainer(
                     [.inlinePresentationIntent: InlinePresentationIntent.stronglyEmphasized.rawValue]
