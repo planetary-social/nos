@@ -85,8 +85,7 @@ struct NoteComposer: View {
                                     }
                                     NoteTextEditor(
                                         controller: $editingController,
-                                        minHeight: minimumEditorHeight,
-                                        placeholder: .localizable.newNotePlaceholder
+                                        minHeight: minimumEditorHeight
                                     )
                                     .padding(10)
                                     .disabled(showNotePreview)
@@ -156,7 +155,7 @@ struct NoteComposer: View {
                 if isUploadingImage {
                     FullscreenProgressView(
                         isPresented: .constant(true),
-                        text: String(localized: .imagePicker.uploading)
+                        text: String(localized: "uploading", table: "ImagePicker")
                     )
                 }
 
@@ -174,7 +173,7 @@ struct NoteComposer: View {
                 if showRelayPicker, let author = currentUser.author {
                     RelayPicker(
                         selectedRelay: $selectedRelay,
-                        defaultSelection: String(localized: .localizable.allMyRelays),
+                        defaultSelection: String(localized: "allMyRelays"),
                         author: author,
                         isPresented: $showRelayPicker
                     )
@@ -186,14 +185,13 @@ struct NoteComposer: View {
                 }
             }
             .background(Color.appBg)
-            .navigationBarTitle(String(localized: .localizable.newNote), displayMode: .inline)
+            .navigationBarTitle(String(localized: "newNote"), displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
             .toolbar {
                 RelayPickerToolbarButton(
                     selectedRelay: $selectedRelay,
-                    isPresenting: $showRelayPicker,
-                    defaultSelection: .localizable.allMyRelays
+                    isPresenting: $showRelayPicker
                 ) {
                     withAnimation {
                         showRelayPicker.toggle()
@@ -205,10 +203,10 @@ struct NoteComposer: View {
                     isPresented = false
                 }
                 label: {
-                    Text(.localizable.cancel)
+                    Text("cancel")
                         .foregroundColor(.primaryTxt)
                 },
-                trailing: ActionButton(title: .localizable.post, action: postAction)
+                trailing: ActionButton("post", action: postAction)
                     .frame(height: 22)
                     .disabled(!isPostEnabled)
                     .padding(.bottom, 3)
@@ -265,18 +263,18 @@ struct NoteComposer: View {
     @MainActor private func postAction() async {
         guard currentUser.keyPair != nil, let author = currentUser.author else {
             alert = AlertState(title: {
-                TextState(String(localized: .localizable.error))
+                TextState(String(localized: "error"))
             }, message: {
-                TextState(String(localized: .localizable.youNeedToEnterAPrivateKeyBeforePosting))
+                TextState(String(localized: "youNeedToEnterAPrivateKeyBeforePosting"))
             })
             return
         }
         if let relay = selectedRelay {
             guard expirationTime == nil || relay.supportedNIPs?.contains(40) == true else {
                 alert = AlertState(title: {
-                    TextState(String(localized: .localizable.error))
+                    TextState(String(localized: "error"))
                 }, message: {
-                    TextState(String(localized: .localizable.relayDoesNotSupportNIP40))
+                    TextState(String(localized: "relayDoesNotSupportNIP40"))
                 })
                 return
             }
@@ -285,15 +283,15 @@ struct NoteComposer: View {
                 let relays = try await Relay.find(supporting: 40, for: author, context: viewContext)
                 if relays.isEmpty {
                     alert = AlertState(title: {
-                        TextState(String(localized: .localizable.error))
+                        TextState(String(localized: "error"))
                     }, message: {
-                        TextState(String(localized: .localizable.anyRelaysSupportingNIP40))
+                        TextState(String(localized: "anyRelaysSupportingNIP40"))
                     })
                     return
                 }
             } catch {
                 alert = AlertState(title: {
-                    TextState(String(localized: .localizable.error))
+                    TextState(String(localized: "error"))
                 }, message: {
                     TextState(error.localizedDescription)
                 })

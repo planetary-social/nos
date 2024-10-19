@@ -1,5 +1,7 @@
+import Dependencies
 import SwiftUI
 
+/// The state of onboarding, tracking the flow, steps, and success or failure of a few specific tasks.
 @Observable final class OnboardingState {
     var flow: OnboardingFlow = .createAccount
     var step: OnboardingStep = .onboardingStart {
@@ -8,6 +10,17 @@ import SwiftUI
         }
     }
     var path = NavigationPath()
+    
+    /// Whether the user succeeded in setting their display name
+    var displayNameSucceeded = false
+
+    /// Whether the user succeeded in setting their username
+    var usernameSucceeded = false
+    
+    /// Whether the user succeeded in all steps of onboarding
+    var allStepsSucceeded: Bool {
+        displayNameSucceeded && usernameSucceeded
+    }
 }
 
 enum OnboardingFlow {
@@ -20,6 +33,11 @@ enum OnboardingStep {
     case ageVerification
     case notOldEnough
     case createAccount
+    case privateKey
+    case publicKey
+    case displayName
+    case username
+    case accountSuccess
     case buildYourNetwork
     case login
 }
@@ -27,7 +45,9 @@ enum OnboardingStep {
 /// The view that initializes the onboarding navigation stack and shows the first view.
 struct OnboardingView: View {
     @State var state = OnboardingState()
-    
+
+    @Dependency(\.featureFlags) private var featureFlags
+
     /// Completion to be called when all onboarding steps are complete
     let completion: @MainActor () -> Void
     
@@ -41,13 +61,33 @@ struct OnboardingView: View {
                         OnboardingStartView()
                             .environment(state)
                     case .ageVerification:
-                        OnboardingAgeVerificationView()
-                            .environment(state)
+                        if featureFlags.isEnabled(.newOnboardingFlow) {
+                            AgeVerificationView()
+                                .environment(state)
+                        } else {
+                            OnboardingAgeVerificationView()
+                                .environment(state)
+                        }
                     case .notOldEnough:
                         OnboardingNotOldEnoughView()
                             .environment(state)
                     case .createAccount:
                         CreateAccountView()
+                            .environment(state)
+                    case .privateKey:
+                        PrivateKeyView()
+                            .environment(state)
+                    case .publicKey:
+                        PublicKeyView()
+                            .environment(state)
+                    case .displayName:
+                        DisplayNameView()
+                            .environment(state)
+                    case .username:
+                        UsernameView()
+                            .environment(state)
+                    case .accountSuccess:
+                        AccountSuccessView()
                             .environment(state)
                     case .login:
                         OnboardingLoginView(completion: completion)

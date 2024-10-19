@@ -45,20 +45,20 @@ struct OutOfNetworkView: View {
                 Spacer() // pushes content to the center
                 
                 if self.isOverlayHelpTextBoxShown {
-                    Text(.localizable.outsideNetworkExplanation)
+                    Text("outsideNetworkExplanation")
                         .font(.body)
                         .foregroundColor(.primaryTxt)
                         .padding(.horizontal, 24)
                         .fixedSize(horizontal: false, vertical: true)
                 } else {
-                    Text(.localizable.outsideNetwork)
+                    Text("outsideNetwork")
                         .font(.body)
                         .foregroundColor(.primaryTxt)
                         .padding(.horizontal, 24)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 
-                SecondaryActionButton(title: .localizable.viewThisPostAnyway) {
+                SecondaryActionButton("viewThisPostAnyway") {
                     withAnimation {
                         controller.userHidWarning = true
                     }
@@ -104,7 +104,7 @@ struct OverlayContentReportView: View {
                 
                 // TextBox or Image based on isTextBoxShown
                 if self.isOverlayHelpTextBoxShown {
-                    Text(.localizable.contentWarningExplanation)
+                    Text("contentWarningExplanation")
                         .font(.body)
                         .foregroundColor(.secondaryTxt)
                         .padding(.horizontal, 24)
@@ -123,7 +123,7 @@ struct OverlayContentReportView: View {
                         ContentWarningMessage(reports: controller.authorReports, type: .author)
                     }
                 }
-                SecondaryActionButton(title: .localizable.viewThisPostAnyway) {
+                SecondaryActionButton("viewThisPostAnyway") {
                     withAnimation {
                         controller.userHidWarning = true
                     }

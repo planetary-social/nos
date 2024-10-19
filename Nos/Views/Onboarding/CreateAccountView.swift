@@ -37,13 +37,13 @@ struct CreateAccountView: View {
             NumberedStepsView()
                 .padding(.horizontal, 10)
             Spacer()
-            BigActionButton(title: "createAccountButton") {
+            BigActionButton("createAccountButton") {
                 do {
                     try await currentUser.createAccount()
                 } catch {
                     crashReporting.report(error)
                 }
-                state.step = .buildYourNetwork
+                state.step = .privateKey
             }
         }
         .padding(40)

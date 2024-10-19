@@ -92,7 +92,7 @@ enum SearchOrigin {
                     case .discover:
                         analytics.searchedDiscover()
                     case .mentions:
-                        analytics.searchedMentions()
+                        analytics.mentionsAutocompleteCharactersEntered()
                     }
                 }
                 self.authorResults = self.authors(named: query)

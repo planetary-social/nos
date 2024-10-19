@@ -51,7 +51,7 @@ protocol RawEventViewModel {
     }
     
     private func loadRawMessage() {
-        loadingMessage = String(localized: .localizable.loading)
+        loadingMessage = String(localized: "loading")
         
         let rawMessage: String
         do {

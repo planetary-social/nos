@@ -68,15 +68,15 @@ struct ExcellentChoiceSheet: View {
                     .font(.clarity(.regular, textStyle: .callout))
                     .foregroundStyle(Color.primaryTxt)
             case .claimed:
-                WizardSheetTitleText(.localizable.excellentChoice)
+                WizardSheetTitleText("excellentChoice")
                 Text(attributedUsername)
                     .font(.clarity(.bold, textStyle: .title3))
                     .foregroundStyle(Color.secondaryTxt)
-                WizardSheetDescriptionText(markdown: .localizable.usernameClaimedNotice)
+                WizardSheetDescriptionText(markdown: AttributedString(localized: "usernameClaimedNotice"))
 
                 Spacer(minLength: 0)
 
-                Button(String(localized: LocalizedStringResource.localizable.done)) {
+                Button("done") {
                     isPresented = false
                 }
                 .buttonStyle(BigActionButtonStyle())
@@ -87,7 +87,7 @@ struct ExcellentChoiceSheet: View {
             Button {
                 isPresented = false
             } label: {
-                Text(.localizable.ok)
+                Text("ok")
             }
         }
         .task {
