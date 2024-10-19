@@ -7,7 +7,7 @@ struct AuthorListView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
 
-    @StateObject private var searchController = SearchController(searchOrigin: .mentions)
+    @State private var searchController = SearchController(searchOrigin: .mentions)
 
     @FocusState private var isSearching: Bool
 
