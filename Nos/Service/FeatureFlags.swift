@@ -31,7 +31,7 @@ protocol FeatureFlags {
 
     /// Feature flags and their values.
     private var featureFlags: [FeatureFlag: Bool] = [
-        .newOnboardingFlow: false
+        .newOnboardingFlow: true
     ]
 
     /// Returns true if the feature is enabled.
