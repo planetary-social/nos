@@ -321,6 +321,9 @@
 		C94D855C2991479900749478 /* NoteComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94D855B2991479900749478 /* NoteComposer.swift */; };
 		C94D855F29914D2300749478 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C94D855E29914D2300749478 /* SwiftUINavigation */; };
 		C94FE9F729DB259300019CD3 /* Text+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAE629C69FA000466635 /* Text+Gradient.swift */; };
+		C95057A72CC692360024EC9C /* mute_list.json in Resources */ = {isa = PBXBuildFile; fileRef = C95057A62CC692320024EC9C /* mute_list.json */; };
+		C95057B12CC698730024EC9C /* mute_list_2.json in Resources */ = {isa = PBXBuildFile; fileRef = C95057B02CC6986E0024EC9C /* mute_list_2.json */; };
+		C95057C52CC69A7D0024EC9C /* mute_list_self.json in Resources */ = {isa = PBXBuildFile; fileRef = C95057C42CC69A770024EC9C /* mute_list_self.json */; };
 		C959DB762BD01DF4008F3627 /* GiftWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C959DB752BD01DF4008F3627 /* GiftWrapper.swift */; };
 		C959DB772BD01DF4008F3627 /* GiftWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C959DB752BD01DF4008F3627 /* GiftWrapper.swift */; };
 		C959DB812BD02460008F3627 /* NostrSDK in Frameworks */ = {isa = PBXBuildFile; productRef = C959DB802BD02460008F3627 /* NostrSDK */; };
@@ -838,6 +841,9 @@
 		C94D39212ABDDDFE0019C4D5 /* Secrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		C94D39242ABDDFB60019C4D5 /* EmptySecrets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = EmptySecrets.xcconfig; sourceTree = "<group>"; };
 		C94D855B2991479900749478 /* NoteComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteComposer.swift; sourceTree = "<group>"; };
+		C95057A62CC692320024EC9C /* mute_list.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = mute_list.json; sourceTree = "<group>"; };
+		C95057B02CC6986E0024EC9C /* mute_list_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = mute_list_2.json; sourceTree = "<group>"; };
+		C95057C42CC69A770024EC9C /* mute_list_self.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = mute_list_self.json; sourceTree = "<group>"; };
 		C959DB752BD01DF4008F3627 /* GiftWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftWrapper.swift; sourceTree = "<group>"; };
 		C95D689E299E6B4100429F86 /* ProfileHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileHeader.swift; sourceTree = "<group>"; };
 		C95D68A0299E6D3E00429F86 /* BioView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BioView.swift; sourceTree = "<group>"; };
@@ -1211,6 +1217,9 @@
 		03618AF72C82583D00BCBC55 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				C95057C42CC69A770024EC9C /* mute_list_self.json */,
+				C95057B02CC6986E0024EC9C /* mute_list_2.json */,
+				C95057A62CC692320024EC9C /* mute_list.json */,
 				C9BD91882B61BBEF00FDA083 /* bad_contact_list.json */,
 				0350F1162C0A47B20024CC15 /* contact_list.json */,
 				039C96282C48321E00A8EB39 /* long_form_data.json */,
@@ -2214,6 +2223,7 @@
 				038196F72CA36797002A94E3 /* elmo-animated.webp in Resources */,
 				9DB106002C650DDE00F98A30 /* Colors.xcassets in Resources */,
 				C987F84329BA951E00B44E7A /* ClarityCity-Black.otf in Resources */,
+				C95057A72CC692360024EC9C /* mute_list.json in Resources */,
 				C9BD91892B61BBEF00FDA083 /* bad_contact_list.json in Resources */,
 				50F695072C6392C4000E4C74 /* zap_receipt.json in Resources */,
 				039C96292C48321E00A8EB39 /* long_form_data.json in Resources */,
@@ -2222,6 +2232,7 @@
 				C987F84729BA951E00B44E7A /* ClarityCity-Light.otf in Resources */,
 				C987F83929BA951E00B44E7A /* ClarityCity-MediumItalic.otf in Resources */,
 				C987F85129BA951E00B44E7A /* ClarityCity-ExtraLightItalic.otf in Resources */,
+				C95057B12CC698730024EC9C /* mute_list_2.json in Resources */,
 				C987F84D29BA951E00B44E7A /* ClarityCity-ThinItalic.otf in Resources */,
 				03B4E6A22C125CA1006E5F59 /* nostr_build_nip96_upload_response.json in Resources */,
 				0314CF742C9C7DD00001A53B /* youTube_fortnight_short.html in Resources */,
@@ -2240,6 +2251,7 @@
 				0373CE802C08DBC40027C856 /* old_contact_list.json in Resources */,
 				0350F10C2C0A46760024CC15 /* new_contact_list.json in Resources */,
 				3AEABEFF2B2BF858001BC933 /* Moderation.xcstrings in Resources */,
+				C95057C52CC69A7D0024EC9C /* mute_list_self.json in Resources */,
 				C9DEC006298947900078B43A /* sample_data.json in Resources */,
 				037071362C90D3F200BEAEC4 /* youtube_video_toxic.html in Resources */,
 				C94B2D182B17F5EC002104B6 /* sample_repost.json in Resources */,

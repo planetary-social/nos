@@ -1,5 +1,6 @@
 import CoreData
 import XCTest
+import Dependencies
 
 /// Tests for `EventProcessor` which calls methods on `Event`, hence the name "IntegrationTests".
 class EventProcessorIntegrationTests: CoreDataTestCase {
@@ -255,6 +256,96 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
 
         // Assert
         XCTAssertEqual(event?.author?.follows.count, 2)
+    }
+    
+    // MARK: - Mute List parsing
+    
+    @MainActor func test_parseMuteList_mutesNewUsers() async throws {
+        // Arrange
+        let muteListData = try jsonData(filename: "mute_list")
+        let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: muteListData)
+        
+        let mutedUserOne = "756bcacddd4fd7051cde3e39464cdd3557fec416ab1f496e2e91da0534b14272"
+        let mutedUserTwo = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
+        let mutedUserThree = "27cf2c68535ae1fc06510e827670053f5dcd39e6bd7e05f1ffb487ef2ac13549"
+        let nonMutedUser = try Author.findOrCreate(
+            by: "31c7f8c1a6c81eef0029c1a91a52f5da29dc14c599bfb0c93b645207e8413cfd",
+            context: testContext
+        )
+        
+        // Act
+        let parsedEvent = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: testContext)!
+        
+        // Assert
+        XCTAssertEqual(parsedEvent.identifier, "f1171a8ef1983fb1d55089092da5e7bbcb204bf9219697a3cf08d8e53ddbcec5")
+        XCTAssertEqual(try Author.find(by: mutedUserOne, context: testContext)?.muted, true)
+        XCTAssertEqual(try Author.find(by: mutedUserTwo, context: testContext)?.muted, true)
+        XCTAssertEqual(try Author.find(by: mutedUserThree, context: testContext)?.muted, true)
+        
+        // sanity check
+        XCTAssertEqual(try Author.find(by: nonMutedUser.hexadecimalPublicKey!, context: testContext)?.muted, false)
+    }
+    
+    @MainActor func test_parseMuteList_unmutesUsers() async throws {
+        // Arrange
+        let muteListData = try jsonData(filename: "mute_list_2")
+        let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: muteListData)
+        
+        let mutedUserOne = "756bcacddd4fd7051cde3e39464cdd3557fec416ab1f496e2e91da0534b14272"
+        let mutedUserTwo = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
+        let unmutedUser = "27cf2c68535ae1fc06510e827670053f5dcd39e6bd7e05f1ffb487ef2ac13549"
+        
+        // Start with all users muted
+        try Author.findOrCreate(by: mutedUserOne, context: testContext).muted = true
+        try Author.findOrCreate(by: mutedUserTwo, context: testContext).muted = true
+        try Author.findOrCreate(by: unmutedUser, context: testContext).muted = true
+        try testContext.save()
+        
+        // Act
+        _ = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: testContext)!
+        
+        // Assert
+        XCTAssertEqual(try Author.find(by: mutedUserOne, context: testContext)?.muted, true)
+        XCTAssertEqual(try Author.find(by: mutedUserTwo, context: testContext)?.muted, true)
+        XCTAssertEqual(try Author.find(by: unmutedUser, context: testContext)?.muted, false)
+    }
+    
+    @MainActor func test_parseMuteList_skipsOldList() async throws {
+        // Arrange
+        let mutedUserOne = "756bcacddd4fd7051cde3e39464cdd3557fec416ab1f496e2e91da0534b14272"
+        let mutedUserTwo = "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
+        let mutedUserThree = "27cf2c68535ae1fc06510e827670053f5dcd39e6bd7e05f1ffb487ef2ac13549"
+        
+        let oldMuteListData = try jsonData(filename: "mute_list")
+        let newMuteListData = try jsonData(filename: "mute_list_2")
+        let oldMuteListEvent = try JSONDecoder().decode(JSONEvent.self, from: oldMuteListData)
+        let newMuteListEvent = try JSONDecoder().decode(JSONEvent.self, from: newMuteListData)
+        
+        // Act 
+        // process the newer event first and then the old event
+        _ = try EventProcessor.parse(jsonEvent: newMuteListEvent, from: nil, in: testContext)!
+        _ = try EventProcessor.parse(jsonEvent: oldMuteListEvent, from: nil, in: testContext)!
+        
+        // Assert
+        // The third user should not be muted because they are not muted in the newer list.
+        XCTAssertEqual(try Author.find(by: mutedUserOne, context: testContext)?.muted, true)
+        XCTAssertEqual(try Author.find(by: mutedUserTwo, context: testContext)?.muted, true)
+        XCTAssertEqual(try Author.find(by: mutedUserThree, context: testContext)?.muted, false)
+    }
+    
+    @MainActor func test_parseMuteList_unMutesSelf() async throws {
+        // Arrange
+        let keyPair = KeyPair(nsec: "nsec17vdaesh5tp6u5dy74vdy7a7e5x5ww4wfdnrn6ewgnsfxav8pcurqnlmj88")
+        @Dependency(\.currentUser) var currentUser
+        await currentUser.setKeyPair(keyPair)
+        
+        let muteListData = try jsonData(filename: "mute_list_self")
+        let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: muteListData)
+        
+        // Act
+        _ = try EventProcessor.parse(jsonEvent: jsonEvent, from: nil, in: testContext)!
+        
+        XCTAssertEqual(try Author.find(by: keyPair!.publicKeyHex, context: testContext)?.muted, false)
     }
 
     // MARK: - Zap Receipt/Request parsing
