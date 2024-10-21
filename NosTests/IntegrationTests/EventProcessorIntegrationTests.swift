@@ -333,7 +333,7 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
         XCTAssertEqual(try Author.find(by: mutedUserThree, context: testContext)?.muted, nil)
     }
     
-    @MainActor func test_parseMuteList_unMutesSelf() async throws {
+    @MainActor func test_parseMuteList_unmutesSelf() async throws {
         // Arrange
         let keyPair = KeyPair(nsec: "nsec17vdaesh5tp6u5dy74vdy7a7e5x5ww4wfdnrn6ewgnsfxav8pcurqnlmj88")
         @Dependency(\.currentUser) var currentUser
