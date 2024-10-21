@@ -173,9 +173,11 @@ struct NoteCard: View {
         .onChange(of: note.quotedNoteID) {
             loadQuotedNote()
         }
-        .background(LinearGradient.cardBackground)
+        .background(
+            LinearGradient.cardBackground
+                .cornerRadius(cornerRadius)
+        )
         .listRowInsets(EdgeInsets())
-        .cornerRadius(cornerRadius)
     }
     
     private func loadQuotedNote() {

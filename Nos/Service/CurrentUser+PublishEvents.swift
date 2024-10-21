@@ -10,7 +10,6 @@ extension CurrentUser {
             displayName: author.displayName,
             name: author.name,
             nip05: author.nip05,
-            uns: author.uns,
             about: author.about,
             website: author.website,
             picture: author.profilePhotoURL?.absoluteString
@@ -133,7 +132,12 @@ extension CurrentUser {
         let jsonEvent = JSONEvent.contactList(pubKey: pubKey, tags: tags, relayAddresses: relays)
         
         do {
-            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
+            let signedEvent = try await relayService.publishToAll(
+                event: jsonEvent, 
+                signingKey: keyPair, 
+                context: viewContext
+            )
+            analytics.published(contactList: signedEvent)
         } catch {
             Log.debug("failed to update Follows \(error.localizedDescription)")
         }
@@ -206,7 +210,6 @@ extension CurrentUser {
         author.website = nil
         author.nip05 = nil
         author.profilePhotoURL = nil
-        author.uns = nil
         author.rawMetadata = nil
         
         try viewContext.save()

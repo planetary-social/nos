@@ -3,11 +3,16 @@ import SwiftUINavigation
 
 struct NosTextField: View {
     
-    var label: LocalizedStringResource
+    var label: LocalizedStringKey
     @Binding var text: String
     
+    init(_ label: LocalizedStringKey, text: Binding<String>) {
+        self.label = label
+        self._text = text
+    }
+    
     var body: some View {
-        NosFormField(label: label) {
+        NosFormField(label) {
             TextField("", text: $text)
                 .textInputAutocapitalization(.none)
                 .foregroundColor(.primaryTxt)
@@ -19,10 +24,10 @@ struct NosTextField: View {
 struct NosTextField_Previews: PreviewProvider {
     static var previews: some View {
         NosForm {
-            NosFormSection(label: .localizable.profilePicture) {
+            NosFormSection("profilePicture") {
                 WithState(initialValue: "Alice") { text in
-                    NosTextField(label: .localizable.url, text: text)
-                }    
+                    NosTextField("url", text: text)
+                }
             }   
         }
     }

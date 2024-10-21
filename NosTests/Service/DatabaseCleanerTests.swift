@@ -202,6 +202,87 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         XCTAssertEqual(authors, [carl, bob, alice])
     }
     
+    @MainActor func test_cleanup_erasesAuthorsWithoutFollows() async throws {
+        // Arrange
+        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        _ = try Author.findOrCreate(by: "bob", context: testContext)
+        _ = try Author.findOrCreate(by: "carl", context: testContext)
+        _ = try Author.findOrCreate(by: "eve", context: testContext)
+        
+        // Act
+        try testContext.saveIfNeeded()
+        
+        // Act 
+        try await DatabaseCleaner.cleanupEntities(
+            for: KeyFixture.alice.publicKeyHex, 
+            in: testContext
+        )
+        
+        // Assert
+        let authors = try testContext.fetch(Author.allAuthorsRequest())
+        // Eve and bob are muted and should be saved even though bob is out of network
+        XCTAssertEqual(authors, [alice])
+    }
+    
+    @MainActor func test_cleanup_keepsMutedAuthors() async throws {
+        // Arrange
+        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        let bob   = try Author.findOrCreate(by: "bob", context: testContext)
+        _ = try Author.findOrCreate(by: "carl", context: testContext)
+        let eve   = try Author.findOrCreate(by: "eve", context: testContext)
+        
+        // Act
+        _ = try Follow.findOrCreate(source: alice, destination: bob, context: testContext)
+        bob.muted = true
+        eve.muted = true
+        
+        try testContext.saveIfNeeded()
+        
+        // Act 
+        try await DatabaseCleaner.cleanupEntities(
+            for: KeyFixture.alice.publicKeyHex, 
+            in: testContext
+        )
+        
+        // Assert
+        let authors = try testContext.fetch(Author.allAuthorsRequest())
+        // Eve and bob are muted and should be saved even though bob is out of network
+        XCTAssertEqual(authors, [eve, bob, alice])
+    }
+    
+    @MainActor func test_cleanup_keepsAuthorsWithEvents() async throws {
+        // Arrange
+        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        let bob   = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+        
+        // Act
+        // Create an event by an out of network author
+        let event = try EventFixture.build(
+            in: testContext, 
+            publicKey: KeyFixture.bob.publicKeyHex, 
+            receivedAt: Date(timeIntervalSince1970: 11)
+        )
+        
+        try testContext.saveIfNeeded()
+        
+        // Act 
+        try await DatabaseCleaner.cleanupEntities(
+            for: KeyFixture.alice.publicKeyHex, 
+            in: testContext,
+            keeping: 1
+        )
+        
+        // Assert
+        let authors = try testContext.fetch(Author.allAuthorsRequest())
+        // Bob should be kept around because he has published events that weren't deleted.
+        XCTAssertEqual(authors, [bob, alice]) 
+        
+        // Sanity check that Bob's event was kept
+        let events = try testContext.fetch(Event.allEventsRequest())
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events.first?.identifier, event.identifier)
+    }
+    
     // MARK: - Follows
     
     @MainActor func test_cleanup_keepsInNetworkFollows() async throws {

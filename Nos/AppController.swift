@@ -7,22 +7,24 @@ import Logger
     
     enum CurrentState {
         case onboarding
+        case loading
         case loggedIn
     }
     
-    private(set) var currentState: CurrentState?
+    private(set) var currentState: CurrentState
     
     @ObservationIgnored @Dependency(\.analytics) private var analytics
     @ObservationIgnored @Dependency(\.router) private var router
     @ObservationIgnored @Dependency(\.currentUser) private var currentUser
     
     init() {
+        currentState = .loading
         Log.info("App Version: \(Bundle.current.versionAndBuild)")
     }
     
     func configureCurrentState() {
-        currentState = currentUser.keyPair == nil ? .onboarding : .loggedIn
         Task { @MainActor in
+            currentState = currentUser.keyPair == nil ? .onboarding : .loggedIn
             let signedInAuthor = currentUser.author
             if currentState == .loggedIn, let signedInAuthor, signedInAuthor.lastUpdatedContactList == nil {
                 router.selectedTab = .discover

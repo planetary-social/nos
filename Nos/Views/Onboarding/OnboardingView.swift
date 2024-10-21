@@ -1,15 +1,26 @@
-import SwiftUI
 import Dependencies
-import Logger
+import SwiftUI
 
-class OnboardingState: ObservableObject {
-    @Published var flow: OnboardingFlow = .createAccount
-    @Published var step: OnboardingStep = .onboardingStart {
+/// The state of onboarding, tracking the flow, steps, and success or failure of a few specific tasks.
+@Observable final class OnboardingState {
+    var flow: OnboardingFlow = .createAccount
+    var step: OnboardingStep = .onboardingStart {
         didSet {
             path.append(step)
         }
     }
-    @Published var path = NavigationPath()
+    var path = NavigationPath()
+    
+    /// Whether the user succeeded in setting their display name
+    var displayNameSucceeded = false
+
+    /// Whether the user succeeded in setting their username
+    var usernameSucceeded = false
+    
+    /// Whether the user succeeded in all steps of onboarding
+    var allStepsSucceeded: Bool {
+        displayNameSucceeded && usernameSucceeded
+    }
 }
 
 enum OnboardingFlow {
@@ -21,36 +32,67 @@ enum OnboardingStep {
     case onboardingStart
     case ageVerification
     case notOldEnough
-    case termsOfService
+    case createAccount
+    case privateKey
+    case publicKey
+    case displayName
+    case username
+    case accountSuccess
+    case buildYourNetwork
     case login
 }
 
+/// The view that initializes the onboarding navigation stack and shows the first view.
 struct OnboardingView: View {
-    @StateObject var state = OnboardingState()
-    
+    @State var state = OnboardingState()
+
+    @Dependency(\.featureFlags) private var featureFlags
+
     /// Completion to be called when all onboarding steps are complete
     let completion: @MainActor () -> Void
     
     var body: some View {
         NavigationStack(path: $state.path) {
             OnboardingStartView()
-                .environmentObject(state)
+                .environment(state)
                 .navigationDestination(for: OnboardingStep.self) { step in
                     switch step {
                     case .onboardingStart:
                         OnboardingStartView()
-                            .environmentObject(state)
+                            .environment(state)
                     case .ageVerification:
-                        OnboardingAgeVerificationView()
-                            .environmentObject(state)
+                        if featureFlags.isEnabled(.newOnboardingFlow) {
+                            AgeVerificationView()
+                                .environment(state)
+                        } else {
+                            OnboardingAgeVerificationView()
+                                .environment(state)
+                        }
                     case .notOldEnough:
                         OnboardingNotOldEnoughView()
-                            .environmentObject(state)
-                    case .termsOfService:
-                        OnboardingTermsOfServiceView(completion: completion)
-                            .environmentObject(state)
+                            .environment(state)
+                    case .createAccount:
+                        CreateAccountView()
+                            .environment(state)
+                    case .privateKey:
+                        PrivateKeyView()
+                            .environment(state)
+                    case .publicKey:
+                        PublicKeyView()
+                            .environment(state)
+                    case .displayName:
+                        DisplayNameView()
+                            .environment(state)
+                    case .username:
+                        UsernameView()
+                            .environment(state)
+                    case .accountSuccess:
+                        AccountSuccessView()
+                            .environment(state)
                     case .login:
                         OnboardingLoginView(completion: completion)
+                    case .buildYourNetwork:
+                        BuildYourNetworkView(completion: completion)
                     }
                 }
         }
@@ -60,5 +102,6 @@ struct OnboardingView: View {
 struct OnboardingView_Previews: PreviewProvider {
     static var previews: some View {
         OnboardingView {}
+            .inject(previewData: PreviewData())
     }
 }

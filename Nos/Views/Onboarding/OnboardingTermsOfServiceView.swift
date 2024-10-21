@@ -12,7 +12,7 @@ struct OnboardingTermsOfServiceView: View {
     
     var body: some View {
         VStack {
-            Text(.localizable.termsOfServiceTitle)
+            Text("termsOfServiceTitle")
                 .font(.clarity(.bold, textStyle: .largeTitle))
                 .foregroundStyle(LinearGradient.diagonalAccent2.blendMode(.normal))
                 .padding(.top, 92)
@@ -36,16 +36,16 @@ struct OnboardingTermsOfServiceView: View {
             )
             .padding(.horizontal, 44.5)
             HStack {
-                BigActionButton(title: .localizable.reject) {
+                BigActionButton("reject") {
                     state.step = .onboardingStart
                 }
                 Spacer(minLength: 15)
-                BigActionButton(title: .localizable.accept) {
+                BigActionButton("accept") {
                     switch state.flow {
                     case .createAccount:
                         do {
                             try await currentUser.createAccount()
-                            completion()
+                            state.step = .buildYourNetwork
                         } catch {
                             crashReporting.report(error)
                         }

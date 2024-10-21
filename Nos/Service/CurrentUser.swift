@@ -6,13 +6,12 @@ import Dependencies
 // swiftlint:disable type_body_length
 @Observable class CurrentUser: NSObject, NSFetchedResultsControllerDelegate {
     
-    @ObservationIgnored @Dependency(\.analytics) private var analytics
+    @ObservationIgnored @Dependency(\.analytics) var analytics
     @ObservationIgnored @Dependency(\.crashReporting) private var crashReporting
     @ObservationIgnored @Dependency(\.persistenceController) private var persistenceController
     @ObservationIgnored @Dependency(\.pushNotificationService) private var pushNotificationService
     @ObservationIgnored @Dependency(\.relayService) var relayService
     @ObservationIgnored @Dependency(\.keychain) private var keychain
-    @ObservationIgnored @Dependency(\.unsAPI) var unsAPI
     
     // TODO: it's time to cache this
     var keyPair: KeyPair? {
@@ -301,7 +300,6 @@ extension CurrentUser {
         await setKeyPair(nil)
         analytics.logout()
         crashReporting.logout()
-        unsAPI.logout()
         appController.configureCurrentState()
         try? await persistenceController.deleteAll()
     }

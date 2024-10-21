@@ -2,7 +2,7 @@ import Foundation
 import Logger
 
 /// A view model for the RawEventView
-@MainActor protocol RawEventViewModel: ObservableObject {
+protocol RawEventViewModel {
     
     /// The raw message to display in screen
     var rawMessage: String? { get }
@@ -21,17 +21,14 @@ import Logger
 }
 
 /// A controller for the `RawEventView`
-@MainActor class RawEventController: RawEventViewModel {
+@Observable final class RawEventController: RawEventViewModel {
 
-    private var note: Event
+    private let note: Event
+    private let dismissHandler: () -> Void
 
-    @Published var rawMessage: String?
-    
-    @Published var loadingMessage: String?
-
-    @Published var errorMessage: String?
-    
-    private var dismissHandler: () -> Void
+    private(set) var rawMessage: String?
+    private(set) var loadingMessage: String?
+    private(set) var errorMessage: String?
 
     init(note: Event, dismissHandler: @escaping () -> Void) {
         self.note = note
@@ -52,22 +49,20 @@ import Logger
         self.rawMessage = rawMessage
         self.loadingMessage = nil
     }
-
+    
     private func loadRawMessage() {
-        loadingMessage = String(localized: .localizable.loading)
-        Task { [note, weak self] in
-            var rawMessage: String
-            let errorMessage = note.content ?? "error"
-            do {
-                let data = try JSONSerialization.data(
-                    withJSONObject: note.jsonRepresentation ?? [:],
-                    options: [.prettyPrinted]
-                )
-                rawMessage = String(decoding: data, as: UTF8.self) 
-            } catch {
-                rawMessage = errorMessage
-            }
-            self?.updateRawMessage(rawMessage)
+        loadingMessage = String(localized: "loading")
+        
+        let rawMessage: String
+        do {
+            let data = try JSONSerialization.data(
+                withJSONObject: note.jsonRepresentation ?? [:],
+                options: [.prettyPrinted]
+            )
+            rawMessage = String(decoding: data, as: UTF8.self)
+        } catch {
+            rawMessage = note.content ?? "error"
         }
+        updateRawMessage(rawMessage)
     }
 }

@@ -2,6 +2,7 @@ import SwiftUI
 import CoreData
 import Combine
 import Dependencies
+import TipKit
 
 struct HomeFeedView: View {
     
@@ -21,6 +22,9 @@ struct HomeFeedView: View {
     static let staticLoadTime: TimeInterval = 2
 
     let user: Author
+    
+    /// A tip to display at the top of the feed.
+    let welcomeTip = WelcomeToFeedTip()
 
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay? 
@@ -53,35 +57,44 @@ struct HomeFeedView: View {
         return filter
     }
     
-    var navigationBarTitle: LocalizedStringResource {
+    var navigationBarTitle: LocalizedStringKey {
         if let relayName = selectedRelay?.host {
-            LocalizedStringResource(stringLiteral: relayName)
+            LocalizedStringKey(stringLiteral: relayName)
         } else {
-            .localizable.accountsIFollow
+            "accountsIFollow"
         }
     }
 
     var body: some View {
         ZStack {
-            PagedNoteListView(
-                refreshController: $refreshController,
-                databaseFilter: homeFeedFetchRequest,
-                relayFilter: homeFeedFilter,
-                relay: selectedRelay,
-                managedObjectContext: viewContext,
-                tab: .home,
-                header: {
-                    EmptyView()
-                },
-                emptyPlaceholder: {
-                    VStack {
-                        Text(.localizable.noEvents)
-                            .padding()
+            VStack(spacing: 8) {
+                TipView(welcomeTip)
+                    .padding(.top, 20)
+                    .padding(.horizontal, 16)
+                    .readabilityPadding()
+                    .tipBackground(LinearGradient.horizontalAccentReversed)
+                    .tipViewStyle(.inline)
+
+                PagedNoteListView(
+                    refreshController: $refreshController,
+                    databaseFilter: homeFeedFetchRequest,
+                    relayFilter: homeFeedFilter,
+                    relay: selectedRelay,
+                    managedObjectContext: viewContext,
+                    tab: .home,
+                    header: {
+                        EmptyView()
+                    },
+                    emptyPlaceholder: {
+                        VStack {
+                            Text("noEvents")
+                                .padding()
+                        }
+                        .frame(minHeight: 300)
                     }
-                    .frame(minHeight: 300)
-                }
-            )
-            .padding(0)
+                )
+                .padding(0)
+            }
 
             NewNotesButton(fetchRequest: FetchRequest(fetchRequest: newNotesRequest)) {
                 refreshController.startRefresh = true
@@ -97,7 +110,7 @@ struct HomeFeedView: View {
             if showRelayPicker {
                 RelayPicker(
                     selectedRelay: $selectedRelay,
-                    defaultSelection: String(localized: .localizable.accountsIFollow),
+                    defaultSelection: String(localized: "accountsIFollow"),
                     author: user,
                     isPresented: $showRelayPicker
                 )
@@ -132,22 +145,23 @@ struct HomeFeedView: View {
                 } label: {
                     Image(systemName: "line.3.horizontal.decrease.circle")
                         .foregroundStyle(Color.secondaryTxt)
-                        .accessibilityLabel(Text(.localizable.filter))
+                        .accessibilityLabel(Text("filter"))
                 }
                 .frame(minWidth: 40, minHeight: 40)
             }
         }
         .padding(.top, 1)
-        .nosNavigationBar(title: navigationBarTitle)
+        .nosNavigationBar(navigationBarTitle)
         .onAppear {
             if router.selectedTab == .home {
-                isVisible = true 
+                isVisible = true
             }
         }
         .onDisappear { isVisible = false }
         .onChange(of: isVisible) { 
             if isVisible {
                 analytics.showedHome()
+                GoToFeedTip.viewedFeed.sendDonation()
             }
         }
     }

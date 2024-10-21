@@ -45,7 +45,7 @@ struct BioSheet: View {
                 }
 
                 if let bio {
-                    Text(.localizable.bio)
+                    Text("bio")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Color.secondaryTxt)
                         .lineSpacing(10)
@@ -62,7 +62,7 @@ struct BioSheet: View {
                         .foregroundStyle(Color.primaryTxt)
                         .tint(.accent)
                 } else {
-                    Text(.localizable.bioMissing)
+                    Text("bioMissing")
                         .font(.body)
                         .foregroundStyle(Color.secondaryTxt)
                         .padding(.top, 34)
@@ -81,7 +81,7 @@ struct BioSheet: View {
     var previewData = PreviewData()
 
     return Group {
-        BioSheet(author: previewData.unsAuthor)
+        BioSheet(author: previewData.eve)
             .inject(previewData: previewData)
             .padding()
             .background(Color.previewBg)

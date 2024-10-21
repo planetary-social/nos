@@ -1,6 +1,7 @@
 import SwiftUI
 import Logger
 import Dependencies
+import TipKit
 
 @main
 struct NosApp: App {
@@ -22,6 +23,7 @@ struct NosApp: App {
         // https://github.com/planetary-social/nos/issues/1064
         UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .systemBlue
         persistenceController.scheduleBackgroundCleanupTask()
+        try? Tips.configure()
     }
     
     var body: some Scene {

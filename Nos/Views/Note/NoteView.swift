@@ -8,6 +8,7 @@ struct NoteView: View {
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
+    @Dependency(\.persistenceController) private var persistenceController
 
     @State private var showReplyComposer = false
     
@@ -19,7 +20,9 @@ struct NoteView: View {
     var repliesRequest: FetchRequest<Event>
     /// All replies
     var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
-  
+
+    /// The authors who are referenced in a note in addition to those who replied to the note, if any.
+    @State private var relatedAuthors: [Author] = []
     @State private var directReplies: [Event] = []
     
     func computeDirectReplies() async {
@@ -61,7 +64,42 @@ struct NoteView: View {
     }
     
     var note: Event
-    
+
+    /// Retrieves a list of authors associated with the current note, including the
+    /// rootNote if any and any author referenced in a note.
+    ///
+    /// - Returns: An array of `Author` objects.
+    private func computeRelatedAuthors() -> [Author] {
+        var authors: Set<Author> = []
+
+        // Include the author of the root note
+        if let rootNoteAuthor = note.rootNote()?.author {
+            authors.insert(rootNoteAuthor)
+        }
+
+        // Include the author of the current note
+        if let noteAuthor = note.author {
+            authors.insert(noteAuthor)
+        }
+
+        // Include authors referenced in the current note
+        let noteAuthorReferences = note.loadAuthorsFromReferences(in: persistenceController.viewContext)
+        authors.formUnion(noteAuthorReferences)
+
+        // Include authors referenced in the root note
+        if let rootNoteAuthorReferences = note.rootNote()?.loadAuthorsFromReferences(
+            in: persistenceController.viewContext
+        ) {
+            authors.formUnion(rootNoteAuthorReferences)
+        }
+
+        // Include up to 10 authors from direct replies
+        let tenDirectReplies = directReplies.compactMap { $0.author }.prefix(10)
+        authors.formUnion(tenDirectReplies)
+
+        return Array(authors)
+    }
+
     func subscribeToReplies() {
         Task(priority: .userInitiated) {
             // Close out stale requests
@@ -108,11 +146,20 @@ struct NoteView: View {
                         )
                         .padding(.top, 15)
                         .sheet(isPresented: $showReplyComposer, content: {
-                            NoteComposer(replyTo: note, isPresented: $showReplyComposer)
+                            NoteComposer(
+                                replyTo: note,
+                                relatedAuthors: relatedAuthors,
+                                isPresented: $showReplyComposer
+                            )
                                 .environment(currentUser)
                                 .interactiveDismissDisabled()
                         })
-                        
+                        .onChange(of: showReplyComposer) { _, newValue in
+                            if newValue {
+                                relatedAuthors = computeRelatedAuthors()
+                            }
+                        }
+
                         ForEach(directReplies.reversed()) { event in
                             ThreadView(root: event, allReplies: replies.reversed())
                         }
@@ -121,7 +168,7 @@ struct NoteView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(.top, 1)
-                .nosNavigationBar(title: .localizable.thread)
+                .nosNavigationBar("thread")
                 .onAppear {
                     subscribeToReplies()
                 }
@@ -150,7 +197,7 @@ struct NoteView: View {
                         Button(action: {
                             focusTextView = false
                         }, label: {
-                            Text(.localizable.cancel)
+                            Text("cancel")
                                 .foregroundColor(.primaryTxt)
                         })
                     }

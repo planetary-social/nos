@@ -15,7 +15,7 @@ struct FollowersDestination: Hashable {
 /// Displays a list of people someone is following.
 struct FollowsView: View {
     /// Screen title
-    var title: LocalizedStringResource
+    var title: LocalizedStringKey
 
     /// Sorted list of authors to display in the list
     var authors: [Author]
@@ -26,6 +26,16 @@ struct FollowsView: View {
     @Dependency(\.relayService) private var relayService
     @EnvironmentObject private var router: Router
 
+    init(
+        _ title: LocalizedStringKey,
+        authors: [Author],
+        subscriptions: [ObjectIdentifier: SubscriptionCancellable] = [ObjectIdentifier: SubscriptionCancellable]()
+    ) {
+        self.title = title
+        self.authors = authors
+        self.subscriptions = subscriptions
+    }
+    
     var body: some View {
         ScrollView {
             LazyVStack {
@@ -50,6 +60,6 @@ struct FollowsView: View {
             .padding(.vertical, 12)
         }
         .background(Color.appBg)
-        .nosNavigationBar(title: title)
+        .nosNavigationBar(title)
     }
 }

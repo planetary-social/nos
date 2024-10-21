@@ -29,15 +29,11 @@ struct SettingsView: View {
     @State private var showReportWarnings = true
     @State private var showOutOfNetworkWarning = true
     @State private var copyButtonState: CopyButtonState = .copy
+    @State private var showDeleteConfirmationAlert = false
 
     fileprivate enum AlertAction {
         case logout
         case deleteAccount
-    }
-
-    fileprivate enum CopyButtonState {
-        case copy
-        case copied
     }
 
     var body: some View {
@@ -48,7 +44,7 @@ struct SettingsView: View {
                         .foregroundColor(.primaryTxt)
                         .font(.clarity(.regular, textStyle: .body))
                         .lineLimit(1)
-                        .accessibilityLabel(Text(.localizable.privateKey))
+                        .accessibilityLabel(Text("privateKey"))
 
                     Spacer()
 
@@ -57,7 +53,7 @@ struct SettingsView: View {
                     ZStack {
                         // Copy Button
                         SecondaryActionButton(
-                            title: .localizable.copy,
+                            "copy",
                             image: .copyIcon,
                             imageAlignment: .right,
                             shouldFillHorizontalSpace: true
@@ -73,7 +69,7 @@ struct SettingsView: View {
 
                         // Copied Button
                         SecondaryActionButton(
-                            title: .localizable.copied,
+                            "copied",
                             shouldFillHorizontalSpace: true
                         )
                         .opacity(copyButtonState == .copied ? 1 : 0)
@@ -83,25 +79,25 @@ struct SettingsView: View {
                     .padding(.vertical, 5)
                 }
                 
-                ActionButton(title: .localizable.logout) {
+                ActionButton("logout") {
                     alert = AlertState(
-                        title: { TextState(String(localized: .localizable.logout)) },
+                        title: { TextState(String(localized: "logout")) },
                         actions: {
                             ButtonState(role: .destructive, action: .send(.logout)) {
-                                TextState(String(localized: .localizable.myKeyIsBackedUp))
+                                TextState(String(localized: "myKeyIsBackedUp"))
                             }
                         },
-                        message: { TextState(String(localized: .localizable.backUpYourKeyWarning)) }
+                        message: { TextState(String(localized: "backUpYourKeyWarning")) }
                     )
-                }        
+                }
                 .padding(.vertical, 5)
             } header: {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(.localizable.privateKey)
+                    Text("privateKey")
                         .foregroundColor(.primaryTxt)
                         .font(.clarity(.semibold, textStyle: .headline))
 
-                    Text(.localizable.privateKeyWarning)
+                    Text("privateKeyWarning")
                         .foregroundColor(.secondaryTxt)
                         .font(.footnote)
                 }
@@ -111,31 +107,31 @@ struct SettingsView: View {
                 .padding(.bottom, 20)
             }
             .listRowGradientBackground()
-            
+
             Section {
                 VStack {
-                    NosToggle(isOn: $showReportWarnings, labelText: .localizable.useReportsFromFollows)
-                    .onChange(of: showReportWarnings) { _, newValue in
-                        userDefaults.set(newValue, forKey: showReportWarningsKey)
-                    }
+                    NosToggle("useReportsFromFollows", isOn: $showReportWarnings)
+                        .onChange(of: showReportWarnings) { _, newValue in
+                            userDefaults.set(newValue, forKey: showReportWarningsKey)
+                        }
                     
                     HStack {
-                        Text(.localizable.useReportsFromFollowsDescription)
+                        Text("useReportsFromFollowsDescription")
                             .foregroundColor(.secondaryTxt)
                             .font(.footnote)
                         Spacer()
                     }
                 }
                 .padding(.bottom, 8)
-
+                
                 VStack {
-                    NosToggle(isOn: $showOutOfNetworkWarning, labelText: .localizable.showOutOfNetworkWarnings)
-                    .onChange(of: showOutOfNetworkWarning) { _, newValue in
-                        userDefaults.set(newValue, forKey: showOutOfNetworkWarningKey)
-                    }
+                    NosToggle("showOutOfNetworkWarnings", isOn: $showOutOfNetworkWarning)
+                        .onChange(of: showOutOfNetworkWarning) { _, newValue in
+                            userDefaults.set(newValue, forKey: showOutOfNetworkWarningKey)
+                        }
                     
                     HStack {
-                        Text(.localizable.showOutOfNetworkWarningsDescription)
+                        Text("showOutOfNetworkWarningsDescription")
                             .foregroundColor(.secondaryTxt)
                             .font(.footnote)
                         Spacer()
@@ -143,7 +139,7 @@ struct SettingsView: View {
                 }
                 .padding(.bottom, 8)
             } header: {
-                Text(.localizable.feedSettings)
+                Text("feedSettings")
                     .foregroundColor(.primaryTxt)
                     .font(.clarity(.semibold, textStyle: .headline))
                     .textCase(nil)
@@ -155,9 +151,9 @@ struct SettingsView: View {
                 showReportWarnings = userDefaults.object(forKey: showReportWarningsKey) as? Bool ?? true
                 showOutOfNetworkWarning = userDefaults.object(forKey: showOutOfNetworkWarningKey) as? Bool ?? true
             }
-            
+
             Section {
-                Text("\(String(localized: .localizable.appVersion)) \(Bundle.current.versionAndBuild)")
+                Text("\(String(localized: "appVersion")) \(Bundle.current.versionAndBuild)")
                     .foregroundColor(.primaryTxt)
                     .padding(.vertical, 5)
                     .sheet(
@@ -174,29 +170,29 @@ struct SettingsView: View {
                         }
                     )
 
-                SecondaryActionButton(title: .localizable.shareDatabase) {
+                SecondaryActionButton("shareDatabase") {
                     Task {
                         do {
                             fileToShare = try await Zipper.zipDatabase(controller: persistenceController)
                         } catch {
                             alert = AlertState(title: {
-                                TextState(String(localized: .localizable.error))
+                                TextState(String(localized: "error"))
                             }, message: {
-                                TextState(String(localized: .localizable.failedToShareDatabase))
+                                TextState(String(localized: "failedToShareDatabase"))
                             })
                         }
                     }
                 }
 
-                SecondaryActionButton(title: .localizable.shareLogs) {
+                SecondaryActionButton("shareLogs") {
                     Task {
                         do {
                             fileToShare = try await Zipper.zipLogs()
                         } catch {
                             alert = AlertState(title: {
-                                TextState(String(localized: .localizable.error))
+                                TextState(String(localized: "error"))
                             }, message: {
-                                TextState(String(localized: .localizable.failedToExportLogs))
+                                TextState(String(localized: "failedToExportLogs"))
                             })
                         }
                     }
@@ -210,7 +206,7 @@ struct SettingsView: View {
                 debugControls
                 #endif
             } header: {
-                Text(.localizable.debug)
+                Text("debug")
                     .foregroundColor(.primaryTxt)
                     .font(.clarity(.semibold, textStyle: .headline))
                     .textCase(nil)
@@ -218,24 +214,16 @@ struct SettingsView: View {
                     .padding(.vertical, 15)
             }
             .listRowGradientBackground()
-            
+
             ActionButton(
-                title: .localizable.deleteMyAccount,
+                "deleteMyAccount",
                 font: .clarityBold(.title3),
                 padding: EdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0),
                 depthEffectColor: .actionSecondaryDepthEffect,
                 backgroundGradient: .verticalAccentSecondary,
                 shouldFillHorizontalSpace: true
             ) {
-                alert = AlertState(
-                    title: { TextState(String(localized: .localizable.deleteAccount)) },
-                    actions: {
-                        ButtonState(role: .destructive, action: .send(.deleteAccount)) {
-                            TextState(String(localized: .localizable.delete))
-                        }
-                    },
-                    message: { TextState(String(localized: .localizable.deleteAccountDescription)) }
-                )
+                showDeleteConfirmationAlert = true
             }
             .clipShape(Capsule())
             .listRowBackground(Color.clear)
@@ -243,7 +231,7 @@ struct SettingsView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color.appBg)
-        .nosNavigationBar(title: .localizable.settings)
+        .nosNavigationBar("settings")
         .alert(unwrapping: $alert) { (action: AlertAction?) in
             if let action {
                 await alertButtonTapped(action)
@@ -253,8 +241,32 @@ struct SettingsView: View {
             privateKeyString = currentUser.keyPair?.nsec ?? ""
             analytics.showedSettings()
         }
+        .overlay {
+            ZStack {
+                if showDeleteConfirmationAlert {
+                    /// Adds a translucent background overlay to the view's man content
+                    Color.actionSheetOverlay.opacity(0.5)
+                        .ignoresSafeArea()
+                    
+                    DeleteConfirmationView(
+                        requiredText: String(localized: "delete").uppercased(),
+                        onDelete: {
+                            Task {
+                                await alertButtonTapped(.deleteAccount)
+                            }
+                            showDeleteConfirmationAlert = false
+                        },
+                        onCancel: {
+                            showDeleteConfirmationAlert = false
+                        }
+                    )
+                }
+            }                    
+            .transition(.opacity)
+            .animation(.easeInOut(duration: 0.2), value: showDeleteConfirmationAlert)
+        }
     }
-    
+
     fileprivate func alertButtonTapped(_ action: AlertAction) async {
         switch action {
         case .logout:
@@ -272,17 +284,17 @@ struct SettingsView: View {
 // DEBUG builds will have everything that's in STAGING builds and more.
 #if STAGING || DEBUG
 extension SettingsView {
-    /// Whether the new moderation flow is enabled.
-    private var isNewModerationFlowEnabled: Binding<Bool> {
+    /// Whether the new onboarding flow is enabled.
+    private var isNewOnboardingFlowEnabled: Binding<Bool> {
         Binding<Bool>(
-            get: { featureFlags.isEnabled(.newModerationFlow) },
-            set: { featureFlags.setFeature(.newModerationFlow, enabled: $0) }
+            get: { featureFlags.isEnabled(.newOnboardingFlow) },
+            set: { featureFlags.setFeature(.newOnboardingFlow, enabled: $0) }
         )
     }
 
     /// A toggle for the new moderation flow that allows the user to turn the feature on or off.
-    private var newModerationFlowToggle: some View {
-        NosToggle(isOn: isNewModerationFlowEnabled, labelText: .localizable.enableNewModerationFlow)
+    private var newOnboardingFlowToggle: some View {
+        NosToggle("New Onboarding Flow", isOn: isNewOnboardingFlowEnabled)
     }
 }
 #endif
@@ -292,8 +304,7 @@ extension SettingsView {
     /// Controls that will appear when the app is built for STAGING.
     @MainActor private var stagingControls: some View {
         Group {
-            newModerationFlowToggle
-            deleteAccountToggle
+            newOnboardingFlowToggle
         }
     }
 }
@@ -304,10 +315,10 @@ extension SettingsView {
     /// Controls that will appear when the app is built for DEBUG.
     @MainActor private var debugControls: some View {
         Group {
-            newModerationFlowToggle
-            Text(.localizable.sampleDataInstructions)
+            newOnboardingFlowToggle
+            Text("sampleDataInstructions")
                 .foregroundColor(.primaryTxt)
-            Button(String(localized: .localizable.loadSampleData)) {
+            Button("loadSampleData") {
                 Task {
                     do {
                         try await persistenceController.loadSampleData(context: viewContext)
@@ -320,7 +331,7 @@ extension SettingsView {
                 NavigationLink {
                     PublishedEventsView(author: author)
                 } label: {
-                    Text(.localizable.allPublishedEvents)
+                    Text("allPublishedEvents")
                 }
             }
         }

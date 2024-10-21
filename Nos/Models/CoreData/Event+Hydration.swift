@@ -60,7 +60,7 @@ extension Event {
             hydrateMetaData(from: jsonEvent, author: newAuthor, context: context)
             
         case .mute:
-            hydrateMuteList(from: jsonEvent, context: context)
+            try hydrateMuteList(from: jsonEvent, context: context)
         case .repost:
             
             hydrateDefault(from: jsonEvent, context: context)
@@ -173,15 +173,20 @@ extension Event {
                 newAuthor.profilePhotoURL = metadata.profilePhotoURL
                 newAuthor.website = metadata.website
                 newAuthor.nip05 = metadata.nip05
-                newAuthor.uns = metadata.uns
             } catch {
                 print("Failed to decode metaData event with ID \(String(describing: identifier))")
             }
         }
     }
     
-    private func hydrateMuteList(from jsonEvent: JSONEvent, context: NSManagedObjectContext) {
-        let mutedKeys = jsonEvent.tags.map { $0[1] }
+    private func hydrateMuteList(from jsonEvent: JSONEvent, context: NSManagedObjectContext) throws {
+        guard createdAt! > author?.lastUpdatedMuteList ?? Date.distantPast else {
+            return
+        }
+        
+        author?.lastUpdatedMuteList = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
+        
+        let mutedKeys = Set(jsonEvent.tags.map { $0[1] })
         
         let request = Author.allAuthorsRequest(muted: true)
         
@@ -189,21 +194,22 @@ extension Event {
         if let authors = try? context.fetch(request) {
             for author in authors where !mutedKeys.contains(author.hexadecimalPublicKey!) {
                 author.muted = false
-                print("Parse-Un-Muted \(author.hexadecimalPublicKey ?? "")")
+                Log.info("Parse-Un-Muted \(author.hexadecimalPublicKey ?? "")")
             }
         }
         
         // Mute anyone (locally only) in the mutedKeys
         for key in mutedKeys {
-            if let author = try? Author.find(by: key, context: context) {
+            if let author = try? Author.findOrCreate(by: key, context: context) {
                 author.muted = true
-                print("Parse-Muted \(author.hexadecimalPublicKey ?? "")")
+                Log.info("Parse-Muted \(author.hexadecimalPublicKey ?? "")")
             }
         }
         
         // Force ensure current user never was muted
-        Task { @MainActor in
-            currentUser.author?.muted = false
+        if let signedInUserID = currentUser.publicKeyHex {
+            let currentUser = try Author.find(by: signedInUserID, context: context)
+            currentUser?.muted = false
         }
     }
 }

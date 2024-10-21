@@ -21,6 +21,7 @@ class JSONEventTests: XCTestCase {
             ["p", "14aeb8dad4", "wss://bobrelay.com/nostr", "bob"],
             ["p", "612aee610f", "ws://carolrelay.com/ws", "carol"]
         ]
+        let expectedTags = pTags + [["client", "nos", "https://nos.social"]]
         let relayAddresses = [
             "wss://relay1.lol",
             "wss://relay2.lol"
@@ -37,7 +38,7 @@ class JSONEventTests: XCTestCase {
         """
         
         XCTAssertEqual(event.kind, 3)
-        XCTAssertEqual(event.tags, pTags)
+        XCTAssertEqual(event.tags, expectedTags)
         XCTAssertEqual(event.content, expectedContent)
     }
     
@@ -47,6 +48,7 @@ class JSONEventTests: XCTestCase {
             ["p", "14aeb8dad4", "wss://bobrelay.com/nostr", "bob"],
             ["p", "612aee610f", "ws://carolrelay.com/ws", "carol"]
         ]
+        let expectedTags = pTags + [["client", "nos", "https://nos.social"]]
         
         let event = JSONEvent.contactList(
             pubKey: "",
@@ -57,7 +59,7 @@ class JSONEventTests: XCTestCase {
         let expectedContent = "{}"
         
         XCTAssertEqual(event.kind, 3)
-        XCTAssertEqual(event.tags, pTags)
+        XCTAssertEqual(event.tags, expectedTags)
         XCTAssertEqual(event.content, expectedContent)
     }
     

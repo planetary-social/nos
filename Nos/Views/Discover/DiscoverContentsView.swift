@@ -44,7 +44,7 @@ struct DiscoverContentsView: View {
                         FullscreenProgressView(
                             isPresented: .constant(true),
                             text: searchController.state == .stillLoading ?
-                            String(localized: .localizable.notFindingResults) : nil
+                            String(localized: "notFindingResults") : nil
                         )
                     case .results:
                         ScrollView {
@@ -84,12 +84,16 @@ struct DiscoverContentsView: View {
                     
                     ForEach(featuredAuthorIDs) { authorID in
                         AuthorObservationView(authorID: authorID) { author in
-                            AuthorCard(author: author) {
-                                router.push(author)
+                            VStack {
+                                if author.lastUpdatedMetadata != nil {
+                                    AuthorCard(author: author) {
+                                        router.push(author)
+                                    }
+                                    .padding(.horizontal, 13)
+                                    .padding(.top, 5)
+                                    .readabilityPadding()
+                                }
                             }
-                            .padding(.horizontal, 13)
-                            .padding(.top, 5)
-                            .readabilityPadding()
                             .task {
                                 subscriptions[author.id] =
                                 await relayService.requestMetadata(

@@ -2,7 +2,7 @@
 class MockFeatureFlags: FeatureFlags {
     /// Mock feature flags and their values.
     private var featureFlags: [FeatureFlag: Bool] = [
-        .newModerationFlow: false,
+        .newOnboardingFlow: true
     ]
 
     func isEnabled(_ feature: FeatureFlag) -> Bool {

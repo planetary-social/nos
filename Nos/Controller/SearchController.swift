@@ -22,6 +22,15 @@ enum SearchState {
     case stillLoading
 }
 
+/// Represents the origin from which a search is initiated.
+enum SearchOrigin {
+    /// Search initiated from the Discover tab
+    case discover
+
+    /// Search initiated from the mentions `AuthorListView`
+    case mentions
+}
+
 /// Manages a search query and list of results.
 class SearchController: ObservableObject {
     
@@ -39,7 +48,6 @@ class SearchController: ObservableObject {
     @Dependency(\.router) private var router
     @Dependency(\.relayService) private var relayService
     @Dependency(\.persistenceController) private var persistenceController
-    @Dependency(\.unsAPI) var unsAPI
     @Dependency(\.currentUser) var currentUser
     @Dependency(\.analytics) private var analytics
 
@@ -54,9 +62,14 @@ class SearchController: ObservableObject {
     /// The amount of time, in seconds, to remain in the `.loading` state until switching to `.stillLoading`.
     private let stillLoadingTime: TimeInterval = 10
 
+    /// The origin of the current search.
+    let searchOrigin: SearchOrigin
+
     // MARK: - Init
     
-    init() {
+    init(searchOrigin: SearchOrigin = .discover) {
+        self.searchOrigin = searchOrigin
+
         $query
             .removeDuplicates()
             .map { [weak self] query in
@@ -70,7 +83,12 @@ class SearchController: ObservableObject {
                 guard let self else { return nil }
                 if self.state == .noQuery {
                     // User is starting a new search
-                    analytics.searchedDiscover()
+                    switch searchOrigin {
+                    case .discover:
+                        analytics.searchedDiscover()
+                    case .mentions:
+                        analytics.mentionsAutocompleteCharactersEntered()
+                    }
                 }
                 self.authorResults = self.authors(named: query)
                 if self.authorResults.isEmpty {
@@ -90,6 +108,11 @@ class SearchController: ObservableObject {
             }
             .store(in: &cancellables)
 
+        observeContextChanges()
+    }
+
+    /// Observes changes in the `NSManagedObjectContext` and updates the query and author results.
+    func observeContextChanges() {
         NotificationCenter.default.publisher(
             for: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
             object: context
@@ -107,7 +130,7 @@ class SearchController: ObservableObject {
         })
         .store(in: &cancellables)
     }
-    
+
     // MARK: - Internal
     
     func author(fromPublicKey publicKeyString: String) -> Author? {
@@ -157,7 +180,7 @@ class SearchController: ObservableObject {
         }
     }
     
-    /// Searches the relays and UNS for the given query.
+    /// Searches the relays for the given query.
     /// - Parameter query: The string to search for.
     ///
     /// - Warning: SIDE EFFECT WARNING:
@@ -173,7 +196,6 @@ class SearchController: ObservableObject {
         Task {
             self.searchSubscriptions.removeAll()
             self.searchRelays(for: query)
-            self.searchUNS(for: query)
         }
     }
 
@@ -194,28 +216,6 @@ class SearchController: ObservableObject {
         }
     }
     
-    func searchUNS(for query: String) {
-        Task {
-            do {
-                let pubKeys = try await unsAPI.names(matching: query)
-                try Task.checkCancellation()
-                try await self.context.perform {
-                    for pubKey in pubKeys {
-                        let author = try Author.findOrCreate(by: pubKey, context: self.context)
-                        author.uns = query
-                    }
-                }
-                try self.context.saveIfNeeded()
-                for pubKey in pubKeys {
-                    try Task.checkCancellation()
-                    searchSubscriptions.append(await relayService.requestMetadata(for: pubKey, since: nil))
-                }
-            } catch {
-                Log.optional(error)
-            }
-        }
-    }
-
     func startSearchTimer() {
         timer?.invalidate()
 
@@ -236,7 +236,7 @@ class SearchController: ObservableObject {
     /// 
     /// Third, checks to see if `query` matches a note's public key and if so, shows the note.
     /// 
-    /// Finally, if all previous checks fail, searches the relays and UNS for the given query.
+    /// Finally, if all previous checks fail, searches the relays for the given query.
     func submitSearch(query: String) {
         searchSubscriptions.removeAll()
 

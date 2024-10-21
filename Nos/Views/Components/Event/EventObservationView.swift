@@ -33,7 +33,7 @@ struct EventObservationView<Content: View>: View {
         if let event = events.first {
             contentBuilder(event)
         } else {
-            Text(.localizable.error)
+            Text("error")
         }
     }
 }

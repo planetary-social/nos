@@ -73,30 +73,6 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertTrue(author.hasNIP05)
     }
 
-    func test_hasUNS_false_when_uns_is_nil() throws {
-        let context = persistenceController.viewContext
-        let author = try Author.findOrCreate(by: "test", context: context)
-        author.uns = nil
-
-        XCTAssertFalse(author.hasUNS)
-    }
-
-    func test_hasUNS_false_when_uns_is_empty() throws {
-        let context = persistenceController.viewContext
-        let author = try Author.findOrCreate(by: "test", context: context)
-        author.uns = ""
-
-        XCTAssertFalse(author.hasUNS)
-    }
-
-    func test_hasUNS_true_when_uns_exists() throws {
-        let context = persistenceController.viewContext
-        let author = try Author.findOrCreate(by: "test", context: context)
-        author.uns = "me@example.com"
-
-        XCTAssertTrue(author.hasUNS)
-    }
-
     func test_nip05Parts() throws {
         let context = persistenceController.viewContext
         let author = try Author.findOrCreate(by: "test", context: context)
@@ -145,7 +121,7 @@ final class AuthorTests: CoreDataTestCase {
 
         XCTAssertEqual(author.formattedNIP05, expected)
     }
-    
+
     func test_weblink_with_nos_social_NIP05() throws {
         let context = persistenceController.viewContext
         let author = try Author.findOrCreate(by: "test", context: context)
@@ -253,7 +229,7 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertEqual(events.count, 0)
     }
     
-    @MainActor func test_outOfNetwork_givenCircleOfFollows() throws {
+    @MainActor func test_orphaned_givenCircleOfFollows() throws {
         // Arrange
         let alice = try Author.findOrCreate(by: "alice", context: testContext)
         let bob   = try Author.findOrCreate(by: "bob", context: testContext)
@@ -270,9 +246,26 @@ final class AuthorTests: CoreDataTestCase {
         try testContext.saveIfNeeded()
         
         // Act 
-        let authors = try testContext.fetch(Author.outOfNetwork(for: alice))
+        let authors = try testContext.fetch(Author.orphaned(for: alice))
         
         // Assert
         XCTAssertEqual(authors, [eve])
+    }
+    
+    @MainActor func test_orphaned_givenNoFollows() throws {
+        // Arrange
+        let alice = try Author.findOrCreate(by: "alice", context: testContext)
+        let bob   = try Author.findOrCreate(by: "bob", context: testContext)
+        let carl  = try Author.findOrCreate(by: "carl", context: testContext)
+        let eve   = try Author.findOrCreate(by: "eve", context: testContext)
+        
+        // Act
+        try testContext.saveIfNeeded()
+        
+        // Act 
+        let authors = try testContext.fetch(Author.orphaned(for: alice))
+        
+        // Assert
+        XCTAssertEqual(authors, [eve, carl, bob])
     }
 }

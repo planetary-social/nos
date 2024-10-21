@@ -1,38 +1,59 @@
-import SwiftUI
 import Dependencies
+import SwiftUI
 
+/// The beginning of the Onboarding views which contains buttons to start creating a new account or log in.
 struct OnboardingStartView: View {
-    @EnvironmentObject var state: OnboardingState
+    @Environment(OnboardingState.self) private var state
+
     @Dependency(\.analytics) private var analytics
-    
+
     var body: some View {
-        VStack {
-            Image.nosLogo
-                .resizable()
-                .frame(width: 235.45, height: 67.1)
-                .padding(.top, 155)
-                .padding(.bottom, 10)
-            Text(.localizable.onboardingTitle)
-                .font(.custom("ClarityCity-Bold", size: 25.21))
-                .fontWeight(.heavy)
-                .foregroundStyle(LinearGradient.diagonalAccent2.blendMode(.normal))
-            Spacer()
-            BigActionButton(title: .localizable.tryIt) {
-                state.flow = .createAccount
-                state.step = .ageVerification
+        GeometryReader { geometry in
+            VStack(spacing: 30) {
+                Image.nosLogo
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 200)
+                    .padding(.bottom, 40)
+
+                Image.network
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: geometry.size.width)
+                Spacer()
+
+                Group {
+                    BigActionButton("newToNostr") {
+                        state.flow = .createAccount
+                        state.step = .ageVerification
+                    }
+
+                    Button("logInWithAccount") {
+                        state.flow = .loginToExistingAccount
+                        state.step = .ageVerification
+                    }
+                    .foregroundStyle(Color.primaryTxt)
+
+                    Text("acceptTermsAndPrivacy")
+                        .foregroundStyle(Color.secondaryTxt)
+                        .font(.footnote)
+                        .tint(Color.primaryTxt)
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.horizontal, 40)
             }
-            .padding(.horizontal, 24)
-            .padding(.bottom)
-            Button(String(localized: .localizable.loginWithKey)) {
-                state.flow = .loginToExistingAccount
-                state.step = .ageVerification
-            }
-            .padding(.bottom, 50)
+            .padding(.vertical, 40)
+            .background(Color.appBg)
+            .navigationBarHidden(true)
         }
-        .background(Color.appBg)
-        .navigationBarHidden(true)
         .onAppear {
             analytics.startedOnboarding()
         }
     }
+}
+
+#Preview {
+    OnboardingStartView()
+        .environment(OnboardingState())
+        .inject(previewData: PreviewData())
 }

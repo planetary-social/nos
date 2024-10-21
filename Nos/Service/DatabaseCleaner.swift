@@ -62,7 +62,7 @@ enum DatabaseCleaner {
                     Event.previewRequest(),
                     EventReference.orphanedRequest(),
                     AuthorReference.orphanedRequest(),
-                    Author.outOfNetwork(for: currentUser),
+                    Author.orphaned(for: currentUser),
                     Follow.orphanedRequest(),
                     Relay.orphanedRequest(),
                     NosNotification.oldNotificationsRequest(),

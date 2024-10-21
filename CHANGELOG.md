@@ -11,11 +11,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Release Notes
+- Added relay.mostr.pub to the default relay list. [#1592](https://github.com/planetary-social/nos/issues/1592)
+- Fix two bugs that could result in muted users being unmuted. [#1674](https://github.com/planetary-social/nos/pull/1674)
+- Added a tip to Discover to prompt first-time users to go to their Feed. [#1601](https://github.com/planetary-social/nos/issues/1601)
+- Added a tip to the Feed to welcome first-time users and explain how the Feed works. [#1602](https://github.com/planetary-social/nos/issues/1602)
+- Added a tag to published contact lists to help us detect the source of lost contact lists. [cleanstr#51](https://github.com/planetary-social/cleanstr/issues/51)
+- Removed integration with Universal Name Space [#1636](https://github.com/planetary-social/nos/issues/1636)
+- Remove most usage of xcstringstool-generated strings to improve performance. [#1458](https://github.com/planetary-social/nos/issues/1458)
+- Added new authors and categories to the Discover tab. [#1592](https://github.com/planetary-social/nos/issues/1592)
+
+### Internal Changes
+- Added code to hide users on the Discover tab with no profile metadata. [#1592](https://github.com/planetary-social/nos/issues/1592)
+- Migrate ObservableObject to @Observable where possible [#1458](https://github.com/planetary-social/nos/issues/1458)
+- Added the Create Account onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1594](https://github.com/planetary-social/nos/issues/1594)
+- Increase build settings timeout in fastlane. [#1662](https://github.com/planetary-social/nos/pull/1662)
+- Removed new moderation feature flag. [#1646](https://github.com/planetary-social/nos/issues/1646)
+- Added the Private Key onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1595](https://github.com/planetary-social/nos/issues/1595)
+- Added the Public Key onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1596](https://github.com/planetary-social/nos/issues/1596)
+- Added the Display Name onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1597](https://github.com/planetary-social/nos/issues/1597)
+- Added the Username onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1598](https://github.com/planetary-social/nos/issues/1598)
+- Added the Account Success onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1599](https://github.com/planetary-social/nos/issues/1599)
+- Updated the Age Verification onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1651](https://github.com/planetary-social/nos/issues/1651)
+- Track opening mentions with Posthog. [#1480](https://github.com/planetary-social/nos/issues/1480)
+
+## [0.2.2] - 2024-10-11Z
+
+### Release Notes
 - Updated the media viewer that displays images, videos, and web pages inside of notes. [#1538](https://github.com/planetary-social/nos/issues/1538)
 - Removed image and video link text from notes. Now only the images and videos will appear, without the link. [#1487](https://github.com/planetary-social/nos/issues/1487)
+- Added a broken link icon that appears when an image fails to load. [#1583](https://github.com/planetary-social/nos/issues/1583)
 - Added new translations for the app so you can use it in Korean, Chinese Simplified, Swedish, and more! Thanks to alternative, 안마리 (everyscreennetwork), Andypsl8, Dženan (Dzenan), ObjectifMoon, ra5pvt1n, and everyone else who contributed translations on Crowdin!
+- Updated user mentions search functionality to also search relays in the user's relay list. [#1560](https://github.com/planetary-social/nos/issues/1560)
+- Updated initial onboarding screen to include links to Terms of Service and Privacy Policy. [#1593](https://github.com/planetary-social/nos/issues/1593)
+- Added Build Your Network screen to onboarding to explain how the feed works. [#1600](https://github.com/planetary-social/nos/issues/1600)
 - Decreased the opacity on disabled buttons.
 - Added a Delete Account button to the Settings screen. [#80](https://github.com/planetary-social/nos/issues/80)
+- Added participants in a thread to the mentions lookup. [#1568](https://github.com/planetary-social/nos/issues/1568)
 
 ### Internal Changes
 - Moved the database cleanup routine into a background execution task. [#1426](https://github.com/planetary-social/nos/issues/1426)

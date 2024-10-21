@@ -583,6 +583,48 @@
         }
       }
     },
+    "acceptTermsAndPrivacy" : {
+      "comment" : "Text with links for accepting the terms and privacy policy",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By proceeding, I accept the [Terms of Service](https://nos.social/terms-of-service) and the [Privacy Policy](https://nos.social/privacy)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al continuar, acepto los [Términos de servicio](https://nos.social/terms-of-service) y la [Política de privacidad](https://nos.social/privacy)"
+          }
+        }
+      }
+    },
+    "accountPartialSuccessDescription" : {
+      "comment" : "description for the account success screen when something isn't quite right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The app couldn't save your chosen Display Name or Username. You can set these up later in your Profile."
+          }
+        }
+      }
+    },
+    "accountPartialSuccessHeadline" : {
+      "comment" : "headline for the account success screen when something isn't quite right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You've finished setting up your account, but..."
+          }
+        }
+      }
+    },
     "accountsIFollow" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -632,6 +674,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "我關注的賬戶"
+          }
+        }
+      }
+    },
+    "accountSuccessDescription" : {
+      "comment" : "description for the account success screen when everything is right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now that you know who you are on Nostr, let’s find other people to follow!"
+          }
+        }
+      }
+    },
+    "accountSuccessHeadline" : {
+      "comment" : "headline for the account success screen when everything is right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You've finished setting up your account!"
           }
         }
       }
@@ -976,6 +1042,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "地址"
+          }
+        }
+      }
+    },
+    "ageVerificationDescription" : {
+      "comment" : "description for the age verification screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For legal reasons, we need to make sure you're over this age to use Nos."
+          }
+        }
+      }
+    },
+    "ageVerificationHeadline" : {
+      "comment" : "headline for the age verification screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you over 16 years old?"
           }
         }
       }
@@ -2184,6 +2274,40 @@
         }
       }
     },
+    "buildYourNetwork" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Build your network!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Crea tu red!"
+          }
+        }
+      }
+    },
+    "buildYourNetworkDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your feed is only populated by accounts you follow. Nos does not use algorithms to control what you see."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu feed solo está formado por cuentas que sigues. Nos no usa algoritmos para controlar lo que ves."
+          }
+        }
+      }
+    },
     "cancel" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2281,83 +2405,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消"
-          }
-        }
-      }
-    },
-    "chooseNameOrRegister" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wähle aus deinen existierenden Namen oder registriere einen neuen:"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose from your existing names, or register a new one:"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elija entre sus nombres existentes o registre uno nuevo:"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "از بین نام های موجود خود انتخاب کنید، یا یک جدید بسازید:"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choisissez parmi vos noms existants, ou enregistrez un nouveau :"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "기존 이름 중에서 선택하거나 새 이름을 등록하세요:"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Välj bland dina befintliga namn eller registrera ett nytt:"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chagua kutoka kwa majina yako yaliyopo, au sajili jipya:"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เลือกจากรายการที่มีอยู่แล้ว หรือสมัครใหม่:"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Önceki isimlerinizden seçin veya yeni bir tane oluşturun:"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "从你现有的名称中选择或注册一个新的名称："
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "從你現有的名稱中選擇或註冊一個新的名稱："
           }
         }
       }
@@ -2464,166 +2511,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "這是其他人在 Nos 上看到你的方式，也是你個人檔案的公共 URL。\n\n你可以稍後更改此設置。"
-          }
-        }
-      }
-    },
-    "chooseYourName" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wähle deinen Namen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose your name"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elige tu nombre"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "نام خود را انتخاب کنید"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choisissez votre nom"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "표시 이름을 선택하세요."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kies Je Naam"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Escolha seu nome"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Välj ditt namn"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chagua jina lako"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เลือกชื่อของคุณ"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "İsminizi seçin"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择你的名称"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "選擇你的名稱"
-          }
-        }
-      }
-    },
-    "chooseYourNameDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dies wird dein Universeller Name sein. Du kannst später noch mehr registrieren. Gültige Namen "
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This will be your Universal Name. You can register more later. Valid names "
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Este será tu nombre universal. Puedes registrarte más tarde. Nombres válidos "
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "این نام جهانی شما خواهد بود. می توانید بعدا نام های دیگری ثبت کنید. نام ها معتبر "
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ce sera votre nom universel. Vous pouvez vous inscrire plus tard. Noms valides "
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이것이 귀하의 보편적인 이름이 됩니다. 나중에 더 등록할 수 있습니다. 유효한 이름 "
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Detta kommer att vara ditt universella namn. Du kan registrera fler senare. Giltiga namn "
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hili litakuwa Jina lako la Jumla. Unaweza kujiandikisha zaidi baadaye. Majina halali "
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bu sizin Universal isminiz. Dilerseniz daha sonrasında kaydolabilirsiniz. Geçersiz isimler"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "这将是你的通用名称。你可以稍后注册更多。有效的名称 "
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "這將是你的通用名稱。你可以稍後註冊更多。有效的名稱 "
           }
         }
       }
@@ -3308,225 +3195,6 @@
         }
       }
     },
-    "connectGlobalID" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GlobaliD App verbinden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connect GlobaliD app"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conectar aplicación GlobaliD"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "اتصال اپلیکیشن GlobaliD"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connecter l'app GlobaliD"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GlobaliD 앱에 연결하기"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anslut GlobaliD-appen"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unganisha programu ya GlobaliD"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GlobaliD uygulaması ile bağlan"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "连接 GlobaliD 应用程序"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "連接 GlobaliD 應用程式"
-          }
-        }
-      }
-    },
-    "connectGlobalIDTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verbinde deine GlobaliD Wallet um USBC zu senden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connect your GlobaliD wallet to send USBC"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conecte su monedero GlobaliD para enviar USBC"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "برای ارسال USBC کیف پول GlobaliD خود را متصل کنید"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connecter votre portefeuille GlobaliD pour envoyer USBC"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GlobaliD 지갑에 연결해 USBC 보내기"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anslut din GlobaliD-plånbok för att skicka USBC"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unganisha pochi yako ya GlobaliD kutuma USBC"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "USBC göndermek için GlobaliD cüzdanınızı bağlayın"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "连接你的 GlobaliD 钱包以发送 USBC"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "連接你的 GlobaliD 錢包以發送 USBC"
-          }
-        }
-      }
-    },
-    "connectWallet" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wallet verbinden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connect Wallet"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conectar billetera"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "اتصال کیف پول"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connecter un portefeuille"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "지갑 연결하기"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anslut plånbok"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unganisha Pochi"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เชื่อมต่อ Wallet"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cüzdan ekle"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "连接钱包"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "連接錢包"
-          }
-        }
-      }
-    },
     "contact" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4161,6 +3829,30 @@
         }
       }
     },
+    "copyPrivateKey" : {
+      "comment" : "title for the button that copies the private key",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy private key"
+          }
+        }
+      }
+    },
+    "copyPublicKey" : {
+      "comment" : "title for the button that copies the public key",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy public key"
+          }
+        }
+      }
+    },
     "copyQRLink" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4434,73 +4126,38 @@
         }
       }
     },
-    "createNewName" : {
+    "createAccountButton" : {
+      "comment" : "The title of the button to create an account",
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neuen Namen erstellen"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create a new name"
+            "value" : "Create Account"
           }
-        },
-        "es" : {
+        }
+      }
+    },
+    "createAccountDescription" : {
+      "comment" : "The description on the create account screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Crear nuevo nombre"
+            "value" : "We've simplified management of your account credentials. Nos uses public-private key encryption to verify your identity."
           }
-        },
-        "fa" : {
+        }
+      }
+    },
+    "createAccountHeadline" : {
+      "comment" : "headline for the create account screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ایجاد نام جدید"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Créer un nouveau nom"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "새 이름 만들기"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skapa ett nytt namn"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unda jina jipya"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yeni bir isim oluşturun"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "创建新名称"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "創建新名稱"
+            "value" : "Say goodbye to usernames and passwords!"
           }
         }
       }
@@ -4861,6 +4518,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "删除您的帐户将从 Nos 服务器中删除您的所有数据，并要求您的所有中继执行同样的操作。"
+          }
+        }
+      }
+    },
+    "deleteAccountMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting your account will delete all your data from Nos servers and ask all your relays to do the same."
           }
         }
       }
@@ -5628,6 +5296,42 @@
         }
       }
     },
+    "displayNameDescription" : {
+      "comment" : "a description for the display name screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is how others will see you when they view your notes. You can always change it."
+          }
+        }
+      }
+    },
+    "displayNameHeadline" : {
+      "comment" : "headline for the display name screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display Name"
+          }
+        }
+      }
+    },
+    "displayNamePlaceholder" : {
+      "comment" : "placeholder text for the display name field in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your display name"
+          }
+        }
+      }
+    },
     "done" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5925,118 +5629,6 @@
         }
       }
     },
-    "enableAccountDeletion" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable account deletion"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activar eliminación de cuenta"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "계정 삭제 활성화"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启用账户删除"
-          }
-        }
-      }
-    },
-    "enableNewMediaDisplay" : {
-      "comment" : "Setting for new media feature flag",
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neue Mediendarstellung aktivieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable new media display"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activar nuevo visor de medios"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activer l'affichage des nouveaux médias"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "새로운 미디어 디스플레이 사용"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Washa onyesho jipya la midia"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启用新的媒体显示"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "啓用新的媒體顯示"
-          }
-        }
-      }
-    },
-    "enableNewModerationFlow" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable new moderation flow"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activar nuevo flujo de moderación"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "새로운 모더레이션 흐름 활성화"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启用新审核流程"
-          }
-        }
-      }
-    },
     "enterCode" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -6217,6 +5809,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "錯誤"
+          }
+        }
+      }
+    },
+    "errorConnecting" : {
+      "comment" : "error message for when we can't set the display name or username in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There is a problem connecting to the servers. You can skip for now and visit your Profile to update later."
           }
         }
       }
@@ -6748,6 +6352,28 @@
         }
       }
     },
+    "featuredAuthorCategoryEspanol" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Español"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryFood" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Food"
+          }
+        }
+      }
+    },
     "featuredAuthorCategoryGaming" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -6862,6 +6488,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "健康"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryLifestyle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lifestyle"
           }
         }
       }
@@ -7039,6 +6676,61 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新聞"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryNZAustralia" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NZ / Australia"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryPhotography" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photography"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryPolitics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Politics"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryRandom" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Random"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategorySciFi" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sci-Fi"
           }
         }
       }
@@ -7359,6 +7051,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "篩選"
+          }
+        }
+      }
+    },
+    "findPeople" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find people"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encuentra gente"
           }
         }
       }
@@ -8070,6 +7779,12 @@
             "value" : "User is stealing someone else's identity."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El usuario está robando la identidad de otra persona."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8091,6 +7806,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Impersonation"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suplantación de identidad"
           }
         },
         "ko" : {
@@ -8169,6 +7890,12 @@
             "value" : "Mute This User?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Silenciar a este usuario?"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8190,6 +7917,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You won't see notes by this user anymore."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya no verás más notas de este usuario."
           }
         },
         "ko" : {
@@ -8215,6 +7948,12 @@
             "value" : "Mute"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silenciar"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8238,6 +7977,12 @@
             "value" : "The Nos moderation team will analyze the user for %@ and may publish a report from our Tagr-bot account, concealing your identity."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El equipo de moderación de Nos analizará la nota por contenido de %@ y podrá publicar un informe desde nuestra cuenta Tagr-bot, ocultando tu identidad."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8259,6 +8004,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Flag User"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reportar usuario"
           }
         },
         "zh-Hans" : {
@@ -9209,6 +8960,12 @@
             "value" : "GIF"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GIF"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9330,73 +9087,13 @@
         }
       }
     },
-    "goBackAndRegister" : {
+    "goToYourFeed" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Du kannst zurückgehen und einen anderen Namen registrieren"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You may want to go back and register a different name"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Quizás quieras volver atrás y registrar un nombre diferente"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ممکن است بخواهید برگردید و نام دیگری ثبت کنید"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vous pouvez revenir en arrière et enregistrer un nom différent"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "돌아가서 다른 이름을 등록할 수 있어요"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Du kanske vill gå tillbaka och registrera ett annat namn"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unaweza kutaka kurudi na kusajili jina tofauti"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bir önceki adıma dönüp farklı bir isim ile devam etmek isteyebilirsiniz"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "你可能想要返回并注册一个不同的名称"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "你可能想要返回並註冊一個不同的名稱"
+            "value" : "Go to your Feed to see notes from your connections."
           }
         }
       }
@@ -9411,6 +9108,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feed"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Feed"
@@ -9894,6 +9597,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keep on helping us make Nostr a better place for everyone!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Sigue ayudándonos a hacer de Nostr un mejor lugar para todos!"
           }
         },
         "ko" : {
@@ -10520,67 +10229,20 @@
         }
       }
     },
-    "loginWithKey" : {
+    "logInWithAccount" : {
+      "comment" : "Button title for logging in with an existing account",
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mit Schlüssel anmelden"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Login with key"
+            "value" : "Log in with my account"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Iniciar sesión con clave"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ورود با کلید"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se connecter avec une clé"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "키로 로그인하기"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Logga in med nyckel"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ingia na ufunguo"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用密钥登录"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用密鑰登錄"
+            "value" : "Iniciar sesión con mi cuenta"
           }
         }
       }
@@ -10769,71 +10431,6 @@
         }
       }
     },
-    "manageUniversalName" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universellen Namen verwalten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Manage your Universal Name"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configura tu Nombre Universal"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "نام جهانی خود را مدیریت کنید"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configurez votre nom universel"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "유니버셜 네임 관리하기"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Konfigurera ditt universella namn"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dhibiti Jina lako la Universal"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "设置你的通用名"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "設置你的通用名"
-          }
-        }
-      }
-    },
     "mention" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10998,6 +10595,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "min"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "min"
@@ -11692,95 +11295,6 @@
         }
       }
     },
-    "nameLower" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Name"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "name"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "nombre"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "نام"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "nom"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "名前"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이름"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "naam"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "nome"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "namn"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "jina"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ชื่อ"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "名称"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "名稱"
-          }
-        }
-      }
-    },
     "new" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -12106,7 +11620,26 @@
         }
       }
     },
+    "newToNostr" : {
+      "comment" : "Button title for starting the new account flow",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I'm new to Nostr"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soy nuevo en Nostr"
+          }
+        }
+      }
+    },
     "next" : {
+      "comment" : "title for a button that moves to the next step",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -12240,6 +11773,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NIP-05"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "NIP-05"
@@ -12481,6 +12020,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No"
@@ -12913,6 +12458,12 @@
             "value" : "Nos"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12929,6 +12480,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nos"
+          }
+        }
+      }
+    },
+    "nosDoesNotUseAlgorithms" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos does not use algorithms to populate your feed. Notes appear in reverse chronological order based on publish time and date."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos no usa algoritmos para generar tu feed. Las notas aparecen en orden cronológico inverso, basado en la fecha y hora de publicación."
           }
         }
       }
@@ -14396,7 +13964,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your **@username** is your identity in the Nos community.\u2028\nChoose a name that reflects you or your organization. Make it memorable and distinct!"
+            "value" : "Your **@username** is your identity in the Nos community. \nChoose a name that reflects you or your organization. Make it memorable and distinct!"
           }
         },
         "es" : {
@@ -14579,148 +14147,6 @@
         }
       }
     },
-    "premiumName" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dies ist ein Premium-Name"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This is a Premium name"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Este es un nombre Premium"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "این یک نام ویژه است"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "C'est un nom Premium"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이건 프리미엄 이름이에요."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Detta är ett Premium-namn"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hili ni jina la Premium"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bu Premium bir isim"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "这是一个高级版的名称"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "這是一個高級名稱"
-          }
-        }
-      }
-    },
-    "premiumNameDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Du wirst auf die UNS-Website weitergeleitet, auf der du einen Premium-Namen registrieren kannst."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You'll be redirected to the UNS website where you can register a premium name."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Serás redirigido al sitio web de UNS donde puedes registrar un nombre premium."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "به وب سایت UNS ارجاع می شوید تا بتوانید یک نام ویژه ثبت کنید."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vous serez redirigé vers le site UNS où vous pourrez enregistrer un nom premium."
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "프리미엄 이름을 등록할 수 있는 UNS 사이트로 리다이렉트됩니다."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Du kommer att omdirigeras till UNS webbplats där du kan registrera ett premiumnamn."
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utaelekezwa kwenye tovuti ya UNS ambapo unaweza kusajili jina la malipo."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Premium isminizi almak için UNS web sayfasına yönlendirileceksiniz."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "你将被重定向到UNS网站，你可以在那里注册高级名称。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "你將被重定向到UNS網站，你可以在那裡註冊高級名稱。"
-          }
-        }
-      }
-    },
     "preview" : {
       "comment" : "verb for showing a preview of the typed note text",
       "extractionState" : "manual",
@@ -14842,6 +14268,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "私鑰"
+          }
+        }
+      }
+    },
+    "privateKeyDescription" : {
+      "comment" : "a description for the private key screen explaining what a private key is",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your private key is the only login you need for Nos. It is stored in your device keychain. Similar to a password, you should not share it. \n\n**Important!** You should save it somewhere else as well because there is no recovery mechanism if you lose your device."
+          }
+        }
+      }
+    },
+    "privateKeyHeadline" : {
+      "comment" : "headline for the private key screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Key"
+          }
+        }
+      }
+    },
+    "privateKeyNsecParenthetical" : {
+      "comment" : "the word \"nsec\" in parentheses in English. \"nsec\" should not be translated, but the parentheses may",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(nsec)"
           }
         }
       }
@@ -15285,6 +14747,42 @@
         }
       }
     },
+    "publicKeyDescription" : {
+      "comment" : "a description for the public key screen explaining what a public key is",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is your public identifier that does not change. Public keys can be shared."
+          }
+        }
+      }
+    },
+    "publicKeyHeadline" : {
+      "comment" : "headline for the public key screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Public Key"
+          }
+        }
+      }
+    },
+    "publicKeyNpubParenthetical" : {
+      "comment" : "the word \"npub\" in parentheses in English. \"npub\" should not be translated, but the parentheses may",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(npub)"
+          }
+        }
+      }
+    },
     "quote" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -15512,219 +15010,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "推薦中繼器"
-          }
-        }
-      }
-    },
-    "reconnectWallet" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wallet erneut verbinden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reconnect wallet"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reconectar la billetera"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "اتصال دوباره کیف پول"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reconnecter le portefeuille"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "지갑 재연결"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Återanslut plånbok"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unganisha tena pochi"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cüzdanı yeniden bağla"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "重新连接钱包"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "重新連結錢包"
-          }
-        }
-      }
-    },
-    "registerADifferentName" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "einen anderen Namen registrieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "register a different name"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "registrar un nombre diferente"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "نام دیگری ثبت کنید"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "enregistrer un autre nom"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "다른 이름으로 등록하기"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "registrera ett annat namn"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "kusajili jina tofauti"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "farklı bir isim al"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "注册一个不同的名称"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "註冊一個不同的名稱"
-          }
-        }
-      }
-    },
-    "registerPremiumName" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Premium-Name registrieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Register Premium Name"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Registrar nombre Premium"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "نام ویژه ای ثبت کنید"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enregistrer un nom Premium"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "프리미엄 이름 등록하기"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Registrera Premium-namn"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sajili Jina la Premium"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Premium İsim Al"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "注册高级版名称"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "註冊高級名稱"
           }
         }
       }
@@ -15981,6 +15266,12 @@
             "value" : "Relay"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relay"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16177,6 +15468,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relays"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Relays"
@@ -16899,77 +16196,6 @@
         }
       }
     },
-    "returnToChooseName" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kehre zu dem \"Namen auswählen\"-Schritt zurück und wähle deinen registrierten Namen."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Return to the choose name step and choose your registered name."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Regresa al paso \"Eligir nombre\" y elige tu nombre registrado."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "به مرحله انتخاب نام برگردید و نامی که ثبت کردید انتخاب کنید."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Retourner à l'étape du choix du nom et de votre nom enregistré."
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이름 선택 단계로 돌아가서 등록된 이름을 선택해요."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Återgå till välja namn steget och välj ditt registrerade namn."
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rudi kwa hatua ya kuchagua jina na uchague jina lako lililosajiliwa."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Önceki aşamaya geri dönün ve belirlediğiniz ismi seçin."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "返回到选择名称步骤并选择你的注册名称。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "返回到選擇名稱步驟並選擇你的註冊名稱。"
-          }
-        }
-      }
-    },
     "sampleDataInstructions" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -17239,77 +16465,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "無法保存中繼器。"
-          }
-        }
-      }
-    },
-    "scanTheWalletConnectQR" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scanne den QR-Code oder lade die Global ID App herunter, um USBC an deine Freunde zu senden!"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scan the QR code or download the Global ID app to send USBC to your friends!"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡Escanea el código QR o descarga la aplicación de Global ID para enviar USBC a tus amigos!"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "کد QR را اسکن کنید یا اپلیکیشن Global ID را بارگیری کنید تا USBC به دوستانتان بفرستید!"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scannez le QR code ou téléchargez l'application Global ID pour envoyer de l'USBC à vos amis !"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "QR 코드를 스캔하거나 글로벌 ID 앱을 다운로드하여 친구에게 USBC를 보내요!"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skanna QR-koden eller ladda ner appen Global ID för att skicka USBC till dina vänner!"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Changanua msimbo wa QR au upakue programu ya Global ID ili kutuma USBC kwa marafiki zako!"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Global ID uygulamasını indirerek arkadaşlarınıza USBC göndermek için QR kodu okutun!"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "扫描二维码或下载 Global ID应用，向你的朋友发送 USBC！"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "掃描二維碼或下載 Global ID 應用，向你的朋友發送 USBC！"
           }
         }
       }
@@ -17764,77 +16919,6 @@
         }
       }
     },
-    "sendUSBC" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "USBC senden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Send USBC"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enviar USBC"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ارسال USBC"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoyer USBC"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "USBC 보내기"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skicka USBC"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tuma USBC"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "USBC gönder"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "发送 USBC"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "發送 USBC"
-          }
-        }
-      }
-    },
     "settings" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -17985,101 +17069,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "設置我的@用戶名"
-          }
-        }
-      }
-    },
-    "setUpUNS" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "عكس اسمك"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reserviere deinen Namen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reserve Your Name"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reserva tu nombre"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "نام خود را رزرو کنید"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réserver votre nom"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "あなたの名前を設定する"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이름 예약하기"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reserveer je naam"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reserve seu nome"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reservera ditt namn"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hifadhi Jina Lako"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "İsminizi rezerve edin"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "预订你的名称"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "預訂你的名稱"
           }
         }
       }
@@ -18670,10 +17659,28 @@
         }
       }
     },
+    "skipForNow" : {
+      "comment" : "button title that allows the user to skip this for now",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip for now"
+          }
+        }
+      }
+    },
     "software" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Software"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Software"
@@ -18886,6 +17893,12 @@
             "value" : "Spam"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spam"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19058,6 +18071,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stories"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stories"
@@ -19501,6 +18520,12 @@
             "value" : "Thanks for your tag."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gracias por tu etiqueta."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19511,89 +18536,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "感谢您的标记。"
-          }
-        }
-      }
-    },
-    "thatNameIsTaken" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dieser Name ist vergeben."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "That name is taken."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ese nombre ya está en uso."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "این نام قبلا گرفته شده است."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ce nom est déjà utilisé."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "その名前は既に使用されています。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이 이름은 이미 누가 쓰고있어요."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Naam is al in gebruik."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esse nome já está em uso."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Namnet är upptaget."
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jina hilo limechukuliwa."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "这个名称已被使用。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "這個名稱已被使用。"
           }
         }
       }
@@ -19740,132 +18682,13 @@
         }
       }
     },
-    "tryAnotherName" : {
+    "typeDelete" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bitte versuche es mit einem anderen Namen."
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Please try with a different name."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Por favor, inténtalo con un nombre diferente."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "لطفا نام دیگری امتحان کنید."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Veuillez essayer avec un nom différent."
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "다른 이름으로 시도해봐요."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vänligen försök med ett annat namn."
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tafadhali jaribu na jina tofauti."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请尝试使用不同的名称。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "請嘗試使用不同的名稱。"
-          }
-        }
-      }
-    },
-    "tryIt" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jetzt ausprobieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try it"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inténtalo"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "امتحان کنید"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Essayer"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "시도해봐요"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prova det"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ijaribu"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "尝试"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "嘗試"
+            "value" : "Type Delete"
           }
         }
       }
@@ -19955,71 +18778,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消關注"
-          }
-        }
-      }
-    },
-    "universalName" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universeller Name"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universal name"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nombre Universal"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "نام جهانی"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nom universel"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "유니버셜 네임"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universellt namn"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jina la Universal"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通用名称"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通用名"
           }
         }
       }
@@ -20160,442 +18918,16 @@
         }
       }
     },
-    "unsDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Der Universal Namespace gibt dir einen Namen, den du überall verwenden kannst. Registriere deinen Universal Name und verbinde ihn mit deinem Nostr Profil. Erfahre mehr."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The Universal Namespace gives you one name you can use everywhere. Register your Universal Name and connect it to your Nostr profile. Learn more."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universal Name Space te da un nombre que puedes usar en todas partes. Puedes verificar tu identidad y obtener tu nombre universal aquí en Nos. Esta pantalla es solo para propósitos de demostración, todos los nombres se restablecerán en el futuro. Más información."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"فضای نامگذاری جهانی\" یک نام به شما می دهد که می توانید همه جا استفاده کنید. نامی جهانی ثبت کنید و به نمایه ناستر خود متصل کنید. بیشتر بدانید."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L'espace universel de noms vous donne un nom que vous pouvez utiliser partout. Vous pouvez vérifier votre identité et obtenir votre nom universel ici dans Nos. Cet écran est uniquement destiné à la démo, tous les noms seront réinitialisés par la suite. En savoir plus."
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "유니버셜 네임스페이스(Uns) 는 어디서든 사용 가능한 하나의 이름을 제공해요. 유니버설 네임을 등록하고 Nostr 프로필에 연결해봐요. 자세히 알아보기."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "De Universal Namespace geeft u één naam die u overal kunt gebruiken. U kunt uw identiteit verifiëren en uw universele naam hier krijgen in Nos. Dit scherm is alleen voor testdoeleinden; alle namen zullen in de toekomst opnieuw worden ingesteld. Meer informatie."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O \"Namespace\" Universal oferece um nome que você pode usar em qualquer lugar. Você pode verificar sua identidade e obter seu nome universal aqui em Nos. Esta tela é apenas para fins de demonstração, todos os nomes serão redefinidos no futuro. Saber mais."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universal Namespace ger dig ett namn som du kan använda överallt. Registrera ditt universella namn och koppla det till din Nostr profil. Läs mer."
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nafasi ya Majina ya Universal hukupa jina moja unaloweza kutumia kila mahali. Sajili Jina lako la Universal na uunganishe na wasifu wako wa Nostr. Jifunze zaidi."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通用名空间为你提供一个你可以在任何地方使用的名称。注册你的通用名并将其连接到你的 nostr 档案。了解更多。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通用名空間爲你提供一個你可以在任何地方使用的名稱。註冊你的通用名並將其連接到你的 nostr 檔案。瞭解更多。"
-          }
-        }
-      }
-    },
-    "unsLearnMore" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mehr über UNS erfahren."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Learn more about UNS."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leer más sobre UNS."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "درباره UNS بیشتر بیاموزید."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "En savoir plus."
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "UNS 더 알아보기"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Meer informatie."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saiba mais."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Läs mer om UNS."
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pata maelezo zaidi kuhusu UNS."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "了解更多关于 UNS 的信息"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "瞭解更多關於 UNS 的信息。"
-          }
-        }
-      }
-    },
-    "unsRegister" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Registriere deinen Universellen Namen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Register your Universal Name"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Registra tu Nombre Universal"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "نام جهانی خود را ثبت کنید"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configurez votre nom universel"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "유니버셜 네임 등록하기"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Registrera ditt universella namn"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sajili Jina lako la Universal"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "注册你的通用名"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "設置你的通用名"
-          }
-        }
-      }
-    },
-    "unsRegisterDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universal Name Space gibt dir einen Namen, den du überall verwenden kannst.\u2028\u2028Verifizieredeine Identität und verknüpfe deine sozialen Konten, Personalausweis, Brieftaschen und mehr."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universal Name Space gives you a name you can use everywhere.\n        \nVerify your identity and link your social accounts, government ID, wallets and more."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universal Name Space te da un nombre que puedes usar en todas partes.\n        \nVerifica tu identidad y vincula tus cuentas sociales, ID gubernamental, billeteras y más."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "فضای نام جهانی Universal Name Space نامی به شما می دهد که می توانید همه جا استفاده کنید.\n        \nهویت خود را تایید کنید و حساب کاربری اجتماعی و شناسه دولتی و کیف پولتان و غیره را متصل کنید."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L'espace de nom universel vous donne un nom que vous pouvez utiliser partout.\n        \nVérifiez votre identité et liez vos comptes sociaux, carte d'identité nationale, portefeuilles et plus encore."
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "유니버셜 네임스페이스는 어디서나 사용 가능한 이름을 제공해요.\n        \n신원을 인증하고 소셜 계정, 정부 ID, 지갑 등을 연결해봐요."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universal Name Space ger dig ett namn som du kan använda överallt.\u2028\u2028Verifiera din identitet och länka dina sociala konton, statligt ID, plånböcker med mera."
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nafasi ya Jina la Universal hukupa jina unaloweza kutumia kila mahali.\n        \nThibitisha utambulisho wako na uunganishe akaunti zako za kijamii, kitambulisho cha serikali, pochi na zaidi."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通用名空间（Universal Name Space）为你提供一个你可以在任何地方使用的名称。\n        \n验证你的身份并关联你的社交媒体帐户、政府身份证件、钱包等。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通用名空間（Universal Name Space）為你提供一個你可以在任何地方使用的名稱。\u2028\u2028驗證你的身份並關聯你的社交媒體帳戶、政府身分證件、錢包等。"
-          }
-        }
-      }
-    },
-    "unsSuccessDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Du hast deinen Universellen Namen erfolgreich mit deinem Nostr-Profil verknüpft."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You have successfully linked your Universal Name to your Nostr profile."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Has vinculado con éxito tu nombre universal a tu perfil de Nostr."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "شما با موفقیت نام جهانی خود را به نمایه ناسترتان وصل کردید."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vous avez lié avec succès votre nom universel à votre profil Nostr."
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "당신의 유니버셜 네임을 당신의 노스터 프로필에 성공적으로 연결했어요."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Du har framgångsrikt kopplat ditt universella namn till din Nostr profil."
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Umefanikiwa kuunganisha Jina lako la Universal kwenye wasifu wako wa Nostr."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "你已成功地将你的通用名称连接到你的 Nostr 个人档案。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "你已成功地將你的通用名連接到了你的 Nostr 個人檔案。"
-          }
-        }
-      }
-    },
-    "unsTagline" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universal Name Space bringt Identitätsverifizierung, der du vertrauen kannst."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universal Name Space brings identity verification you can trust."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universal Name Space proporciona una verificación de identidad en la que puedes confiar."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "فضای نامگذاری جهانی (Universal Name Space) امکان تایید هویتی را که می توانید به آن اعتماد کنید ارائه می کند."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L'espace universel de noms apporte des vérifications d'identité auxquelles vous pouvez avoir confiance."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ユニバーサルネーム (universalname.space) は信頼できるID認証を提供します。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "유니버셜 네임 스페이스는 당신이 믿을 수 있는 신원 확인을 제공해요."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universal Name Space zorgt voor identiteitsverificatie die u kunt vertrouwen."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Universal \"Name Space\" oferece uma verificação de identidade na qual você pode confiar."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universal Name Space ger identitetskontroll som du kan lita på."
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Universal Name Space huleta uthibitishaji wa utambulisho unaoweza kuamini."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通用名空间（Universal Name Space）提供你可以信任的身份验证。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通用名空間（Universal Name Space）提供你可以信任的身份驗證。"
-          }
-        }
-      }
-    },
     "url" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "URL"
@@ -20893,7 +19225,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Well done, you've successfully claimed your **@username**!\u2028\nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
+            "value" : "Well done, you've successfully claimed your **@username**! \nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
           }
         },
         "es" : {
@@ -20930,6 +19262,66 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "做得好，你已成功認領你的**@用戶名**！\n\n你可以與 Nostr 和 Fediverse 社群中的其他人分享此名稱，以便輕鬆找到你。"
+          }
+        }
+      }
+    },
+    "usernameDescription" : {
+      "comment" : "a description for the username screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is an easy to share alternative to your public key and allows people to search for you on Nos."
+          }
+        }
+      }
+    },
+    "usernameHeadline" : {
+      "comment" : "headline for the username screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Username"
+          }
+        }
+      }
+    },
+    "usernameNIP05Parenthetical" : {
+      "comment" : "the word \"NIP-05\" in parentheses in English. \"NIP-05\" should not be translated, but the parentheses may",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(NIP-05)"
+          }
+        }
+      }
+    },
+    "usernameNotAvailable" : {
+      "comment" : "error text to display when the username is unavailable",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This username is not available."
+          }
+        }
+      }
+    },
+    "usernamePlaceholder" : {
+      "comment" : "placeholder text for the username field in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "username"
           }
         }
       }
@@ -21632,6 +20024,23 @@
         }
       }
     },
+    "welcomeToYourFeed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to your feed!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Bienvenido a tu feed!"
+          }
+        }
+      }
+    },
     "xNewFollowers" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -21841,83 +20250,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你必須在設置中輸入私鑰才能發佈帖子。"
-          }
-        }
-      }
-    },
-    "yourNewUNMessage" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ist Ihr universeller Name.\u2028\u2028Wir haben eine Verbindung zwischen deinem Nostr Profil und deinem universellen Namen erstellt und deinen universellen Name in das Feld \"Benutzername\" in dein Profil eingetragen."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "is your Universal Name.\n\nWe've created a link between your Nostr profile and your Universal Name and filled your Universal Name into the username field on your profile."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "es tu nombre universal.\u2028\n\nHemos asociado tu perfil de Nostr con tu nombre universal, y hemos configurado tu nombre universal como nombre de usuario en tu perfil."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"نام جهانی\" شماست.\n\nما اتصالی بین نمایه ناستر و نام جهانی شما برقرار کرده و نام جهانی تان را در بخش نام کاربری نمایه پر کردیم."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "est votre nouveau nom d'utilisateur Nostr.\\n\\nCette démo de l'espace de noms universel est uniquement à des fins de test. Tous les noms seront réinitialisés par la suite."
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "은 당신의 유니버셜 네임이에요.\n\nNostr 프로필과 유니버셜 네임 사이에 링크를 생성하고 프로필의 사용자 이름 필드에 유니버셜 네임을 입력했어요."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "is uw nieuwe Nostr gebruikersnaam.\u2028\u2028Deze demo van de Universele Namespace is alleen voor testdoeleinden. Alle namen worden in de toekomst gereset."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "é o seu novo nome de usuário Nostr.\u2028\u2028Esta demonstração do \"Namespace\" Universal é apenas para fins de teste. Todos os nomes serão redefinidos no futuro."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "är ditt Universella Namn.\\n\\nVi har skapat en länk mellan din Nostr profil och ditt Universella Namn och har fyllt i ditt Universella Namn i användarnamnfältet på din profil."
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ni Jina lako la Universal.\n\nTumeunda kiungo kati ya wasifu wako wa Nostr na Jina lako la Jumla na kujaza Jina lako la Jumla kwenye sehemu ya jina la mtumiaji kwenye wasifu wako."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "是你的通用名。\n \u2028我们已连接了你的 nostr 档案和你的通用名，并将你的通用名作为用户名填入了你的档案。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "是你的通用名。\n\n我們已連接了你的 nostr 檔案和你的通用名，並將你的通用名作爲用戶名填入了你的檔案。"
           }
         }
       }

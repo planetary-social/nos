@@ -10,3 +10,7 @@ A description of the changes proposed in the pull request. Explain what it does 
 
 ## Screenshots/Video
 Post screenshots or video showing your changes, ideally showing how the app worked before and after these changes. Delete this section if this PR contains no visual changes.
+
+| Before | After |
+|--------|--------|
+| replaceme | replaceme |

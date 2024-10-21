@@ -37,17 +37,17 @@ struct FlagOption: Identifiable, Equatable {
     /// `FlagOption` instances representing different categories of how a content can can be flagged.
     static let flagContentSendOptions: [FlagOption] = [
         FlagOption(
-            title: String(localized: .localizable.flagSendToNosTitle),
-            description: String(localized: .localizable.flagSendToNosDescription),
+            title: String(localized: "flagSendToNosTitle"),
+            description: String(localized: "flagSendToNosDescription"),
             info: { selectedTitle in
                 guard let selectedTitle = selectedTitle else { return nil }
-                return String(localized: .localizable.flagUserSendToNosInfo(selectedTitle))
+                return String.localizedStringWithFormat(String(localized: "flagUserSendToNosInfo"), selectedTitle)
             },
             category: .privacy(.sendToNos)
         ),
         FlagOption(
-            title: String(localized: .localizable.flagPubliclyTitle),
-            description: String(localized: .localizable.flagPubliclyDescription),
+            title: String(localized: "flagPubliclyTitle"),
+            description: String(localized: "flagPubliclyDescription"),
             info: nil,
             category: .privacy(.publicly)
         )
@@ -56,17 +56,17 @@ struct FlagOption: Identifiable, Equatable {
     /// `FlagOption` instances representing different categories of how a user can be flagged.
     static let flagUserSendOptions: [FlagOption] = [
         FlagOption(
-            title: String(localized: .localizable.flagSendToNosTitle),
-            description: String(localized: .localizable.flagSendToNosDescription),
+            title: String(localized: "flagSendToNosTitle"),
+            description: String(localized: "flagSendToNosDescription"),
             info: { selectedTitle in
                 guard let selectedTitle = selectedTitle else { return nil }
-                return String(localized: .localizable.flagUserSendToNosInfo(selectedTitle))
+                return String.localizedStringWithFormat(String(localized: "flagUserSendToNosInfo"), selectedTitle)
             },
             category: .privacy(.sendToNos)
         ),
         FlagOption(
-            title: String(localized: .localizable.flagPubliclyTitle),
-            description: String(localized: .localizable.flagPubliclyDescription),
+            title: String(localized: "flagPubliclyTitle"),
+            description: String(localized: "flagPubliclyDescription"),
             info: nil,
             category: .privacy(.publicly)
         )
@@ -75,14 +75,14 @@ struct FlagOption: Identifiable, Equatable {
     /// `FlagOption` instances representing different categories of the visibility of a flagged user.
     static let flagUserVisibilityOptions: [FlagOption] = [
         FlagOption(
-            title: String(localized: .localizable.flagUserMuteTitle),
-            description: String(localized: .localizable.flagUserMuteDescription),
+            title: String(localized: "flagUserMuteTitle"),
+            description: String(localized: "flagUserMuteDescription"),
             info: nil,
             category: .visibility(.mute)
         ),
         FlagOption(
-            title: String(localized: .localizable.flagUserDontMuteTitle),
-            description: String(localized: .localizable.flagUserDontMuteDescription),
+            title: String(localized: "flagUserDontMuteTitle"),
+            description: String(localized: "flagUserDontMuteDescription"),
             info: nil,
             category: .visibility(.dontMute)
         )
@@ -95,43 +95,43 @@ struct FlagOption: Identifiable, Equatable {
 
 extension FlagOption {
     static let spam = FlagOption(
-        title: String(localized: .localizable.flagContentSpamTitle),
+        title: String(localized: "flagContentSpamTitle"),
         description: nil,
         info: nil,
         category: .report(ReportCategory.spam)
     )
     
     static let harassment = FlagOption(
-        title: String(localized: .localizable.flagContentHarassmentTitle),
-        description: String(localized: .localizable.flagContentHarassmentDescription),
+        title: String(localized: "flagContentHarassmentTitle"),
+        description: String(localized: "flagContentHarassmentDescription"),
         info: nil,
         category: .report(ReportCategory.harassment)
     )
 
     static let nsfw = FlagOption(
         title: "NSFW",
-        description: String(localized: .localizable.flagContentNudityDescription),
+        description: String(localized: "flagContentNudityDescription"),
         info: nil,
         category: .report(ReportCategory.nsfw)
     )
 
     static let illegal = FlagOption(
-        title: String(localized: .localizable.flagContentIllegalTitle),
-        description: String(localized: .localizable.flagContentIllegalDescription),
+        title: String(localized: "flagContentIllegalTitle"),
+        description: String(localized: "flagContentIllegalDescription"),
         info: nil,
         category: .report(ReportCategory.illegal)
     )
 
     static let impersonation = FlagOption(
-        title: String(localized: .localizable.flagUserImpersonationTitle),
-        description: String(localized: .localizable.flagUserImpersonationDescription),
+        title: String(localized: "flagUserImpersonationTitle"),
+        description: String(localized: "flagUserImpersonationDescription"),
         info: nil,
         category: .report(ReportCategory.other)
     )
 
     static let other = FlagOption(
-        title: String(localized: .localizable.flagContentOtherTitle),
-        description: String(localized: .localizable.flagContentOtherDescription),
+        title: String(localized: "flagContentOtherTitle"),
+        description: String(localized: "flagContentOtherDescription"),
         info: nil,
         category: .report(ReportCategory.other)
     )

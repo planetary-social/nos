@@ -142,7 +142,8 @@ struct CompactNoteView: View {
                             isTextTruncated = false
                         }
                     } label: {
-                        Text(String(localized: .localizable.readMore).uppercased())
+                        Text("readMore")
+                            .textCase(.uppercase)
                             .font(.caption)
                             .foregroundColor(.secondaryTxt)
                             .padding(EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6))
@@ -189,7 +190,7 @@ struct CompactNoteView_Previews: PreviewProvider {
             CompactNoteView(note: previewData.doubleImageNote, showLinkPreviews: false)
         }
         .padding()
-        .background(Color.previewBg)
+        .background(LinearGradient.cardBackground)
         .inject(previewData: PreviewData())
     }
 }

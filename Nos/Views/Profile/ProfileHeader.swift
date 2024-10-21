@@ -117,11 +117,6 @@ struct ProfileHeader: View {
                             }
                         }
 
-                        // Universal name
-                        if author.hasUNS {
-                            UNSNameView(author: author)
-                        }
-
                         Spacer(minLength: 0)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -174,7 +169,7 @@ struct ProfileHeader: View {
                             )
                         } else {
                             ActionButton(
-                                title: .localizable.editProfile,
+                                "editProfile",
                                 font: .clarity(.bold, textStyle: .subheadline),
                                 depthEffectColor: .actionSecondaryDepthEffect,
                                 backgroundGradient: LinearGradient.verticalAccentSecondary,
@@ -212,7 +207,7 @@ struct ProfileHeader: View {
             NavigationView {
                 BioSheet(author: author)
                     .background(Color.bioBgGradientBottom)
-                    .nosNavigationBar(title: .localizable.profileTitle)
+                    .nosNavigationBar("profileTitle")
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
@@ -238,7 +233,7 @@ struct ProfileHeader: View {
                     Image.profilePosts
                         .renderingMode(.template)
                         .foregroundColor(color)
-                    Text(.localizable.notes)
+                    Text("notes")
                         .font(.subheadline.weight(.medium))
                         .foregroundColor(color)
                     Spacer()
@@ -255,7 +250,7 @@ struct ProfileHeader: View {
                     Image.profileFeed
                         .renderingMode(.template)
                         .foregroundColor(color)
-                    Text(.localizable.activity)
+                    Text("activity")
                         .foregroundColor(color)
                         .font(.subheadline.weight(.medium))
                     Spacer()
@@ -290,7 +285,6 @@ struct ProfileHeader: View {
         author.add(relay: Relay(context: previewContext))
         author.name = "Sebastian Heit"
         author.nip05 = "chardot@nostr.fan"
-        // author.uns = "chardot"
         author.about = "Go programmer working on Nos/Planetary. You can find me at various European events related to" +
         " Chaos Computer Club, the hacker community and free software."
         let first = Author(context: previewContext)
@@ -319,15 +313,4 @@ struct ProfileHeader: View {
     .previewDevice("iPhone SE (2nd generation)")
     .padding()
     .background(Color.previewBg)
-}
-
-#Preview("UNS") {
-    var previewData = PreviewData()
-    
-    return Group {
-        ProfileHeader(author: previewData.unsAuthor, selectedTab: .constant(.activity))
-            .inject(previewData: previewData)
-            .padding()
-            .background(Color.previewBg)
-    }
 }

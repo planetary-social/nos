@@ -23,7 +23,7 @@ struct AuthorObservationView<Content: View>: View {
         if let author = authors.first {
             contentBuilder(author)
         } else {
-            Text(.localizable.error)
+            Text("error")
         }
     }
 }

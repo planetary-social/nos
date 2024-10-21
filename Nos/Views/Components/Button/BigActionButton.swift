@@ -3,10 +3,22 @@ import SwiftUI
 /// A big bright button that is used as the primary call-to-action on a screen.
 struct BigActionButton: View {
     
-    var title: LocalizedStringResource
+    var title: LocalizedStringKey
     var backgroundGradient: LinearGradient = .bigAction
     var action: () async -> Void
     @State var disabled = false
+    
+    init(
+        _ title: LocalizedStringKey,
+        backgroundGradient: LinearGradient = .bigAction,
+        action: @escaping () async -> Void,
+        disabled: Bool = false
+    ) {
+        self.title = title
+        self.backgroundGradient = backgroundGradient
+        self.action = action
+        self.disabled = disabled
+    }
     
     var body: some View {
         Button(action: {
@@ -100,15 +112,13 @@ struct BigActionButtonStyle: ButtonStyle {
     }
 }
 
-struct BigGradientButton_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 20) {
-            BigActionButton(title: .localizable.tryIt, action: {})
-                .frame(width: 268)
-            
-            BigActionButton(title: .localizable.tryIt, action: {})
-                .disabled(true)
-                .frame(width: 268)
-        }
+#Preview {
+    VStack(spacing: 20) {
+        BigActionButton("accept", action: {})
+            .frame(width: 268)
+
+        BigActionButton("accept", action: {})
+            .disabled(true)
+            .frame(width: 268)
     }
 }

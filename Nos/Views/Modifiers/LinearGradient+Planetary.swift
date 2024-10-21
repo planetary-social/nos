@@ -3,19 +3,25 @@ import SwiftUI
 extension LinearGradient {
     
     public static let horizontalAccent = LinearGradient(
-        colors: [ Color.actionPrimaryGradientTop, Color.actionPrimaryGradientBottom],
+        colors: [.actionPrimaryGradientTop, .actionPrimaryGradientBottom],
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    public static let horizontalAccentReversed = LinearGradient(
+        colors: [.actionPrimaryGradientBottom, .actionPrimaryGradientTop],
         startPoint: .leading,
         endPoint: .trailing
     )
     
     public static let diagonalAccent = LinearGradient(
-        colors: [ Color.actionPrimaryGradientTop, Color.actionPrimaryGradientBottom],
+        colors: [.actionPrimaryGradientTop, .actionPrimaryGradientBottom],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
     public static let diagonalAccent2 = LinearGradient(
-        colors: [ Color.actionPrimaryGradientTop, Color.actionPrimaryGradientBottom],
+        colors: [.actionPrimaryGradientTop, .actionPrimaryGradientBottom],
         startPoint: .bottomLeading,
         endPoint: .topTrailing
     )
@@ -31,9 +37,15 @@ extension LinearGradient {
         startPoint: .top,
         endPoint: .bottom
     )
-    
+
+    public static let brokenLinkBackground = LinearGradient(
+        colors: [.brokenLinkBackgroundTop, .brokenLinkBackgroundBottom],
+        startPoint: .top,
+        endPoint: .bottom
+    )
+
     public static let cardGradient = LinearGradient(
-        colors: [Color.cardBgTop, Color.cardBgBottom],
+        colors: [.cardBgTop, .cardBgBottom],
         startPoint: .top,
         endPoint: .bottom
     )
@@ -45,19 +57,19 @@ extension LinearGradient {
     )
 
     public static let gold = LinearGradient(
-        colors: [Color.goldBgGradientTop, Color.goldBgGradientBottom],
+        colors: [.goldBgGradientTop, .goldBgGradientBottom],
         startPoint: .top,
         endPoint: .bottom
     )
 
     public static let nip05 = LinearGradient(
-        colors: [Color.nip05BgGradientTop, Color.nip05BgGradientBottom],
+        colors: [.nip05BgGradientTop, .nip05BgGradientBottom],
         startPoint: .top,
         endPoint: .bottom
     )
 
     public static let bio = LinearGradient(
-        colors: [Color.bioBgGradientTop, Color.bioBgGradientBottom],
+        colors: [.bioBgGradientTop, .bioBgGradientBottom],
         startPoint: .top,
         endPoint: .bottom
     )
