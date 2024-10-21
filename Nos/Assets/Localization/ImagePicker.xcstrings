@@ -34,6 +34,12 @@
             "value" : "카메라"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Câmera"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -85,6 +91,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "이 디바이스에서 카메라 사용 불가"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Câmera não está disponível neste dispositivo"
           }
         },
         "sv" : {
@@ -140,6 +152,12 @@
             "value" : "파일을 업로드하는 도중 오류가 발생했어요"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erro ao enviar o arquivo"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -173,6 +191,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El maximo tamaño para publicacion de achivos gratis es %@. Para subir archives mas grande puedes pagar para subscribir a una cuenta Nostr.build pro."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O tamanho de arquivo máximo para o “upload” grátis é %@. Para fazer o \"upload\" de arquivos grandes, atualize para uma conta \"Nostr.build Profissional\"."
           }
         },
         "zh-Hans" : {
