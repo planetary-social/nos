@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Build Your Network screen to onboarding to explain how the feed works. [#1600](https://github.com/planetary-social/nos/issues/1600)
 - Decreased the opacity on disabled buttons.
 - Added a Delete Account button to the Settings screen. [#80](https://github.com/planetary-social/nos/issues/80)
+- Added participants in a thread to the mentions lookup. [#1568](https://github.com/planetary-social/nos/issues/1568)
 
 ### Internal Changes
 - Moved the database cleanup routine into a background execution task. [#1426](https://github.com/planetary-social/nos/issues/1426)

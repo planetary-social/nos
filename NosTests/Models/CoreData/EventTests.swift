@@ -199,4 +199,26 @@ final class EventTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(events.count, 0)
     }
+
+    @MainActor func test_loadAuthorsFromReferences() throws {
+        // Arrange
+        let eventID = "foo"
+        let event = try Event.findOrCreateStubBy(id: eventID, context: testContext)
+        let alice = try Author.findOrCreate(by: "alice", context: testContext)
+        let bob = try Author.findOrCreate(by: "bob", context: testContext)
+
+        let aliceAuthorReference = AuthorReference(context: testContext)
+        aliceAuthorReference.pubkey = alice.hexadecimalPublicKey
+
+        let bobAuthorReference = AuthorReference(context: testContext)
+        bobAuthorReference.pubkey = bob.hexadecimalPublicKey
+
+        event.authorReferences = [aliceAuthorReference, bobAuthorReference]
+
+        // Act
+        let references = event.loadAuthorsFromReferences(in: testContext)
+
+        // Assert
+        XCTAssertEqual(references, [alice, bob])
+    }
 }
