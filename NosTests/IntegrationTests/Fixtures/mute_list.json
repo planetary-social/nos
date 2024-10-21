@@ -1,0 +1,22 @@
+{
+    "kind": 10000,
+    "id": "f1171a8ef1983fb1d55089092da5e7bbcb204bf9219697a3cf08d8e53ddbcec5",
+    "pubkey": "ffd99f9e545b53e3291dab4b8cd6d25d12b9973c40f02e1938c0891d62e38e57",
+    "created_at": 1729518241,
+    "tags": [
+        [
+            "p",
+            "756bcacddd4fd7051cde3e39464cdd3557fec416ab1f496e2e91da0534b14272"
+        ],
+        [
+            "p",
+            "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
+        ],
+        [
+            "p",
+            "27cf2c68535ae1fc06510e827670053f5dcd39e6bd7e05f1ffb487ef2ac13549"
+        ]
+    ],
+    "content": "",
+    "sig": "907b4365e5aa5d54358ae7a741e7a6acc0162f91c6210fad44c9c1e87a79a9b5a3a96d97c1178e60a60b7d0ad8d60023b90e6c913b9f1d972dbe813fbe901bd6"
+}

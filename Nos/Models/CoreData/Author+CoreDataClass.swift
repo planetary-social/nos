@@ -282,14 +282,20 @@ import Logger
         return fetchRequest
     }
 
-    /// Fetches all the authors who are further than 2 hops away on the social graph for the given `author`.
-    static func outOfNetwork(for author: Author) -> NSFetchRequest<Author> {
+    /// Fetches all the authors who can be safely deleted from the database. 
+    /// We save authors who:
+    ///   - still have Events in the database
+    ///   - are on the mute list
+    ///   - within 2 hops on the social graph (in network) for the given `author`.
+    static func orphaned(for author: Author) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
         fetchRequest.predicate = NSPredicate(
-            format: "NOT (ANY followers.source IN %@.follows.destination) " +
-                "AND NOT (hexadecimalPublicKey IN %@.follows.destination.hexadecimalPublicKey) AND " +
-                "hexadecimalPublicKey != %@.hexadecimalPublicKey AND muted = 0",
+            format: "events.@count = 0 " +
+                "AND muted = 0 " +
+                "AND (followers.@count = 0 OR NOT ANY followers.source IN %@.follows.destination) " + // two hops
+                "AND NOT SELF IN %@.follows.destination AND " + // one hop
+                "hexadecimalPublicKey != %@.hexadecimalPublicKey",
             author,
             author,
             author
