@@ -22,6 +22,12 @@
             "value" : "토론 중"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "em discussão"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -43,6 +49,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unirse a la discusión"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Participe da discussão"
           }
         },
         "zh-Hans" : {
@@ -619,6 +631,12 @@
             "state" : "translated",
             "value" : "⚡️ 당신에게 잽을 보냄"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Te mandou um \"Zap\"!"
+          }
         }
       }
     },
@@ -656,6 +674,24 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "⚡ ¡te mando un zap de %ld sats!"
+                }
+              }
+            }
+          }
+        },
+        "pt-BR" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Te mandou %ld sat!"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Te mandou %ld sats!"
                 }
               }
             }
