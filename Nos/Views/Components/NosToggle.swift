@@ -1,13 +1,20 @@
 import SwiftUI
+
 /// A toggle with the tint color set to green.
 struct NosToggle: View {
-    @Binding var isOn: Bool
     /// A string that shows up beside the toggle. Optional.
-    var labelText: LocalizedStringResource?
+    var labelText: LocalizedStringKey?
+    
+    @Binding var isOn: Bool
 
+    init(_ labelText: LocalizedStringKey? = nil, isOn: Binding<Bool>) {
+        self.labelText = labelText
+        self._isOn = isOn
+    }
+    
     var body: some View {
         Toggle(isOn: $isOn) {
-            if let labelText = labelText {
+            if let labelText {
                 Text(labelText)
                     .foregroundColor(.primaryTxt)
             }
@@ -20,7 +27,7 @@ struct NosToggle: View {
     @State var isOn = true
 
     return NosToggle(
-        isOn: $isOn,
-        labelText: .localizable.useReportsFromFollows
+        "useReportsFromFollows",
+        isOn: $isOn
     )
 }

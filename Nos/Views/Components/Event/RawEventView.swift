@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {
-    @ObservedObject var viewModel: ViewModel
+    let viewModel: ViewModel
 
     /// A loading overlay that displays the `loadingMessage` from the view model.
     private var loadingIndicator: some View {
@@ -70,12 +70,12 @@ struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {
                 }
             }
         }
-        .nosNavigationBar(title: .localizable.eventSource)
+        .nosNavigationBar("eventSource")
         .disabled(showProgress)
         .overlay(loadingIndicator)
         .alert(isPresented: showAlert) {
             Alert(
-                title: Text(.localizable.error),
+                title: Text("error"),
                 message: Text(viewModel.errorMessage ?? "")
             )
         }
@@ -84,11 +84,11 @@ struct RawEventView<ViewModel>: View where ViewModel: RawEventViewModel {
 
 fileprivate class PreviewViewModel: RawEventViewModel {
 
-    @Published var rawMessage: String?
+    var rawMessage: String?
 
-    @Published var loadingMessage: String? = "Loading..."
+    var loadingMessage: String? = "Loading..."
 
-    @Published var errorMessage: String?
+    var errorMessage: String?
 
     init(_ rawMessage: String) {
         self.rawMessage = rawMessage

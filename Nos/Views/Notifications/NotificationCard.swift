@@ -9,13 +9,9 @@ struct NotificationCard: View {
     @EnvironmentObject private var relayService: RelayService
     @Dependency(\.persistenceController) private var persistenceController
     
-    @ObservedObject private var viewModel: NotificationViewModel
+    let viewModel: NotificationViewModel
     @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var content: AttributedString?
-    
-    init(viewModel: NotificationViewModel) {
-        self.viewModel = viewModel
-    }
     
     func showNote() {
         guard let note = Event.find(by: viewModel.noteID, context: viewContext) else {

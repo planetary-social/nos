@@ -17,7 +17,7 @@ struct PickYourUsernameSheet: View {
             Button {
                 isPresented = false
             } label: {
-                Text(.localizable.cancel)
+                Text("cancel")
                     .font(.clarity(.medium, textStyle: .body))
                     .foregroundStyle(Color.primaryTxt)
                     .padding(.vertical, 20)
@@ -25,8 +25,8 @@ struct PickYourUsernameSheet: View {
             }
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
-                    WizardSheetTitleText(.localizable.pickYourUsernameTitle)
-                    WizardSheetDescriptionText(markdown: .localizable.pickYourUsernameDescription)
+                    WizardSheetTitleText("pickYourUsernameTitle")
+                    WizardSheetDescriptionText(markdown: AttributedString(localized: "pickYourUsernameDescription"))
                     HStack {
                         UsernameTextField(usernameObserver: usernameObserver)
                             .onChange(of: usernameObserver.debouncedText) { _, newValue in
@@ -61,11 +61,11 @@ struct PickYourUsernameSheet: View {
                             ProgressView()
                                 .frame(height: .zero)
                                 .tint(Color.white)
-                            Text(.localizable.next)
+                            Text("next")
                                 .hidden()
                         }
                     } else {
-                        Text(.localizable.next)
+                        Text("next")
                     }
                 }
                 .buttonStyle(BigActionButtonStyle())
@@ -76,7 +76,7 @@ struct PickYourUsernameSheet: View {
     }
 
     private func usernameAlreadyClaimedText() -> some View {
-        Text(.localizable.usernameAlreadyClaimed)
+        Text("usernameAlreadyClaimed")
             .font(.clarity(.medium, textStyle: .subheadline))
             .foregroundStyle(Color.red)
             .lineSpacing(3)
@@ -144,9 +144,9 @@ fileprivate struct UsernameTextField: View {
     var body: some View {
         TextField(
             text: $usernameObserver.text,
-            prompt: Text(.localizable.username).foregroundStyle(Color.secondaryTxt)
+            prompt: Text("username").foregroundStyle(Color.secondaryTxt)
         ) {
-            Text(.localizable.username)
+            Text("username")
                 .foregroundStyle(Color.primaryTxt)
         }
         .focused($usernameFieldIsFocused)

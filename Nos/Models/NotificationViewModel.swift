@@ -8,11 +8,11 @@ import UIKit
 /// in the .init method of a View. Because of this you must call the async function
 /// `loadContent()` to populate the `content` variable because it relies on some
 ///  database queries.
-class NotificationViewModel: ObservableObject, Identifiable {
+@Observable final class NotificationViewModel: Identifiable {
     let noteID: RawEventID
     let authorProfilePhotoURL: URL?
     let actionText: AttributedString
-    @Published var content: AttributedString?
+    private(set) var content: AttributedString?
     let date: Date
     
     var id: RawEventID {

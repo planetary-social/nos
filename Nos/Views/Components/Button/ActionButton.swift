@@ -8,21 +8,14 @@ struct ActionButton: View {
         case right
     }
 
-    var title: LocalizedStringResource
+    let titleText: Text
     var font: Font = .clarity(.bold)
     var image: Image?
     var imageAlignment: ImageAlignment = .left
     var padding = EdgeInsets(top: 8, leading: 13, bottom: 8, trailing: 13)
     var textColor = Color.white
     var depthEffectColor = Color.actionPrimaryDepthEffect
-    var backgroundGradient = LinearGradient(
-        colors: [
-            Color.actionPrimaryGradientTop,
-            Color.actionPrimaryGradientBottom
-        ],
-        startPoint: .bottomLeading,
-        endPoint: .topTrailing
-    )
+    var backgroundGradient = LinearGradient.diagonalAccent2
     var textShadow = true
     /// A flag used to fill the available horizontal space (centering the
     /// contents) or to fit the horizontal space to the contents of the action
@@ -30,6 +23,62 @@ struct ActionButton: View {
     var shouldFillHorizontalSpace = false
     var action: (() async -> Void)?
     @State var disabled = false
+    
+    init(
+        title: String,
+        font: Font = .clarity(.bold),
+        image: Image? = nil,
+        imageAlignment: ImageAlignment = .left,
+        padding: EdgeInsets = EdgeInsets(top: 8, leading: 13, bottom: 8, trailing: 13),
+        textColor: SwiftUI.Color = Color.white,
+        depthEffectColor: Color = Color.actionPrimaryDepthEffect,
+        backgroundGradient: LinearGradient = LinearGradient.diagonalAccent2,
+        textShadow: Bool = true,
+        shouldFillHorizontalSpace: Bool = false,
+        action: (() async -> Void)? = nil,
+        disabled: Bool = false
+    ) {
+        self.titleText = Text(title)
+        self.font = font
+        self.image = image
+        self.imageAlignment = imageAlignment
+        self.padding = padding
+        self.textColor = textColor
+        self.depthEffectColor = depthEffectColor
+        self.backgroundGradient = backgroundGradient
+        self.textShadow = textShadow
+        self.shouldFillHorizontalSpace = shouldFillHorizontalSpace
+        self.action = action
+        self.disabled = disabled
+    }
+    
+    init(
+        _ titleKey: LocalizedStringKey,
+        font: Font = .clarity(.bold),
+        image: Image? = nil,
+        imageAlignment: ImageAlignment = .left,
+        padding: EdgeInsets = EdgeInsets(top: 8, leading: 13, bottom: 8, trailing: 13),
+        textColor: Color = Color.white,
+        depthEffectColor: Color = Color.actionPrimaryDepthEffect,
+        backgroundGradient: LinearGradient = LinearGradient.diagonalAccent2,
+        textShadow: Bool = true,
+        shouldFillHorizontalSpace: Bool = false,
+        action: (() async -> Void)? = nil,
+        disabled: Bool = false
+    ) {
+        self.titleText = Text(titleKey)
+        self.font = font
+        self.image = image
+        self.imageAlignment = imageAlignment
+        self.padding = padding
+        self.textColor = textColor
+        self.depthEffectColor = depthEffectColor
+        self.backgroundGradient = backgroundGradient
+        self.textShadow = textShadow
+        self.shouldFillHorizontalSpace = shouldFillHorizontalSpace
+        self.action = action
+        self.disabled = disabled
+    }
     
     var body: some View {
         Button(action: {
@@ -48,7 +97,7 @@ struct ActionButton: View {
                 if imageAlignment == .left {
                     image
                 }
-                Text(title)
+                titleText
                     .font(font)
                     .transition(.opacity)
                     .font(.headline)
@@ -77,19 +126,28 @@ struct ActionButton: View {
 }
 
 struct SecondaryActionButton: View {
-    var title: LocalizedStringResource
-    var font: Font = .clarity(.bold)
-
-    var image: Image?
-    var imageAlignment: ActionButton.ImageAlignment = .left
-    /// A flag used to fill the available horizontal space (centering the
+    
+    private let button: ActionButton
+    
+    /// Initializes a ``SecondaryActionButton``.
+    /// - Parameters:
+    ///   - title: The title for the button.
+    ///   - font: The font to use.
+    ///   - image: An image for the button. Optional.
+    ///   - imageAlignment: The side of the button the image should appear on.
+    ///   - shouldFillHorizontalSpace: A flag used to fill the available horizontal space (centering the
     /// contents) or to fit the horizontal space to the contents of the action
     /// button.
-    var shouldFillHorizontalSpace = false
-    var action: (() async -> Void)?
-    
-    var body: some View {
-        ActionButton(
+    ///   - action: The action to perform when the button is tapped.
+    init(
+        title: String,
+        font: Font = .clarity(.bold),
+        image: Image? = nil,
+        imageAlignment: ActionButton.ImageAlignment = .left,
+        shouldFillHorizontalSpace: Bool = false,
+        action: (() -> Void)? = nil
+    ) {
+        button = ActionButton(
             title: title,
             font: font,
             image: image,
@@ -100,11 +158,35 @@ struct SecondaryActionButton: View {
             action: action
         )
     }
+    
+    init(
+        _ titleKey: LocalizedStringKey,
+        font: Font = .clarity(.bold),
+        image: Image? = nil,
+        imageAlignment: ActionButton.ImageAlignment = .left,
+        shouldFillHorizontalSpace: Bool = false,
+        action: (() async -> Void)? = nil
+    ) {
+        button = ActionButton(
+            titleKey,
+            font: font,
+            image: image,
+            imageAlignment: imageAlignment,
+            depthEffectColor: .actionSecondaryDepthEffect,
+            backgroundGradient: .verticalAccentSecondary,
+            shouldFillHorizontalSpace: shouldFillHorizontalSpace,
+            action: action
+        )
+    }
+    
+    var body: some View {
+        button
+    }
 }
 
 struct ActionButtonStyle: ButtonStyle {
     
-    @SwiftUI.Environment(\.isEnabled) private var isEnabled
+    @Environment(\.isEnabled) private var isEnabled
     
     let cornerRadius: CGFloat = 17
     let depthEffectColor: Color
@@ -161,13 +243,13 @@ struct ActionButtonStyle: ButtonStyle {
 struct ActionButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
-            ActionButton(title: .localizable.done, action: {})
+            ActionButton("done")
 
-            ActionButton(title: .localizable.done, action: {})
+            ActionButton("done")
                 .disabled(true)
             
             ActionButton(
-                title: .localizable.edit,
+                "edit",
                 font: .clarity(.medium),
                 image: Image.editProfile, 
                 textColor: Color.actionBannerButtonTxt,
@@ -180,15 +262,16 @@ struct ActionButton_Previews: PreviewProvider {
                     startPoint: .leading,
                     endPoint: .trailing
                 ),
-                textShadow: false,
-                action: {}
+                textShadow: false
             )
             
-            SecondaryActionButton(title: .localizable.edit, action: {})
+            SecondaryActionButton("edit")
 
             // Something that should wrap at larger text sizes
-            SecondaryActionButton(title: .localizable.reportNoteSendToNosConfirmation("harassment"), action: {})
-                .disabled(true)
+            SecondaryActionButton(
+                title: "The Nos moderation team will analyze the note for harassment content and may publish a report from our own account, concealing your identity."  // swiftlint:disable:this line_length
+            )
+            .disabled(true)
         }
     }
 }

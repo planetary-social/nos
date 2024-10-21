@@ -15,6 +15,10 @@
 
 default_platform(:ios)
 
+# Work around
+# https://github.com/fastlane/fastlane/issues/20919
+ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "60" 
+
 platform :ios do
   asc_key_content = ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]
   asc_issuer_id = ENV["APP_STORE_CONNECT_ISSUER_ID"]

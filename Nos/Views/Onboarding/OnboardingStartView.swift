@@ -3,7 +3,7 @@ import SwiftUI
 
 /// The beginning of the Onboarding views which contains buttons to start creating a new account or log in.
 struct OnboardingStartView: View {
-    @EnvironmentObject var state: OnboardingState
+    @Environment(OnboardingState.self) private var state
 
     @Dependency(\.analytics) private var analytics
 
@@ -23,7 +23,7 @@ struct OnboardingStartView: View {
                 Spacer()
 
                 Group {
-                    BigActionButton(title: "newToNostr") {
+                    BigActionButton("newToNostr") {
                         state.flow = .createAccount
                         state.step = .ageVerification
                     }
@@ -54,6 +54,6 @@ struct OnboardingStartView: View {
 
 #Preview {
     OnboardingStartView()
-        .environmentObject(OnboardingState())
+        .environment(OnboardingState())
         .inject(previewData: PreviewData())
 }

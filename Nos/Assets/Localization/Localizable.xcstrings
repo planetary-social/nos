@@ -601,6 +601,30 @@
         }
       }
     },
+    "accountPartialSuccessDescription" : {
+      "comment" : "description for the account success screen when something isn't quite right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The app couldn't save your chosen Display Name or Username. You can set these up later in your Profile."
+          }
+        }
+      }
+    },
+    "accountPartialSuccessHeadline" : {
+      "comment" : "headline for the account success screen when something isn't quite right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You've finished setting up your account, but..."
+          }
+        }
+      }
+    },
     "accountsIFollow" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -650,6 +674,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "我關注的賬戶"
+          }
+        }
+      }
+    },
+    "accountSuccessDescription" : {
+      "comment" : "description for the account success screen when everything is right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now that you know who you are on Nostr, let’s find other people to follow!"
+          }
+        }
+      }
+    },
+    "accountSuccessHeadline" : {
+      "comment" : "headline for the account success screen when everything is right",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You've finished setting up your account!"
           }
         }
       }
@@ -994,6 +1042,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "地址"
+          }
+        }
+      }
+    },
+    "ageVerificationDescription" : {
+      "comment" : "description for the age verification screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For legal reasons, we need to make sure you're over this age to use Nos."
+          }
+        }
+      }
+    },
+    "ageVerificationHeadline" : {
+      "comment" : "headline for the age verification screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you over 16 years old?"
           }
         }
       }
@@ -3757,6 +3829,30 @@
         }
       }
     },
+    "copyPrivateKey" : {
+      "comment" : "title for the button that copies the private key",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy private key"
+          }
+        }
+      }
+    },
+    "copyPublicKey" : {
+      "comment" : "title for the button that copies the public key",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy public key"
+          }
+        }
+      }
+    },
     "copyQRLink" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4026,6 +4122,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "無法讀取你的私鑰。請確保它是十六進制（hex）格式。"
+          }
+        }
+      }
+    },
+    "createAccountButton" : {
+      "comment" : "The title of the button to create an account",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create Account"
+          }
+        }
+      }
+    },
+    "createAccountDescription" : {
+      "comment" : "The description on the create account screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We've simplified management of your account credentials. Nos uses public-private key encryption to verify your identity."
+          }
+        }
+      }
+    },
+    "createAccountHeadline" : {
+      "comment" : "headline for the create account screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Say goodbye to usernames and passwords!"
           }
         }
       }
@@ -4386,6 +4518,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "删除您的帐户将从 Nos 服务器中删除您的所有数据，并要求您的所有中继执行同样的操作。"
+          }
+        }
+      }
+    },
+    "deleteAccountMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting your account will delete all your data from Nos servers and ask all your relays to do the same."
           }
         }
       }
@@ -5153,6 +5296,42 @@
         }
       }
     },
+    "displayNameDescription" : {
+      "comment" : "a description for the display name screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is how others will see you when they view your notes. You can always change it."
+          }
+        }
+      }
+    },
+    "displayNameHeadline" : {
+      "comment" : "headline for the display name screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display Name"
+          }
+        }
+      }
+    },
+    "displayNamePlaceholder" : {
+      "comment" : "placeholder text for the display name field in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your display name"
+          }
+        }
+      }
+    },
     "done" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5450,118 +5629,6 @@
         }
       }
     },
-    "enableAccountDeletion" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable account deletion"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activar eliminación de cuenta"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "계정 삭제 활성화"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启用账户删除"
-          }
-        }
-      }
-    },
-    "enableNewMediaDisplay" : {
-      "comment" : "Setting for new media feature flag",
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neue Mediendarstellung aktivieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable new media display"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activar nuevo visor de medios"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activer l'affichage des nouveaux médias"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "새로운 미디어 디스플레이 사용"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Washa onyesho jipya la midia"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启用新的媒体显示"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "啓用新的媒體顯示"
-          }
-        }
-      }
-    },
-    "enableNewModerationFlow" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable new moderation flow"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activar nuevo flujo de moderación"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "새로운 모더레이션 흐름 활성화"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启用新审核流程"
-          }
-        }
-      }
-    },
     "enterCode" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5742,6 +5809,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "錯誤"
+          }
+        }
+      }
+    },
+    "errorConnecting" : {
+      "comment" : "error message for when we can't set the display name or username in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There is a problem connecting to the servers. You can skip for now and visit your Profile to update later."
           }
         }
       }
@@ -8920,6 +8999,17 @@
         }
       }
     },
+    "goToYourFeed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go to your Feed to see notes from your connections."
+          }
+        }
+      }
+    },
     "homeFeed" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -11461,6 +11551,7 @@
       }
     },
     "next" : {
+      "comment" : "title for a button that moves to the next step",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -13785,7 +13876,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your **@username** is your identity in the Nos community.\u2028\nChoose a name that reflects you or your organization. Make it memorable and distinct!"
+            "value" : "Your **@username** is your identity in the Nos community. \nChoose a name that reflects you or your organization. Make it memorable and distinct!"
           }
         },
         "es" : {
@@ -14089,6 +14180,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "私鑰"
+          }
+        }
+      }
+    },
+    "privateKeyDescription" : {
+      "comment" : "a description for the private key screen explaining what a private key is",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your private key is the only login you need for Nos. It is stored in your device keychain. Similar to a password, you should not share it. \n\n**Important!** You should save it somewhere else as well because there is no recovery mechanism if you lose your device."
+          }
+        }
+      }
+    },
+    "privateKeyHeadline" : {
+      "comment" : "headline for the private key screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Key"
+          }
+        }
+      }
+    },
+    "privateKeyNsecParenthetical" : {
+      "comment" : "the word \"nsec\" in parentheses in English. \"nsec\" should not be translated, but the parentheses may",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(nsec)"
           }
         }
       }
@@ -14528,6 +14655,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "公鑰"
+          }
+        }
+      }
+    },
+    "publicKeyDescription" : {
+      "comment" : "a description for the public key screen explaining what a public key is",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is your public identifier that does not change. Public keys can be shared."
+          }
+        }
+      }
+    },
+    "publicKeyHeadline" : {
+      "comment" : "headline for the public key screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Public Key"
+          }
+        }
+      }
+    },
+    "publicKeyNpubParenthetical" : {
+      "comment" : "the word \"npub\" in parentheses in English. \"npub\" should not be translated, but the parentheses may",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(npub)"
           }
         }
       }
@@ -17408,6 +17571,18 @@
         }
       }
     },
+    "skipForNow" : {
+      "comment" : "button title that allows the user to skip this for now",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip for now"
+          }
+        }
+      }
+    },
     "software" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -18419,6 +18594,17 @@
         }
       }
     },
+    "typeDelete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type Delete"
+          }
+        }
+      }
+    },
     "unfollow" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -18951,7 +19137,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Well done, you've successfully claimed your **@username**!\u2028\nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
+            "value" : "Well done, you've successfully claimed your **@username**! \nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
           }
         },
         "es" : {
@@ -18988,6 +19174,66 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "做得好，你已成功認領你的**@用戶名**！\n\n你可以與 Nostr 和 Fediverse 社群中的其他人分享此名稱，以便輕鬆找到你。"
+          }
+        }
+      }
+    },
+    "usernameDescription" : {
+      "comment" : "a description for the username screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is an easy to share alternative to your public key and allows people to search for you on Nos."
+          }
+        }
+      }
+    },
+    "usernameHeadline" : {
+      "comment" : "headline for the username screen in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Username"
+          }
+        }
+      }
+    },
+    "usernameNIP05Parenthetical" : {
+      "comment" : "the word \"NIP-05\" in parentheses in English. \"NIP-05\" should not be translated, but the parentheses may",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(NIP-05)"
+          }
+        }
+      }
+    },
+    "usernameNotAvailable" : {
+      "comment" : "error text to display when the username is unavailable",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This username is not available."
+          }
+        }
+      }
+    },
+    "usernamePlaceholder" : {
+      "comment" : "placeholder text for the username field in onboarding",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "username"
           }
         }
       }

@@ -27,7 +27,7 @@ struct FollowButton: View {
     var body: some View {
         let following = currentUser.isFollowing(author: author)
         ActionButton(
-            title: following ? .localizable.unfollow : .localizable.follow,
+            following ? "unfollow" : "follow",
             font: .clarity(.bold, textStyle: .subheadline),
             image: image(for: following),
             shouldFillHorizontalSpace: shouldFillHorizontalSpace
@@ -39,6 +39,7 @@ struct FollowButton: View {
                 } else {
                     try await currentUser.follow(author: author)
                     analytics.followed(author)
+                    GoToFeedTip.followedAccount.sendDonation()
                 }
             } catch {
                 crashReporting.report(error)
