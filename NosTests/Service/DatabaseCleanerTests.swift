@@ -274,7 +274,7 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         
         // Assert
         let authors = try testContext.fetch(Author.allAuthorsRequest())
-        // Bob should be kept around since 
+        // Bob should be kept around because he has published events that weren't deleted.
         XCTAssertEqual(authors, [bob, alice]) 
         
         // Sanity check that Bob's event was kept
