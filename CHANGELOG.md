@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Release Notes
+- Added relay.mostr.pub to the default relay list. [#1592](https://github.com/planetary-social/nos/issues/1592)
 - Fix two bugs that could result in muted users being unmuted. [#1674](https://github.com/planetary-social/nos/pull/1674)
 - Added a tip to Discover to prompt first-time users to go to their Feed. [#1601](https://github.com/planetary-social/nos/issues/1601)
 - Added a tip to the Feed to welcome first-time users and explain how the Feed works. [#1602](https://github.com/planetary-social/nos/issues/1602)
