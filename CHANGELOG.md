@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new authors and categories to the Discover tab. [#1592](https://github.com/planetary-social/nos/issues/1592)
 
 ### Internal Changes
+- Added code to hide users on the Discover tab with no profile metadata. [#1592](https://github.com/planetary-social/nos/issues/1592)
 - Migrate ObservableObject to @Observable where possible [#1458](https://github.com/planetary-social/nos/issues/1458)
 - Added the Create Account onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1594](https://github.com/planetary-social/nos/issues/1594)
 - Increase build settings timeout in fastlane. [#1662](https://github.com/planetary-social/nos/pull/1662)
