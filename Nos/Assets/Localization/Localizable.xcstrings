@@ -6352,6 +6352,28 @@
         }
       }
     },
+    "featuredAuthorCategoryEspanol" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Español"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryFood" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Food"
+          }
+        }
+      }
+    },
     "featuredAuthorCategoryGaming" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -6466,6 +6488,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "健康"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryLifestyle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lifestyle"
           }
         }
       }
@@ -6643,6 +6676,61 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新聞"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryNZAustralia" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NZ / Australia"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryPhotography" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photography"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryPolitics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Politics"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategoryRandom" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Random"
+          }
+        }
+      }
+    },
+    "featuredAuthorCategorySciFi" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sci-Fi"
           }
         }
       }
