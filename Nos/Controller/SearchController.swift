@@ -32,24 +32,29 @@ enum SearchOrigin {
 }
 
 /// Manages a search query and list of results.
-class SearchController: ObservableObject {
+@Observable final class SearchController {
     
     // MARK: - Properties
     
     /// The search query string.
-    @Published var query: String = ""
+    var query: String = "" {
+        didSet {
+            queryPublisher.send(query)
+        }
+    }
+    @ObservationIgnored private lazy var queryPublisher = CurrentValueSubject<String, Never>(query)
     
     /// Any and all authors in the search results. As of this writing, _only_ authors appear in search results,
     /// so this contains all search results, period.
-    @Published var authorResults = [Author]()
+    var authorResults = [Author]()
 
-    @Published var state: SearchState = .noQuery
+    var state: SearchState = .noQuery
 
-    @Dependency(\.router) private var router
-    @Dependency(\.relayService) private var relayService
-    @Dependency(\.persistenceController) private var persistenceController
-    @Dependency(\.currentUser) var currentUser
-    @Dependency(\.analytics) private var analytics
+    @ObservationIgnored @Dependency(\.router) private var router
+    @ObservationIgnored @Dependency(\.relayService) private var relayService
+    @ObservationIgnored @Dependency(\.persistenceController) private var persistenceController
+    @ObservationIgnored @Dependency(\.currentUser) var currentUser
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
 
     private var cancellables = [AnyCancellable]()
     private var searchSubscriptions = SubscriptionCancellables()
@@ -57,7 +62,7 @@ class SearchController: ObservableObject {
     /// The timer for showing the "not finding results" view. Resets any time the query is changed.
     private var timer: Timer?
 
-    private lazy var context = persistenceController.viewContext
+    @ObservationIgnored private lazy var context = persistenceController.viewContext
 
     /// The amount of time, in seconds, to remain in the `.loading` state until switching to `.stillLoading`.
     private let stillLoadingTime: TimeInterval = 10
@@ -70,7 +75,7 @@ class SearchController: ObservableObject {
     init(searchOrigin: SearchOrigin = .discover) {
         self.searchOrigin = searchOrigin
 
-        $query
+        queryPublisher
             .removeDuplicates()
             .map { [weak self] query in
                 if query.isEmpty {

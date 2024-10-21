@@ -4,7 +4,7 @@ import SwiftUINavigation
 import Dependencies
 
 struct NoteView: View {
-    @EnvironmentObject private var relayService: RelayService
+    @Environment(RelayService.self) private var relayService
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
@@ -257,7 +257,7 @@ struct RepliesView_Previews: PreviewProvider {
             }
         }
         .environment(\.managedObjectContext, previewContext)
-        .environmentObject(emptyRelayService)
+        .environment(emptyRelayService)
         .environmentObject(router)
         .environment(currentUser)
         .padding()

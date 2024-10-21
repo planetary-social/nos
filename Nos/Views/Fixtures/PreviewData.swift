@@ -341,7 +341,7 @@ struct InjectPreviewData: ViewModifier {
         content
             .environment(\.managedObjectContext, previewData.persistenceController.viewContext)
             .environmentObject(previewData.router)
-            .environmentObject(previewData.relayService)
+            .environment(previewData.relayService)
             .environment(previewData.currentUser)
     }
 }

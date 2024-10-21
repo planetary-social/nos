@@ -10,7 +10,7 @@ struct RelaysDestination: Hashable {
 
 struct RelayView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var relayService: RelayService
+    @Environment(RelayService.self) private var relayService
     @Environment(CurrentUser.self) private var currentUser
     @ObservedObject var author: Author
     

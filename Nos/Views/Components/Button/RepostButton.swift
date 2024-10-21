@@ -10,7 +10,7 @@ struct RepostButton: View {
     let showsCount: Bool
 
     @FetchRequest private var reposts: FetchedResults<Event>
-    @EnvironmentObject private var relayService: RelayService
+    @Environment(RelayService.self) private var relayService
     @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
     

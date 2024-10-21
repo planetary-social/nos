@@ -8,7 +8,7 @@ struct AppView: View {
 
     @Environment(AppController.self) var appController
     @EnvironmentObject private var router: Router
-    @EnvironmentObject var pushNotificationService: PushNotificationService
+    @Environment(PushNotificationService.self) private var pushNotificationService
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.userDefaults) private var userDefaults
@@ -226,26 +226,26 @@ struct AppView_Previews: PreviewProvider {
     static var previews: some View {
         AppView()
             .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
+            .environment(relayService)
             .environmentObject(router)
             .environment(loggedInAppController)
             .environment(currentUser)
-            .environmentObject(pushNotificationService)
+            .environment(pushNotificationService)
 
         AppView()
             .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
+            .environment(relayService)
             .environmentObject(router)
             .environment(AppController())
             .environment(currentUser)
-            .environmentObject(pushNotificationService)
+            .environment(pushNotificationService)
 
         AppView()
             .environment(\.managedObjectContext, previewContext)
-            .environmentObject(relayService)
+            .environment(relayService)
             .environmentObject(routerWithSideMenuOpened)
             .environment(AppController())
             .environment(currentUser)
-            .environmentObject(pushNotificationService)
+            .environment(pushNotificationService)
     }
 }

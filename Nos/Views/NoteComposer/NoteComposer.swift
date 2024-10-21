@@ -7,8 +7,8 @@ import SwiftUINavigation
 struct NoteComposer: View {
 
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var relayService: RelayService
-    @Environment(CurrentUser.self) var currentUser
+    @Environment(RelayService.self) private var relayService
+    @Dependency(\.currentUser) private var currentUser
     @Dependency(\.analytics) private var analytics
     @Dependency(\.noteParser) private var noteParser
     @Dependency(\.persistenceController) private var persistenceController
@@ -266,7 +266,7 @@ struct NoteComposer: View {
         .zIndex(1)
     }
 
-    private func postAction() async {
+    @MainActor private func postAction() async {
         guard currentUser.keyPair != nil, let author = currentUser.author else {
             alert = AlertState(title: {
                 TextState(String(localized: "error"))
@@ -349,7 +349,7 @@ struct NoteComposer: View {
         )
     }
 
-    private func publishPost() async {
+    @MainActor private func publishPost() async {
         guard let keyPair = currentUser.keyPair, let author = currentUser.author else {
             Log.error("Cannot post without a keypair")
             return

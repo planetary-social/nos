@@ -3,7 +3,7 @@ import SwiftUI
 import Dependencies
 
 struct DiscoverContentsView: View {
-    @ObservedObject var searchController: SearchController
+    @State private var searchController: SearchController
 
     @EnvironmentObject private var router: Router
 
