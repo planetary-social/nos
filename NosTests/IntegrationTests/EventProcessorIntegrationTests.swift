@@ -330,7 +330,7 @@ class EventProcessorIntegrationTests: CoreDataTestCase {
         // The third user should not be muted because they are not muted in the newer list.
         XCTAssertEqual(try Author.find(by: mutedUserOne, context: testContext)?.muted, true)
         XCTAssertEqual(try Author.find(by: mutedUserTwo, context: testContext)?.muted, true)
-        XCTAssertEqual(try Author.find(by: mutedUserThree, context: testContext)?.muted, false)
+        XCTAssertEqual(try Author.find(by: mutedUserThree, context: testContext)?.muted, nil)
     }
     
     @MainActor func test_parseMuteList_unMutesSelf() async throws {

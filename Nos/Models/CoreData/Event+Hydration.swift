@@ -180,6 +180,12 @@ extension Event {
     }
     
     private func hydrateMuteList(from jsonEvent: JSONEvent, context: NSManagedObjectContext) throws {
+        guard createdAt! > author?.lastUpdatedMuteList ?? Date.distantPast else {
+            return
+        }
+        
+        author?.lastUpdatedMuteList = Date(timeIntervalSince1970: TimeInterval(jsonEvent.createdAt))
+        
         let mutedKeys = Set(jsonEvent.tags.map { $0[1] })
         
         let request = Author.allAuthorsRequest(muted: true)

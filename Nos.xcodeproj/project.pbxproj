@@ -844,6 +844,7 @@
 		C95057A62CC692320024EC9C /* mute_list.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = mute_list.json; sourceTree = "<group>"; };
 		C95057B02CC6986E0024EC9C /* mute_list_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = mute_list_2.json; sourceTree = "<group>"; };
 		C95057C42CC69A770024EC9C /* mute_list_self.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = mute_list_self.json; sourceTree = "<group>"; };
+		C95057C62CC69FD70024EC9C /* Nos 19.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 19.xcdatamodel"; sourceTree = "<group>"; };
 		C959DB752BD01DF4008F3627 /* GiftWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftWrapper.swift; sourceTree = "<group>"; };
 		C95D689E299E6B4100429F86 /* ProfileHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileHeader.swift; sourceTree = "<group>"; };
 		C95D68A0299E6D3E00429F86 /* BioView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BioView.swift; sourceTree = "<group>"; };
@@ -3827,6 +3828,7 @@
 		C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C95057C62CC69FD70024EC9C /* Nos 19.xcdatamodel */,
 				C9BB9FE32CBEFF560045DC5A /* Nos 18.xcdatamodel */,
 				C9D2839E2CB9B177007ADCB9 /* Nos 17.xcdatamodel */,
 				033B288D2C419E7600E325E8 /* Nos 16.xcdatamodel */,
@@ -3838,7 +3840,7 @@
 				C9C547562A4F1D1A006B0741 /* Nos 9.xcdatamodel */,
 				5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */,
 			);
-			currentVersion = C9BB9FE32CBEFF560045DC5A /* Nos 18.xcdatamodel */;
+			currentVersion = C95057C62CC69FD70024EC9C /* Nos 19.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
