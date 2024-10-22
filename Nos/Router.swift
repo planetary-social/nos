@@ -64,7 +64,14 @@ import Dependencies
                 )
             )
         } else {
-            fatalError("Tried to push a note with no identifier; that's not going to work.")
+            let debuggingDetails = """
+            noteId: \(String(describing: note.identifier)) \n
+            replaceableIdentifier: \(String(describing: note.replaceableIdentifier)) \n
+            noteAuthor: \(String(describing: note.author))
+            """
+
+            crashReporting.report("Tried to push a note and it failed. Details: \n \(debuggingDetails)")
+            assertionFailure("Tried to push a note and it failed. Details: \n \(debuggingDetails)")
         }
     }
     
