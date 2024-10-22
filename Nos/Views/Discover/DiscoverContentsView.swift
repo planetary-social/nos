@@ -133,7 +133,7 @@ struct DiscoverContentsView: View {
             }
             .scrollIndicators(.never)
         }
-        .background(Color.profileBgTop)
+        .background(Color.cardBgBottom)
     }
 
     var categoriesStack: some View {

@@ -20,6 +20,7 @@ struct DiscoverTab: View {
     @StateObject private var searchController = SearchController()
 
     @State var predicate: NSPredicate = .false
+    @FocusState private var isSearching: Bool
 
     let goToFeedTip = GoToFeedTip()
 
@@ -27,51 +28,55 @@ struct DiscoverTab: View {
     
     var body: some View {
         NosNavigationStack(path: $router.discoverPath) {
-            ZStack {
-                DiscoverContentsView(
-                    featuredAuthorCategory: .all,
-                    searchController: searchController
+            VStack {
+                SearchBar(
+                    text: $searchController.query,
+                    isSearching: $isSearching,
+                    placeholder: String(localized: "searchBar")
                 )
+                .background(Color.cardBgBottom)
+                .onSubmit {
+                    searchController.submitSearch(query: searchController.query)
+                }
+                ZStack {
+                    DiscoverContentsView(
+                        featuredAuthorCategory: .all,
+                        searchController: searchController
+                    )
 
-                VStack {
-                    Spacer()
-                    
-                    TipView(goToFeedTip)
-                        .padding(.horizontal, 12)
-                        .padding(.bottom, 8)
-                        .readabilityPadding()
-                        .tipBackground(LinearGradient.horizontalAccentReversed)
-                        .tipViewStyle(.pointDownEmoji)
+                    VStack {
+                        Spacer()
+
+                        TipView(goToFeedTip)
+                            .padding(.horizontal, 12)
+                            .padding(.bottom, 8)
+                            .readabilityPadding()
+                            .tipBackground(LinearGradient.horizontalAccentReversed)
+                            .tipViewStyle(.pointDownEmoji)
+                    }
                 }
-            }
-            .searchable(
-                text: $searchController.query, 
-                placement: .toolbar, 
-                prompt: Text("searchBar")
-            )
-            .autocorrectionDisabled()
-            .onSubmit(of: .search) {
-                searchController.submitSearch(query: searchController.query)
-            }
-            .background(Color.appBg)
-            .animation(.easeInOut, value: columns)
-            .onAppear {
-                if router.selectedTab == .discover {
-                    isVisible = true
+                .background(Color.appBg)
+                .animation(.easeInOut, value: columns)
+                .onAppear {
+                    if router.selectedTab == .discover {
+                        isVisible = true
+                    }
                 }
-            }
-            .onDisappear {
-                isVisible = false
-            }
-            .onChange(of: isVisible) {
-                if isVisible {
-                    analytics.showedDiscover()
+                .onDisappear {
+                    isVisible = false
                 }
+                .onChange(of: isVisible) {
+                    if isVisible {
+                        analytics.showedDiscover()
+                    }
+                }
+                .nosNavigationBar("discover")
+                .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+                .navigationBarItems(leading: SideMenuButton())
             }
-            .nosNavigationBar("discover")
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
-            .navigationBarItems(leading: SideMenuButton())
+            // This makes the white line change to the background color instead
+            .padding(.top, 1)
         }
     }
 }

@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed integration with Universal Name Space [#1636](https://github.com/planetary-social/nos/issues/1636)
 - Remove most usage of xcstringstool-generated strings to improve performance. [#1458](https://github.com/planetary-social/nos/issues/1458)
 - Added new authors and categories to the Discover tab. [#1592](https://github.com/planetary-social/nos/issues/1592)
+- Fix Search bar disappearing on Discover tab when scrolling. [#1679](https://github.com/planetary-social/nos/issues/1679)
 
 ### Internal Changes
 - Added code to hide users on the Discover tab with no profile metadata. [#1592](https://github.com/planetary-social/nos/issues/1592)
