@@ -28,6 +28,12 @@
             "value" : "پورن دو جنس"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pornografia bissexual"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -73,6 +79,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "صدمه جسمی"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lesão Corporal"
           }
         },
         "sv" : {
@@ -122,6 +134,12 @@
             "value" : "عریانی معمولی"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nudez casual"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -167,6 +185,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "سوء استفاده جنسی از کودکان"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abuso Sexual Infantil"
           }
         },
         "sv" : {
@@ -216,6 +240,12 @@
             "value" : "بدزبانی"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linguagem Grosseira ou Intolerância"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -261,6 +291,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "نقض حق تکثیر"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Violação de Direitos Autorais"
           }
         },
         "sv" : {
@@ -310,6 +346,12 @@
             "value" : "جرائم مواد مخدر"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crime associado à droga"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -355,6 +397,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "تحریک آمیز"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erótica"
           }
         },
         "sv" : {
@@ -404,6 +452,12 @@
             "value" : "ضرر مالی"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danos Financeiros"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -449,6 +503,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "شیادی و کلاهبرداری"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Golpes e Fraudes"
           }
         },
         "sv" : {
@@ -498,6 +558,12 @@
             "value" : "پورن مردان"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pornografia masculina homossexual"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -545,6 +611,12 @@
             "value" : "پورن بی جنسیت"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gênero-fluido / pornografia não binária"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -580,6 +652,12 @@
             "value" : "Acoso"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assédio"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -613,6 +691,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "مزاحمت یا افشای اطلاعات خصوصی"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assédio, Perseguição, ou Doxxing"
           }
         },
         "sv" : {
@@ -662,6 +746,12 @@
             "value" : "پورن جنس مخالف"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pornografia Heterosexual"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -701,6 +791,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "غیر قانونی"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ilegal"
           }
         },
         "sv" : {
@@ -750,6 +846,12 @@
             "value" : "جعل هویت"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falsidade Ideológica"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -795,6 +897,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "عدم مدارا و نفرت"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intolerância e Ódio"
           }
         },
         "sv" : {
@@ -844,6 +952,12 @@
             "value" : "پورن زنان"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pornografia Lésbica"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -883,6 +997,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "احتمال آسیب"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passível de causar dano"
           }
         },
         "sv" : {
@@ -938,6 +1058,12 @@
             "value" : "멀웨어"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“Malware”"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -979,6 +1105,12 @@
             "value" : "NSFW"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NSFW"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1012,6 +1144,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "عریانی و جنسی"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nudez ou Conteúdo Sexual"
           }
         },
         "sv" : {
@@ -1067,6 +1205,12 @@
             "value" : "기타"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Outros"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1114,6 +1258,12 @@
             "value" : "پورن"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pornografia"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1155,6 +1305,12 @@
             "value" : "تن فروشی"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prostituição"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1188,6 +1344,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "سکس"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sexo"
           }
         },
         "zh-Hans" : {
@@ -1229,6 +1391,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "스팸"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "'Spam'"
           }
         },
         "sv" : {
@@ -1276,6 +1444,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "پورن بین جنسی"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pornografia transsexual"
           }
         },
         "sv" : {
@@ -1331,6 +1505,12 @@
             "value" : "폭력"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Violência"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1378,6 +1558,12 @@
             "value" : "خشونت بر علیه حیوان بااحساس"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Violência contra um ser humano"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1423,6 +1609,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "خشونت بر علیه انسان"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Violência contra um animal senciente"
           }
         },
         "sv" : {
