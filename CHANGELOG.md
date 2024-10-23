@@ -11,13 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Release Notes
+- Added relay.mostr.pub to the default relay list. [#1592](https://github.com/planetary-social/nos/issues/1592)
+- Fix two bugs that could result in muted users being unmuted. [#1674](https://github.com/planetary-social/nos/pull/1674)
 - Added a tip to Discover to prompt first-time users to go to their Feed. [#1601](https://github.com/planetary-social/nos/issues/1601)
 - Added a tip to the Feed to welcome first-time users and explain how the Feed works. [#1602](https://github.com/planetary-social/nos/issues/1602)
 - Added a tag to published contact lists to help us detect the source of lost contact lists. [cleanstr#51](https://github.com/planetary-social/cleanstr/issues/51)
+- Updated the onboarding screens with a new design.
 - Removed integration with Universal Name Space [#1636](https://github.com/planetary-social/nos/issues/1636)
 - Remove most usage of xcstringstool-generated strings to improve performance. [#1458](https://github.com/planetary-social/nos/issues/1458)
+- Added new authors and categories to the Discover tab. [#1592](https://github.com/planetary-social/nos/issues/1592)
+- Fix Search bar disappearing on Discover tab when scrolling. [#1679](https://github.com/planetary-social/nos/issues/1679)
 
 ### Internal Changes
+- Added code to hide users on the Discover tab with no profile metadata. [#1592](https://github.com/planetary-social/nos/issues/1592)
 - Migrate ObservableObject to @Observable where possible [#1458](https://github.com/planetary-social/nos/issues/1458)
 - Added the Create Account onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1594](https://github.com/planetary-social/nos/issues/1594)
 - Increase build settings timeout in fastlane. [#1662](https://github.com/planetary-social/nos/pull/1662)
@@ -30,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the Age Verification onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1651](https://github.com/planetary-social/nos/issues/1651)
 - Track opening mentions with Posthog. [#1480](https://github.com/planetary-social/nos/issues/1480)
 - More ObservableObject to @Observable migrations [#1458](https://github.com/planetary-social/nos/issues/1458)
+- Avoid crash and print extra debugging details when a reposted note that has not finished loading is clicked. [#1669](https://github.com/planetary-social/nos/issues/1669)
 
 ## [0.2.2] - 2024-10-11Z
 
@@ -43,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Build Your Network screen to onboarding to explain how the feed works. [#1600](https://github.com/planetary-social/nos/issues/1600)
 - Decreased the opacity on disabled buttons.
 - Added a Delete Account button to the Settings screen. [#80](https://github.com/planetary-social/nos/issues/80)
+- Added participants in a thread to the mentions lookup. [#1568](https://github.com/planetary-social/nos/issues/1568)
 
 ### Internal Changes
 - Moved the database cleanup routine into a background execution task. [#1426](https://github.com/planetary-social/nos/issues/1426)

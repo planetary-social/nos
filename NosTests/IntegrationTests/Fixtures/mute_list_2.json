@@ -1,0 +1,18 @@
+{
+    "kind": 10000,
+    "id": "c54f0aef32400e566355f88af29dc9ad7c7fcad46ca4488013eec1260254bafe",
+    "pubkey": "ffd99f9e545b53e3291dab4b8cd6d25d12b9973c40f02e1938c0891d62e38e57",
+    "created_at": 1729519829,
+    "tags": [
+        [
+            "p",
+            "756bcacddd4fd7051cde3e39464cdd3557fec416ab1f496e2e91da0534b14272"
+        ],
+        [
+            "p",
+            "d0a1ffb8761b974cec4a3be8cbcb2e96a7090dcf465ffeac839aa4ca20c9a59e"
+        ]
+    ],
+    "content": "",
+    "sig": "0c55ce1abd8df9b93c0978c31170d9cc134fc89e971f76112d7686ed3134b6a80de112b90f35e75e1e5a935c0aaf1fcbb575aed7bb35ffe086858522a41c6d96"
+}

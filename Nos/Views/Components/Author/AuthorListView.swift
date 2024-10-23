@@ -10,6 +10,10 @@ struct AuthorListView: View {
     @State private var searchController = SearchController(searchOrigin: .mentions)
 
     @FocusState private var isSearching: Bool
+    @State private var filteredAuthors: [Author] = []
+
+    /// The authors are referenced in a note / who replied under the note the user is replying if any.
+    var relatedAuthors: [Author]?
 
     var didSelectGesture: ((Author) -> Void)?
 
@@ -22,7 +26,7 @@ struct AuthorListView: View {
                     searchController.submitSearch(query: searchController.query)
                 }
             LazyVStack {
-                ForEach(searchController.authorResults) { author in
+                ForEach(filteredAuthors) { author in
                     AuthorCard(author: author, showsFollowButton: false) {
                         didSelectGesture?(author)
                     }
@@ -36,6 +40,18 @@ struct AuthorListView: View {
         .nosNavigationBar("mention")
         .onAppear {
             isSearching = true
+
+            guard let relatedAuthors = relatedAuthors else { return }
+            filteredAuthors = relatedAuthors
+        }
+        .onChange(of: searchController.authorResults) { _, newValue in
+            // Empty the array, so the search result can be at the top of the related authors.
+            filteredAuthors = []
+            // Add search result first.
+            filteredAuthors += newValue
+            // Add related authors to the end of the search result.
+            guard let relatedAuthors = relatedAuthors else { return }
+            filteredAuthors += relatedAuthors
         }
         .disableAutocorrection(true)
         .toolbar {

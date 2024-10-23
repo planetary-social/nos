@@ -34,6 +34,12 @@
             "value" : "카메라"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Câmera"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -85,6 +91,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "이 디바이스에서 카메라 사용 불가"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Câmera não está disponível neste dispositivo"
           }
         },
         "sv" : {
@@ -140,6 +152,12 @@
             "value" : "파일을 업로드하는 도중 오류가 발생했어요"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erro ao enviar o arquivo"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -175,6 +193,12 @@
             "value" : "El maximo tamaño para publicacion de achivos gratis es %@. Para subir archives mas grande puedes pagar para subscribir a una cuenta Nostr.build pro."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O tamanho de arquivo máximo para o “upload” grátis é %@. Para fazer o \"upload\" de arquivos grandes, atualize para uma conta \"Nostr.build Professional\"."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -196,6 +220,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Registarse para una cuenta pro de Nostr.build para la abilidad de subir archivos mas grande"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtenha uma conta 'Nostr.build' para fazer 'upload' de arquivos maiores"
           }
         },
         "zh-Hans" : {
@@ -233,6 +263,12 @@
             "value" : "هنگام بارگذاری فایلی که دادید خطایی رخ داد. لطفا دوباره تلاش کنید."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Foi encontrado um erro ao carregar o arquivo que você forneceu. Por favor, tente novamente."
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -268,6 +304,12 @@
             "value" : "Hubo un error en el intento de subir el archivo. El mensaje de error era\"%@\""
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Foi encontrado um erro ao carregar o arquivo que você forneceu. A mensagem foi: \"%@\""
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -289,6 +331,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Registar una Cuenta"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obter uma conta"
           }
         },
         "zh-Hans" : {
@@ -324,6 +372,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "می توانید مجوز دوربین را در تنظیمات اپ مجاز کنید."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você pode habilitar as permissões da câmera abrindo as Configurações do aplicativo."
           }
         },
         "sv" : {
@@ -371,6 +425,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "برای %@ به مجوز نیاز است"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permissões necessárias para %@"
           }
         },
         "sv" : {
@@ -426,6 +486,12 @@
             "value" : "갤러리"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biblioteca de Fotos"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -473,6 +539,12 @@
             "value" : "انتخاب از گالری عکس"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecione a partir da Biblioteca de Fotos"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -512,6 +584,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "사진 찍기"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tirar foto"
           }
         },
         "sv" : {
@@ -559,6 +637,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "사진 혹은 영상 찍기"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tirar foto ou vídeo"
           }
         },
         "sv" : {
@@ -612,6 +696,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "업로드 중..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviando..."
           }
         },
         "sv" : {

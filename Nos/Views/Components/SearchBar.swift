@@ -3,16 +3,21 @@ import SwiftUI
 struct SearchBar: View {
     @Binding var text: String
     var isSearching: FocusState<Bool>.Binding
-    
+    var placeholder = String(localized: "Search")
+
     var body: some View {
         HStack(spacing: 8) {
             HStack(spacing: 8) {
                 HStack {
                     Image(systemName: "magnifyingglass")
-                        .foregroundColor(Color(.systemGray))
-                    TextField("Search", text: $text)
-                        .font(.clarity(.regular))
+                        .foregroundColor(Color(.secondaryTxt))
+                    TextField("", text: $text)
                         .foregroundColor(.primaryTxt)
+                        .placeholder(when: $text.wrappedValue.isEmpty, placeholder: { 
+                            Text(placeholder)
+                                .foregroundStyle(Color.secondaryTxt)
+                                .lineLimit(1)
+                        })
                         .onTapGesture {
                             isSearching.wrappedValue = true // Set focus to the search bar when tapped
                         }
@@ -20,11 +25,11 @@ struct SearchBar: View {
                         .submitLabel(.search)
                     Spacer()
                 }
-                .padding(8)
+                .padding(10)
             }
-            .background(Color.cardBgBottom)
-            .cornerRadius(8)
-            
+            .background(Color.searchBarBg)
+            .cornerRadius(10)
+
             if isSearching.wrappedValue {
                 Button(action: {
                     text = "" // Clear the search text
@@ -38,6 +43,7 @@ struct SearchBar: View {
             }
         }
         .padding(16)
+        .shadow(color: Color.searchBarOuterShadow, radius: 0, x: 0, y: 0.31)
     }
 }
 
