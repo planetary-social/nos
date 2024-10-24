@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove most usage of xcstringstool-generated strings to improve performance. [#1458](https://github.com/planetary-social/nos/issues/1458)
 - Added new authors and categories to the Discover tab. [#1592](https://github.com/planetary-social/nos/issues/1592)
 - Fix Search bar disappearing on Discover tab when scrolling. [#1679](https://github.com/planetary-social/nos/issues/1679)
+- Nos now hides the notes from blocked users when viewing their profile page. [#1681](https://github.com/planetary-social/nos/pull/1681)
 
 ### Internal Changes
 - Added code to hide users on the Discover tab with no profile metadata. [#1592](https://github.com/planetary-social/nos/issues/1592)
@@ -36,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the Age Verification onboarding screen. Currently behind the “New Onboarding Flow” feature flag. [#1651](https://github.com/planetary-social/nos/issues/1651)
 - Track opening mentions with Posthog. [#1480](https://github.com/planetary-social/nos/issues/1480)
 - Avoid crash and print extra debugging details when a reposted note that has not finished loading is clicked. [#1669](https://github.com/planetary-social/nos/issues/1669)
+- Changed the term "mute" to "block". [#1681](https://github.com/planetary-social/nos/pull/1681)
 
 ## [0.2.2] - 2024-10-11Z
 

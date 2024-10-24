@@ -65,6 +65,16 @@ struct PreviewData {
         return author
     }()
     
+    lazy var blockedUser: Author = {
+        let author = try! Author.findOrCreate(by: KeyFixture.eve.publicKeyHex, context: previewContext)
+        author.name = "Sam"
+        author.about = "I am a terrible person"
+        author.muted = true
+        author.nip05 = "sam@nos.social"
+        
+        return author
+    }()
+    
     // MARK: - Notes
     
     lazy var shortNote: Event = {
