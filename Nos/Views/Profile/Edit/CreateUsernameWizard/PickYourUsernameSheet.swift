@@ -6,7 +6,7 @@ import SwiftUI
 struct PickYourUsernameSheet: View {
 
     @Binding var isPresented: Bool
-    @State private var usernameObserver = TextDebouncer()
+    @State var usernameObserver = TextDebouncer()
     @State private var verified: Bool?
     @State private var isVerifying = false
     @Dependency(\.namesAPI) private var namesAPI
@@ -116,7 +116,7 @@ struct PickYourUsernameSheet: View {
 
 fileprivate struct UsernameTextField: View {
 
-    @State var usernameObserver: TextDebouncer
+    @Bindable var usernameObserver: TextDebouncer
     @FocusState private var usernameFieldIsFocused: Bool
 
     var body: some View {
