@@ -222,6 +222,12 @@
             "value" : "Registarse para una cuenta pro de Nostr.build para la abilidad de subir archivos mas grande"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nostr.build 계정을 통해 더 큰 파일을 업로드하세요"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -261,6 +267,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "هنگام بارگذاری فایلی که دادید خطایی رخ داد. لطفا دوباره تلاش کنید."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일을 업로드하는 동안 오류가 발생했습니다. 다시 시도하세요."
           }
         },
         "pt-BR" : {
@@ -304,6 +316,12 @@
             "value" : "Hubo un error en el intento de subir el archivo. El mensaje de error era\"%@\""
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일을 업로드하는 동안 오류가 발생했습니다. 메세지: \"%@\""
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -331,6 +349,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Registar una Cuenta"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계정 생성"
           }
         },
         "pt-BR" : {
@@ -372,6 +396,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "می توانید مجوز دوربین را در تنظیمات اپ مجاز کنید."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정을 통해 카메라 권한을 허용할 수 있습니다."
           }
         },
         "pt-BR" : {
@@ -425,6 +455,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "برای %@ به مجوز نیاز است"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@를 위해 권한이 필요합니다"
           }
         },
         "pt-BR" : {
@@ -537,6 +573,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "انتخاب از گالری عکس"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사진 라이브러리에서 선택하기"
           }
         },
         "pt-BR" : {
