@@ -28,6 +28,12 @@
             "value" : "پورن دو جنس"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "양성애 음란물"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -79,6 +85,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "صدمه جسمی"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "신체적 피해"
           }
         },
         "pt-BR" : {
@@ -187,6 +199,12 @@
             "value" : "سوء استفاده جنسی از کودکان"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아동 성 학대"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -238,6 +256,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "بدزبانی"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "거친 표현 또는 편협함"
           }
         },
         "pt-BR" : {
@@ -293,6 +317,12 @@
             "value" : "نقض حق تکثیر"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저작권 위반"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -344,6 +374,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "جرائم مواد مخدر"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마약 관련 범죄"
           }
         },
         "pt-BR" : {
@@ -452,6 +488,12 @@
             "value" : "ضرر مالی"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재정적 피해"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -503,6 +545,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "شیادی و کلاهبرداری"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사기 및 스캠"
           }
         },
         "pt-BR" : {
@@ -558,6 +606,12 @@
             "value" : "پورن مردان"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "남자 동성애 음란물"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -611,6 +665,12 @@
             "value" : "پورن بی جنسیت"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "젠더플루이드 / 논바이너리 음란물"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -652,6 +712,12 @@
             "value" : "Acoso"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "괴롭힘"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -691,6 +757,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "مزاحمت یا افشای اطلاعات خصوصی"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "괴롭힘, 스토킹 혹은 신상털기"
           }
         },
         "pt-BR" : {
@@ -746,6 +818,12 @@
             "value" : "پورن جنس مخالف"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이성애(헤테로) 음란물"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -791,6 +869,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "غیر قانونی"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "불법"
           }
         },
         "pt-BR" : {
@@ -846,6 +930,12 @@
             "value" : "جعل هویت"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "도용 또는 사칭"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -897,6 +987,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "عدم مدارا و نفرت"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "해로움 및 증오"
           }
         },
         "pt-BR" : {
@@ -952,6 +1048,12 @@
             "value" : "پورن زنان"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "여자 동성애 음란물"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -997,6 +1099,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "احتمال آسیب"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "해를 끼칠 가능성"
           }
         },
         "pt-BR" : {
@@ -1146,6 +1254,12 @@
             "value" : "عریانی و جنسی"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "누드 또는 성적 콘텐츠"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1258,6 +1372,12 @@
             "value" : "پورن"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "음란물"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1305,6 +1425,12 @@
             "value" : "تن فروشی"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "성매매"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1344,6 +1470,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "سکس"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "성적인"
           }
         },
         "pt-BR" : {
@@ -1444,6 +1576,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "پورن بین جنسی"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "트랜섹슈얼 음란물"
           }
         },
         "pt-BR" : {
@@ -1558,6 +1696,12 @@
             "value" : "خشونت بر علیه حیوان بااحساس"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "인간에 대한 폭력"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1609,6 +1753,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "خشونت بر علیه انسان"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지각 있는 동물에 대한 폭력"
           }
         },
         "pt-BR" : {
