@@ -81,33 +81,11 @@ struct ProfileView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack {
-                PagedNoteListView(
-                    refreshController: $refreshController,
-                    databaseFilter: databaseFilter,
-                    relayFilter: selectedTab.relayFilter(author: author),
-                    relay: nil,
-                    managedObjectContext: viewContext,
-                    tab: .profile, 
-                    header: {
-                        ProfileHeader(author: author, selectedTab: $selectedTab)
-                            .compositingGroup()
-                            .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
-                    },
-                    emptyPlaceholder: {
-                        VStack {
-                            Text("noEventsOnProfile")
-                                .padding()
-                                .readabilityPadding()
-                            
-                            SecondaryActionButton("tapToRefresh") {
-                                refreshController.startRefresh = true
-                            }
-                        }
-                        .frame(minHeight: 300)
-                    }
-                )
-                .padding(0)
-                .id(selectedTab)
+                if author.muted {
+                    blockedUserListView
+                } else {
+                    noteListView
+                }
             }
             .doubleTapToPop(tab: .profile, enabled: addDoubleTapToPop) { _ in
                 NotificationCenter.default.post(
@@ -219,6 +197,50 @@ struct ProfileView: View {
             relaySubscriptions.removeAll()
         }
     }
+    
+    var noteListView: some View {
+        PagedNoteListView(
+            refreshController: $refreshController,
+            databaseFilter: databaseFilter,
+            relayFilter: selectedTab.relayFilter(author: author),
+            relay: nil,
+            managedObjectContext: viewContext,
+            tab: .profile, 
+            header: {
+                ProfileHeader(author: author, selectedTab: $selectedTab)
+                    .compositingGroup()
+                    .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
+            },
+            emptyPlaceholder: {
+                VStack {
+                    Text("noEventsOnProfile")
+                        .padding()
+                        .readabilityPadding()
+                    
+                    SecondaryActionButton("tapToRefresh") {
+                        refreshController.startRefresh = true
+                    }
+                }
+                .frame(minHeight: 300)
+            }
+        )
+        .padding(0)
+        .id(selectedTab) 
+    }
+    
+    var blockedUserListView: some View {
+        VStack {
+            ProfileHeader(author: author, selectedTab: $selectedTab)
+                .compositingGroup()
+                .shadow(color: .profileShadow, radius: 10, x: 0, y: 4)
+            Spacer()
+            Text("muted")
+                .padding()
+                .readabilityPadding()
+            Spacer()
+        }
+        .frame(maxHeight: .infinity)
+    }
 }
 
 #Preview("Generic user") {
@@ -242,6 +264,22 @@ struct ProfileView: View {
     
     return NavigationStack {
         ProfileView(author: previewData.eve)
+    }
+    .inject(previewData: previewData)
+}
+
+#Preview("Blocked user") {
+    
+    @Dependency(\.persistenceController) var persistenceController 
+    
+    lazy var previewContext: NSManagedObjectContext = {
+        persistenceController.viewContext  
+    }()
+    
+    var previewData = PreviewData(currentUserKey: KeyFixture.eve)
+    
+    return NavigationStack {
+        ProfileView(author: previewData.blockedUser)
     }
     .inject(previewData: previewData)
 }
