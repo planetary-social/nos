@@ -7,7 +7,7 @@ struct CompactAuthorCard: View {
     let author: Author
 
     @EnvironmentObject private var router: Router
-    @EnvironmentObject private var relayService: RelayService
+    @Environment(RelayService.self) private var relayService
     
     @State private var relaySubscriptions = SubscriptionCancellables()
 

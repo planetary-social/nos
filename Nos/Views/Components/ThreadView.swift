@@ -151,7 +151,7 @@ struct ThreadView_Previews: PreviewProvider {
     static var previews: some View {
         ThreadView(root: rootNote, allReplies: [replyNote, secondReply])
             .environment(\.managedObjectContext, emptyPreviewContext)
-            .environmentObject(emptyRelayService)
+            .environment(emptyRelayService)
             .environmentObject(router)
             .environment(currentUser)
     }
