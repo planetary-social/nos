@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "03F8D175-6378-4DAA-A865-8D553DDC7FAF"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3347496C-ECAE-4498-9D95-D244A2E45C40"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nos/Views/MostRecentPostView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "3347496C-ECAE-4498-9D95-D244A2E45C40 - c29671d1d7b425e9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; () in Nos.MostRecentPostView.body.getter : some"
+                  moduleName = "StayReal Dev"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/matt/dev/stayreal/Nos/Views/MostRecentPostView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32"
+                  offsetFromSymbolStart = "616">
+               </Location>
+               <Location
+                  uuid = "3347496C-ECAE-4498-9D95-D244A2E45C40 - 603f11b72b797ccc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for closure #1 @Sendable () async -&gt; () in closure #2 () -&gt; () in Nos.MostRecentPostView.body.getter : some"
+                  moduleName = "StayReal Dev"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/matt/dev/stayreal/Nos/Views/MostRecentPostView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32"
+                  offsetFromSymbolStart = "152">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "62F9E6BD-583C-4BCC-81D0-34B6018D2358"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nos/Views/StayRealHomeView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "22"
+            endingLineNumber = "22"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4AFDB13D-590D-464F-AFD3-40916E532623"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nos/Views/MostRecentPostView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "4AFDB13D-590D-464F-AFD3-40916E532623 - c29671d1d7b422b4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; () in Nos.MostRecentPostView.body.getter : some"
+                  moduleName = "StayReal Dev"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/matt/dev/stayreal/Nos/Views/MostRecentPostView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "27"
+                  endingLineNumber = "27"
+                  offsetFromSymbolStart = "436">
+               </Location>
+               <Location
+                  uuid = "4AFDB13D-590D-464F-AFD3-40916E532623 - 5923fba037677d57"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable () async -&gt; () in closure #2 () -&gt; () in Nos.MostRecentPostView.body.getter : some"
+                  moduleName = "StayReal Dev"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/matt/dev/stayreal/Nos/Views/MostRecentPostView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "27"
+                  endingLineNumber = "27"
+                  offsetFromSymbolStart = "276">
+               </Location>
+               <Location
+                  uuid = "4AFDB13D-590D-464F-AFD3-40916E532623 - 8e60c8ec93010797"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for closure #1 @Sendable () async -&gt; () in closure #2 () -&gt; () in Nos.MostRecentPostView.body.getter : some"
+                  moduleName = "StayReal Dev"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/matt/dev/stayreal/Nos/Views/MostRecentPostView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "27"
+                  endingLineNumber = "27"
+                  offsetFromSymbolStart = "104">
+               </Location>
+               <Location
+                  uuid = "4AFDB13D-590D-464F-AFD3-40916E532623 - c29671d1d7b42293"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; () in Nos.MostRecentPostView.body.getter : some"
+                  moduleName = "StayReal Dev"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/matt/dev/stayreal/Nos/Views/MostRecentPostView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "26"
+                  endingLineNumber = "26"
+                  offsetFromSymbolStart = "180">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "093CCADE-EB6E-4C44-A2A8-DE5AA7E9AFC4"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nos/Views/MostRecentPostView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "093CCADE-EB6E-4C44-A2A8-DE5AA7E9AFC4 - e379cf421d486dea"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Nos.MostRecentPostView.body.getter : some"
+                  moduleName = "StayReal Dev"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/matt/dev/stayreal/Nos/Views/MostRecentPostView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "20"
+                  endingLineNumber = "20"
+                  offsetFromSymbolStart = "412">
+               </Location>
+               <Location
+                  uuid = "093CCADE-EB6E-4C44-A2A8-DE5AA7E9AFC4 - 72b9d9474bcf2a4a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Nos.Event) -&gt; Nos.NoteButton in Nos.MostRecentPostView.body.getter : some"
+                  moduleName = "StayReal Dev"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/matt/dev/stayreal/Nos/Views/MostRecentPostView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "20"
+                  endingLineNumber = "20"
+                  offsetFromSymbolStart = "88">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "87A72929-06D6-47A3-AA33-0C5A1724FDCE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nos/Views/StayRealHomeView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2F217D46-1816-416C-BAD3-617311CA2F9A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nos/Views/StayRealHomeView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

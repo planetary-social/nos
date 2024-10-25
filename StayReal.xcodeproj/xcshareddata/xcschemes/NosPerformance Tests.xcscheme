@@ -14,40 +14,49 @@
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "C9DEBFE3298941020078B43A"
-                     BuildableName = "NosTests.xctest"
-                     BlueprintName = "NosTests"
-                     ReferencedContainer = "container:Nos.xcodeproj">
+                     BlueprintIdentifier = "C90862BA29E9804B00C35A71"
+                     BuildableName = "StayRealPerformanceTests.xctest"
+                     BlueprintName = "StayRealPerformanceTests"
+                     ReferencedContainer = "container:StayReal.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>
             </ActionContent>
          </ExecutionAction>
       </PreActions>
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C908621429E97D3700C35A71"
+               BuildableName = "Nos Performance Tests.xctest"
+               BlueprintName = "Nos Performance Tests"
+               ReferencedContainer = "container:StayReal.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
    </BuildAction>
    <TestAction
-      buildConfiguration = "Debug"
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
-      <TestPlans>
-         <TestPlanReference
-            reference = "container:NosTests/UnitTests.xctestplan"
-            default = "YES">
-         </TestPlanReference>
-         <TestPlanReference
-            reference = "container:NosTests/PerformanceTests.xctestplan">
-         </TestPlanReference>
-      </TestPlans>
+      buildConfiguration = "Release"
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      disableMainThreadChecker = "YES"
+      systemAttachmentLifetime = "keepNever">
       <Testables>
          <TestableReference
             skipped = "NO"
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C9DEBFE3298941020078B43A"
-               BuildableName = "NosTests.xctest"
-               BlueprintName = "NosTests"
-               ReferencedContainer = "container:Nos.xcodeproj">
+               BlueprintIdentifier = "C90862BA29E9804B00C35A71"
+               BuildableName = "StayRealPerformanceTests.xctest"
+               BlueprintName = "StayRealPerformanceTests"
+               ReferencedContainer = "container:StayReal.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>

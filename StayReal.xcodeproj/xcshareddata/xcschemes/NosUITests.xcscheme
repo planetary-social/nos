@@ -21,7 +21,7 @@
                BlueprintIdentifier = "C9DEBFED298941020078B43A"
                BuildableName = "NosUITests.xctest"
                BlueprintName = "NosUITests"
-               ReferencedContainer = "container:Nos.xcodeproj">
+               ReferencedContainer = "container:StayReal.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>

@@ -11,6 +11,9 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 
     /// Follow List
     case contactList = 3
+    
+    /// Friend List
+    case friendList = 3_129_078
 
     /// Encrypted Direct Message
     case directMessage = 4

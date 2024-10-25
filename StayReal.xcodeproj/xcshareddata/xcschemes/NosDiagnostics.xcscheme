@@ -9,15 +9,15 @@
          <ExecutionAction
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
-               title = "Run Script"
+               title = "Copy Secrets"
                scriptText = "${SOURCE_ROOT}/Scripts/copy_secrets.sh&#10;">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
                      BlueprintIdentifier = "C9DEBFCD298941000078B43A"
-                     BuildableName = "Nos.app"
-                     BlueprintName = "Nos"
-                     ReferencedContainer = "container:Nos.xcodeproj">
+                     BuildableName = "StayReal Dev.app"
+                     BlueprintName = "StayReal"
+                     ReferencedContainer = "container:StayReal.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>
             </ActionContent>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C9DEBFCD298941000078B43A"
-               BuildableName = "Nos.app"
-               BlueprintName = "Nos"
-               ReferencedContainer = "container:Nos.xcodeproj">
+               BuildableName = "StayReal Dev.app"
+               BlueprintName = "StayReal"
+               ReferencedContainer = "container:StayReal.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,26 +45,36 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
+      enableThreadSanitizer = "YES"
       codeCoverageEnabled = "YES"
       onlyGenerateCoverageForSpecifiedTargets = "YES">
       <CodeCoverageTargets>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C9DEBFCD298941000078B43A"
-            BuildableName = "Nos.app"
-            BlueprintName = "Nos"
-            ReferencedContainer = "container:Nos.xcodeproj">
+            BuildableName = "StayReal Dev.app"
+            BlueprintName = "StayReal"
+            ReferencedContainer = "container:StayReal.xcodeproj">
          </BuildableReference>
       </CodeCoverageTargets>
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:NosTests/UnitTests.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:NosTests/PerformanceTests.xctestplan">
+         </TestPlanReference>
+      </TestPlans>
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C9DEBFE3298941020078B43A"
-               BuildableName = "NosTests.xctest"
-               BlueprintName = "NosTests"
-               ReferencedContainer = "container:Nos.xcodeproj">
+               BuildableName = "StayRealTests.xctest"
+               BlueprintName = "StayRealTests"
+               ReferencedContainer = "container:StayReal.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -75,7 +85,7 @@
                BlueprintIdentifier = "C9DEBFED298941020078B43A"
                BuildableName = "NosUITests.xctest"
                BlueprintName = "NosUITests"
-               ReferencedContainer = "container:Nos.xcodeproj">
+               ReferencedContainer = "container:StayReal.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -84,9 +94,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C90862BA29E9804B00C35A71"
-               BuildableName = "NosPerformanceTests.xctest"
-               BlueprintName = "NosPerformanceTests"
-               ReferencedContainer = "container:Nos.xcodeproj">
+               BuildableName = "StayRealPerformanceTests.xctest"
+               BlueprintName = "StayRealPerformanceTests"
+               ReferencedContainer = "container:StayReal.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -95,7 +105,6 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      language = "IDELaunchSchemeLanguageAccentedLatin"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -107,14 +116,20 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C9DEBFCD298941000078B43A"
-            BuildableName = "Nos.app"
-            BlueprintName = "Nos"
-            ReferencedContainer = "container:Nos.xcodeproj">
+            BuildableName = "StayReal Dev.app"
+            BlueprintName = "StayReal"
+            ReferencedContainer = "container:StayReal.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-com.apple.CoreData.SQLDebug 1"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "TESTING_LOCALIZATION"
+            key = "com.apple.CoreData.ConcurrencyDebug"
             value = "1"
             isEnabled = "YES">
          </EnvironmentVariable>
@@ -131,9 +146,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C9DEBFCD298941000078B43A"
-            BuildableName = "Nos.app"
-            BlueprintName = "Nos"
-            ReferencedContainer = "container:Nos.xcodeproj">
+            BuildableName = "StayReal Dev.app"
+            BlueprintName = "StayReal"
+            ReferencedContainer = "container:StayReal.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

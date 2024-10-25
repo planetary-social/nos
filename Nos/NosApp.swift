@@ -2,7 +2,6 @@ import SwiftUI
 import Logger
 import Dependencies
 
-@main
 struct NosApp: App {
     
     @Dependency(\.crashReporting) private var crashReporting
@@ -33,9 +32,6 @@ struct NosApp: App {
                 .environment(currentUser)
                 .environmentObject(pushNotificationService)
                 .onOpenURL { DeepLinkService.handle($0, router: router) }
-                .task {
-                    await persistenceController.cleanupEntities()
-                }
                 .onChange(of: scenePhase) { _, newPhase in
                     switch newPhase {
                     case .inactive:

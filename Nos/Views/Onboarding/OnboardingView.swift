@@ -19,8 +19,6 @@ enum OnboardingFlow {
 
 enum OnboardingStep {
     case onboardingStart
-    case ageVerification
-    case notOldEnough
     case termsOfService
     case login
 }
@@ -39,12 +37,6 @@ struct OnboardingView: View {
                     switch step {
                     case .onboardingStart:
                         OnboardingStartView()
-                            .environmentObject(state)
-                    case .ageVerification:
-                        OnboardingAgeVerificationView()
-                            .environmentObject(state)
-                    case .notOldEnough:
-                        OnboardingNotOldEnoughView()
                             .environmentObject(state)
                     case .termsOfService:
                         OnboardingTermsOfServiceView(completion: completion)

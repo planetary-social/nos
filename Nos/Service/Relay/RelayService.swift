@@ -721,13 +721,12 @@ extension RelayService {
             return
         }
         
-        await self.backgroundContext.perform {
+        await self.backgroundContext.perform { [backgroundContext] in
             
-            guard let user = try? Author.find(by: userKey, context: self.backgroundContext) else {
+            guard let user = try? Author.find(by: userKey, context: backgroundContext) else {
                 return
             }
-            let objectContext = self.backgroundContext
-            let eventsToRetry = Event.unpublishedEvents(for: user, context: objectContext)
+            let eventsToRetry = Event.unpublishedEvents(for: user, context: backgroundContext)
             
             // Try to publish each of these again to each relay that failed.
             for event in eventsToRetry {

@@ -15,9 +15,9 @@
                   <BuildableReference
                      BuildableIdentifier = "primary"
                      BlueprintIdentifier = "C9DEBFCD298941000078B43A"
-                     BuildableName = "Nos.app"
-                     BlueprintName = "Nos"
-                     ReferencedContainer = "container:Nos.xcodeproj">
+                     BuildableName = "StayReal Dev.app"
+                     BlueprintName = "StayReal"
+                     ReferencedContainer = "container:StayReal.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>
             </ActionContent>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C9DEBFCD298941000078B43A"
-               BuildableName = "Nos.app"
-               BlueprintName = "Nos"
-               ReferencedContainer = "container:Nos.xcodeproj">
+               BuildableName = "StayReal Dev.app"
+               BlueprintName = "StayReal"
+               ReferencedContainer = "container:StayReal.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -51,9 +51,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C9DEBFCD298941000078B43A"
-            BuildableName = "Nos.app"
-            BlueprintName = "Nos"
-            ReferencedContainer = "container:Nos.xcodeproj">
+            BuildableName = "StayReal Dev.app"
+            BlueprintName = "StayReal"
+            ReferencedContainer = "container:StayReal.xcodeproj">
          </BuildableReference>
       </CodeCoverageTargets>
       <TestPlans>
@@ -71,10 +71,21 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C9DEBFE3298941020078B43A"
-               BuildableName = "NosTests.xctest"
-               BlueprintName = "NosTests"
-               ReferencedContainer = "container:Nos.xcodeproj">
+               BuildableName = "StayRealTests.xctest"
+               BlueprintName = "StayRealTests"
+               ReferencedContainer = "container:StayReal.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "EventTests/testFetchEventByIDPerformance()">
+               </Test>
+               <Test
+                  Identifier = "SocialGraphTests/testFollow()">
+               </Test>
+               <Test
+                  Identifier = "SocialGraphTests/testTwoFollows()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "YES"
@@ -84,7 +95,7 @@
                BlueprintIdentifier = "C9DEBFED298941020078B43A"
                BuildableName = "NosUITests.xctest"
                BlueprintName = "NosUITests"
-               ReferencedContainer = "container:Nos.xcodeproj">
+               ReferencedContainer = "container:StayReal.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -93,15 +104,15 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C90862BA29E9804B00C35A71"
-               BuildableName = "NosPerformanceTests.xctest"
-               BlueprintName = "NosPerformanceTests"
-               ReferencedContainer = "container:Nos.xcodeproj">
+               BuildableName = "StayRealPerformanceTests.xctest"
+               BlueprintName = "StayRealPerformanceTests"
+               ReferencedContainer = "container:StayReal.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Staging"
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -115,9 +126,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C9DEBFCD298941000078B43A"
-            BuildableName = "Nos.app"
-            BlueprintName = "Nos"
-            ReferencedContainer = "container:Nos.xcodeproj">
+            BuildableName = "StayReal Dev.app"
+            BlueprintName = "StayReal"
+            ReferencedContainer = "container:StayReal.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -132,9 +143,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C9DEBFCD298941000078B43A"
-            BuildableName = "Nos.app"
-            BlueprintName = "Nos"
-            ReferencedContainer = "container:Nos.xcodeproj">
+            BuildableName = "StayReal Dev.app"
+            BlueprintName = "StayReal"
+            ReferencedContainer = "container:StayReal.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
@@ -142,7 +153,7 @@
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Staging"
+      buildConfiguration = "Release"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

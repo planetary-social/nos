@@ -156,6 +156,8 @@ import Dependencies
             return Binding(get: { self.notificationsPath }, set: { self.notificationsPath = $0 })
         case .profile:
             return Binding(get: { self.profilePath }, set: { self.profilePath = $0 })
+        case .addFriend:
+            return path(for: .home)
         }
     }
 }

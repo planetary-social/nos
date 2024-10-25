@@ -7,11 +7,7 @@ struct OnboardingStartView: View {
     
     var body: some View {
         VStack {
-            Image.nosLogo
-                .resizable()
-                .frame(width: 235.45, height: 67.1)
-                .padding(.top, 155)
-                .padding(.bottom, 10)
+            Text("Stay Real")
             Text(.localizable.onboardingTitle)
                 .font(.custom("ClarityCity-Bold", size: 25.21))
                 .fontWeight(.heavy)
@@ -19,13 +15,13 @@ struct OnboardingStartView: View {
             Spacer()
             BigActionButton(title: .localizable.tryIt) {
                 state.flow = .createAccount
-                state.step = .ageVerification
+                state.step = .termsOfService
             }
             .padding(.horizontal, 24)
             .padding(.bottom)
             Button(String(localized: .localizable.loginWithKey)) {
                 state.flow = .loginToExistingAccount
-                state.step = .ageVerification
+                state.step = .termsOfService
             }
             .padding(.bottom, 50)
         }

@@ -202,6 +202,17 @@ import Logger
         return fetchRequest
     }
     
+    @nonobjc public class func followed(by author: Author) -> NSFetchRequest<Author> {
+        let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
+        fetchRequest.predicate = NSPredicate(
+            format: "ANY followers.source = %@ AND SELF != %@", 
+            author, 
+            author
+        )
+        return fetchRequest
+    }
+        
     /// Returns the authors that this author (self) follows who also follow the given `author`.
     @nonobjc public func knownFollowers(of author: Author) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")

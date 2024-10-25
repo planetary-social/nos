@@ -12,33 +12,13 @@ public class Relay: NosManagedObject {
 
     static var recommended: [String] {
         [
-        "wss://relay.damus.io",
-        "wss://purplepag.es",
         nosAddress.absoluteString,
-        "wss://relay.snort.social",
-        "wss://olympics2024.nos.social",
         ]
     }
     
     static var allKnown: [String] {
         [
-        "wss://eden.nostr.land",
-        "wss://nostr.fmt.wiz.biz",
-        "wss://relay.damus.io",
-        "wss://nostr-pub.wellorder.net",
-        "wss://relay.nostr.info",
-        "wss://offchain.pub",
-        "wss://nos.lol",
-        "wss://brb.io",
-        "wss://relay.snort.social",
-        "wss://relay.current.fyi",
-        "wss://nostr.relayer.se",
-        "wss://e.nos.lol",
-        "wss://purplepag.es",
-        "wss://soloco.nl",
-        "wss://relayable.org",
         nosAddress.absoluteString,
-        "wss://relay.causes.com",
         ]
     }
 
@@ -49,7 +29,7 @@ public class Relay: NosManagedObject {
     }()
     
     // swiftlint:disable:next force_unwrapping
-    static var nosAddress = URL(string: "wss://relay.nos.social")!
+    static var nosAddress = URL(string: "wss://nostr.lorentz.is")!
 
     @nonobjc public class func relay(by address: String) -> NSFetchRequest<Relay> {
         let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")

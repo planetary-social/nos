@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_72" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,41 +16,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="obG-Y5-kRd">
-                                <rect key="frame" x="0.0" y="912" width="430" height="0.0"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stay Real..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="obG-Y5-kRd">
+                                <rect key="frame" x="172.66666666666666" y="455.66666666666669" width="84.999999999999972" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="nosLogo" translatesAutoresizingMaskIntoConstraints="NO" id="nuS-zj-vSK">
-                                <rect key="frame" x="95" y="402" width="240" height="128"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="128" id="0tS-oi-S0j"/>
-                                    <constraint firstAttribute="width" constant="240" id="1eD-k4-6t9"/>
-                                </constraints>
-                            </imageView>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nhG-Zf-8jB">
-                                <rect key="frame" x="-44" y="535" width="518" height="35"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="518" id="2eb-yr-Quf"/>
-                                    <constraint firstAttribute="height" constant="35" id="uWf-39-dxu"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="A stupid hack to fix the launch screen on ipad landscape in ios 16"/>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" name="app-bg"/>
                         <constraints>
-                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="centerX" secondItem="obG-Y5-kRd" secondAttribute="centerX" id="5cz-MP-9tL"/>
-                            <constraint firstItem="nuS-zj-vSK" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="JNX-xm-GZb"/>
-                            <constraint firstItem="nhG-Zf-8jB" firstAttribute="top" secondItem="nuS-zj-vSK" secondAttribute="bottom" constant="5" id="Jnj-JR-nFO"/>
-                            <constraint firstItem="nuS-zj-vSK" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="RUS-fO-lrw"/>
-                            <constraint firstItem="obG-Y5-kRd" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" symbolic="YES" id="SfN-ll-jLj"/>
-                            <constraint firstAttribute="bottom" secondItem="obG-Y5-kRd" secondAttribute="bottom" constant="20" id="Y44-ml-fuU"/>
-                            <constraint firstItem="nuS-zj-vSK" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="c79-kO-bZI"/>
-                            <constraint firstItem="nhG-Zf-8jB" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="fZV-fM-y47"/>
-                            <constraint firstItem="nuS-zj-vSK" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="qjl-Z5-qQL"/>
+                            <constraint firstItem="obG-Y5-kRd" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Wfj-Iu-OBs"/>
+                            <constraint firstItem="obG-Y5-kRd" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="jtI-ci-egi"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -61,9 +37,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="nosLogo" width="78.666664123535156" height="24"/>
         <namedColor name="app-bg">
-            <color red="0.94117647058823528" green="0.90588235294117647" blue="0.90196078431372551" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.90588235294117647" blue="0.90196078431372551" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

@@ -122,7 +122,6 @@ import Dependencies
                 
                 Task {
                     await subscribe()
-                    refreshFriendMetadata()
                 }
             } catch {
                 crashReporting.report("Serious error in CurrentUser.setUp(): \(error.localizedDescription)")
@@ -418,7 +417,7 @@ import Dependencies
         relayString.removeLast()
         relayString += "}"
         
-        let jsonEvent = JSONEvent(pubKey: pubKey, kind: .contactList, tags: tags, content: relayString)
+        let jsonEvent = JSONEvent(pubKey: pubKey, kind: .friendList, tags: tags, content: relayString)
         
         if let pair = keyPair {
             do {

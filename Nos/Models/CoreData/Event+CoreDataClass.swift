@@ -338,6 +338,31 @@ public class Event: NosManagedObject, VerifiableEvent {
         return fetchRequest
     }
     
+    @nonobjc class func mostRecentPosts(from author: Author) -> NSFetchRequest<Event> {
+        
+        let kind1Predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "kind = 1"),
+            NSPredicate(
+                format: "SUBQUERY(" +
+                "eventReferences, $reference, $reference.marker = 'root'" +
+                " OR $reference.marker = 'reply'" +
+                " OR $reference.marker = nil" +
+                ").@count = 0"
+            )
+        ])
+
+        let notDeletedPredicate = NSPredicate(format: "deletedOn.@count = 0")
+        let authorPredicate = NSPredicate(format: "author = %@", author)
+
+        let allPredicates = [kind1Predicate, notDeletedPredicate, authorPredicate]
+
+        let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        fetchRequest.fetchLimit = 1
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: allPredicates)
+        return fetchRequest
+    }
+    
     /// Returns a predicate that can be used to fetch the given user's home feed.
     /// - Parameters:
     ///   - user: The user whose home feed should appear.
