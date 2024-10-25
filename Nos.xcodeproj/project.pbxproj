@@ -471,6 +471,10 @@
 		C9B678E129EEC41000303F33 /* SocialGraphCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E029EEC41000303F33 /* SocialGraphCache.swift */; };
 		C9B678E229EEC41000303F33 /* SocialGraphCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E029EEC41000303F33 /* SocialGraphCache.swift */; };
 		C9B678E729F01A8500303F33 /* FullscreenProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */; };
+		C9B6B3152CCC2AD10047CC36 /* Hashtag+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B6B3132CCC2AD10047CC36 /* Hashtag+CoreDataClass.swift */; };
+		C9B6B3162CCC2AD10047CC36 /* Hashtag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B6B3142CCC2AD10047CC36 /* Hashtag+CoreDataProperties.swift */; };
+		C9B6B31B2CCC2BED0047CC36 /* Hashtag+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B6B3132CCC2AD10047CC36 /* Hashtag+CoreDataClass.swift */; };
+		C9B6B3202CCC2BF80047CC36 /* Hashtag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B6B3142CCC2AD10047CC36 /* Hashtag+CoreDataProperties.swift */; };
 		C9B708BB2A13BE41006C613A /* NoteTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */; };
 		C9B71DBE2A8E9BAD0031ED9F /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = C9B71DBD2A8E9BAD0031ED9F /* Sentry */; };
 		C9B71DC02A8E9BAD0031ED9F /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C9B71DBF2A8E9BAD0031ED9F /* SentrySwiftUI */; };
@@ -943,6 +947,9 @@
 		C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Sendable.swift"; sourceTree = "<group>"; };
 		C9B678E029EEC41000303F33 /* SocialGraphCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialGraphCache.swift; sourceTree = "<group>"; };
 		C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenProgressView.swift; sourceTree = "<group>"; };
+		C9B6B30A2CCC29F90047CC36 /* Nos 20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 20.xcdatamodel"; sourceTree = "<group>"; };
+		C9B6B3132CCC2AD10047CC36 /* Hashtag+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Hashtag+CoreDataClass.swift"; path = "Generated/Hashtag+CoreDataClass.swift"; sourceTree = "<group>"; };
+		C9B6B3142CCC2AD10047CC36 /* Hashtag+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Hashtag+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTextEditor.swift; sourceTree = "<group>"; };
 		C9B71DC12A9003670031ED9F /* CrashReporting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReporting.swift; sourceTree = "<group>"; };
 		C9BAB09A2996FBA10003A84E /* EventProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventProcessor.swift; sourceTree = "<group>"; };
@@ -1079,6 +1086,7 @@
 				03FE3F7B2C87AC9900D25810 /* Event+InlineMetadata.swift */,
 				3FFB1D9229A6BBCE002A755D /* EventReference+CoreDataClass.swift */,
 				A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */,
+				C9B6B3132CCC2AD10047CC36 /* Hashtag+CoreDataClass.swift */,
 				C9C547572A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift */,
 				C9DEC06C2989668E0078B43A /* Relay+CoreDataClass.swift */,
 				037A2C242BA9D75F00FC554B /* Generated */,
@@ -1410,6 +1418,7 @@
 		037A2C242BA9D75F00FC554B /* Generated */ = {
 			isa = PBXGroup;
 			children = (
+				C9B6B3142CCC2AD10047CC36 /* Hashtag+CoreDataProperties.swift */,
 				C973AB582A323167002AED16 /* Author+CoreDataProperties.swift */,
 				C973AB572A323167002AED16 /* AuthorReference+CoreDataProperties.swift */,
 				C973AB562A323167002AED16 /* Event+CoreDataProperties.swift */,
@@ -2161,7 +2170,7 @@
 				C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */,
 				C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */,
 				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */,
-				C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
+				C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */,
 				C9FD35112BCED5A6008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
 				03C49ABE2C938A9C00502321 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				039389212CA4985C00698978 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
@@ -2578,6 +2587,8 @@
 				50DE6B1B2C6B88FE0065665D /* View+StyledBorder.swift in Sources */,
 				C93EC2FD29C3785C0012EE2A /* View+RoundedCorner.swift in Sources */,
 				5B503F622A291A1A0098805A /* JSONRelayMetadata.swift in Sources */,
+				C9B6B3152CCC2AD10047CC36 /* Hashtag+CoreDataClass.swift in Sources */,
+				C9B6B3162CCC2AD10047CC36 /* Hashtag+CoreDataProperties.swift in Sources */,
 				C98298332ADD7F9A0096C5B5 /* DeepLinkService.swift in Sources */,
 				03F7C4F42C10E05B006FF613 /* URLSessionProtocol.swift in Sources */,
 				CD09A74829A51EFC0063464F /* Router.swift in Sources */,
@@ -2719,6 +2730,7 @@
 				0357299F2BE41653005FEE85 /* ContentWarningControllerTests.swift in Sources */,
 				035729B22BE4167E005FEE85 /* SHA256KeyTests.swift in Sources */,
 				0326346E2C10C2FD00E489B5 /* FileStorageServerInfoResponseJSON.swift in Sources */,
+				C9B6B3202CCC2BF80047CC36 /* Hashtag+CoreDataProperties.swift in Sources */,
 				0326346B2C10C1D800E489B5 /* FileStorageServerInfoResponseJSONTests.swift in Sources */,
 				0350F1212C0A490E0024CC15 /* EventProcessorIntegrationTests.swift in Sources */,
 				03ED93472C46C48400C8D443 /* JSONEventTests.swift in Sources */,
@@ -2726,6 +2738,7 @@
 				C9B678DC29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
 				C9F0BB6D29A503D9000547FC /* Int+Bool.swift in Sources */,
 				0314D5AD2C7D31060002E7F4 /* MediaService.swift in Sources */,
+				C9B6B31B2CCC2BED0047CC36 /* Hashtag+CoreDataClass.swift in Sources */,
 				50089A022C9712EF00834588 /* JSONEvent+Kinds.swift in Sources */,
 				C9C097232C13534800F78EC3 /* DatabaseCleanerTests.swift in Sources */,
 				03618C962C826D5E00BCBC55 /* CompactNoteView.swift in Sources */,
@@ -2795,11 +2808,11 @@
 /* Begin PBXTargetDependency section */
 		3AD3185D2B294E9000026B07 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 3AD3185C2B294E9000026B07 /* plugin:XCStringsToolPlugin */;
+			productRef = 3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */;
 		};
 		3AEABEF32B2BF806001BC933 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 3AEABEF22B2BF806001BC933 /* plugin:XCStringsToolPlugin */;
+			productRef = 3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */;
 		};
 		C90862C229E9804B00C35A71 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2808,11 +2821,11 @@
 		};
 		C9A6C7442AD83F7A001F9500 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = C9A6C7432AD83F7A001F9500 /* plugin:SwiftGenPlugin */;
+			productRef = C9A6C7432AD83F7A001F9500 /* SwiftGenPlugin */;
 		};
 		C9D573402AB24A3700E06BB4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = C9D5733F2AB24A3700E06BB4 /* plugin:SwiftGenPlugin */;
+			productRef = C9D5733F2AB24A3700E06BB4 /* SwiftGenPlugin */;
 		};
 		C9DEBFE6298941020078B43A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3669,7 +3682,7 @@
 				minimumVersion = 4.0.0;
 			};
 		};
-		C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */ = {
+		C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift";
 			requirement = {
@@ -3708,12 +3721,12 @@
 			package = 03C49ABE2C938A9C00502321 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
 		};
-		3AD3185C2B294E9000026B07 /* plugin:XCStringsToolPlugin */ = {
+		3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
 			productName = "plugin:XCStringsToolPlugin";
 		};
-		3AEABEF22B2BF806001BC933 /* plugin:XCStringsToolPlugin */ = {
+		3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
 			productName = "plugin:XCStringsToolPlugin";
@@ -3787,7 +3800,7 @@
 			package = C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
 		};
-		C9A6C7432AD83F7A001F9500 /* plugin:SwiftGenPlugin */ = {
+		C9A6C7432AD83F7A001F9500 /* SwiftGenPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */;
 			productName = "plugin:SwiftGenPlugin";
@@ -3807,7 +3820,7 @@
 			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
 		};
-		C9D5733F2AB24A3700E06BB4 /* plugin:SwiftGenPlugin */ = {
+		C9D5733F2AB24A3700E06BB4 /* SwiftGenPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9C8450C2AB249DB00654BC1 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */;
 			productName = "plugin:SwiftGenPlugin";
@@ -3819,12 +3832,12 @@
 		};
 		C9FD34F52BCEC89C008F8D95 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
+			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */;
 			productName = secp256k1;
 		};
 		C9FD34F72BCEC8B5008F8D95 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
+			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */;
 			productName = secp256k1;
 		};
 		C9FD35122BCED5A6008F8D95 /* NostrSDK */ = {
@@ -3848,6 +3861,7 @@
 		C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C9B6B30A2CCC29F90047CC36 /* Nos 20.xcdatamodel */,
 				C95057C62CC69FD70024EC9C /* Nos 19.xcdatamodel */,
 				C9BB9FE32CBEFF560045DC5A /* Nos 18.xcdatamodel */,
 				C9D2839E2CB9B177007ADCB9 /* Nos 17.xcdatamodel */,
@@ -3860,7 +3874,7 @@
 				C9C547562A4F1D1A006B0741 /* Nos 9.xcdatamodel */,
 				5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */,
 			);
-			currentVersion = C95057C62CC69FD70024EC9C /* Nos 19.xcdatamodel */;
+			currentVersion = C9B6B30A2CCC29F90047CC36 /* Nos 20.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

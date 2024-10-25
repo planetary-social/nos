@@ -51,6 +51,8 @@ struct NoteComposer: View {
     /// The quoted note, if any.
     @State private var quotedNote: Event?
 
+    @State private var streamName: String = ""
+    
     /// The authors who are referenced in a note in addition to those who replied to the note, if any.
     var relatedAuthors: [Author]
 
@@ -128,6 +130,8 @@ struct NoteComposer: View {
                             scrollViewHeight = newValue
                         }
                     }
+                    
+                    TextField("stream name", text: $streamName)
 
                     composerActionBar
                 }
@@ -340,12 +344,12 @@ struct NoteComposer: View {
         guard let keyPair = currentUser.keyPair else {
             throw CurrentUserError.keyPairNotFound
         }
+        var (content, _) = noteParser.parse(attributedText: attributedString)
         return JSONEvent(
-            attributedText: attributedString,
-            noteParser: noteParser,
-            expirationTime: expirationTime,
-            replyToNote: replyToNote,
-            keyPair: keyPair
+            pubKey: currentUser.keyPair!.publicKeyHex,
+            kind: .streamPhoto,
+            tags: [["t", streamName]],
+            content: content
         )
     }
 

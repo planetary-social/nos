@@ -351,7 +351,7 @@ struct PreviewData {
         note.content = "https://media.tacdn.com/media/attractions-splice-spp-674x446/0a/ff/66/e5.jpg"
         note.author = bob
         note.createdAt = .now
-        note.allTags = [["s": "#uruguay"]] as NSObject
+        try! note.hashtags.insert(Hashtag.findOrCreate(by: "🇺🇾 Uruguay", context: previewContext))
         return note
     }()
     
@@ -362,7 +362,7 @@ struct PreviewData {
         note.content = "https://www.cunard.com/content/dam/cunard/inventory-assets/ports/MVD/MVD.jpg"
         note.author = bob
         note.createdAt = .now
-        note.allTags = [["s": "#uruguay"]] as NSObject
+        try! note.hashtags.insert(Hashtag.findOrCreate(by: "🇺🇾 Uruguay", context: previewContext))
         return note
     }()
     
@@ -373,7 +373,7 @@ struct PreviewData {
         note.content = "https://d1bvpoagx8hqbg.cloudfront.net/originals/experience-montevideo-uruguay-1ad4b9998fbce78bf83d7db2798a922f.jpg"
         note.author = bob
         note.createdAt = .now
-        note.allTags = [["s": "#uruguay"]] as NSObject
+        try! note.hashtags.insert(Hashtag.findOrCreate(by: "🇺🇾 Uruguay", context: previewContext))
         return note
     }()
 }

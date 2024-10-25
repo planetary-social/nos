@@ -146,6 +146,10 @@ extension Event {
                 authorReference.pubkey = jsonTag[safe: 1]
                 authorReference.recommendedRelayUrl = jsonTag[safe: 2]
                 newAuthorReferences.add(authorReference)
+            } else if jsonTag.first == "t",
+                let name = jsonTag[safe: 1] {
+                let hashtag = try! Hashtag.findOrCreate(by: name, context: context)
+                hashtags.insert(hashtag)
             }
         }
         eventReferences = newEventReferences

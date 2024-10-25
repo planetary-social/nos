@@ -7,20 +7,13 @@ import TipKit
 struct HomeFeedView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var relayService: RelayService
     @EnvironmentObject private var router: Router
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
-    @State private var refreshController = RefreshController(lastRefreshDate: Date.now + Self.staticLoadTime)
+    @State private var refreshController = RefreshController(lastRefreshDate: Date.now)
     @State private var isVisible = false
     
-    /// When set to true this will display a fullscreen progress wheel for a set amount of time to give us a chance
-    /// to get some data from relay. The amount of time is defined in `staticLoadTime`.
-    @State private var showTimedLoadingIndicator = true
-    
-    /// The amount of time (in seconds) the loading indicator will be shown when showTimedLoadingIndicator is set to 
-    /// true.
-    static let staticLoadTime: TimeInterval = 2
-
     let user: Author
     
     /// A tip to display at the top of the feed.
@@ -28,11 +21,12 @@ struct HomeFeedView: View {
 
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay? 
+    @State private var cancellables = [SubscriptionCancellable]()
     
-    @FetchRequest<Event>(
-        entity: Event.entity(), 
-        sortDescriptors: [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
-    ) private var notes
+    @FetchRequest<Hashtag>(
+        entity: Hashtag.entity(), 
+        sortDescriptors: [NSSortDescriptor(keyPath: \Hashtag.name, ascending: true)]
+    ) private var hashtags
 
     init(user: Author) {
         self.user = user
@@ -55,10 +49,8 @@ struct HomeFeedView: View {
     }
 
     var homeFeedFilter: Filter {
-        var filter = Filter(kinds: [.text, .delete, .repost, .longFormContent, .report])
-        if selectedRelay == nil {
-            filter.authorKeys = user.followedKeys.sorted()
-        } 
+        var filter = Filter(kinds: [.streamPhoto])
+        filter.authorKeys = user.followedKeys.sorted()
         return filter
     }
     
@@ -70,13 +62,40 @@ struct HomeFeedView: View {
         ZStack {
             VStack(spacing: 8) {
                 ScrollView {
-                    ForEach(notes) { note in
-                        VStack {
-                            if !note.contentLinks.isEmpty {
-                                GalleryView(urls: note.contentLinks, metadata: note.inlineMetadata)
+                    ForEach(hashtags) { hashtag in
+                        if let events = (hashtag.events ?? []).sortedArray(using: [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]) as? [Event] {
+                            VStack(spacing: 8) {
+                                HStack {
+                                    Text("\(hashtag.name ?? "error")")
+                                        .font(.title)
+                                    Spacer()
+                                }
+                                .padding(.top)
+                                
+                                if let authorName = events.last?.author?.name {
+                                    HStack {
+                                        Text("by \(authorName)")
+                                            .font(.caption)
+                                        Spacer()
+                                    }
+                                }
+                                ScrollView(.horizontal) {
+                                    HStack(spacing: 8) {
+                                        ForEach(events) { note in
+                                            VStack {
+                                                if !note.contentLinks.isEmpty {
+                                                    GalleryView(urls: Array(note.contentLinks.prefix(1)), metadata: note.inlineMetadata)
+                                                        .cornerRadius(3)
+                                                }
+                                            }
+                                            .task { await note.loadAttributedContent() }
+                                        }
+                                    }
+                                    .frame(height: 200)
+                                }
                             }
+                            .padding()
                         }
-                        .task { await note.loadAttributedContent() }
                     }
                 }
             }
@@ -84,13 +103,10 @@ struct HomeFeedView: View {
             NewNotesButton(fetchRequest: FetchRequest(fetchRequest: newNotesRequest)) {
                 refreshController.startRefresh = true
             }
-
-            if showTimedLoadingIndicator {
-                FullscreenProgressView(
-                    isPresented: $showTimedLoadingIndicator,
-                    hideAfter: .now() + .seconds(Int(Self.staticLoadTime))
-                )
-            } 
+        }
+        .task {
+            cancellables.removeAll()
+            await cancellables.append(relayService.fetchEvents(matching: homeFeedFilter))
         }
         .doubleTapToPop(tab: .home) { _ in
             NotificationCenter.default.post(
