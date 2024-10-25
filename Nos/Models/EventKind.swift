@@ -65,4 +65,6 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 
     /// Long-form Content
     case longFormContent = 30_023
+    
+    case streamPhoto = 99_999
 }

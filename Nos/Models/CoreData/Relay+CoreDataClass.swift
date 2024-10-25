@@ -10,37 +10,9 @@ enum RelayError: Error {
 @objc(Relay)
 public class Relay: NosManagedObject {
 
-    static var recommended: [String] {
-        [
-        nosAddress.absoluteString,
-        "wss://relay.damus.io",
-        "wss://purplepag.es",
-        "wss://nos.lol",
-        "wss://relay.mostr.pub",
-        ]
-    }
+    static var recommended: [String] { [ nosAddress.absoluteString ] }
     
-    static var allKnown: [String] {
-        [
-        "wss://eden.nostr.land",
-        "wss://nostr.fmt.wiz.biz",
-        "wss://relay.damus.io",
-        "wss://nostr-pub.wellorder.net",
-        "wss://relay.nostr.info",
-        "wss://offchain.pub",
-        "wss://nos.lol",
-        "wss://brb.io",
-        "wss://relay.snort.social",
-        "wss://relay.current.fyi",
-        "wss://nostr.relayer.se",
-        "wss://e.nos.lol",
-        "wss://purplepag.es",
-        "wss://soloco.nl",
-        "wss://relayable.org",
-        nosAddress.absoluteString,
-        "wss://relay.causes.com",
-        ]
-    }
+    static var allKnown: [String] { [ nosAddress.absoluteString ] }
 
     /// Relays that should be used for NIP-50 search and will be excluded from other requests.
     /// In the future we should use the kind 10007 search relays list instead of this hardcoded list.

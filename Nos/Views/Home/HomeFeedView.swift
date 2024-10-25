@@ -28,6 +28,11 @@ struct HomeFeedView: View {
 
     @State private var showRelayPicker = false
     @State private var selectedRelay: Relay? 
+    
+    @FetchRequest<Event>(
+        entity: Event.entity(), 
+        sortDescriptors: [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
+    ) private var notes
 
     init(user: Author) {
         self.user = user
@@ -58,42 +63,22 @@ struct HomeFeedView: View {
     }
     
     var navigationBarTitle: LocalizedStringKey {
-        if let relayName = selectedRelay?.host {
-            LocalizedStringKey(stringLiteral: relayName)
-        } else {
-            "accountsIFollow"
-        }
+        "Latest"
     }
 
     var body: some View {
         ZStack {
             VStack(spacing: 8) {
-                TipView(welcomeTip)
-                    .padding(.top, 20)
-                    .padding(.horizontal, 16)
-                    .readabilityPadding()
-                    .tipBackground(LinearGradient.horizontalAccentReversed)
-                    .tipViewStyle(.inline)
-
-                PagedNoteListView(
-                    refreshController: $refreshController,
-                    databaseFilter: homeFeedFetchRequest,
-                    relayFilter: homeFeedFilter,
-                    relay: selectedRelay,
-                    managedObjectContext: viewContext,
-                    tab: .home,
-                    header: {
-                        EmptyView()
-                    },
-                    emptyPlaceholder: {
+                ScrollView {
+                    ForEach(notes) { note in
                         VStack {
-                            Text("noEvents")
-                                .padding()
+                            if !note.contentLinks.isEmpty {
+                                GalleryView(urls: note.contentLinks, metadata: note.inlineMetadata)
+                            }
                         }
-                        .frame(minHeight: 300)
+                        .task { await note.loadAttributedContent() }
                     }
-                )
-                .padding(0)
+                }
             }
 
             NewNotesButton(fetchRequest: FetchRequest(fetchRequest: newNotesRequest)) {
@@ -106,24 +91,6 @@ struct HomeFeedView: View {
                     hideAfter: .now() + .seconds(Int(Self.staticLoadTime))
                 )
             } 
-            
-            if showRelayPicker {
-                RelayPicker(
-                    selectedRelay: $selectedRelay,
-                    defaultSelection: String(localized: "accountsIFollow"),
-                    author: user,
-                    isPresented: $showRelayPicker
-                )
-                .onChange(of: selectedRelay) { _, _ in
-                    showTimedLoadingIndicator = true
-                    refreshController.lastRefreshDate = .now + Self.staticLoadTime
-                    Task {
-                        withAnimation {
-                            showRelayPicker = false
-                        }
-                    }
-                }
-            }
         }
         .doubleTapToPop(tab: .home) { _ in
             NotificationCenter.default.post(
@@ -133,23 +100,6 @@ struct HomeFeedView: View {
             )
         }
         .background(Color.appBg)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                SideMenuButton()
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    withAnimation {
-                        showRelayPicker.toggle()
-                    }
-                } label: {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
-                        .foregroundStyle(Color.secondaryTxt)
-                        .accessibilityLabel(Text("filter"))
-                }
-                .frame(minWidth: 40, minHeight: 40)
-            }
-        }
         .padding(.top, 1)
         .nosNavigationBar(navigationBarTitle)
         .onAppear {
@@ -179,7 +129,11 @@ struct HomeFeedView: View {
             relay?.addToAuthors(user)
         }
         
-        _ = previewData.shortNote
+        Task { try await previewData.currentUser.follow(author: previewData.bob) }
+        
+        _ = previewData.streamImageOne
+        _ = previewData.streamImageTwo
+        _ = previewData.streamImageThree
     }
     
     return NavigationStack {
