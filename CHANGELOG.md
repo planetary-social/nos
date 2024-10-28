@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2024-10-28Z
+
 ### Release Notes
 - Added relay.mostr.pub to the default relay list. [#1592](https://github.com/planetary-social/nos/issues/1592)
 - Fix two bugs that could result in muted users being unmuted. [#1674](https://github.com/planetary-social/nos/pull/1674)
