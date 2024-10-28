@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2024-10-28Z
+
+### Release Notes
+- This version is the same as 1.0.0, and was released only to TestFlight users because they missed 1.0.0.
+
 ## [1.0.0] - 2024-10-28Z
 
 ### Release Notes
