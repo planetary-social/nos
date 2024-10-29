@@ -450,4 +450,14 @@ extension Event {
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.identifier, ascending: true)]
         return request
     }
+    
+    public class func by(hashtag: String) -> NSFetchRequest<Event> {
+        let request = NSFetchRequest<Event>(entityName: "Event")
+        request.predicate = NSPredicate(
+            format: "ANY hashtags.name = %@",
+            hashtag
+        )
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        return request
+    }
 }

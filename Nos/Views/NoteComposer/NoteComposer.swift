@@ -347,7 +347,7 @@ struct NoteComposer: View {
         var (content, _) = noteParser.parse(attributedText: attributedString)
         return JSONEvent(
             pubKey: currentUser.keyPair!.publicKeyHex,
-            kind: .streamPhoto,
+            kind: .text,
             tags: [["t", streamName]],
             content: content
         )

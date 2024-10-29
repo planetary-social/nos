@@ -49,7 +49,7 @@ struct HomeFeedView: View {
     }
 
     var homeFeedFilter: Filter {
-        var filter = Filter(kinds: [.streamPhoto])
+        var filter = Filter(kinds: [.text])
         filter.authorKeys = user.followedKeys.sorted()
         return filter
     }
@@ -60,48 +60,12 @@ struct HomeFeedView: View {
 
     var body: some View {
         ZStack {
-            VStack(spacing: 8) {
-                ScrollView {
+            ScrollView(.vertical) {
+                LazyVStack(spacing: 8) {
                     ForEach(hashtags) { hashtag in
-                        if let events = (hashtag.events ?? []).sortedArray(using: [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]) as? [Event] {
-                            VStack(spacing: 8) {
-                                HStack {
-                                    Text("\(hashtag.name ?? "error")")
-                                        .font(.title)
-                                    Spacer()
-                                }
-                                .padding(.top)
-                                
-                                if let authorName = events.last?.author?.name {
-                                    HStack {
-                                        Text("by \(authorName)")
-                                            .font(.caption)
-                                        Spacer()
-                                    }
-                                }
-                                ScrollView(.horizontal) {
-                                    HStack(spacing: 8) {
-                                        ForEach(events) { note in
-                                            VStack {
-                                                if !note.contentLinks.isEmpty {
-                                                    GalleryView(urls: Array(note.contentLinks.prefix(1)), metadata: note.inlineMetadata)
-                                                        .cornerRadius(3)
-                                                }
-                                            }
-                                            .task { await note.loadAttributedContent() }
-                                        }
-                                    }
-                                    .frame(height: 200)
-                                }
-                            }
-                            .padding()
-                        }
+                        HorizontalStreamCarousel(streamName: hashtag.name!)
                     }
                 }
-            }
-
-            NewNotesButton(fetchRequest: FetchRequest(fetchRequest: newNotesRequest)) {
-                refreshController.startRefresh = true
             }
         }
         .task {
@@ -124,12 +88,6 @@ struct HomeFeedView: View {
             }
         }
         .onDisappear { isVisible = false }
-        .onChange(of: isVisible) { 
-            if isVisible {
-                analytics.showedHome()
-                GoToFeedTip.viewedFeed.sendDonation()
-            }
-        }
     }
 }
 
@@ -158,5 +116,54 @@ struct HomeFeedView: View {
     .inject(previewData: previewData)
     .onAppear {
         createTestData()
+    }
+}
+
+struct HorizontalStreamCarousel: View {
+    
+    var streamName: String 
+    
+    @FetchRequest var streamPhotos: FetchedResults<Event>
+    
+    init(streamName: String) {
+        self.streamName = streamName
+        _streamPhotos = FetchRequest(fetchRequest: Event.by(hashtag: streamName))
+    }
+    
+    var body: some View {
+        VStack(spacing: 8) {
+            HStack {
+                Text(streamName)
+                    .font(.title)
+                Spacer()
+            }
+            .padding(.top)
+            
+            if let authorName = streamPhotos.last?.author?.safeName {
+                HStack {
+                    Text("by ") + Text(authorName).underline()
+                    Spacer()
+                }
+                .font(.callout)
+            }
+            ScrollView(.horizontal) {
+                HStack(spacing: 8) {
+                    ForEach(streamPhotos) { photoEvent in
+                        VStack {
+                            if !photoEvent.contentLinks.isEmpty {
+                                GalleryView(
+                                    urls: Array(photoEvent.contentLinks.prefix(1)),
+                                    metadata: photoEvent.inlineMetadata
+                                )
+                                .cornerRadius(3)
+                            }
+                        }
+                        .task { await photoEvent.loadAttributedContent() }
+                    }
+                }
+                .frame(height: 200)
+            }
+        }
+        .padding()
     }
 }

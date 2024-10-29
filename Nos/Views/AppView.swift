@@ -54,14 +54,8 @@ struct AppView: View {
                 HomeTab(user: author)
                     .tabItem {
                         VStack {
-                            let text = Text("homeFeed")
-                            if $router.selectedTab.wrappedValue == .home {
-                                Image.tabIconHomeSelected
-                                text
-                            } else {
-                                Image.tabIconHome
-                                text.foregroundColor(.secondaryTxt)
-                            }
+                            Image(systemName: "sparkles")
+                            Text("Latest")
                         }
                     }
                     .toolbarBackground(.visible, for: .tabBar)
@@ -105,24 +99,6 @@ struct AppView: View {
                     }
                 }
                 .tag(AppDestination.noteComposer(nil))
-
-            NotificationsView(user: currentUser.author)
-                .tabItem {
-                    VStack {
-                        let text = Text("notifications")
-                        if $router.selectedTab.wrappedValue == .notifications {
-                            Image.tabIconNotificationsSelected
-                            text.foregroundColor(.primaryTxt)
-                        } else {
-                            Image.tabIconNotifications
-                            text.foregroundColor(.secondaryTxt)
-                        }
-                    }
-                }
-                .toolbarBackground(.visible, for: .tabBar)
-                .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                .tag(AppDestination.notifications)
-                .badge(pushNotificationService.badgeCount)
 
             if let author = currentUser.author {
                 ProfileTab(author: author, path: $router.profilePath)
