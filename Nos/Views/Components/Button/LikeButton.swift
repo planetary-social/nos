@@ -17,7 +17,7 @@ struct LikeButton: View {
     /// Whether a "like" or "delete like" event is currently being published.
     @State private var isPublishing = false
 
-    @EnvironmentObject private var relayService: RelayService
+    @Environment(RelayService.self) private var relayService
     @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
     @ObservationIgnored @Dependency(\.analytics) private var analytics

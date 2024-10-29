@@ -7,7 +7,7 @@ import Logger
 /// Displays a list of cells that let the user know when other users interact with their notes.
 struct NotificationsView: View {
     
-    @EnvironmentObject private var relayService: RelayService
+    @Environment(RelayService.self) private var relayService
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
     @Dependency(\.pushNotificationService) private var pushNotificationService

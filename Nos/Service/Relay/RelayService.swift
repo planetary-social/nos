@@ -9,7 +9,7 @@ import UIKit
 
 /// A service that maintains connections to Nostr Relay servers and executes requests for data from those relays
 /// in the form of `Filters` and `RelaySubscription`s.
-class RelayService: ObservableObject {
+@Observable class RelayService {
     
     private var subscriptionManager: RelaySubscriptionManager
     private var processSubscriptionQueueTimer: AsyncTimer?
@@ -19,11 +19,10 @@ class RelayService: ObservableObject {
     private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
     private var parseQueue = ParseQueue()
     
-    @Dependency(\.persistenceController) var persistenceController
-    @Dependency(\.analytics) private var analytics
-    @Dependency(\.crashReporting) private var crashReporting
-    @MainActor @Dependency(\.currentUser) private var currentUser
-    @Published var numberOfConnectedRelays: Int = 0
+    @ObservationIgnored @Dependency(\.persistenceController) var persistenceController
+    @ObservationIgnored @Dependency(\.analytics) private var analytics
+    @ObservationIgnored @Dependency(\.crashReporting) private var crashReporting
+    @MainActor @ObservationIgnored @Dependency(\.currentUser) private var currentUser
     
     init(subscriptionManager: RelaySubscriptionManager = RelaySubscriptionManagerActor()) {
         self.subscriptionManager = subscriptionManager
@@ -312,13 +311,6 @@ extension RelayService {
         await clearStaleSubscriptions()
         
         await subscriptionManager.processSubscriptionQueue()
-        
-        let socketsCount = await subscriptionManager.sockets().count
-        Task { @MainActor in
-            if numberOfConnectedRelays != socketsCount {
-                numberOfConnectedRelays = socketsCount
-            }
-        }
     }
     
     private func clearStaleSubscriptions() async {

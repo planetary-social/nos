@@ -17,7 +17,7 @@ struct DiscoverTab: View {
     
     @State private var isVisible = false
 
-    @StateObject private var searchController = SearchController()
+    @State private var searchController = SearchController()
 
     @State var predicate: NSPredicate = .false
     @FocusState private var isSearching: Bool

@@ -31,7 +31,7 @@ struct NoteButton: View {
     private let tapAction: ((Event) -> Void)?
     @State private var relaySubscriptions = SubscriptionCancellables()
 
-    @EnvironmentObject private var relayService: RelayService
+    @Environment(RelayService.self) private var relayService
     @EnvironmentObject private var router: Router
     
     /// Initializes a NoteButton object.

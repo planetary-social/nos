@@ -30,11 +30,11 @@ struct NosApp: App {
         WindowGroup {
             AppView()
                 .environment(\.managedObjectContext, persistenceController.viewContext)
-                .environmentObject(relayService)
+                .environment(relayService)
                 .environmentObject(router)
                 .environment(appController)
                 .environment(currentUser)
-                .environmentObject(pushNotificationService)
+                .environment(pushNotificationService)
                 .onOpenURL { DeepLinkService.handle($0, router: router) }
                 .onChange(of: scenePhase) { _, newPhase in
                     switch newPhase {

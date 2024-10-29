@@ -5,7 +5,7 @@ import SwiftUI
 
 struct AlreadyHaveANIP05View: View {
     @Binding var isPresented: Bool
-    @StateObject private var usernameObserver = UsernameObserver()
+    @State var usernameObserver = TextDebouncer()
     @State private var verified: Bool?
     @State private var isVerifying = false
     @State private var verifyTask: Task<Void, Never>?
@@ -124,31 +124,9 @@ struct AlreadyHaveANIP05View: View {
     }
 }
 
-fileprivate class UsernameObserver: ObservableObject {
-
-    @Published
-    var debouncedText = ""
-
-    @Published
-    var text = ""
-
-    private var subscriptions = Set<AnyCancellable>()
-
-    init() {
-        $text
-            .removeDuplicates()
-            .filter { $0.count >= 3 }
-            .debounce(for: .milliseconds(200), scheduler: RunLoop.main)
-            .sink { [weak self] value in
-                self?.debouncedText = value
-            }
-            .store(in: &subscriptions)
-    }
-}
-
 fileprivate struct UsernameTextField: View {
 
-    @StateObject var usernameObserver: UsernameObserver
+    @Bindable var usernameObserver: TextDebouncer
     @FocusState private var usernameFieldIsFocused: Bool
 
     var body: some View {
