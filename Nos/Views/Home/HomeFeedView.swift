@@ -82,6 +82,7 @@ struct HomeFeedView: View {
         .background(Color.appBg)
         .padding(.top, 1)
         .nosNavigationBar(navigationBarTitle)
+        .navigationBarItems(leading: SideMenuButton())
         .onAppear {
             if router.selectedTab == .home {
                 isVisible = true
@@ -116,54 +117,5 @@ struct HomeFeedView: View {
     .inject(previewData: previewData)
     .onAppear {
         createTestData()
-    }
-}
-
-struct HorizontalStreamCarousel: View {
-    
-    var streamName: String 
-    
-    @FetchRequest var streamPhotos: FetchedResults<Event>
-    
-    init(streamName: String) {
-        self.streamName = streamName
-        _streamPhotos = FetchRequest(fetchRequest: Event.by(hashtag: streamName))
-    }
-    
-    var body: some View {
-        VStack(spacing: 8) {
-            HStack {
-                Text(streamName)
-                    .font(.title)
-                Spacer()
-            }
-            .padding(.top)
-            
-            if let authorName = streamPhotos.last?.author?.safeName {
-                HStack {
-                    Text("by ") + Text(authorName).underline()
-                    Spacer()
-                }
-                .font(.callout)
-            }
-            ScrollView(.horizontal) {
-                HStack(spacing: 8) {
-                    ForEach(streamPhotos) { photoEvent in
-                        VStack {
-                            if !photoEvent.contentLinks.isEmpty {
-                                GalleryView(
-                                    urls: Array(photoEvent.contentLinks.prefix(1)),
-                                    metadata: photoEvent.inlineMetadata
-                                )
-                                .cornerRadius(3)
-                            }
-                        }
-                        .task { await photoEvent.loadAttributedContent() }
-                    }
-                }
-                .frame(height: 200)
-            }
-        }
-        .padding()
     }
 }

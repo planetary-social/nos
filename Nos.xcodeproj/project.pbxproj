@@ -443,6 +443,8 @@
 		C99DBF802A9E8BCF00F7068F /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C99DBF7F2A9E8BCF00F7068F /* SDWebImageSwiftUI */; };
 		C99DBF822A9E8BDE00F7068F /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C99DBF812A9E8BDE00F7068F /* SDWebImageSwiftUI */; };
 		C99E80CD2A0C2C6400187474 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94BC09A2A0AC74A0098F6F1 /* PreviewData.swift */; };
+		C9A05F782CD178BC00196FD6 /* HorizontalStreamCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A05F772CD178B400196FD6 /* HorizontalStreamCarousel.swift */; };
+		C9A05F7E2CD178FE00196FD6 /* MyStreamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A05F7D2CD178FE00196FD6 /* MyStreamsView.swift */; };
 		C9A0DADA29C685E500466635 /* SideMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DAD929C685E500466635 /* SideMenuButton.swift */; };
 		C9A0DADD29C689C900466635 /* NosNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DADC29C689C900466635 /* NosNavigationBar.swift */; };
 		C9A0DAE029C697A100466635 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A0DADF29C697A100466635 /* AboutView.swift */; };
@@ -928,6 +930,8 @@
 		C996933D2C11FF0F00A2C70D /* EventObservationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventObservationView.swift; sourceTree = "<group>"; };
 		C996933F2C120CC900A2C70D /* AuthorObservationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorObservationView.swift; sourceTree = "<group>"; };
 		C99721CA2AEBED26004EBEAB /* String+Empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Empty.swift"; sourceTree = "<group>"; };
+		C9A05F772CD178B400196FD6 /* HorizontalStreamCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalStreamCarousel.swift; sourceTree = "<group>"; };
+		C9A05F7D2CD178FE00196FD6 /* MyStreamsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStreamsView.swift; sourceTree = "<group>"; };
 		C9A0DAD929C685E500466635 /* SideMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuButton.swift; sourceTree = "<group>"; };
 		C9A0DADC29C689C900466635 /* NosNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosNavigationBar.swift; sourceTree = "<group>"; };
 		C9A0DADF29C697A100466635 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
@@ -1569,6 +1573,7 @@
 		5B79F6402BA11618002DA9BE /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				C9A05F772CD178B400196FD6 /* HorizontalStreamCarousel.swift */,
 				C98DC9BA2A795CAD004E5F0F /* ActionBanner.swift */,
 				C9A0DAE929C6A34200466635 /* ActivityView.swift */,
 				3FFB1D88299FF37C002A755D /* AvatarView.swift */,
@@ -2020,6 +2025,7 @@
 				03618C052C82663600BCBC55 /* Relay */,
 				03618BDF2C8265CF00BCBC55 /* Settings */,
 				03618BF42C82661400BCBC55 /* SideMenu */,
+				C9A05F7D2CD178FE00196FD6 /* MyStreamsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2344,6 +2350,7 @@
 				C987F81729BA4C6A00B44E7A /* BigActionButton.swift in Sources */,
 				C98DC9BB2A795CAD004E5F0F /* ActionBanner.swift in Sources */,
 				038863DE2C6FF51500B09797 /* ZoomableContainer.swift in Sources */,
+				C9A05F782CD178BC00196FD6 /* HorizontalStreamCarousel.swift in Sources */,
 				C9F204802AE029D90029A858 /* AppDestination.swift in Sources */,
 				C9C5475B2A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift in Sources */,
 				C98B8B4029FBF83B009789C8 /* NotificationCard.swift in Sources */,
@@ -2477,6 +2484,7 @@
 				0304D0A72C9B4BF2001D16C7 /* OpenGraphMetatdata.swift in Sources */,
 				C973AB5F2A323167002AED16 /* AuthorReference+CoreDataProperties.swift in Sources */,
 				030FECAB2CB5E0B900820014 /* BuildYourNetworkView.swift in Sources */,
+				C9A05F7E2CD178FE00196FD6 /* MyStreamsView.swift in Sources */,
 				A3B943CF299AE00100A15A08 /* Keychain.swift in Sources */,
 				C9671D73298DB94C00EE7E12 /* Data+Encoding.swift in Sources */,
 				03C7E7922CB9C0B30054624C /* WelcomeToFeedTip.swift in Sources */,

@@ -53,9 +53,13 @@ struct AppView: View {
             if let author = currentUser.author {
                 HomeTab(user: author)
                     .tabItem {
-                        VStack {
+                        let text = Text("Latest")
+                        if $router.selectedTab.wrappedValue == .home {
                             Image(systemName: "sparkles")
-                            Text("Latest")
+                            text.foregroundColor(.primaryTxt)
+                        } else {
+                            Image(systemName: "sparkles")
+                            text.foregroundColor(.secondaryTxt)
                         }
                     }
                     .toolbarBackground(.visible, for: .tabBar)
@@ -91,21 +95,12 @@ struct AppView: View {
                 .toolbarBackground(Color.cardBgBottom, for: .tabBar)
                 .tag(AppDestination.discover)
 
-            VStack {}
-                .tabItem {
-                    VStack {
-                        Image.newPostButton
-                        Text("post")
-                    }
-                }
-                .tag(AppDestination.noteComposer(nil))
-
             if let author = currentUser.author {
-                ProfileTab(author: author, path: $router.profilePath)
+                MyStreamsView(author: author)
                     .tabItem {
                         VStack {
-                            let text = Text("profileTitle")
-                            if $router.selectedTab.wrappedValue == .profile {
+                            let text = Text("My Streams")
+                            if $router.selectedTab.wrappedValue == .myStreams {
                                 Image.tabProfileSelected
                                 text.foregroundColor(.primaryTxt)
                             } else {
@@ -116,7 +111,7 @@ struct AppView: View {
                     }
                     .toolbarBackground(.visible, for: .tabBar)
                     .toolbarBackground(Color.cardBgBottom, for: .tabBar)
-                    .tag(AppDestination.profile)
+                    .tag(AppDestination.myStreams)
             }
         }
         .onChange(of: router.selectedTab) { _, newTab in

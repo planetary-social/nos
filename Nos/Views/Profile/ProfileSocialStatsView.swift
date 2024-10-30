@@ -23,18 +23,7 @@ struct ProfileSocialStatsView: View {
                     )
                 )
             } label: {
-                tab(label: "following", value: author.follows.count)
-            }
-            spacer
-            Button {
-                router.push(
-                    RelaysDestination(
-                        author: author,
-                        relays: author.relays.map { $0 }
-                    )
-                )
-            } label: {
-                tab(label: "relays", value: author.relays.count)
+                tab(label: "friends", value: author.follows.count)
             }
             spacer
         }

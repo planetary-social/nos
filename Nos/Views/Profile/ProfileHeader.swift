@@ -188,10 +188,6 @@ struct ProfileHeader: View {
                 .padding(.horizontal, 18)
                 .padding(.vertical, 0)
                 .frame(maxWidth: .infinity)
-
-                divider
-
-                profileHeaderTab
             }
             .frame(maxWidth: 500)
         }

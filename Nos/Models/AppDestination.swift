@@ -8,6 +8,7 @@ enum AppDestination: Hashable, Equatable {
     case notifications
     case noteComposer(String?)
     case profile
+    case myStreams
     
     var destinationString: String {
         switch self {
@@ -21,6 +22,8 @@ enum AppDestination: Hashable, Equatable {
             return String(localized: "newNote")
         case .profile:
             return String(localized: "profileTitle")
+        case .myStreams:
+            return String(localized: "myStreams")
         }
     }
     
