@@ -7,10 +7,12 @@ struct MyStreamsView: View {
     @EnvironmentObject private var router: Router
     @Environment(\.managedObjectContext) private var viewContext
     
-    @FetchRequest<Hashtag>(
-        entity: Hashtag.entity(), 
-        sortDescriptors: [NSSortDescriptor(keyPath: \Hashtag.name, ascending: true)]
-    ) private var hashtags
+    @FetchRequest var hashtags: FetchedResults<Hashtag>
+    
+    init(author: Author) {
+        self.author = author
+        _hashtags = FetchRequest(fetchRequest: Hashtag.streams(for: author))
+    }
     
     @State private var showNewStreamView = false
     @State private var newStreamName = ""
@@ -31,6 +33,9 @@ struct MyStreamsView: View {
             .padding(.top, 1)
             .navigationDestination(for: EditProfileDestination.self) { destination in
                 ProfileEditView(author: destination.profile)
+            }
+            .navigationDestination(for: FollowsDestination.self) { destination in
+                FollowsView("Friends", authors: destination.follows)
             }
             .toolbar { 
                 ToolbarItem(placement: .topBarTrailing) { 
@@ -78,7 +83,7 @@ struct MyStreamsView: View {
                     }
                     .padding()
                 }
-                .background(LinearGradient.cardBackground)
+                .border(LinearGradient.cardBackground)
                 .clipShape(RoundedRectangle(cornerRadius: 15))
                 .mimicCardButtonStyle()
                 
@@ -101,22 +106,17 @@ struct MyStreamsView: View {
     var previewData = PreviewData()
     
     func createTestData() {
-        let user = previewData.alice
-        let addresses = Relay.recommended
-        addresses.forEach { address in
-            let relay = try? Relay.findOrCreate(by: address, context: previewData.previewContext)
-            relay?.relayDescription = "A Nostr relay that aims to cultivate a healthy community."
-            relay?.addToAuthors(user)
+        let user = previewData.bob
+        Task { 
+            await previewData.currentUser.setPrivateKeyHex(KeyFixture.bob.privateKeyHex)
         }
-        
-        Task { try await previewData.currentUser.follow(author: previewData.bob) }
         
         _ = previewData.streamImageOne
         _ = previewData.streamImageTwo
         _ = previewData.streamImageThree
     }
     
-    return MyStreamsView(author: previewData.previewAuthor)
+    return MyStreamsView(author: previewData.bob)
         .inject(previewData: previewData)
         .onAppear { createTestData() }
 }

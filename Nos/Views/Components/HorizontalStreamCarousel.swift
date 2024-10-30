@@ -18,6 +18,8 @@ struct HorizontalStreamCarousel: View {
     @State private var showPhotoMenu = false
     @State private var imagePickerSource: UIImagePickerController.SourceType?
     @State private var showSettingsAlert = false
+    @State private var showStreamOptionsSheet = false
+    @State private var showingShare = false
     
     let cameraDevice: UIImagePickerController.CameraDevice = .rear
     let mediaTypes: [UTType] = [.image]
@@ -49,14 +51,32 @@ struct HorizontalStreamCarousel: View {
     }
     
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 0) {
+            // Stream header
             HStack {
                 Text(streamName)
                     .font(.title)
-                Spacer()
+                Spacer() 
+                if let user {
+                    VStack {
+                        // Ellipsis Button
+                        Button(
+                            action: {
+                                showStreamOptionsSheet = true
+                            },
+                            label: {
+                                Image(systemName: "ellipsis")
+                                    .font(.title)
+                                    .foregroundStyle(Color.actionSecondaryBackground)
+                            }
+                        )
+                        .frame(minHeight: 50)
+                    }
+                }
             }
             .padding(.top)
             
+            // Author name
             if let authorName = streamPhotos.last?.author?.safeName {
                 HStack {
                     Text("by ") + Text(authorName).underline()
@@ -64,6 +84,8 @@ struct HorizontalStreamCarousel: View {
                 }
                 .font(.callout)
             }
+            
+            // Photo carousel
             ScrollView(.horizontal) {
                 HStack(spacing: 8) {
                     if let user {
@@ -71,15 +93,15 @@ struct HorizontalStreamCarousel: View {
                             addPhotoPressed()
                         } label: { 
                             ZStack {
-                                Rectangle()
-                                    .foregroundStyle(LinearGradient.verticalAccentSecondary)
-                                    .cornerRadius(5)
-                                    .padding(30)
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(Color.actionSecondaryBackground, lineWidth: 4)
+                                    .foregroundStyle(Color.clear)
+                                    .aspectRatio(2/3, contentMode: .fit)
+                                    .padding(2)
                                 Image(systemName: "plus")
-                                    .foregroundStyle(Color.white)
+                                    .foregroundStyle(Color.actionSecondaryBackground)
                                     .font(.system(size: 40)) 
                             }
-                            .frame(width: 140, height: 140)
                         }
                     }
                     ForEach(streamPhotos) { photoEvent in
@@ -97,6 +119,7 @@ struct HorizontalStreamCarousel: View {
                 }
                 .frame(height: 200)
             }
+            .padding(.top)
         }
         .padding()
         .confirmationDialog(
@@ -142,6 +165,18 @@ struct HorizontalStreamCarousel: View {
                 showPhotoMenu = false
             }
         }
+        .confirmationDialog("share", isPresented: $showStreamOptionsSheet) {
+            Button("Share invite link") {
+                showStreamOptionsSheet = false
+                showingShare = true
+            }
+            Button("Manage members") {
+                showStreamOptionsSheet = false
+            }
+            Button("Delete") {
+                showStreamOptionsSheet = false
+            }
+        }
         .alert(
             settingsAlertTitle,
             isPresented: $showSettingsAlert,
@@ -166,6 +201,15 @@ struct HorizontalStreamCarousel: View {
                 onCompletion: addPhoto
             ) 
             .edgesIgnoringSafeArea(.bottom)
+        }
+        .sheet(isPresented: $showingShare) {
+            if let user, let url = URL(string: "nos-dev://\(user.npubString!)") {
+                ActivityViewController(activityItems: [url]) {
+                    showingShare = false
+                }
+            } else {
+                EmptyView()
+            }
         }
     }
     
@@ -218,5 +262,6 @@ struct HorizontalStreamCarousel: View {
     
     return HorizontalStreamCarousel(streamName: "🇺🇾 Uruguay", showComposeButtonFor: previewData.previewAuthor)
         .inject(previewData: previewData)
+        .background(Color.appBg)
         .onAppear { createTestData() }
 }

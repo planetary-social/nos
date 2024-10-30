@@ -1,11 +1,3 @@
-//
-//  Hashtag+CoreDataClass.swift
-//  Nos
-//
-//  Created by Matthew Lorentz on 10/25/24.
-//
-//
-
 import Foundation
 import CoreData
 
@@ -23,7 +15,6 @@ public class Hashtag: NSManagedObject {
         }
     }
     
-    
     class func find(by name: String, context: NSManagedObjectContext) throws -> Hashtag? {
         let fetchRequest = NSFetchRequest<Hashtag>(entityName: String(describing: Hashtag.self))
         fetchRequest.predicate = NSPredicate(format: "name = %@", name)
@@ -36,4 +27,13 @@ public class Hashtag: NSManagedObject {
         return nil
     }
 
+    class func streams(for author: Author) -> NSFetchRequest<Hashtag> {
+        let request = NSFetchRequest<Hashtag>(entityName: "Hashtag")
+        request.predicate = NSPredicate(
+            format: "ANY events.author = %@",
+            author
+        )
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Hashtag.name, ascending: true)]
+        return request
+    }
 }

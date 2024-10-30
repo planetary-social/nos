@@ -51,6 +51,7 @@ struct HomeFeedView: View {
     var homeFeedFilter: Filter {
         var filter = Filter(kinds: [.text])
         filter.authorKeys = user.followedKeys.sorted()
+        filter.keepSubscriptionOpen = true
         return filter
     }
     

@@ -19,6 +19,7 @@ enum DeepLinkService {
     
     @MainActor static func handle(_ url: URL, router: Router) {
         @Dependency(\.persistenceController) var persistenceController
+        @Dependency(\.currentUser) var currentUser
         Log.info("handling link \(url.absoluteString)")
         
         let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
@@ -49,6 +50,11 @@ enum DeepLinkService {
                     let identifier = try NostrIdentifier.decode(bech32String: string)
                     switch identifier {
                     case .npub(let rawAuthorID), .nprofile(let rawAuthorID, _):
+                        let author = try Author.findOrCreate(
+                            by: rawAuthorID,
+                            context: persistenceController.viewContext
+                        )
+                        Task { try await currentUser.follow(author: author) }
                         router.pushAuthor(id: rawAuthorID)
                     case .note(let rawEventID), .nevent(let rawEventID, _, _, _):
                         router.pushNote(id: rawEventID)

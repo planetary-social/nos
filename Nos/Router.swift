@@ -214,6 +214,9 @@ extension Router {
     }
 
     public func handleHexadecimalPublicKey(_ hex: String) throws {
+        @Dependency(\.currentUser) var currentUser
+        let author = try Author.findOrCreate(by: hex, context: persistenceController.viewContext)
+        Task { try await currentUser.follow(author: author) }
         pushAuthor(id: hex)
     }
 

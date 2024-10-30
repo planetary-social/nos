@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.verse.nos.database-cleaner</string>
+	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -47,12 +51,6 @@
 	<array>
 		<string>remote-notification</string>
 		<string>processing</string>
-	</array>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Nos uses the microphone when you are record a video from within the app.</string>
-	<key>BGTaskSchedulerPermittedIdentifiers</key>
-	<array>
-		<string>com.verse.nos.database-cleaner</string>
 	</array>
 </dict>
 </plist>
