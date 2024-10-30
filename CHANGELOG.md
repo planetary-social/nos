@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Release Notes
+
+### Internal Changes
+- minor strings simplifications
+
 ## [1.0.1] - 2024-10-28Z
 
 ### Release Notes
