@@ -13366,13 +13366,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sorry, but Nos is not for you yet,"
+            "value" : "Sorry, but Nos is not for you yet."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lo sentimos, pero Nos aún no es para ti,"
+            "value" : "Lo sentimos, pero Nos aún no es para ti."
           }
         },
         "fa" : {
@@ -13384,7 +13384,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Désolé, mais Nos n'est pas pour vous pour l'instant,"
+            "value" : "Désolé, mais Nos n'est pas pour vous pour l'instant."
           }
         },
         "ja" : {
@@ -13402,25 +13402,25 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sorry, maar Nos is nog niet iets voor jou,"
+            "value" : "Sorry, maar Nos is nog niet iets voor jou."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Desculpa, mas o Nos não é para você ainda,"
+            "value" : "Desculpa, mas o Nos não é para você ainda."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tyvärr, men Nos är inte för er ännu,"
+            "value" : "Tyvärr, men Nos är inte för er ännu."
           }
         },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pole, lakini Nos bado sio yako,"
+            "value" : "Pole, lakini Nos bado sio yako."
           }
         },
         "th" : {
