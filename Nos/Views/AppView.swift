@@ -13,6 +13,7 @@ struct AppView: View {
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.userDefaults) private var userDefaults
     @Environment(CurrentUser.self) var currentUser
+    @Environment(RelayService.self) private var relayService
 
     @State private var lastSelectedTab = AppDestination.home
     @State private var showNIP05Wizard = false
@@ -163,6 +164,7 @@ struct AppView: View {
         .sheet(isPresented: $showNewPost) {
             NoteComposer(initialContents: newPostContents, isPresented: $showNewPost)
                 .environment(currentUser)
+                .environment(relayService)
                 .interactiveDismissDisabled()
         }
     }
