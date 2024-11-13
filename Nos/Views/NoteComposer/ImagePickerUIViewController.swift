@@ -7,7 +7,7 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
     let sourceType: UIImagePickerController.SourceType
     let mediaTypes: [UTType]
     let cameraDevice: UIImagePickerController.CameraDevice
-    let onCompletion: ((URL?) -> Void)
+    let onCompletion: (URL?) -> Void
     
     init(
         sourceType: UIImagePickerController.SourceType = .photoLibrary,
@@ -54,6 +54,9 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
         }
         
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+//            Task {
+//                await onCompletion(nil)
+//            }
             onCompletion(nil)
         }
 
@@ -61,17 +64,33 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
             _ picker: UIImagePickerController,
             didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
         ) {
-            if let videoURL = info[.mediaURL] as? URL {
-                onCompletion(videoURL)
-            } else if let image = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage,
-                let imageData = image.jpegData(compressionQuality: 1.0) {
-                let url = saveImage(imageData)
-                onCompletion(url)
-            } else if let imageURL = info[.imageURL] as? URL {
-                onCompletion(imageURL)
-            } else {
-                onCompletion(nil)
+            DispatchQueue.main.async {
+                if let videoURL = info[.mediaURL] as? URL {
+                    self.onCompletion(videoURL)
+                } else if let image = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage,
+                          let imageData = image.jpegData(compressionQuality: 1.0) {
+                    let url = self.saveImage(imageData)
+                    self.onCompletion(url)
+                } else if let imageURL = info[.imageURL] as? URL {
+                    self.onCompletion(imageURL)
+                } else {
+                    self.onCompletion(nil)
+                }
             }
+            
+//            Task {
+//                if let videoURL = info[.mediaURL] as? URL {
+//                    await onCompletion(videoURL)
+//                } else if let image = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage,
+//                          let imageData = image.jpegData(compressionQuality: 1.0) {
+//                    let url = saveImage(imageData)
+//                    await onCompletion(url)
+//                } else if let imageURL = info[.imageURL] as? URL {
+//                    await onCompletion(imageURL)
+//                } else {
+//                    await onCompletion(nil)
+//                }
+//            }
         }
 
         /// Saves the given image data to a JPG file and returns the URL of the file.

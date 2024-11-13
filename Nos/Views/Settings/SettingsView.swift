@@ -334,6 +334,12 @@ extension SettingsView {
                     Text("allPublishedEvents")
                 }
             }
+            
+            NavigationLink {
+                SensitiveImageSettingView()
+            } label: {
+                Text("Sensitive Content")
+            }
         }
     }
 }

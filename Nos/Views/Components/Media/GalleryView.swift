@@ -9,6 +9,9 @@ struct GalleryView: View {
 
     /// Inline metadata describing the data in ``urls``.
     let metadata: InlineMetadataCollection?
+    
+    /// The ``Author`` that posted the content.
+    let author: Author?
 
     /// The currently-selected tab in the tab view.
     @State private var selectedTab = 0
@@ -18,6 +21,12 @@ struct GalleryView: View {
     
     /// The media service that loads content from URLs and determines the orientation for this gallery.
     @Dependency(\.mediaService) private var mediaService
+    
+    init(urls: [URL], metadata: InlineMetadataCollection?, author: Author? = nil) {
+        self.urls = urls
+        self.metadata = metadata
+        self.author = author
+    }
     
     /// The orientation determined by the `metadata`, if any.
     private var metadataOrientation: MediaOrientation? {
@@ -50,6 +59,9 @@ struct GalleryView: View {
                         LinkView(url: urls[index])
                             .tag(index)
                     }
+                    .overlay {
+                        SensitiveContentOverlayView(url: urls[index], author: author)
+                    }
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
@@ -80,6 +92,9 @@ struct GalleryView: View {
     private func linkView(url: URL, orientation: MediaOrientation) -> some View {
         AspectRatioContainer(orientation: orientation) {
             LinkView(url: url)
+        }
+        .overlay {
+            SensitiveContentOverlayView(url: url, author: author)
         }
     }
     

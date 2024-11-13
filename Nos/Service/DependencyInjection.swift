@@ -94,6 +94,11 @@ extension DependencyValues {
         get { self[PreviewEventRepositoryKey.self] }
         set { self[PreviewEventRepositoryKey.self] = newValue }
     }
+    
+    var sensitiveContentController: SensitiveContentController {
+        get { self[SensitiveContentControllerKey.self] }
+        set { self[SensitiveContentControllerKey.self] = newValue }
+    }
 }
 
 fileprivate enum AnalyticsKey: DependencyKey {
@@ -197,4 +202,8 @@ fileprivate enum OpenGraphServiceKey: DependencyKey {
 
 fileprivate enum PreviewEventRepositoryKey: DependencyKey {
     static let liveValue: any PreviewEventRepository = DefaultPreviewEventRepository()
+}
+
+fileprivate enum SensitiveContentControllerKey: DependencyKey {
+    static let liveValue = SensitiveContentController()
 }

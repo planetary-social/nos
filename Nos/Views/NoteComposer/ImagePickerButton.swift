@@ -8,8 +8,11 @@ struct ImagePickerButton<Label>: View where Label: View {
     let cameraDevice: UIImagePickerController.CameraDevice
     /// The types of content the user can choose.
     let mediaTypes: [UTType]
-    let onCompletion: ((URL) -> Void)
+    let onCompletion: ((URL) -> Void)   // ⚠️ could pass sensitivity as a bool back here
     let label: () -> Label
+    
+    @State
+    private var selectedContentURL: URL?
 
     /// State used to present or hide a confirmation dialog that lets the user select the ImagePicker source.
     @State
@@ -18,6 +21,9 @@ struct ImagePickerButton<Label>: View where Label: View {
     /// State used to present or hide an alert that lets the user go to settings.
     @State
     private var showSettingsAlert = false
+    
+    @State
+    private var showSensitiveContentAlert = false
 
     /// Source used by ImagePicker when opening it
     @State
@@ -108,6 +114,23 @@ struct ImagePickerButton<Label>: View where Label: View {
                 Text("openSettingsMessage", tableName: "ImagePicker")
             }
         )
+        .alert(
+            "contentWarning",
+            isPresented: $showSensitiveContentAlert,
+            actions: {
+                Button("cancel") {}
+                Button("upload") {
+                    if let selectedContentURL {
+                        onCompletion(selectedContentURL)
+                    } else {
+                        assertionFailure("ImagePickerButton did not have the content URL")
+                    }
+                }
+            },
+            message: {
+                Text("sensitiveContentUploadWarning")
+            }
+        )
         .sheet(isPresented: showImagePicker) {
             ImagePickerUIViewController(
                 sourceType: imagePickerSource ?? .photoLibrary, 
@@ -129,13 +152,23 @@ struct ImagePickerButton<Label>: View where Label: View {
     /// Called when a user chooses an image or video.
     /// - Parameter url: The URL of the image or video on disk.
     func userPicked(url: URL?) {
-        if let url {
-            analytics.selectedImage()
-            onCompletion(url)
-        } else {
-            analytics.cancelledImageSelection()
+        imagePickerSource = nil // dismisses the picker
+        
+        Task {  // The separate Task allows the picker view to dismiss before we potentially show another pop-up.
+            if let url {
+                analytics.selectedImage()
+                
+                let shouldWarn = await SensitiveContentController.shared.shouldWarnUserUploadingFile(at: url)
+                if shouldWarn {
+                    selectedContentURL = url
+                    showSensitiveContentAlert = true
+                } else {
+                    onCompletion(url)
+                }
+            } else {
+                analytics.cancelledImageSelection()
+            }
         }
-        imagePickerSource = nil
     }
 }
 
