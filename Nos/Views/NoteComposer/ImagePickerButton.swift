@@ -8,7 +8,7 @@ struct ImagePickerButton<Label>: View where Label: View {
     let cameraDevice: UIImagePickerController.CameraDevice
     /// The types of content the user can choose.
     let mediaTypes: [UTType]
-    let onCompletion: ((URL) -> Void)   // ⚠️ could pass sensitivity as a bool back here
+    let onCompletion: ((URL) -> Void)
     let label: () -> Label
     
     @State
