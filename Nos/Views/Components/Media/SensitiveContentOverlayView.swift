@@ -15,9 +15,14 @@ struct VisualEffectView: UIViewRepresentable {
     }
 }
 
+/// A view to add over another view as an overlay that blurs the image beneath while it is being analyzed.
 struct SensitiveContentOverlayView: View {
     /// The URL of the content to check for sensitivity.
     let url: URL
+    
+    /// The author of the content being analyzed.
+    ///
+    /// > Note: The author is required here to provide the user with the ability to block or report the user or content.
     let author: Author?
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -38,7 +43,7 @@ struct SensitiveContentOverlayView: View {
     
     var body: some View {
         ZStack {
-            VisualEffectView(effect: .light)
+            VisualEffectView(effect: .dark)
             
             if analysisState == .analyzing {
                 ProgressView()
@@ -103,10 +108,10 @@ struct SensitiveContentOverlayView: View {
         .reportMenu($showingReportMenu, reportedObject: .author(author!))
         .task {
             if url.isImage && SensitiveContentController.shared.isSensitivityAnalysisEnabled {
-                Task {  // This is intentional! SwiftUI will sometimes cancel the .task of the view.
-                    await SensitiveContentController.shared.shouldObfuscateContent(atURL: url)
+                Task {  // The separate Task here is intentional! SwiftUI will sometimes cancel the .task of the view.
+                    await SensitiveContentController.shared.analyzeContent(atURL: url)
                     
-                    cancellable = await SensitiveContentController.shared.publisher(for: url)
+                    cancellable = await SensitiveContentController.shared.analysisStatePublisher(for: url)
                         .receive(on: DispatchQueue.main)
                         .sink { state in
                             analysisState = state

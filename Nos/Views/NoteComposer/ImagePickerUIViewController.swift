@@ -54,9 +54,6 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
         }
         
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-//            Task {
-//                await onCompletion(nil)
-//            }
             onCompletion(nil)
         }
 
@@ -68,7 +65,7 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
                 if let videoURL = info[.mediaURL] as? URL {
                     self.onCompletion(videoURL)
                 } else if let image = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage,
-                          let imageData = image.jpegData(compressionQuality: 1.0) {
+                    let imageData = image.jpegData(compressionQuality: 1.0) {
                     let url = self.saveImage(imageData)
                     self.onCompletion(url)
                 } else if let imageURL = info[.imageURL] as? URL {
@@ -77,20 +74,6 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
                     self.onCompletion(nil)
                 }
             }
-            
-//            Task {
-//                if let videoURL = info[.mediaURL] as? URL {
-//                    await onCompletion(videoURL)
-//                } else if let image = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage,
-//                          let imageData = image.jpegData(compressionQuality: 1.0) {
-//                    let url = saveImage(imageData)
-//                    await onCompletion(url)
-//                } else if let imageURL = info[.imageURL] as? URL {
-//                    await onCompletion(imageURL)
-//                } else {
-//                    await onCompletion(nil)
-//                }
-//            }
         }
 
         /// Saves the given image data to a JPG file and returns the URL of the file.

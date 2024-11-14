@@ -2,6 +2,7 @@ import Dependencies
 import SensitiveContentAnalysis
 import SwiftUI
 
+/// A debug view to manage testing of sensitive content analysis.
 struct SensitiveImageSettingView: View {
     @Dependency(\.featureFlags) private var featureFlags
     

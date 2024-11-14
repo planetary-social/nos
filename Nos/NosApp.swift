@@ -15,7 +15,6 @@ struct NosApp: App {
     private let appController = AppController()
     @Environment(\.scenePhase) private var scenePhase
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-//    @State private var sensitiveContentController = SensitiveContentController()
     
     init() {
         _ = crashReporting // force crash reporting init as early as possible
@@ -36,7 +35,6 @@ struct NosApp: App {
                 .environment(appController)
                 .environment(currentUser)
                 .environment(pushNotificationService)
-//                .environment(sensitiveContentController)
                 .onOpenURL { DeepLinkService.handle($0, router: router) }
                 .onChange(of: scenePhase) { _, newPhase in
                     switch newPhase {

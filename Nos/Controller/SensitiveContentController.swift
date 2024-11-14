@@ -3,20 +3,9 @@ import Dependencies
 import Foundation
 import SensitiveContentAnalysis
 
-protocol FileDownloading {}
-extension FileDownloading {
-    
-    func file(byDownloadingFrom url: URL) async throws -> URL {
-        let temporaryDirectory = FileManager.default.temporaryDirectory
-        let fileURL = temporaryDirectory.appendingPathComponent(url.lastPathComponent)
-        let (data, _) = try await URLSession.shared.data(from: url)
-        try data.write(to: fileURL)
-        return fileURL
-    }
-}
-
 extension SCSensitivityAnalysisPolicy {
     var description: String {
+        // TODO: Localize
         switch self {
         case .disabled:
             "Sensitive Content Analysis is currently disabled. To enable, go to Settings app -> Privacy & Security -> \"Sensitive Content Warning\"." // swiftlint:disable:this line_length
@@ -26,14 +15,22 @@ extension SCSensitivityAnalysisPolicy {
     }
 }
 
+/// An object that analyzes images for nudity and manages and publishes related state.
+///
+/// > Note: This object is a Swift actor because many images may be analyzed simultaneously, and the analysis state
+///         cache needs to be read from and written to with isolated access.
 actor SensitiveContentController: FileDownloading {
     
     @Dependency(\.featureFlags) private var featureFlags
     
+    /// The state of analysis of content at a given file URL.
     enum AnalysisState: Equatable {
+        /// The content is currently being analyzed by the system.
         case analyzing
+        /// The content has been analyzed. The associated Bool indicates whether the content has been deemed sensitive.
         case analyzed(Bool) // true == sensitive
-        case allowed        // user has okay'ed this content already
+        /// The content has been explicitly allowed by the user.
+        case allowed
         
         var shouldObfuscate: Bool {
             switch self {
@@ -53,46 +50,49 @@ actor SensitiveContentController: FileDownloading {
     
     private let analyzer = SCSensitivityAnalyzer()
     
+    /// Indicates whether sensitivity analysis can be performed.
     nonisolated var isSensitivityAnalysisEnabled: Bool {
         analyzer.analysisPolicy != .disabled
     }
     
-    @discardableResult
-    func shouldObfuscateContent(atURL url: URL) async -> Bool {
-        assert(!url.isFileURL)
-        
+    /// Analyzes content at the provided URL for nudity.
+    /// - Parameter url: The URL to get the content from.
+    func analyzeContent(atURL url: URL) async {
         guard isSensitivityAnalysisEnabled && url.isImage else {
-            return false
+            return  // the content cannot be analyzed
         }
         
-        if let analysisState = cache[url.absoluteString] {
-            return analysisState.shouldObfuscate
+        if cache[url.absoluteString] != nil {
+            return  // the content is already being analyzed
         }
         
         do {
-            let tempFileURL = try await file(byDownloadingFrom: url)
-            
             #if DEBUG
             let shouldOverrideAnalyzer = featureFlags.isEnabled(.sensitiveContentIncoming)
             if shouldOverrideAnalyzer {
                 try await Task.sleep(nanoseconds: 1 * 1_000_000_000)    // simulate time to analyze
-                updateState(for: url, to: .analyzed(true))
-                return true
+                updateState(.analyzed(true), for: url)
+                return
             }
             #endif
             
-            let result = try await analyzer.analyzeImage(at: tempFileURL)
-            updateState(for: url, to: .analyzed(result.isSensitive))
-            return result.isSensitive
+            let fileURLToAnalyze = url.isFileURL ? url : try await file(byDownloadingFrom: url)
+            let result = try await analyzer.analyzeImage(at: fileURLToAnalyze)
+            updateState(.analyzed(result.isSensitive), for: url)
         } catch {
-            return false
+            print("⚠️ SensitiveContentController: Failed to analyze content at \(url): \(error)")
         }
     }
     
+    /// Marks content at a provided URL as allowed.
+    /// - Parameter url: The URL to mark as allowed.
     func allowContent(at url: URL) {
-        updateState(for: url, to: .allowed)
+        updateState(.allowed, for: url)
     }
     
+    /// Analyzes content the user wants to upload for nudity.
+    /// - Parameter fileURL: The file URL to analyze.
+    /// - Returns: True if the content is sensitive.
     func shouldWarnUserUploadingFile(at fileURL: URL) async -> Bool {
         guard isSensitivityAnalysisEnabled else {
             return false
@@ -102,7 +102,7 @@ actor SensitiveContentController: FileDownloading {
         let shouldOverrideAnalyzer = featureFlags.isEnabled(.sensitiveContentOutgoing)
         if shouldOverrideAnalyzer {
             try? await Task.sleep(nanoseconds: 250_000_000) // simulate time to analyze
-            updateState(for: fileURL, to: .analyzed(true))
+            updateState(.analyzed(true), for: fileURL)
             return true
         }
         #endif
@@ -115,7 +115,10 @@ actor SensitiveContentController: FileDownloading {
         }
     }
     
-    func publisher(for url: URL) -> AnyPublisher<AnalysisState, Never> {
+    /// A publisher for a listener to monitor for analysis state changes for a given URL.
+    /// - Parameter url: The URL to monitor state on.
+    /// - Returns: The requested publisher.
+    func analysisStatePublisher(for url: URL) -> AnyPublisher<AnalysisState, Never> {
         if let publisher = publishers[url.absoluteString] {
             return publisher.eraseToAnyPublisher()
         } else {
@@ -126,12 +129,18 @@ actor SensitiveContentController: FileDownloading {
         }
     }
 
-    private func updateState(for url: URL, to newState: AnalysisState) {
-        cache[url.absoluteString] = newState
+    /// Updates the analysis state for a provided URL.
+    /// - Parameters:
+    ///   - url: The URL for which to update state.
+    ///   - newState: The state to update to.
+    ///
+    /// The state is cached locally and published to listeners.
+    private func updateState(_ state: AnalysisState, for url: URL) {
+        cache[url.absoluteString] = state
         if let publisher = publishers[url.absoluteString] {
-            publisher.send(newState)
+            publisher.send(state)
         } else {
-            let publisher = CurrentValueSubject<AnalysisState, Never>(newState)
+            let publisher = CurrentValueSubject<AnalysisState, Never>(state)
             publishers[url.absoluteString] = publisher
         }
     }
