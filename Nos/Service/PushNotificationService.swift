@@ -211,7 +211,6 @@ import Combine
                     let firstPubkey = followPubkeys.first,
                     let publicKey = PublicKey.build(npubOrHex: firstPubkey) {
                     Task { @MainActor in
-                        self.router.selectedTab = .notifications
                         self.router.pushAuthor(id: publicKey.hex)
                     }
                 }
