@@ -130,23 +130,58 @@ fileprivate struct GalleryIndexView: View {
     private let secondaryFill = Color.galleryIndexDotSecondary
 
     /// The scale of the circles representing tabs that aren't selected, relative to `circleSize`.
-    private let smallScale: CGFloat = 0.75
+    private let smallScale: CGFloat = 0.5
+
+    /// The maximum distance (in pages) from the selected index for visible circles.
+    /// Circles outside this range are not displayed.
+    private let maxDistance = 6
 
     var body: some View {
         HStack(spacing: circleSpacing) {
             ForEach(0..<numberOfPages, id: \.self) { index in
-                Circle()
-                    .fill(currentIndex == index ? AnyShapeStyle(primaryFill) : AnyShapeStyle(secondaryFill))
-                    .scaleEffect(currentIndex == index ? 1 : smallScale)
-                    .frame(width: circleSize, height: circleSize)
-                    .transition(AnyTransition.opacity.combined(with: .scale))
-                    .id(index)
+                if shouldShowIndex(index) {
+                    Circle()
+                        .fill(currentIndex == index ? AnyShapeStyle(primaryFill) : AnyShapeStyle(secondaryFill))
+                        .scaleEffect(scaleFor(index))
+                        .frame(width: circleSize, height: circleSize)
+                        .transition(AnyTransition.opacity.combined(with: .scale))
+                        .id(index)
+                }
             }
         }
         .padding(8.0)
         .background(
             Color.galleryIndexViewBackground.cornerRadius(16.0)
         )
+    }
+
+    /// Determines whether a given index should be displayed in the view.
+    ///
+    /// - Parameter index: The index of the page to evaluate.
+    /// - Returns: `true` if the index is within `maxDistance` of the `currentIndex`; otherwise, `false`.
+    private func shouldShowIndex(_ index: Int) -> Bool {
+        ((currentIndex - maxDistance)...(currentIndex + maxDistance)).contains(index)
+    }
+
+    /// Calculates the scale factor for a circle at a given index.
+    ///
+    /// - Parameter index: The index of the page to evaluate.
+    /// - Returns: A scale factor based on the distance from `currentIndex`.
+    private func scaleFor(_ index: Int) -> CGFloat {
+        // Show all circles at full size if there are 6 or fewer pages
+        if numberOfPages <= 6 {
+            return 1.0
+        }
+
+        // Calculate the distance from the selected page
+        let distanceFromCenter = abs(index - currentIndex)
+
+        // Scale circles based on distance, shrinking to `smallScale` at max distance
+        let scaleRange = 1.0 - smallScale
+        let scaleFactor = 1.0 - (CGFloat(distanceFromCenter) / CGFloat(maxDistance)) * scaleRange
+
+        // Prevent scale from dropping below `smallScale`
+        return max(smallScale, scaleFactor)
     }
 }
 
