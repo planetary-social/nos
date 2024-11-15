@@ -129,9 +129,9 @@ extension Event {
 
     /// A request for all events that responded to a specific note.
     ///
-    /// - Parameter noteIdentifier: ID of the note to retrieve replies for.
+    /// - Parameter noteID: ID of the note to retrieve replies for.
     ///
-    /// Intented to be used primarily to compute the number of replies and for
+    /// Intended to be used primarily to compute the number of replies and for
     /// building a set of author avatars.
     @nonobjc public class func replies(to noteID: RawEventID) -> NSFetchRequest<Event> {
         let format = """
