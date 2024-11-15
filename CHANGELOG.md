@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Release Notes
 - Fix typo in minimum age warning
 - Fix crash when tapping Post button on macOS. [#1687](https://github.com/planetary-social/nos/issues/1687)
+- Fix galleries expand past the width of the screen when the links are many. [#24](https://github.com/verse-pbc/issues/issues/24)
 
 ### Internal Changes
 
