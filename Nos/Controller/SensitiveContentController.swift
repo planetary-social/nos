@@ -68,7 +68,7 @@ actor SensitiveContentController: FileDownloading {
         
         do {
             #if DEBUG
-            let shouldOverrideAnalyzer = featureFlags.isEnabled(.sensitiveContentIncoming)
+            let shouldOverrideAnalyzer = featureFlags.isEnabled(.sensitiveContentFlagAllAsSensitive)
             if shouldOverrideAnalyzer {
                 try await Task.sleep(nanoseconds: 1 * 1_000_000_000)    // simulate time to analyze
                 updateState(.analyzed(true), for: url)
@@ -99,7 +99,7 @@ actor SensitiveContentController: FileDownloading {
         }
         
         #if DEBUG
-        let shouldOverrideAnalyzer = featureFlags.isEnabled(.sensitiveContentOutgoing)
+        let shouldOverrideAnalyzer = featureFlags.isEnabled(.sensitiveContentFlagAllAsSensitive)
         if shouldOverrideAnalyzer {
             try? await Task.sleep(nanoseconds: 250_000_000) // simulate time to analyze
             updateState(.analyzed(true), for: fileURL)

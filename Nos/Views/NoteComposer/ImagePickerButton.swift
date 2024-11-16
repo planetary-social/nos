@@ -3,7 +3,10 @@ import SwiftUI
 import Dependencies
 
 struct ImagePickerButton<Label>: View where Label: View {
-
+    
+    @Dependency(\.analytics) private var analytics
+    @Dependency(\.featureFlags) private var featureFlags
+    
     /// The device to be used initially when the user chooses to use the camera.
     let cameraDevice: UIImagePickerController.CameraDevice
     /// The types of content the user can choose.
@@ -28,8 +31,6 @@ struct ImagePickerButton<Label>: View where Label: View {
     /// Source used by ImagePicker when opening it
     @State
     private var imagePickerSource: UIImagePickerController.SourceType?
-    
-    @Dependency(\.analytics) private var analytics
     
     @EnvironmentObject private var router: Router
 
@@ -158,10 +159,14 @@ struct ImagePickerButton<Label>: View where Label: View {
             if let url {
                 analytics.selectedImage()
                 
-                let shouldWarn = await SensitiveContentController.shared.shouldWarnUserUploadingFile(at: url)
-                if shouldWarn {
-                    selectedContentURL = url
-                    showSensitiveContentAlert = true
+                if featureFlags.isEnabled(.sensitiveContentAnalysisEnabled) {
+                    let shouldWarn = await SensitiveContentController.shared.shouldWarnUserUploadingFile(at: url)
+                    if shouldWarn {
+                        selectedContentURL = url
+                        showSensitiveContentAlert = true
+                    } else {
+                        onCompletion(url)
+                    }
                 } else {
                     onCompletion(url)
                 }

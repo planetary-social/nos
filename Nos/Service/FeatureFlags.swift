@@ -9,8 +9,8 @@ enum FeatureFlag {
     ///         for the new flow.
     case newOnboardingFlow
     
-    case sensitiveContentOutgoing
-    case sensitiveContentIncoming
+    case sensitiveContentAnalysisEnabled
+    case sensitiveContentFlagAllAsSensitive
 }
 
 /// The set of feature flags used by the app.
@@ -35,8 +35,9 @@ protocol FeatureFlags {
     /// Feature flags and their values.
     private var featureFlags: [FeatureFlag: Bool] = [
         .newOnboardingFlow: true,
-        .sensitiveContentOutgoing: false,
-        .sensitiveContentIncoming: false
+        
+        .sensitiveContentAnalysisEnabled: true,
+        .sensitiveContentFlagAllAsSensitive: false
     ]
 
     /// Returns true if the feature is enabled.
