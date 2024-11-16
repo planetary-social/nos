@@ -7,7 +7,7 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
     let sourceType: UIImagePickerController.SourceType
     let mediaTypes: [UTType]
     let cameraDevice: UIImagePickerController.CameraDevice
-    let onCompletion: ((URL?) -> Void)
+    let onCompletion: (URL?) -> Void
     
     init(
         sourceType: UIImagePickerController.SourceType = .photoLibrary,
@@ -61,16 +61,18 @@ struct ImagePickerUIViewController: UIViewControllerRepresentable {
             _ picker: UIImagePickerController,
             didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
         ) {
-            if let videoURL = info[.mediaURL] as? URL {
-                onCompletion(videoURL)
-            } else if let image = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage,
-                let imageData = image.jpegData(compressionQuality: 1.0) {
-                let url = saveImage(imageData)
-                onCompletion(url)
-            } else if let imageURL = info[.imageURL] as? URL {
-                onCompletion(imageURL)
-            } else {
-                onCompletion(nil)
+            DispatchQueue.main.async {
+                if let videoURL = info[.mediaURL] as? URL {
+                    self.onCompletion(videoURL)
+                } else if let image = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage,
+                    let imageData = image.jpegData(compressionQuality: 1.0) {
+                    let url = self.saveImage(imageData)
+                    self.onCompletion(url)
+                } else if let imageURL = info[.imageURL] as? URL {
+                    self.onCompletion(imageURL)
+                } else {
+                    self.onCompletion(nil)
+                }
             }
         }
 

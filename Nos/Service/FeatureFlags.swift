@@ -8,6 +8,9 @@ enum FeatureFlag {
     /// - Note: See [Figma](https://www.figma.com/design/6MeujQUXzC1AuviHEHCs0J/Nos---In-Progress?node-id=9221-8504)
     ///         for the new flow.
     case newOnboardingFlow
+    
+    case sensitiveContentAnalysisEnabled
+    case sensitiveContentFlagAllAsSensitive
 }
 
 /// The set of feature flags used by the app.
@@ -31,7 +34,10 @@ protocol FeatureFlags {
 
     /// Feature flags and their values.
     private var featureFlags: [FeatureFlag: Bool] = [
-        .newOnboardingFlow: true
+        .newOnboardingFlow: true,
+        
+        .sensitiveContentAnalysisEnabled: true,
+        .sensitiveContentFlagAllAsSensitive: false
     ]
 
     /// Returns true if the feature is enabled.

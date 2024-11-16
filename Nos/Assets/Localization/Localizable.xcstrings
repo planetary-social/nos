@@ -3361,6 +3361,17 @@
         }
       }
     },
+    "contentWarning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Content Warning"
+          }
+        }
+      }
+    },
     "contentWarningExplanation" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -16919,6 +16930,17 @@
         }
       }
     },
+    "sensitiveContentUploadWarning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The media you've selected may contain nudity. Nos prefers to foster a healthy and safe online community. Please confirm that you’re comfortable with this content being posted online."
+          }
+        }
+      }
+    },
     "settings" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -18914,6 +18936,17 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "取消靜音"
+          }
+        }
+      }
+    },
+    "upload" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upload"
           }
         }
       }
