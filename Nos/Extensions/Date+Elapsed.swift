@@ -44,7 +44,7 @@ extension Date {
             let dateFormatter = DateFormatter()
             dateFormatter.timeStyle = .none
             dateFormatter.dateFormat = DateFormatter.dateFormat(
-                fromTemplate: "MMMMd",
+                fromTemplate: "MMM d",
                 options: 0,
                 locale: calendar.locale
             )
