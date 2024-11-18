@@ -144,7 +144,9 @@ struct NoteCard: View {
                                 ReplyButton(note: note, replyAction: replyAction)
                             }
                         }
-                        .padding(5)
+                        .padding(.leading, 13)
+                        .padding(.trailing, 5)
+                        .padding(.vertical, 5)
                         .allowsHitTesting(!note.isPreview)
                     }
                 }
