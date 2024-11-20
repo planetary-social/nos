@@ -17,6 +17,7 @@ extension Author {
     @NSManaged public var name: String?
     @NSManaged public var website: String?
     @NSManaged public var nip05: String?
+    @NSManaged public var pronouns: String?
     @NSManaged public var profilePhotoURL: URL?
     @NSManaged public var rawMetadata: Data?
     @NSManaged public var events: Set<Event>
