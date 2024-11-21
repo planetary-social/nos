@@ -153,6 +153,7 @@
 		04C9D7992CC29EDD00EAAD4D /* FeaturedAuthor+Cohort5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C9D7982CC29EDD00EAAD4D /* FeaturedAuthor+Cohort5.swift */; };
 		04F16AA72CBDBD91003AD693 /* DeleteConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F16AA62CBDBD91003AD693 /* DeleteConfirmationView.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
+		2D3C71B32CEE8EDC00625BCB /* ProfileEditTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D3C71B22CEE8EDC00625BCB /* ProfileEditTests.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
 		3A1C296F2B2A537C0020B753 /* Moderation.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */; };
 		3A67449C2B294712002B8DE0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A67449B2B294712002B8DE0 /* Localizable.xcstrings */; };
@@ -713,6 +714,7 @@
 		04F16AA62CBDBD91003AD693 /* DeleteConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteConfirmationView.swift; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D3C71A52CEE6F7100625BCB /* Nos 20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 20.xcdatamodel"; sourceTree = "<group>"; };
+		2D3C71B22CEE8EDC00625BCB /* ProfileEditTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditTests.swift; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
 		3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Moderation.xcstrings; sourceTree = "<group>"; };
 		3A67449B2B294712002B8DE0 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -1223,6 +1225,7 @@
 			isa = PBXGroup;
 			children = (
 				035729BB2BE416BD005FEE85 /* EventObservationTests.swift */,
+				2D3C71B22CEE8EDC00625BCB /* ProfileEditTests.swift */,
 				038196F32CA36773002A94E3 /* Components */,
 			);
 			path = Views;
@@ -2634,6 +2637,7 @@
 				C96D39282B61B6D200D3D0A1 /* RawNostrID.swift in Sources */,
 				C9B678E229EEC41000303F33 /* SocialGraphCache.swift in Sources */,
 				C9A8015F2BD0177D006E29B2 /* ReportPublisher.swift in Sources */,
+				2D3C71B32CEE8EDC00625BCB /* ProfileEditTests.swift in Sources */,
 				3AAB61B52B24CD0000717A07 /* Date+ElapsedTests.swift in Sources */,
 				C936B45F2A4CAF2B00DF1EB9 /* AppDelegate.swift in Sources */,
 				C96D391B2B61AFD500D3D0A1 /* RawNostrIDTests.swift in Sources */,
