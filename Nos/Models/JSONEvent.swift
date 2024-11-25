@@ -193,7 +193,7 @@ struct MetadataEventJSON: Codable {
             "about": about ?? "",
             "website": website ?? "",
             "picture": picture ?? "",
-            "prnouns": pronouns ?? "",
+            "pronouns": pronouns ?? "",
         ]
     }
 }
