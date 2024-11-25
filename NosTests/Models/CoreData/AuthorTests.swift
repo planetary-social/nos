@@ -269,7 +269,7 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertEqual(authors, [eve, carl, bob])
     }
     
-        /// Test that the `pronouns` field can be set and saved correctly in Core Data.
+    /// Test that the `pronouns` field can be set and saved correctly in Core Data.
     func testSetPronouns() throws {
         let context = persistenceController.viewContext
         let author = try Author.findOrCreate(by: "testAuthor", context: context)
