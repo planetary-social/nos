@@ -50,13 +50,13 @@ struct DeleteConfirmationView: View {
     /// Creates the title and message view for the delete confirmation.
     private func titleMessageView() -> some View {
         VStack(spacing: 0) {
-            Text(String(localized: "deleteAccount"))
+            Text("deleteAccount")
                 .font(.headline)
                 .fontWeight(.bold)
                 .padding(.bottom, 10)
                 .padding(.top, 18)
 
-            Text(String(localized: "deleteAccountMessage"))
+            Text("deleteAccountMessage")
                 .font(.footnote)
                 .fixedSize(horizontal: false, vertical: true)
                 .multilineTextAlignment(.center)
@@ -101,7 +101,7 @@ struct DeleteConfirmationView: View {
         onCancel: @escaping () -> Void
     ) -> some View {
         HStack {
-            Button(String(localized: "cancel")) {
+            Button("cancel") {
                 onCancel()
             }
             .frame(maxWidth: .infinity)
@@ -111,7 +111,7 @@ struct DeleteConfirmationView: View {
                 .frame(width: 1, height: 50)
                 .background(Color.actionSheetDivider)
 
-            Button(String(localized: "delete")) {
+            Button("delete") {
                 onDelete()
             }
             .frame(maxWidth: .infinity)

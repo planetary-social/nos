@@ -191,7 +191,7 @@ struct NoteComposer: View {
                 }
             }
             .background(Color.appBg)
-            .navigationBarTitle(String(localized: "newNote"), displayMode: .inline)
+            .navigationBarTitle("newNote", displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
             .toolbar {

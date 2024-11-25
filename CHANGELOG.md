@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix tapping follower notification not opening follower profile. [#11](https://github.com/verse-pbc/issues/issues/11)
 
 ### Internal Changes
+- minor strings simplifications
 
 ## [1.0.1] - 2024-10-28Z
 
