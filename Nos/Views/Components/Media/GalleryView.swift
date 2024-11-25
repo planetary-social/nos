@@ -132,9 +132,8 @@ fileprivate struct GalleryIndexView: View {
     /// The scale of the circles representing tabs that aren't selected, relative to `circleSize`.
     private let smallScale: CGFloat = 0.5
 
-    /// The maximum distance (in pages) from the selected index for visible circles.
-    /// Circles outside this range are not displayed.
-    private let maxDistance = 6
+    /// The maximum number of circles to display.
+    private let maxNumberOfCircles = 7
 
     var body: some View {
         HStack(spacing: circleSpacing) {
@@ -160,7 +159,34 @@ fileprivate struct GalleryIndexView: View {
     /// - Parameter index: The index of the page to evaluate.
     /// - Returns: `true` if the index is within `maxDistance` of the `currentIndex`; otherwise, `false`.
     private func shouldShowIndex(_ index: Int) -> Bool {
-        ((currentIndex - maxDistance)...(currentIndex + maxDistance)).contains(index)
+        if numberOfPages <= maxNumberOfCircles {
+            return true
+        }
+
+        let expectedRange = currentIndex - maxNumberOfCircles / 2 ... currentIndex + maxNumberOfCircles / 2
+        let realRange: ClosedRange<Int>
+        if expectedRange.lowerBound < 0 {
+            realRange = 0...expectedRange.upperBound - expectedRange.lowerBound
+        } else if expectedRange.upperBound >= numberOfPages {
+            realRange = expectedRange.lowerBound - (expectedRange.upperBound - numberOfPages + 1)...numberOfPages - 1
+        } else {
+            realRange = expectedRange
+        }
+
+        return realRange.contains(index)
+    }
+
+    private func displayRange() -> ClosedRange<Int> {
+        let expectedRange = currentIndex - maxNumberOfCircles / 2 ... currentIndex + maxNumberOfCircles / 2
+        let realRange: ClosedRange<Int>
+        if expectedRange.lowerBound < 0 {
+            realRange = 0...expectedRange.upperBound - expectedRange.lowerBound
+        } else if expectedRange.upperBound >= numberOfPages {
+            realRange = expectedRange.lowerBound - (expectedRange.upperBound - numberOfPages + 1)...numberOfPages - 1
+        } else {
+            realRange = expectedRange
+        }
+        return realRange
     }
 
     /// Calculates the scale factor for a circle at a given index.
@@ -169,19 +195,29 @@ fileprivate struct GalleryIndexView: View {
     /// - Returns: A scale factor based on the distance from `currentIndex`.
     private func scaleFor(_ index: Int) -> CGFloat {
         // Show all circles at full size if there are 6 or fewer pages
-        if numberOfPages <= 6 {
+        if numberOfPages <= maxNumberOfCircles {
             return 1.0
         }
 
-        // Calculate the distance from the selected page
-        let distanceFromCenter = abs(index - currentIndex)
-
-        // Scale circles based on distance, shrinking to `smallScale` at max distance
-        let scaleRange = 1.0 - smallScale
-        let scaleFactor = 1.0 - (CGFloat(distanceFromCenter) / CGFloat(maxDistance)) * scaleRange
-
-        // Prevent scale from dropping below `smallScale`
-        return max(smallScale, scaleFactor)
+        let displayRange = displayRange()
+        if index == currentIndex {
+            return 1.0
+        }
+        if displayRange.lowerBound > 0 {
+            if index == displayRange.lowerBound {
+                return 0.5
+            } else if index == displayRange.lowerBound + 1 {
+                return 0.75
+            }
+        }
+        if displayRange.upperBound < numberOfPages - 1 {
+            if index == displayRange.upperBound {
+                return 0.5
+            } else if index == displayRange.upperBound - 1 {
+                return 0.75
+            }
+        }
+        return 1.0
     }
 }
 
