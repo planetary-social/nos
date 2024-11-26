@@ -11,11 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Release Notes
-- Fix typo in minimum age warning
-- Fix crash when tapping Post button on macOS. [#1687](https://github.com/planetary-social/nos/issues/1687)
 - Fix galleries expand past the width of the screen when the links are many. [#24](https://github.com/verse-pbc/issues/issues/24)
 
+## [1.0.2] - 2024-11-26Z
+
+### Release Notes
+- Fix typo in minimum age warning
+- Fix crash when tapping Post button on macOS. [#1687](https://github.com/planetary-social/nos/issues/1687)
+- Fix tapping follower notification not opening follower profile. [#11](https://github.com/verse-pbc/issues/issues/11)
+
 ### Internal Changes
+- minor strings simplifications
 
 ## [1.0.1] - 2024-10-28Z
 

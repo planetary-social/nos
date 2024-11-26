@@ -44,7 +44,7 @@ struct SettingsView: View {
                         .foregroundColor(.primaryTxt)
                         .font(.clarity(.regular, textStyle: .body))
                         .lineLimit(1)
-                        .accessibilityLabel(Text("privateKey"))
+                        .accessibilityLabel("privateKey")
 
                     Spacer()
 
