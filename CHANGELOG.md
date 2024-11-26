@@ -10,11 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.2] - 2024-11-26Z
-
 ### Release Notes
 - Added support for user setting and displaying pronouns. 
 - Added display of website urls for user profiles. 
+
+## [1.0.2] - 2024-11-26Z
+
+### Release Notes
 - Fix typo in minimum age warning
 - Fix crash when tapping Post button on macOS. [#1687](https://github.com/planetary-social/nos/issues/1687)
 - Fix tapping follower notification not opening follower profile. [#11](https://github.com/verse-pbc/issues/issues/11)
