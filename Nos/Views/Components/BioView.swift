@@ -117,7 +117,7 @@ struct BioView: View {
         (author.website?.isEmpty == false) ||
         (intrinsicSize.height > truncatedSize.height)
     }
-    
+
     fileprivate struct IntrinsicSizePreferenceKey: PreferenceKey {
         static var defaultValue: CGSize = .zero
         static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
