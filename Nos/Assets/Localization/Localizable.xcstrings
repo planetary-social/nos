@@ -699,6 +699,12 @@
             "state" : "translated",
             "value" : "You've finished setting up your account!"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계정 설정이 완료되었습니다!"
+          }
         }
       }
     },
@@ -1066,6 +1072,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you over 16 years old?"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "만 16세 이상인가요?"
           }
         }
       }
@@ -2287,6 +2299,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Crea tu red!"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "당신의 네트워크를 구축하세요"
           }
         }
       }
@@ -3838,6 +3856,12 @@
             "state" : "translated",
             "value" : "Copy private key"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인키 복사"
+          }
         }
       }
     },
@@ -3849,6 +3873,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copy public key"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공개키 복사"
           }
         }
       }
@@ -4134,6 +4164,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create Account"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계정 생성"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skapa konto"
           }
         }
       }
@@ -5317,6 +5359,18 @@
             "state" : "translated",
             "value" : "Display Name"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "표시 이름"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visningsnamn"
+          }
         }
       }
     },
@@ -5328,6 +5382,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your display name"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "표시 이름"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ditt visningsnamn"
           }
         }
       }
@@ -6360,6 +6426,12 @@
             "state" : "translated",
             "value" : "Español"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "스페인어"
+          }
         }
       }
     },
@@ -6370,6 +6442,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Food"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "음식"
           }
         }
       }
@@ -6499,6 +6577,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lifestyle"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "생활"
           }
         }
       }
@@ -6688,6 +6772,12 @@
             "state" : "translated",
             "value" : "NZ / Australia"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "뉴질랜드/호주"
+          }
         }
       }
     },
@@ -6698,6 +6788,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Photography"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사진"
           }
         }
       }
@@ -6710,6 +6806,12 @@
             "state" : "translated",
             "value" : "Politics"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "정치"
+          }
         }
       }
     },
@@ -6721,6 +6823,12 @@
             "state" : "translated",
             "value" : "Random"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "랜덤"
+          }
         }
       }
     },
@@ -6731,6 +6839,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sci-Fi"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공상과학"
           }
         }
       }
@@ -7068,6 +7182,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Encuentra gente"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사람 찾기"
           }
         }
       }
@@ -7749,24 +7869,6 @@
             "state" : "translated",
             "value" : "Don't Block"
           }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No Silenciar"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "뮤트하지 않기"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "不静音"
-          }
         }
       }
     },
@@ -7889,24 +7991,6 @@
             "state" : "translated",
             "value" : "Block This User?"
           }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "¿Silenciar a este usuario?"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "이 유저를 뮤트할건가요?"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "静音此用户？"
-          }
         }
       }
     },
@@ -7946,24 +8030,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Block"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Silenciar"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "뮤트"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "静音"
           }
         }
       }
@@ -8010,6 +8076,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reportar usuario"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "플래그 유저"
           }
         },
         "zh-Hans" : {
@@ -10244,6 +10316,12 @@
             "state" : "translated",
             "value" : "Iniciar sesión con mi cuenta"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내 계정으로 로그인하기"
+          }
         }
       }
     },
@@ -10659,76 +10737,10 @@
     "mute" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stummschalten"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Block"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Silenciar"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "بی‌صدا"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Silence"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "ミュート"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "뮤트"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dempen"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tysta"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Nyamazisha"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "静音"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "靜音"
           }
         }
       }
@@ -10736,76 +10748,10 @@
     "muted" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stumm geschaltet"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Blocked"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Silenciado"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "بی صدا شده"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "En sourdine"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "ミュート"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "뮤트됨"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Gedempt"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tystad"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Imenyamazishwa"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "已静音"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "已靜音"
           }
         }
       }
@@ -10813,70 +10759,10 @@
     "mutedUsers" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stummgeschaltete Benutzer"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Blocked Users"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Usuarios Silenciados"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "کاربران بی صدا شده"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Utilisateurs en sourdine"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "ミュートしたユーザー"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "뮤트한 사용자"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tystade användare"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Watumiaji Walionyamazishwa"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "已静音的用户"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "已靜音的用戶"
           }
         }
       }
@@ -10884,76 +10770,10 @@
     "mutePrompt" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Möchtest du %@ stummschalten?"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Would you like to block %@?"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "¿Te gustaría silenciar a %@?"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "می خواهید %@ را بیصدا کنید؟"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Voulez-vous mettre en sourdine %@?"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%@ をミュートしますか？"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%@를 뮤트하실건가요?"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Wil je %@ dempen?"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Vill du tysta %@?"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Je, ungependa kunyamazisha %@?"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "你是否想要静音 %@？"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "你是否想要靜音 %@？"
           }
         }
       }
@@ -10961,82 +10781,10 @@
     "muteUser" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Mute"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Block User"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Silenciar Usuario"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "بی صدا کردن کاربر"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Mettre en sourdine"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "ユーザーをミュートする"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "뮤트하기"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Demp gebruiker"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Mutar"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tysta användare"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Nyamazisha Mtumiaji"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "静音用户"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "靜音用戶"
           }
         }
       }
@@ -11635,6 +11383,12 @@
             "state" : "translated",
             "value" : "Soy nuevo en Nostr"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nostr에 처음입니다"
+          }
         }
       }
     },
@@ -11882,6 +11636,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "utilisateur@serveur.com"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "user@server.com"
           }
         },
         "zh-Hans" : {
@@ -13351,94 +13111,10 @@
     "notOldEnoughTitle" : {
       "extractionState" : "manual",
       "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "عذراً، لكن التطبيق ليس متاح لك بعد"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entschuldigung, aber Nos ist noch nicht für dich."
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sorry, but Nos is not for you yet."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lo sentimos, pero Nos aún no es para ti."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "متاسفیم، اما نوس هنوز مناسب شما نیست،"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désolé, mais Nos n'est pas pour vous pour l'instant."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "申し訳ありませんが、Nos (ノス) はあなた向けではありません"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "미안하지만, Nos는 아직 사용불가에요."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sorry, maar Nos is nog niet iets voor jou."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desculpa, mas o Nos não é para você ainda."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tyvärr, men Nos är inte för er ännu."
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pole, lakini Nos bado sio yako."
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ขอโทษที แต่ Nos ยังไม่เหมาะกับนายในตอนนี้"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "对不起，但你还不能使用Nos。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "對不起，但你還不能使用 Nos。"
           }
         }
       }
@@ -13964,7 +13640,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your **@username** is your identity in the Nos community. \nChoose a name that reflects you or your organization. Make it memorable and distinct!"
+            "value" : "Your **@username** is your identity in the Nos community.\u2028\nChoose a name that reflects you or your organization. Make it memorable and distinct!"
           }
         },
         "es" : {
@@ -14293,6 +13969,12 @@
             "state" : "translated",
             "value" : "Private Key"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인키"
+          }
         }
       }
     },
@@ -14301,6 +13983,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(nsec)"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "(nsec)"
@@ -14779,6 +14467,12 @@
             "state" : "translated",
             "value" : "Public Key"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공개키"
+          }
         }
       }
     },
@@ -14787,6 +14481,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(npub)"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "(npub)"
@@ -15358,6 +15058,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "votrerelais.com"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yourrelay.com"
           }
         },
         "nl" : {
@@ -17679,6 +17385,12 @@
             "state" : "translated",
             "value" : "Skip for now"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일단 건너뛰기"
+          }
         }
       }
     },
@@ -18849,82 +18561,10 @@
     "unmuteUser" : {
       "extractionState" : "manual",
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stummschaltung aufheben"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Un-Block"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Desilenciar"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "باصدا کردن"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Démuseler"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "ミュート解除"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "뮤트 해제"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dempen opheffen"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Desfazer mutado"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Av-tysta"
-          }
-        },
-        "sw" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Acha Kunyamazisha"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "取消静音"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "取消靜音"
           }
         }
       }
@@ -19236,7 +18876,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Well done, you've successfully claimed your **@username**! \nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
+            "value" : "Well done, you've successfully claimed your **@username**!\u2028\nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
           }
         },
         "es" : {
@@ -19298,6 +18938,12 @@
             "state" : "translated",
             "value" : "Username"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "유저명"
+          }
         }
       }
     },
@@ -19306,6 +18952,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(NIP-05)"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "(NIP-05)"
@@ -19322,6 +18974,12 @@
             "state" : "translated",
             "value" : "This username is not available."
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 이름은 사용할 수 없습니다."
+          }
         }
       }
     },
@@ -19333,6 +18991,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "username"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "유저명"
           }
         }
       }
@@ -20048,6 +19712,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Bienvenido a tu feed!"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "피드에 오신 것을 환영합니다!"
           }
         }
       }
