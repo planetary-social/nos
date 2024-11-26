@@ -19,7 +19,21 @@ struct BioSheet: View {
         )
         return bio
     }
-
+    
+    private var pronouns: String? {
+        guard let pronouns = author.pronouns, !pronouns.isEmpty else {
+            return nil
+        }
+        return pronouns
+    }
+    
+    private var website: String? {
+        guard let website = author.website, !website.isEmpty else {
+            return nil
+        }
+        return website
+    }
+    
     var body: some View {
         ScrollView(.vertical) {
             VStack(alignment: .leading, spacing: 13) {
@@ -43,7 +57,48 @@ struct BioSheet: View {
                 if author.hasMostrNIP05 {
                     ActivityPubBadgeView(author: author)
                 }
-
+                
+                if let website {
+                    Text("website")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Color.secondaryTxt)
+                        .lineSpacing(10)
+                        .shadow(
+                            color: Color.bioSheetShadow,
+                            radius: 4,
+                            x: 0,
+                            y: 4
+                        )
+                        .padding(.top, 34)
+                    Link(destination: URL(string: website) ?? URL(string: "https://nos.social")!,
+                         label: {
+                        Text(website)
+                            .textSelection(.enabled)
+                            .font(.body)
+                            .foregroundStyle(Color.primaryTxt)
+                            .tint(.accent)
+                    })
+                }
+                
+                if let pronouns {
+                    Text("pronouns")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Color.secondaryTxt)
+                        .lineSpacing(10)
+                        .shadow(
+                            color: Color.bioSheetShadow,
+                            radius: 4,
+                            x: 0,
+                            y: 4
+                        )
+                        .padding(.top, 34)
+                    Text(pronouns)
+                        .textSelection(.enabled)
+                        .font(.body)
+                        .foregroundStyle(Color.primaryTxt)
+                        .tint(.accent)
+                }
+                
                 if let bio {
                     Text("bio")
                         .font(.subheadline.weight(.semibold))
