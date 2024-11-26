@@ -49,7 +49,6 @@ struct ProfileHeader: View {
         return false
     }
 
-
     private var knownFollowers: [Follow] {
         author.followers.filter {
             guard let source = $0.source else {
@@ -154,8 +153,6 @@ struct ProfileHeader: View {
 
                 divider
                     .padding(.top, shouldShowBio ? 0 : 16)
-                
-                
 
                 if let first = knownFollowers[safe: 0]?.source {
                     Button {

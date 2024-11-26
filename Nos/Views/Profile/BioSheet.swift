@@ -33,6 +33,18 @@ struct BioSheet: View {
         }
         return website
     }
+
+    private var websiteURL: URL? {
+        guard let website = author.website, !website.isEmpty, let url = URL(string: website) else {
+            return nil
+        }
+
+        guard let scheme = url.scheme, !scheme.isEmpty else {
+            return URL(string: "https://\(website)")
+        }
+
+        return url
+    }
     
     var body: some View {
         ScrollView(.vertical) {
@@ -70,14 +82,23 @@ struct BioSheet: View {
                             y: 4
                         )
                         .padding(.top, 34)
-                    Link(destination: URL(string: website) ?? URL(string: "https://nos.social")!,
-                         label: {
+
+                    if let websiteURL {
+                        Link(destination: websiteURL) {
+                            Text(website)
+                                .textSelection(.enabled)
+                                .font(.body)
+                                .foregroundStyle(Color.primaryTxt)
+                                .tint(.accent)
+                        }
+                        .underline()
+                    } else {
                         Text(website)
                             .textSelection(.enabled)
                             .font(.body)
                             .foregroundStyle(Color.primaryTxt)
                             .tint(.accent)
-                    })
+                    }
                 }
                 
                 if let pronouns {

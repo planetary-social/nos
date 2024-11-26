@@ -113,7 +113,7 @@ struct BioView: View {
     }
 
     private func updateShouldShowReadMore() {
-        shouldShowReadMore =    (author.pronouns?.isEmpty == false) ||
+        shouldShowReadMore = (author.pronouns?.isEmpty == false) ||
         (author.website?.isEmpty == false) ||
         (intrinsicSize.height > truncatedSize.height)
     }
