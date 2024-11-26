@@ -1622,6 +1622,7 @@
 			isa = PBXGroup;
 			children = (
 				5B29B58D2BEC392B008F6008 /* ActivityPubBadgeView.swift */,
+				C913DA092AEAF52B003BDD6D /* NoteWarningController.swift */,
 				5B29B5832BEAA0D7008F6008 /* BioSheet.swift */,
 				A32B6C7229A6BE9B00653FF5 /* FollowsView.swift */,
 				5BFF66B52A58A8A000AA79DD /* MutesView.swift */,
@@ -1972,7 +1973,6 @@
 				0357299A2BE415E5005FEE85 /* ContentWarningController.swift */,
 				C913DA0B2AEB2EBF003BDD6D /* FetchRequestPublisher.swift */,
 				C993148C2C5BD8FC00224BA6 /* NoteEditorController.swift */,
-				C913DA092AEAF52B003BDD6D /* NoteWarningController.swift */,
 				C98CA9062B14FBBF00929141 /* PagedNoteDataSource.swift */,
 				C9DEBFD3298941000078B43A /* PersistenceController.swift */,
 				C97A1C8A29E45B4E009D9E8D /* RawEventController.swift */,
