@@ -288,7 +288,7 @@ final class AuthorTests: CoreDataTestCase {
         XCTAssertEqual(fetchedAuthor?.pronouns, pronouns, "The pronouns should match the saved value.")
     }
 
-        /// Test that the `pronouns` field can be retrieved correctly from Core Data.
+    /// Test that the `pronouns` field can be retrieved correctly from Core Data.
     func testGetPronouns() throws {
         let context = persistenceController.viewContext
         
