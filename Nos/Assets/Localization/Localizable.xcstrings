@@ -14352,6 +14352,17 @@
         }
       }
     },
+    "pronouns" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pronouns"
+          }
+        }
+      }
+    },
     "pubkey" : {
       "extractionState" : "manual",
       "localizations" : {

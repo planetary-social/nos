@@ -11,7 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Release Notes
-- Fix galleries expand past the width of the screen when the links are many. [#24](https://github.com/verse-pbc/issues/issues/24)
+- Fixed galleries expanding past the width of the screen when there are lots of links or images. [#24](https://github.com/verse-pbc/issues/issues/24)
+- Added support for user setting and displaying pronouns.
+- Added display of website urls for user profiles.
 
 ## [1.0.2] - 2024-11-26Z
 
