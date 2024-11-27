@@ -168,13 +168,13 @@ struct HomeFeedView: View {
 }
 
 #Preview {
-    var previewData = PreviewData()
+    @Previewable @State var previewData = PreviewData()
     
     func createTestData() {
         let user = previewData.alice
         let addresses = Relay.recommended
         addresses.forEach { address in
-            let relay = try? Relay.findOrCreate(by: address, context: previewData.previewContext)
+            let relay = try? Relay.findOrCreate(by: address, context: previewData.context)
             relay?.relayDescription = "A Nostr relay that aims to cultivate a healthy community."
             relay?.addToAuthors(user)
         }

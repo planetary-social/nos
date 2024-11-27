@@ -102,7 +102,7 @@ fileprivate enum AnalyticsKey: DependencyKey {
     static let previewValue = Analytics(mock: true)
 }
 
-fileprivate enum CurrentUserKey: DependencyKey {
+fileprivate enum CurrentUserKey: @preconcurrency DependencyKey {
     @MainActor static let liveValue = CurrentUser()
     @MainActor static let testValue = CurrentUser()
     @MainActor static let previewValue = CurrentUser()
@@ -112,7 +112,7 @@ fileprivate enum FileStorageAPIClientKey: DependencyKey {
     static var liveValue: any FileStorageAPIClient = NostrBuildAPIClient()
 }
 
-fileprivate enum RouterKey: DependencyKey {
+fileprivate enum RouterKey: @preconcurrency DependencyKey {
     @MainActor static let liveValue = Router()
     @MainActor static let testValue = Router()
     @MainActor static let previewValue = Router()
@@ -124,7 +124,7 @@ private enum RelayServiceKey: DependencyKey {
     static let previewValue: RelayService = MockRelayService()
 }
 
-fileprivate enum PushNotificationServiceKey: DependencyKey {
+fileprivate enum PushNotificationServiceKey: @preconcurrency DependencyKey {
     @MainActor static let liveValue = PushNotificationService()
     @MainActor static let testValue: PushNotificationService = MockPushNotificationService()
     @MainActor static let previewValue: PushNotificationService = MockPushNotificationService()
@@ -177,7 +177,7 @@ fileprivate enum FeatureFlagsKey: DependencyKey {
     static let previewValue: any FeatureFlags = MockFeatureFlags()
 }
 
-fileprivate enum KeychainKey: DependencyKey {
+fileprivate enum KeychainKey: @preconcurrency DependencyKey {
     @MainActor static let liveValue: Keychain = SystemKeychain()
     @MainActor static let testValue: Keychain = InMemoryKeychain()
     @MainActor static let previewValue: Keychain = InMemoryKeychain()

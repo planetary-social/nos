@@ -312,7 +312,7 @@ public class Event: NosManagedObject, VerifiableEvent {
             let data = try? JSONSerialization.data(withJSONObject: jsonRepresentation) else {
             return nil
         }
-        return String(decoding: data, as: UTF8.self)
+        return String(data: data, encoding: .utf8)
     }
     
     var codable: JSONEvent? {

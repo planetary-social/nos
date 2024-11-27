@@ -180,7 +180,7 @@ struct ComposerActionBar: View {
         do {
             startUploadingImage()
             let url = try await fileStorageAPIClient.upload(fileAt: imageURL, isProfilePhoto: false)
-            await editingController.append(url)
+            editingController.append(url)
             endUploadingImage()
         } catch {
             endUploadingImage()

@@ -20,8 +20,8 @@ final class EventTests: CoreDataTestCase {
         
         // Act
         let serializedData = try JSONSerialization.data(withJSONObject: event.serializedEventForSigning)
-        let actualString = String(decoding: serializedData, as: UTF8.self)
-        
+        let actualString = try XCTUnwrap(String(data: serializedData, encoding: .utf8))
+
         // Assert
         XCTAssertEqual(actualString, expectedString)
     }

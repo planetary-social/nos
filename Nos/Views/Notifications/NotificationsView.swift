@@ -127,7 +127,7 @@ struct NotificationsView_Previews: PreviewProvider {
     
     static var previewData = PreviewData()
     
-    static var previewContext = previewData.previewContext
+    static var previewContext = previewData.context
     
     static var alice: Author {
         previewData.alice
