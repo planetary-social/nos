@@ -154,7 +154,6 @@
 		04F16AA72CBDBD91003AD693 /* DeleteConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F16AA62CBDBD91003AD693 /* DeleteConfirmationView.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
-		2DB44FD82CF66BAD000A6860 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95D68AC299E721700429F86 /* ProfileView.swift */; };
 		3A1C296F2B2A537C0020B753 /* Moderation.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */; };
 		3A67449C2B294712002B8DE0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A67449B2B294712002B8DE0 /* Localizable.xcstrings */; };
 		3AAB61B52B24CD0000717A07 /* Date+ElapsedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAB61B42B24CD0000717A07 /* Date+ElapsedTests.swift */; };
@@ -2638,7 +2637,6 @@
 				3AAB61B52B24CD0000717A07 /* Date+ElapsedTests.swift in Sources */,
 				C936B45F2A4CAF2B00DF1EB9 /* AppDelegate.swift in Sources */,
 				C96D391B2B61AFD500D3D0A1 /* RawNostrIDTests.swift in Sources */,
-				2DB44FD82CF66BAD000A6860 /* ProfileView.swift in Sources */,
 				035729AD2BE4167E005FEE85 /* EventTests.swift in Sources */,
 				035729B32BE4167E005FEE85 /* TLVElementTests.swift in Sources */,
 				C9C2B77D29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
