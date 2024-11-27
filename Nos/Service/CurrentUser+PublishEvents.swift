@@ -12,7 +12,8 @@ extension CurrentUser {
             nip05: author.nip05,
             about: author.about,
             website: author.website,
-            picture: author.profilePhotoURL?.absoluteString
+            picture: author.profilePhotoURL?.absoluteString,
+            pronouns: author.pronouns
         ).dictionary
         if let rawData = author.rawMetadata {
             // Tack on any unsupported fields back onto the dictionary before
@@ -211,6 +212,7 @@ extension CurrentUser {
         author.nip05 = nil
         author.profilePhotoURL = nil
         author.rawMetadata = nil
+        author.pronouns = nil
         
         try viewContext.save()
         try await publishMetadata()

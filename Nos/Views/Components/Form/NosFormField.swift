@@ -43,7 +43,7 @@ struct NosFormField_Previews: PreviewProvider {
                 WithState(initialValue: "") { text in
                     NosFormField("about") {
                         TextField("", text: text)
-                            .textInputAutocapitalization(.none)
+                            .textInputAutocapitalization(.never)
                             .foregroundColor(.primaryTxt)
                             .autocorrectionDisabled()
                     }

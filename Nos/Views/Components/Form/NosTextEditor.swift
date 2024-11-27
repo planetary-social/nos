@@ -14,7 +14,7 @@ struct NosTextEditor: View {
     var body: some View {
         NosFormField(label) {
             TextEditor(text: $text)
-                .textInputAutocapitalization(.none)
+                .textInputAutocapitalization(.never)
                 .foregroundColor(.primaryTxt)
                 .scrollContentBackground(.hidden)
                 .autocorrectionDisabled()

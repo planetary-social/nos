@@ -51,6 +51,12 @@
             "value" : "Unirse a la discusión"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "토론 참여하기"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -181,6 +187,12 @@
             "value" : "返信を投稿する"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "답글 남기기"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -250,6 +262,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "あなたのノートに返信されました:"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "답글을 남김:"
           }
         },
         "nl" : {
@@ -384,6 +402,18 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%lld の返信"
+                }
+              }
+            }
+          }
+        },
+        "ko" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld 답글"
                 }
               }
             }
@@ -532,6 +562,18 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "⚡ ¡te mando un zap de %ld sats!"
+                }
+              }
+            }
+          }
+        },
+        "ko" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "⚡️ 당신에게 %ld sat 잽을 보냄!"
                 }
               }
             }
