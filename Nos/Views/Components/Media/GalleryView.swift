@@ -185,7 +185,7 @@ fileprivate struct GalleryIndexView: View {
     /// Calculates the scale factor for a circle at a given index.
     ///
     /// - Parameter index: The index of the page to evaluate.
-    /// - Returns: A scale factor based on the distance from `currentIndex`.
+    /// - Returns: A scale factor based on whether it's the current index, and if not, whether it's on the edge.
     private func scaleFor(_ index: Int) -> CGFloat {
         if index == currentIndex {
             return 1.0
