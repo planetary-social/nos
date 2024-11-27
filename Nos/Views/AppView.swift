@@ -167,6 +167,7 @@ struct AppView: View {
                 .environment(relayService)
                 .interactiveDismissDisabled()
         }
+        .environment(\.horizontalSizeClass, .compact)
     }
 }
 
