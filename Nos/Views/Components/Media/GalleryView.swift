@@ -135,16 +135,36 @@ fileprivate struct GalleryIndexView: View {
     /// The maximum number of circles to display.
     private let maxNumberOfCircles = 7
 
+    /// The range of indices to display. If there are too many pages, we only show up to `maxNumberOfCircles`.
+    private var displayRange: ClosedRange<Int> {
+        let radius = maxNumberOfCircles / 2
+        let idealStart = currentIndex - radius
+        let idealEnd = currentIndex + radius
+        
+        switch (idealStart, idealEnd) {
+        case (...0, _):
+            // If ideal start is negative, pin to start of range
+            return 0...min(maxNumberOfCircles - 1, numberOfPages - 1)
+        case (_, numberOfPages...):
+            // If ideal end is greater than the number of pages, pin to end of range
+            return max(0, numberOfPages - maxNumberOfCircles)...numberOfPages - 1
+        default:
+            // Ideal case - centered around current index
+            return idealStart...idealEnd
+        }
+    }
+
     var body: some View {
         HStack(spacing: circleSpacing) {
             ForEach(0..<numberOfPages, id: \.self) { index in
                 if shouldShowIndex(index) {
                     Circle()
                         .fill(currentIndex == index ? AnyShapeStyle(primaryFill) : AnyShapeStyle(secondaryFill))
+                        .animation(nil, value: currentIndex)
                         .scaleEffect(scaleFor(index))
                         .frame(width: circleSize, height: circleSize)
-                        .transition(AnyTransition.opacity.combined(with: .scale))
                         .id(index)
+                        .animation(.easeInOut(duration: 0.3), value: currentIndex)
                 }
             }
         }
@@ -159,34 +179,7 @@ fileprivate struct GalleryIndexView: View {
     /// - Parameter index: The index of the page to evaluate.
     /// - Returns: `true` if the index is within `maxDistance` of the `currentIndex`; otherwise, `false`.
     private func shouldShowIndex(_ index: Int) -> Bool {
-        if numberOfPages <= maxNumberOfCircles {
-            return true
-        }
-
-        let expectedRange = currentIndex - maxNumberOfCircles / 2 ... currentIndex + maxNumberOfCircles / 2
-        let realRange: ClosedRange<Int>
-        if expectedRange.lowerBound < 0 {
-            realRange = 0...expectedRange.upperBound - expectedRange.lowerBound
-        } else if expectedRange.upperBound >= numberOfPages {
-            realRange = expectedRange.lowerBound - (expectedRange.upperBound - numberOfPages + 1)...numberOfPages - 1
-        } else {
-            realRange = expectedRange
-        }
-
-        return realRange.contains(index)
-    }
-
-    private func displayRange() -> ClosedRange<Int> {
-        let expectedRange = currentIndex - maxNumberOfCircles / 2 ... currentIndex + maxNumberOfCircles / 2
-        let realRange: ClosedRange<Int>
-        if expectedRange.lowerBound < 0 {
-            realRange = 0...expectedRange.upperBound - expectedRange.lowerBound
-        } else if expectedRange.upperBound >= numberOfPages {
-            realRange = expectedRange.lowerBound - (expectedRange.upperBound - numberOfPages + 1)...numberOfPages - 1
-        } else {
-            realRange = expectedRange
-        }
-        return realRange
+        displayRange.contains(index)
     }
 
     /// Calculates the scale factor for a circle at a given index.
@@ -199,7 +192,6 @@ fileprivate struct GalleryIndexView: View {
             return 1.0
         }
 
-        let displayRange = displayRange()
         if index == currentIndex {
             return 1.0
         }
