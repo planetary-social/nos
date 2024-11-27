@@ -198,6 +198,9 @@ import UIKit
         textView.attributedText = attributedString
         textView.selectedRange.location = range.location + link.length
         isEmpty = false
+
+        // Update the textview height after inserting text
+        updateIntrinsicHeight(view: textView)
     }
     
     /// Takes the same arguments as `textView(_:shouldChangeTextIn:replacementText:)` and detects the case where the 
