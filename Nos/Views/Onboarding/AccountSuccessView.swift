@@ -134,7 +134,7 @@ fileprivate struct ConnectingLine: Shape {
 }
 
 #Preview("All steps completed") {
-    var state = OnboardingState()
+    let state = OnboardingState()
     state.displayNameSucceeded = true
     state.usernameSucceeded = true
 

@@ -119,7 +119,7 @@ struct ComposerActionBar: View {
                 .frame(minWidth: 44, minHeight: 44)
         }
         .padding(.leading, 8)
-        .accessibilityLabel(Text("attachMedia"))
+        .accessibilityLabel("attachMedia")
     }
 
     /// Expiration Time
@@ -135,7 +135,7 @@ struct ComposerActionBar: View {
                         self.expirationTime = $0 ? option.timeInterval : nil
                     })
                 )
-                .accessibilityLabel(Text("expirationDate"))
+                .accessibilityLabel("expirationDate")
                 .padding(12)
             } else {
                 Button {

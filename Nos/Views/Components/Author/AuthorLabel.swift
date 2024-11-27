@@ -9,13 +9,6 @@ struct AuthorLabel: View {
         var authorName = AttributedString(author.safeName)
         authorName.foregroundColor = .primaryTxt
         authorName.font = .clarity(.semibold)
-        if let note {
-            let postedOrRepliedString = String(localized: note.isReply ? "replied" : "posted", table: "Reply")
-            var postedOrReplied = AttributedString(" " + postedOrRepliedString)
-            postedOrReplied.foregroundColor = .secondaryTxt
-            
-            authorName.append(postedOrReplied)
-        }
         return authorName
     }
 

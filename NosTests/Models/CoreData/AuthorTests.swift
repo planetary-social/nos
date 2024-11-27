@@ -268,4 +268,42 @@ final class AuthorTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(authors, [eve, carl, bob])
     }
+    
+    /// Test that the `pronouns` field can be set and saved correctly in Core Data.
+    func testSetPronouns() throws {
+        let context = persistenceController.viewContext
+        let author = try Author.findOrCreate(by: "testAuthor", context: context)
+        
+        // Set the pronouns
+        let pronouns = "they/them"
+        author.pronouns = pronouns
+        
+        // Save the context
+        try context.save()
+        
+        // Fetch the saved author to verify
+        let fetchedAuthor = try Author.find(by: "testAuthor", context: context)
+        
+        XCTAssertNotNil(fetchedAuthor)
+        XCTAssertEqual(fetchedAuthor?.pronouns, pronouns, "The pronouns should match the saved value.")
+    }
+
+    /// Test that the `pronouns` field can be retrieved correctly from Core Data.
+    func testGetPronouns() throws {
+        let context = persistenceController.viewContext
+        
+        // Create and set up an author with pronouns
+        let pronouns = "she/her"
+        let author = try Author.findOrCreate(by: "testAuthor2", context: context)
+        author.pronouns = pronouns
+        
+        // Save the context
+        try context.save()
+        
+        // Fetch the author again and verify pronouns
+        let fetchedAuthor = try Author.find(by: "testAuthor2", context: context)
+        
+        XCTAssertNotNil(fetchedAuthor, "The author should have been fetched successfully.")
+        XCTAssertEqual(fetchedAuthor?.pronouns, pronouns, "The fetched pronouns should match the saved value.")
+    }
 }

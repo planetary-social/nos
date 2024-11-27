@@ -145,7 +145,7 @@ struct HomeFeedView: View {
                 } label: {
                     Image(systemName: "line.3.horizontal.decrease.circle")
                         .foregroundStyle(Color.secondaryTxt)
-                        .accessibilityLabel(Text("filter"))
+                        .accessibilityLabel("filter")
                 }
                 .frame(minWidth: 40, minHeight: 40)
             }

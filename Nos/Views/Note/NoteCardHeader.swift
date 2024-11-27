@@ -6,9 +6,8 @@ struct NoteCardHeader: View {
     @ObservedObject var author: Author
     
     var body: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .center, spacing: 8) {
             AuthorLabel(author: author, note: note)
-            Spacer()
             if let expirationTime = note.expirationDate?.distanceString() {
                 Image.disappearingMessages
                     .resizable()
@@ -24,6 +23,8 @@ struct NoteCardHeader: View {
                     .font(.clarity(.medium))
                     .foregroundColor(.secondaryTxt)
             }
+
+            Spacer()
         }
         .padding(.leading, 10)
     }

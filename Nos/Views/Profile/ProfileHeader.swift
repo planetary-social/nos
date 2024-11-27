@@ -34,6 +34,20 @@ struct ProfileHeader: View {
         }
         return false
     }
+    
+    private var shouldShowWebsite: Bool {
+        if let website = author.website {
+            return website.isEmpty == false
+        }
+        return false
+    }
+    
+    private var shouldShowPronouns: Bool {
+        if let pronouns = author.pronouns {
+            return pronouns.isEmpty == false
+        }
+        return false
+    }
 
     private var knownFollowers: [Follow] {
         author.followers.filter {

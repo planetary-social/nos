@@ -88,6 +88,7 @@ struct NoteCard: View {
                             Spacer()
                         }
                     }
+                    .padding(5)
                     .allowsHitTesting(!note.isPreview)
                     Divider().overlay(Color.cardDividerTop).shadow(color: .cardDividerTopShadow, radius: 0, x: 0, y: 1)
                     Group {
@@ -144,6 +145,8 @@ struct NoteCard: View {
                             }
                         }
                         .padding(.leading, 13)
+                        .padding(.trailing, 5)
+                        .padding(.vertical, 5)
                         .allowsHitTesting(!note.isPreview)
                     }
                 }

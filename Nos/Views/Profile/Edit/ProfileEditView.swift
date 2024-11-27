@@ -22,6 +22,7 @@ struct ProfileEditView: View {
     @State private var bioText: String = ""
     @State private var avatarText: String = ""
     @State private var website: String = ""
+    @State private var pronouns: String = ""
     @State private var showNIP05Wizard = false
     @State private var showConfirmationDialog = false
     @State private var saveError: SaveProfileError?
@@ -77,6 +78,8 @@ struct ProfileEditView: View {
                     .frame(maxHeight: 200)
                 FormSeparator()
                 NosTextField("website", text: $website)
+                FormSeparator()
+                NosTextField("pronouns", text: $pronouns)
             }
         }
         .sheet(isPresented: $showNIP05Wizard) {
@@ -130,6 +133,7 @@ struct ProfileEditView: View {
         bioText = author.about ?? ""
         avatarText = author.profilePhotoURL?.absoluteString ?? ""
         website = author.website ?? ""
+        pronouns = author.pronouns ?? ""
     }
     
     private func save() async {
@@ -137,6 +141,7 @@ struct ProfileEditView: View {
         author.about = bioText
         author.profilePhotoURL = URL(string: avatarText)
         author.website = website
+        author.pronouns = pronouns
         do {
             try viewContext.save()
             try await currentUser.publishMetadata()
