@@ -185,31 +185,18 @@ fileprivate struct GalleryIndexView: View {
     /// Calculates the scale factor for a circle at a given index.
     ///
     /// - Parameter index: The index of the page to evaluate.
-    /// - Returns: A scale factor based on the distance from `currentIndex`.
+    /// - Returns: A scale factor based on whether it's the current index, and if not, whether it's on the edge.
     private func scaleFor(_ index: Int) -> CGFloat {
-        // Show all circles at full size if there are 6 or fewer pages
-        if numberOfPages <= maxNumberOfCircles {
-            return 1.0
-        }
-
         if index == currentIndex {
             return 1.0
         }
-        if displayRange.lowerBound > 0 {
-            if index == displayRange.lowerBound {
-                return 0.5
-            } else if index == displayRange.lowerBound + 1 {
-                return 0.75
-            }
+        if displayRange.lowerBound > 0 && index == displayRange.lowerBound {
+            return 0.5
         }
-        if displayRange.upperBound < numberOfPages - 1 {
-            if index == displayRange.upperBound {
-                return 0.5
-            } else if index == displayRange.upperBound - 1 {
-                return 0.75
-            }
+        if displayRange.upperBound < numberOfPages - 1 && index == displayRange.upperBound {
+            return 0.5
         }
-        return 1.0
+        return 0.75
     }
 }
 
