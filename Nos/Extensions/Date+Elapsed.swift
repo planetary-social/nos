@@ -44,7 +44,7 @@ extension Date {
             let dateFormatter = DateFormatter()
             dateFormatter.timeStyle = .none
             dateFormatter.dateFormat = DateFormatter.dateFormat(
-                fromTemplate: "MMMMd",
+                fromTemplate: "MMM d",
                 options: 0,
                 locale: calendar.locale
             )
@@ -89,7 +89,7 @@ extension Date {
     private func formatLongDate(_ calendar: Calendar) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = .none
-        dateFormatter.dateStyle = .long
+        dateFormatter.dateStyle = .medium
         dateFormatter.calendar = calendar
         dateFormatter.locale = calendar.locale
         dateFormatter.timeZone = calendar.timeZone

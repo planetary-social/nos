@@ -130,23 +130,73 @@ fileprivate struct GalleryIndexView: View {
     private let secondaryFill = Color.galleryIndexDotSecondary
 
     /// The scale of the circles representing tabs that aren't selected, relative to `circleSize`.
-    private let smallScale: CGFloat = 0.75
+    private let smallScale: CGFloat = 0.5
+
+    /// The maximum number of circles to display.
+    private let maxNumberOfCircles = 7
+
+    /// The range of indices to display. If there are too many pages, we only show up to `maxNumberOfCircles`.
+    private var displayRange: ClosedRange<Int> {
+        let radius = maxNumberOfCircles / 2
+        let idealStart = currentIndex - radius
+        let idealEnd = currentIndex + radius
+        
+        switch (idealStart, idealEnd) {
+        case (...0, _):
+            // If ideal start is negative, pin to start of range
+            return 0...min(maxNumberOfCircles - 1, numberOfPages - 1)
+        case (_, numberOfPages...):
+            // If ideal end is greater than the number of pages, pin to end of range
+            return max(0, numberOfPages - maxNumberOfCircles)...numberOfPages - 1
+        default:
+            // Ideal case - centered around current index
+            return idealStart...idealEnd
+        }
+    }
 
     var body: some View {
         HStack(spacing: circleSpacing) {
             ForEach(0..<numberOfPages, id: \.self) { index in
-                Circle()
-                    .fill(currentIndex == index ? AnyShapeStyle(primaryFill) : AnyShapeStyle(secondaryFill))
-                    .scaleEffect(currentIndex == index ? 1 : smallScale)
-                    .frame(width: circleSize, height: circleSize)
-                    .transition(AnyTransition.opacity.combined(with: .scale))
-                    .id(index)
+                if shouldShowIndex(index) {
+                    Circle()
+                        .fill(currentIndex == index ? AnyShapeStyle(primaryFill) : AnyShapeStyle(secondaryFill))
+                        .animation(nil, value: currentIndex)
+                        .scaleEffect(scaleFor(index))
+                        .frame(width: circleSize, height: circleSize)
+                        .id(index)
+                        .animation(.easeInOut(duration: 0.3), value: currentIndex)
+                }
             }
         }
         .padding(8.0)
         .background(
             Color.galleryIndexViewBackground.cornerRadius(16.0)
         )
+    }
+
+    /// Determines whether a given index should be displayed in the view.
+    ///
+    /// - Parameter index: The index of the page to evaluate.
+    /// - Returns: `true` if the index is within `maxDistance` of the `currentIndex`; otherwise, `false`.
+    private func shouldShowIndex(_ index: Int) -> Bool {
+        displayRange.contains(index)
+    }
+
+    /// Calculates the scale factor for a circle at a given index.
+    ///
+    /// - Parameter index: The index of the page to evaluate.
+    /// - Returns: A scale factor based on whether it's the current index, and if not, whether it's on the edge.
+    private func scaleFor(_ index: Int) -> CGFloat {
+        if index == currentIndex {
+            return 1.0
+        }
+        if displayRange.lowerBound > 0 && index == displayRange.lowerBound {
+            return 0.5
+        }
+        if displayRange.upperBound < numberOfPages - 1 && index == displayRange.upperBound {
+            return 0.5
+        }
+        return 0.75
     }
 }
 

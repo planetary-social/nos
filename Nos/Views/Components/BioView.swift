@@ -113,7 +113,9 @@ struct BioView: View {
     }
 
     private func updateShouldShowReadMore() {
-        shouldShowReadMore = intrinsicSize.height != truncatedSize.height
+        shouldShowReadMore = (author.pronouns?.isEmpty == false) ||
+        (author.website?.isEmpty == false) ||
+        (intrinsicSize.height > truncatedSize.height)
     }
 
     fileprivate struct IntrinsicSizePreferenceKey: PreferenceKey {

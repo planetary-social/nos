@@ -51,28 +51,28 @@ final class Date_ElapsedTests: XCTestCase {
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .weekOfMonth, value: -1, to: date))
                 .distanceString(date, calendar: calendar),
-            "December 2"
+            "Dec 2"
         )
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .month, value: -1, to: date))
                 .distanceString(date, calendar: calendar),
-            "November 9"
+            "Nov 9"
         )
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .year, value: -1, to: date))
                 .addingTimeInterval(1)
                 .distanceString(date, calendar: calendar),
-            "December 9"
+            "Dec 9"
         )
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .year, value: -1, to: date))
                 .distanceString(date, calendar: calendar),
-            "December 9, 2022"
+            "Dec 9, 2022"
         )
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .year, value: -2, to: date))
                 .distanceString(date, calendar: calendar),
-            "December 9, 2021"
+            "Dec 9, 2021"
         )
     }
 
@@ -124,28 +124,28 @@ final class Date_ElapsedTests: XCTestCase {
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .weekOfMonth, value: -1, to: date))
                 .distanceString(date, calendar: calendar),
-            "2 décembre"
+            "2 déc."
         )
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .month, value: -1, to: date))
                 .distanceString(date, calendar: calendar),
-            "9 novembre"
+            "9 nov."
         )
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .year, value: -1, to: date))
                 .addingTimeInterval(1)
                 .distanceString(date, calendar: calendar),
-            "9 décembre"
+            "9 déc."
         )
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .year, value: -1, to: date))
                 .distanceString(date, calendar: calendar),
-            "9 décembre 2022"
+            "9 déc. 2022"
         )
         XCTAssertEqual(
             try XCTUnwrap(calendar.date(byAdding: .year, value: -2, to: date))
                 .distanceString(date, calendar: calendar),
-            "9 décembre 2021"
+            "9 déc. 2021"
         )
     }
     // swiftlint:enable function_body_length

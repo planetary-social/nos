@@ -14,7 +14,7 @@ struct NosTextField: View {
     var body: some View {
         NosFormField(label) {
             TextField("", text: $text)
-                .textInputAutocapitalization(.none)
+                .textInputAutocapitalization(.never)
                 .foregroundColor(.primaryTxt)
                 .autocorrectionDisabled()
         }
