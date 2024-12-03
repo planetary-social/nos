@@ -25,13 +25,13 @@ struct NoteParser {
     }
 
     func hashtags(in content: String) -> [[String]] {
-        let pattern = "(?<=^|\\s)#([a-zA-Z0-9]{2,256})(?=\\s|$)"
+        let pattern = "(?<=^|\\s)#([a-zA-Z0-9]{2,256})(?=\\s|[.,!?;:]|$)"
         let regex = try! NSRegularExpression(pattern: pattern) // swiftlint:disable:this force_try
         let matches = regex.matches(in: content, range: NSRange(content.startIndex..., in: content))
 
         let hashtags = matches.map { match -> [String] in
             if let range = Range(match.range(at: 1), in: content) {
-                return ["t", String(content[range])]
+                return ["t", String(content[range].lowercased())]
             }
             return []
         }

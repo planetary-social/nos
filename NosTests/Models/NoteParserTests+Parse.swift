@@ -121,6 +121,30 @@ extension NoteParserTests {
         XCTAssertEqual(result, expected)
     }
 
+    @MainActor func test_parse_returns_hashtag_lowercased() throws {
+        // Arrange
+        let text = "#DOGS"
+
+        // Act
+        let expected = [["t", "dogs"]]
+        let result = sut.hashtags(in: text)
+
+        // Assert
+        XCTAssertEqual(result, expected)
+    }
+
+    @MainActor func test_parse_returns_hashtag_without_punctuation() throws {
+        // Arrange
+        let text = "check out my #hashtag! #hello, #world."
+
+        // Act
+        let expected = [["t", "hashtag"], ["t", "hello"], ["t", "world"]]
+        let result = sut.hashtags(in: text)
+
+        // Assert
+        XCTAssertEqual(result, expected)
+    }
+
     @MainActor func test_parse_returns_multiple_hashtags() throws {
         // Arrange
         let text = "#photography #birds #canada"
