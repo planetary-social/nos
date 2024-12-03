@@ -11,6 +11,7 @@
 		030036852C5D39DD002C71F5 /* RefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030036842C5D39DD002C71F5 /* RefreshController.swift */; };
 		030036942C5D3AD3002C71F5 /* RefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030036842C5D39DD002C71F5 /* RefreshController.swift */; };
 		030036AB2C5D872B002C71F5 /* NewNotesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030036AA2C5D872B002C71F5 /* NewNotesButton.swift */; };
+		0301495C2CFFA8B7000A0152 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0301495B2CFFA8B7000A0152 /* TabBarController.swift */; };
 		0304D0A72C9B4BF2001D16C7 /* OpenGraphMetatdata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */; };
 		0304D0A82C9B4BF2001D16C7 /* OpenGraphMetatdata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */; };
 		0304D0B22C9B731F001D16C7 /* MockOpenGraphService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */; };
@@ -603,6 +604,7 @@
 		030024182CC00DF70073ED56 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		030036842C5D39DD002C71F5 /* RefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshController.swift; sourceTree = "<group>"; };
 		030036AA2C5D872B002C71F5 /* NewNotesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNotesButton.swift; sourceTree = "<group>"; };
+		0301495B2CFFA8B7000A0152 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGraphMetatdata.swift; sourceTree = "<group>"; };
 		0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOpenGraphService.swift; sourceTree = "<group>"; };
 		030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedAuthor.swift; sourceTree = "<group>"; };
@@ -2001,6 +2003,7 @@
 			children = (
 				C9F84C20298DC36800C6714D /* AppView.swift */,
 				030024182CC00DF70073ED56 /* SplashScreenView.swift */,
+				0301495B2CFFA8B7000A0152 /* TabBarController.swift */,
 				5B79F6402BA11618002DA9BE /* Components */,
 				65BD8DC12BDAF2C300802039 /* Discover */,
 				03618B112C825D8700BCBC55 /* Fixtures */,
@@ -2450,6 +2453,7 @@
 				C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */,
 				5B8C96B629DDD3B200B73AEC /* NoteUITextViewRepresentable.swift in Sources */,
 				C93EC2F129C337EB0012EE2A /* RelayPicker.swift in Sources */,
+				0301495C2CFFA8B7000A0152 /* TabBarController.swift in Sources */,
 				03F866692CF7D39900527C39 /* Foundation+Sendable.swift in Sources */,
 				5BBA5E912BADF98E00D57D76 /* AlreadyHaveANIP05View.swift in Sources */,
 				C9F0BB6F29A50437000547FC /* NostrIdentifierPrefix.swift in Sources */,
