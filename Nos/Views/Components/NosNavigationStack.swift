@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// A `NavigationStack` that knows how to present views common to all the tabs like `Events` and `Authors`.
-/// Take care not to nest these.
+    /// A `NavigationStack` that knows how to present views common to all the tabs like `Events` and `Authors`.
+    /// Take care not to nest these.
 struct NosNavigationStack<Content: View>: View {
     
     @Binding var path: NavigationPath
@@ -13,33 +13,33 @@ struct NosNavigationStack<Content: View>: View {
             content()
                 .navigationDestination(for: NosNavigationDestination.self, destination: { destination in
                     switch destination {
-                    case .note(let noteIdentifiable):
-                        if case let .identifier(eventID) = noteIdentifiable {
+                        case .note(let noteIdentifiable):
+                            if case let .identifier(eventID) = noteIdentifiable {
+                                EventObservationView(eventID: eventID) { event in
+                                    NoteView(note: event)
+                                }
+                            } else if case let .replaceableIdentifier(replaceableEventID, author, kind) = noteIdentifiable {
+                                EventObservationView(
+                                    replaceableEventID: replaceableEventID,
+                                    author: author,
+                                    kind: kind
+                                ) { event in
+                                    NoteView(note: event)
+                                }
+                            }
+                        case .author(let authorID):
+                            AuthorObservationView(authorID: authorID) { author in
+                                ProfileView(author: author)
+                            }
+                        case .url(let url):
+                            URLView(url: url)
+                        case .replyTo(let eventID):
                             EventObservationView(eventID: eventID) { event in
-                                NoteView(note: event)
+                                NoteView(note: event, showKeyboard: true)
                             }
-                        } else if case let .replaceableIdentifier(replaceableEventID, author, kind) = noteIdentifiable {
-                            EventObservationView(
-                                replaceableEventID: replaceableEventID,
-                                author: author,
-                                kind: kind
-                            ) { event in
-                                NoteView(note: event)
-                            }
-                        }
-                    case .author(let authorID):
-                        AuthorObservationView(authorID: authorID) { author in
-                            ProfileView(author: author)
-                        }
-                    case .url(let url):
-                        URLView(url: url) 
-                    case .replyTo(let eventID):
-                        EventObservationView(eventID: eventID) { event in
-                            NoteView(note: event, showKeyboard: true)
-                        }
                     }
                 })
-        }            
+        }
     }
 }
 
