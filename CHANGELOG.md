@@ -12,16 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Release Notes
 - Nos now publishes the hashtags it finds in your note when you post. This means it works the way you’ve always expected it to work. [#44](https://github.com/verse-pbc/issues/issues/44)
-- Fixed galleries expanding past the width of the screen when there are lots of links or images. [#24](https://github.com/verse-pbc/issues/issues/24)
 - Added support for user setting and displaying pronouns.
 - Added display of website urls for user profiles.
+- Updated note header UI to make it more readable. [#23](https://github.com/verse-pbc/issues/issues/23)
+- Fixed galleries expanding past the width of the screen when there are lots of links or images. [#24](https://github.com/verse-pbc/issues/issues/24)
+- Fix quoted note composer does not expand to fit mention. [#25](https://github.com/verse-pbc/issues/issues/25)
 
 ## [1.0.2] - 2024-11-26Z
 
 ### Release Notes
+- Fix typo in minimum age warning
 - Fix crash when tapping Post button on macOS. [#1687](https://github.com/planetary-social/nos/issues/1687)
 - Fix tapping follower notification not opening follower profile. [#11](https://github.com/verse-pbc/issues/issues/11)
-- Adjusted note header UI to make it more readable. [#23](https://github.com/verse-pbc/issues/issues/23)
 
 ### Internal Changes
 - minor strings simplifications
