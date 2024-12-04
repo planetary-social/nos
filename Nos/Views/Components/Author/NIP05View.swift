@@ -63,31 +63,31 @@ struct NIP05View: View {
 
     /// A view that displays the given parts of the NIP-05 in different colors.
     func nip05Text(parts: (username: String, domain: String)) -> some View {
-       if parts.domain.hasSuffix(".mostr.pub") {
-           // Extract the first part of the domain (before .mostr.pub)
-           let domainPrefix = parts.domain.replacingOccurrences(
-               of: ".mostr.pub",
-               with: ""
-           )
-           // Replace hyphens with dots
-           let formattedDomain = domainPrefix.replacingOccurrences(
-               of: "-",
-               with: "."
-           )
-           
-           return Text("@" + parts.username)
-               .foregroundStyle(Color.primaryTxt) +
-           Text("@" + formattedDomain)
-               .foregroundStyle(Color.secondaryTxt)
-       } else if parts.username == "_" {
-           return Text(parts.domain)
-               .foregroundStyle(Color.secondaryTxt)
-       } else {
-           return Text(parts.username)
-               .foregroundStyle(Color.primaryTxt) +
-           Text("@" + parts.domain)
-               .foregroundStyle(Color.secondaryTxt)
-       }
+        if parts.domain.hasSuffix(".mostr.pub") {
+            // Extract the first part of the domain (before .mostr.pub)
+            let domainPrefix = parts.domain.replacingOccurrences(
+                of: ".mostr.pub",
+                with: ""
+            )
+            // Replace hyphens with dots
+            let formattedDomain = domainPrefix.replacingOccurrences(
+                of: "-",
+                with: "."
+            )
+            
+            return Text("@" + parts.username)
+                .foregroundStyle(Color.primaryTxt) +
+            Text("@" + formattedDomain)
+                .foregroundStyle(Color.secondaryTxt)
+        } else if parts.username == "_" {
+            return Text(parts.domain)
+                .foregroundStyle(Color.secondaryTxt)
+        } else {
+            return Text(parts.username)
+                .foregroundStyle(Color.primaryTxt) +
+            Text("@" + parts.domain)
+                .foregroundStyle(Color.secondaryTxt)
+        }
     }
     
     /// A view that displays the given `nip05` as text with strikethrough.
