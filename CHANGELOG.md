@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Release Notes
+- Fixed display of mastodon usernames so it shows @username@server.instance rather than username@instance-name.mostr.pub
+
+### Internal Changes
+
 ## [1.0.3] - 2024-12-04Z
 
 ### Release Notes
