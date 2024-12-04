@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Release Notes
+
+### Internal Changes
+- Upgraded to Xcode 16. [#1570](https://github.com/planetary-social/nos/issues/1570)
+
 ## [1.0.3] - 2024-12-04Z
 
 ### Release Notes
@@ -20,7 +25,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix quoted note composer does not expand to fit mention. [#25](https://github.com/verse-pbc/issues/issues/25)
 
 ### Internal Changes
-- Upgraded to Xcode 16. [#1570](https://github.com/planetary-social/nos/issues/1570)
 
 ## [1.0.2] - 2024-11-26Z
 
