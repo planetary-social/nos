@@ -1,7 +1,7 @@
 import SwiftUI
 
-    /// A `NavigationStack` that knows how to present views common to all the tabs like `Events` and `Authors`.
-    /// Take care not to nest these.
+/// A `NavigationStack` that knows how to present views common to all the tabs like `Events` and `Authors`.
+/// Take care not to nest these.
 struct NosNavigationStack<Content: View>: View {
     
     @Binding var path: NavigationPath
