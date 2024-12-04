@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Release Notes
+- Nos now publishes the hashtags it finds in your note when you post. This means it works the way you’ve always expected it to work. [#44](https://github.com/verse-pbc/issues/issues/44)
+
 ## [1.0.3] - 2024-12-04Z
 
 ### Release Notes
-- Nos now publishes the hashtags it finds in your note when you post. This means it works the way you’ve always expected it to work. [#44](https://github.com/verse-pbc/issues/issues/44)
 - Added support for user setting and displaying pronouns.
 - Added display of website urls for user profiles.
 - Updated note header UI to make it more readable. [#23](https://github.com/verse-pbc/issues/issues/23)
