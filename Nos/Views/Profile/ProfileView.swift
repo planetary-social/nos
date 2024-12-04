@@ -244,7 +244,7 @@ struct ProfileView: View {
 }
 
 #Preview("Generic user") {
-    var previewData = PreviewData()
+    @Previewable @State var previewData = PreviewData()
     
     return NavigationStack {
         ProfileView(author: previewData.previewAuthor)

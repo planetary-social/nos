@@ -5,6 +5,7 @@ import Dependencies
 import SDWebImage
 import SDWebImageWebPCoder
 
+@MainActor
 class AppDelegate: NSObject, UIApplicationDelegate {
 
     @Dependency(\.currentUser) private var currentUser

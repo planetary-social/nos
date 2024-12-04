@@ -238,15 +238,15 @@ extension Notification.Name {
 }
 
 #Preview {
-    var previewData = PreviewData()
-    @State var refreshController = RefreshController()
-
+    @Previewable @State var refreshController = RefreshController()
+    @Previewable @State var previewData = PreviewData()
+    
     return PagedNoteListView(
         refreshController: $refreshController,
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
         relayFilter: Filter(), 
         relay: nil,
-        managedObjectContext: previewData.previewContext,
+        managedObjectContext: previewData.context,
         tab: .home,
         header: {
             ProfileHeader(author: previewData.alice, selectedTab: .constant(.activity))
@@ -262,7 +262,7 @@ extension Notification.Name {
     .inject(previewData: previewData)
     .onAppear {
         for i in 0..<100 {
-            let note = Event(context: previewData.previewContext)
+            let note = Event(context: previewData.context)
             note.identifier = "ProfileNotesView-\(i)"
             note.kind = EventKind.text.rawValue
             note.content = "\(i)"

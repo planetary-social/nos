@@ -93,7 +93,10 @@ final class PushNotificationRegistrar {
             publicKey: publicKeyHex,
             relays: relays
         )
-        return String(decoding: try JSONEncoder().encode(content), as: UTF8.self)
+        guard let string = String(data: try JSONEncoder().encode(content), encoding: .utf8) else {
+            throw PushNotificationError.unexpected
+        }
+        return string
     }
 }
 

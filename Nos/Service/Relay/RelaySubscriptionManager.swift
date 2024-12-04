@@ -308,7 +308,9 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
             // Track this so we can close requests if needed
             let request: [Any] = ["REQ", subscription.id, subscription.filter.dictionary]
             let requestData = try JSONSerialization.data(withJSONObject: request)
-            let requestString = String(decoding: requestData, as: UTF8.self)
+            guard let requestString = String(data: requestData, encoding: .utf8) else {
+                throw RelayError.parseError
+            }
             socket.write(string: requestString)
         } catch {
             Log.error("Error: Could not send request \(error.localizedDescription)")
