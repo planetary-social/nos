@@ -24,8 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed galleries expanding past the width of the screen when there are lots of links or images. [#24](https://github.com/verse-pbc/issues/issues/24)
 - Fix quoted note composer does not expand to fit mention. [#25](https://github.com/verse-pbc/issues/issues/25)
 
-### Internal Changes
-
 ## [1.0.2] - 2024-11-26Z
 
 ### Release Notes
