@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="23G93" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="23G93" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Author" representedClassName=".Author" syncable="YES">
         <attribute name="about" optional="YES" attributeType="String"/>
         <attribute name="displayName" optional="YES" attributeType="String"/>
@@ -19,14 +19,26 @@
         <relationship name="followers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Follow" inverseName="destination" inverseEntity="Follow"/>
         <relationship name="followNotifications" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NosNotification" inverseName="follower" inverseEntity="NosNotification"/>
         <relationship name="follows" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Follow" inverseName="source" inverseEntity="Follow"/>
-        <relationship name="followSets" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="FollowSet" inverseName="authors" inverseEntity="FollowSet"/>
+        <relationship name="includedInLists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AuthorList" inverseName="authors" inverseEntity="AuthorList"/>
         <relationship name="incomingNotifications" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NosNotification" inverseName="user" inverseEntity="NosNotification"/>
+        <relationship name="lists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AuthorList" inverseName="owner" inverseEntity="AuthorList"/>
         <relationship name="relays" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="authors" inverseEntity="Relay"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="hexadecimalPublicKey"/>
             </uniquenessConstraint>
         </uniquenessConstraints>
+    </entity>
+    <entity name="AuthorList" representedClassName=".AuthorList" syncable="YES">
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="identifier" attributeType="String"/>
+        <attribute name="image" optional="YES" attributeType="URI"/>
+        <attribute name="kind" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="listDescription" optional="YES" attributeType="String"/>
+        <attribute name="signature" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="includedInLists" inverseEntity="Author"/>
+        <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="lists" inverseEntity="Author"/>
     </entity>
     <entity name="AuthorReference" representedClassName="AuthorReference" syncable="YES">
         <attribute name="pubkey" optional="YES" attributeType="String"/>
@@ -71,18 +83,6 @@
         <attribute name="petName" optional="YES" attributeType="String"/>
         <relationship name="destination" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="followers" inverseEntity="Author"/>
         <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="follows" inverseEntity="Author"/>
-    </entity>
-    <entity name="FollowSet" representedClassName=".FollowSet" syncable="YES">
-        <attribute name="identifier" optional="YES" attributeType="String"/>
-        <attribute name="image" optional="YES" attributeType="URI"/>
-        <attribute name="setDescription" optional="YES" attributeType="String"/>
-        <attribute name="title" optional="YES" attributeType="String"/>
-        <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="followSets" inverseEntity="Author"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="identifier"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="NosNotification" representedClassName="NosNotification" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
