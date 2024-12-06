@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed display of mastodon usernames so it shows @username@server.instance rather than username@instance-name.mostr.pub
 
 ### Internal Changes
+- Download and parse an author’s lists when viewing their profile. [#49](https://github.com/verse-pbc/issues/issues/49)
 
 ## [1.0.3] - 2024-12-04Z
 

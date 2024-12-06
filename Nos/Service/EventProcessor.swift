@@ -11,7 +11,10 @@ enum EventProcessor {
         in parseContext: NSManagedObjectContext,
         skipVerification: Bool = false
     ) throws -> Event? {
-        if let event = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
+        if jsonEvent.kind == EventKind.followSet.rawValue {
+            _ = try AuthorList.create(from: jsonEvent, in: parseContext)
+            return nil // TODO: 🤔
+        } else if let event = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
             relay.unwrap {
                 do {
                     try event.trackDelete(on: $0, context: parseContext)
@@ -41,7 +44,7 @@ enum EventProcessor {
                 let zapRequest = try JSONDecoder().decode(JSONEvent.self, from: zapRequestJSONData)
                 try parse(jsonEvent: zapRequest, from: relay, in: parseContext, skipVerification: skipVerification)
             }
-            
+
             return event
             
         // Verify that this event has been marked seen on the given relay.
