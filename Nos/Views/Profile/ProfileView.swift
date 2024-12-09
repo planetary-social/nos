@@ -49,7 +49,8 @@ struct ProfileView: View {
             await relayService.requestProfileData(
                 for: authorKey, 
                 lastUpdateMetadata: author.lastUpdatedMetadata, 
-                lastUpdatedContactList: nil // always grab contact list because we purge follows aggressively
+                lastUpdatedContactList: nil, // always grab contact list because we purge follows aggressively
+                lastUpdatedFollowSets: nil // TODO: consider how we want to do this
             )
         )
         

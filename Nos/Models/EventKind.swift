@@ -35,7 +35,7 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 
     /// Request to Vanish
     case requestToVanish = 62
-    
+
     /// Gift Wrap
     case giftWrap = 1059
 
@@ -50,19 +50,26 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 
     /// Zap Request
     case zapRequest = 9734
-    
+
     /// Zap Receipt
     case zapReceipt = 9735
-    
+
+    // swiftlint:disable number_separator
+
     /// Mute List
-    case mute = 10_000
+    case mute = 10000
+
+    /// NIP-42 Relay Authentication
+    case relayAuth = 22242
 
     /// NIP-98 HTTP Authentication
-    case httpAuth = 27_235
-    
-    // NIP-42 Relay Authentication
-    case relayAuth = 22_242
+    case httpAuth = 27235
+
+    /// NIP-51 Follow Set
+    case followSet = 30000
 
     /// Long-form Content
-    case longFormContent = 30_023
+    case longFormContent = 30023
+
+    // swiftlint:enable number_separator
 }
