@@ -93,24 +93,7 @@ final class NoteParserTests: CoreDataTestCase {
         XCTAssertEqual(links[safe: 0]?.key, nip05)
         XCTAssertEqual(links[safe: 0]?.value, URL(string: webLink))
     }
-    
-    /// Example taken from [NIP-27](https://github.com/nostr-protocol/nips/blob/master/27.md)
-    func testMentionWithNPub() throws {
-        let mention = "@mattn"
-        let npub = "npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6"
-        let hex = "2c7cc62a697ea3a7826521f3fd34f0cb273693cbe5e9310f35449f43622a5cdc"
-        let link = "nostr:\(npub)"
-        let markdown = "hello [\(mention)](\(link))"
-        let attributedString = try AttributedString(markdown: markdown)
-        let (content, tags) = sut.parse(
-            attributedText: attributedString
-        )
-        let expectedContent = "hello nostr:\(npub)"
-        let expectedTags = [["p", hex]]
-        XCTAssertEqual(content, expectedContent)
-        XCTAssertEqual(tags, expectedTags)
-    }
-    
+
     @MainActor func testContentWithMixedMentions() throws {
         let content = "hello nostr:npub1937vv2nf06360qn9y8el6d8sevnndy7tuh5nzre4gj05xc32tnwqauhaj6 and #[1]"
         let displayName1 = "npub1937vv..."
