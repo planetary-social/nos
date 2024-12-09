@@ -12,7 +12,7 @@ enum EventProcessor {
         skipVerification: Bool = false
     ) throws -> Event? {
         if jsonEvent.kind == EventKind.followSet.rawValue {
-            _ = try AuthorList.create(from: jsonEvent, in: parseContext)
+            _ = try AuthorList.createOrUpdate(from: jsonEvent, in: parseContext)
             return nil // TODO: 🤔
         } else if let event = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
             relay.unwrap {

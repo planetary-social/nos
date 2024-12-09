@@ -3,14 +3,20 @@ import CoreData
 
 @objc(AuthorList)
 public class AuthorList: NSManagedObject {
-    static func create(
+    static func createOrUpdate(
         from jsonEvent: JSONEvent,
         in context: NSManagedObjectContext
-    ) throws -> AuthorList? {
-        guard let replaceableID = jsonEvent.replaceableID else { return nil }
+    ) throws -> AuthorList {
+        guard jsonEvent.kind == EventKind.followSet.rawValue else { throw AuthorListError.invalidKind }
+        guard let replaceableID = jsonEvent.replaceableID else { throw AuthorListError.missingReplaceableID }
         let owner = try Author.findOrCreate(by: jsonEvent.pubKey, context: context)
 
-        let authorList = AuthorList(context: context)
+        // Fetch existing AuthorList if it exists
+        let fetchRequest = AuthorList.authorList(by: replaceableID, owner: owner, kind: EventKind.followSet.rawValue)
+        let existingAuthorList = try context.fetch(fetchRequest).first
+        existingAuthorList?.authors.removeAll()
+
+        let authorList = existingAuthorList ?? AuthorList(context: context)
         authorList.createdAt = jsonEvent.createdDate
         authorList.owner = owner
         authorList.identifier = replaceableID

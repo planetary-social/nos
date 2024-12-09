@@ -143,6 +143,10 @@
 		03FE3F7C2C87AC9900D25810 /* Event+InlineMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FE3F7B2C87AC9900D25810 /* Event+InlineMetadata.swift */; };
 		03FE3F7D2C87AC9900D25810 /* Event+InlineMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FE3F7B2C87AC9900D25810 /* Event+InlineMetadata.swift */; };
 		03FE3F8C2C87BC9500D25810 /* text_note_multiple_media.json in Resources */ = {isa = PBXBuildFile; fileRef = 03FE3F8A2C87BC9500D25810 /* text_note_multiple_media.json */; };
+		03FFCA592D075E2800D6F0F1 /* follow_set_updated.json in Resources */ = {isa = PBXBuildFile; fileRef = 03FFCA582D075E2800D6F0F1 /* follow_set_updated.json */; };
+		03FFCA7B2D07721100D6F0F1 /* AuthorListError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FFCA7A2D07720C00D6F0F1 /* AuthorListError.swift */; };
+		03FFCA7C2D07721100D6F0F1 /* AuthorListError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FFCA7A2D07720C00D6F0F1 /* AuthorListError.swift */; };
+		03FFCA7E2D07729400D6F0F1 /* AuthorListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FFCA7D2D07729200D6F0F1 /* AuthorListTests.swift */; };
 		041C56C42CA1B48E007D3BB2 /* UserFlagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041C56C32CA1B48E007D3BB2 /* UserFlagView.swift */; };
 		042406F32C907A15008F2A21 /* NosToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042406F22C907A15008F2A21 /* NosToggle.swift */; };
 		04368D2B2C99A2C400DEAA2E /* FlagOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04368D2A2C99A2C400DEAA2E /* FlagOption.swift */; };
@@ -707,6 +711,9 @@
 		03FE3F782C87A9D900D25810 /* EventError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventError.swift; sourceTree = "<group>"; };
 		03FE3F7B2C87AC9900D25810 /* Event+InlineMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+InlineMetadata.swift"; sourceTree = "<group>"; };
 		03FE3F8A2C87BC9500D25810 /* text_note_multiple_media.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = text_note_multiple_media.json; sourceTree = "<group>"; };
+		03FFCA582D075E2800D6F0F1 /* follow_set_updated.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = follow_set_updated.json; sourceTree = "<group>"; };
+		03FFCA7A2D07720C00D6F0F1 /* AuthorListError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorListError.swift; sourceTree = "<group>"; };
+		03FFCA7D2D07729200D6F0F1 /* AuthorListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorListTests.swift; sourceTree = "<group>"; };
 		041C56C32CA1B48E007D3BB2 /* UserFlagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFlagView.swift; sourceTree = "<group>"; };
 		042406F22C907A15008F2A21 /* NosToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosToggle.swift; sourceTree = "<group>"; };
 		04368D2A2C99A2C400DEAA2E /* FlagOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagOption.swift; sourceTree = "<group>"; };
@@ -1247,6 +1254,7 @@
 				C9BD91882B61BBEF00FDA083 /* bad_contact_list.json */,
 				0350F1162C0A47B20024CC15 /* contact_list.json */,
 				03C853C52D03A50900164D6C /* follow_set.json */,
+				03FFCA582D075E2800D6F0F1 /* follow_set_updated.json */,
 				039C96282C48321E00A8EB39 /* long_form_data.json */,
 				C95057B02CC6986E0024EC9C /* mute_list_2.json */,
 				C95057C42CC69A770024EC9C /* mute_list_self.json */,
@@ -1391,6 +1399,7 @@
 		03618C8D2C826AB300BCBC55 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				03FFCA7D2D07729200D6F0F1 /* AuthorListTests.swift */,
 				035729A12BE4167E005FEE85 /* AuthorTests.swift */,
 				035729A32BE4167E005FEE85 /* EventTests.swift */,
 				035729A42BE4167E005FEE85 /* FollowTests.swift */,
@@ -1919,6 +1928,7 @@
 		C9DEC02C29894BB20078B43A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				03FFCA7A2D07720C00D6F0F1 /* AuthorListError.swift */,
 				C9F2047F2AE029D90029A858 /* AppDestination.swift */,
 				03FE3F782C87A9D900D25810 /* EventError.swift */,
 				0365CD862C4016A200622A1A /* EventKind.swift */,
@@ -2273,6 +2283,7 @@
 				03B4E6A22C125CA1006E5F59 /* nostr_build_nip96_upload_response.json in Resources */,
 				0314CF742C9C7DD00001A53B /* youTube_fortnight_short.html in Resources */,
 				5095330C2C625B5D00E0BACA /* zap_request_no_amount.json in Resources */,
+				03FFCA592D075E2800D6F0F1 /* follow_set_updated.json in Resources */,
 				C987F84F29BA951E00B44E7A /* ClarityCity-RegularItalic.otf in Resources */,
 				CD27177629A7C8B200AE8888 /* sample_replies.json in Resources */,
 				C987F83B29BA951E00B44E7A /* ClarityCity-BoldItalic.otf in Resources */,
@@ -2418,6 +2429,7 @@
 				030E571B2CC2ADDB00A4A51E /* SaveProfileError.swift in Sources */,
 				C94A5E182A72C84200B6EC5D /* ReportCategory.swift in Sources */,
 				C9A8015E2BD0177D006E29B2 /* ReportPublisher.swift in Sources */,
+				03FFCA7B2D07721100D6F0F1 /* AuthorListError.swift in Sources */,
 				C9F0BB6B29A503D6000547FC /* PublicKey.swift in Sources */,
 				C9EF84CF2C24D63000182B6F /* MockRelayService.swift in Sources */,
 				5B79F6192B98B24C002DA9BE /* DeleteUsernameWizard.swift in Sources */,
@@ -2663,6 +2675,7 @@
 				5BD813A32C8BA7CC00E65F4D /* PreviewEventRepository.swift in Sources */,
 				C9EE3E642A053910008A7491 /* ExpirationTimeOption.swift in Sources */,
 				504454712C90728E00251A7E /* Event+Fetching.swift in Sources */,
+				03FFCA7C2D07721100D6F0F1 /* AuthorListError.swift in Sources */,
 				65D066AA2BD55E160011C5CD /* DirectMessageWrapper.swift in Sources */,
 				C973AB5E2A323167002AED16 /* Event+CoreDataProperties.swift in Sources */,
 				C9F64D8D29ED840700563F2B /* Zipper.swift in Sources */,
@@ -2674,6 +2687,7 @@
 				5B88051D2A2104CC00E21F06 /* SHA256Key.swift in Sources */,
 				0365CD902C40171100622A1A /* EventKind.swift in Sources */,
 				C9CF23182A38A58B00EBEC31 /* ParseQueue.swift in Sources */,
+				03FFCA7E2D07729400D6F0F1 /* AuthorListTests.swift in Sources */,
 				037975C72C0E26FC00ADDF37 /* Font+Clarity.swift in Sources */,
 				5B39E64429EDBF8100464830 /* NoteParser.swift in Sources */,
 				035729CA2BE4173E005FEE85 /* PreviewData.swift in Sources */,
