@@ -32,14 +32,14 @@ struct NosNavigationStack<Content: View>: View {
                             ProfileView(author: author)
                         }
                     case .url(let url):
-                        URLView(url: url) 
+                        URLView(url: url)
                     case .replyTo(let eventID):
                         EventObservationView(eventID: eventID) { event in
                             NoteView(note: event, showKeyboard: true)
                         }
                     }
                 })
-        }            
+        }
     }
 }
 
