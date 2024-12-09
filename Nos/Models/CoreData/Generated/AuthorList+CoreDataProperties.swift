@@ -12,6 +12,7 @@ extension AuthorList {
     @NSManaged public var createdAt: Date
     @NSManaged public var identifier: RawEventID?
     @NSManaged public var image: URL?
+    @NSManaged public var isVerified: Bool
     @NSManaged public var kind: Int64
     @NSManaged public var listDescription: String?
     @NSManaged public var replaceableIdentifier: String

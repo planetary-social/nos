@@ -30,7 +30,6 @@ final class AuthorListTests: CoreDataTestCase {
 
     @MainActor func test_createOrUpdate_includes_all_data() throws {
         // Arrange
-        let imageUrlString = "https://example.com/follow-set.jpg"
         let data = try jsonData(filename: "follow_set")
         let event = try JSONDecoder().decode(JSONEvent.self, from: data)
 

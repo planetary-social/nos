@@ -12,7 +12,15 @@ enum EventProcessor {
         skipVerification: Bool = false
     ) throws -> Event? {
         if jsonEvent.kind == EventKind.followSet.rawValue {
-            _ = try AuthorList.createOrUpdate(from: jsonEvent, in: parseContext)
+            let authorList = try AuthorList.createOrUpdate(from: jsonEvent, in: parseContext)
+            if skipVerification == false {
+                guard try authorList.verifySignature() else {
+                    parseContext.delete(authorList)
+                    Log.info("Invalid signature on author list: \(jsonEvent) from \(relay?.address ?? "error")")
+                    throw AuthorListError.invalidSignature(authorList)
+                }
+                authorList.isVerified = true
+            }
             return nil // TODO: 🤔
         } else if let event = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
             relay.unwrap {

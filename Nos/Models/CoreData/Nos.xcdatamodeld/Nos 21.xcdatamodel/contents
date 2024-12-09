@@ -35,6 +35,7 @@
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="identifier" attributeType="String"/>
         <attribute name="image" optional="YES" attributeType="URI"/>
+        <attribute name="isVerified" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="kind" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="listDescription" optional="YES" attributeType="String"/>
         <attribute name="replaceableIdentifier" attributeType="String"/>
