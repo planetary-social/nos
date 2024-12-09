@@ -50,10 +50,9 @@ struct NoteTextEditor: View {
 }
 
 #Preview {
-
-    var previewData = PreviewData()
-    @State var controller = NoteEditorController()
-
+    @Previewable @State var controller = NoteEditorController()
+    @Previewable @State var previewData = PreviewData()
+    
     return NavigationStack {
         NoteTextEditor(
             controller: $controller,

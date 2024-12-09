@@ -44,7 +44,7 @@ struct NosNavigationStack<Content: View>: View {
 }
 
 #Preview {
-    @State var path = NavigationPath()
+    @Previewable @State var path = NavigationPath()
     
     return NosNavigationStack(path: $path) {
         Text("hello world")

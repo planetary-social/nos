@@ -92,10 +92,9 @@ struct NotificationCard: View {
 }
 
 #Preview {
-    var previewData = PreviewData()
-    
-    let previewContext = previewData.previewContext
-    
+    @Previewable @State var previewData = PreviewData()
+    let context = previewData.context
+
     var alice: Author {
         previewData.alice
     }
@@ -105,16 +104,16 @@ struct NotificationCard: View {
     }
     
     let note: Event = {
-        let mentionNote = Event(context: previewContext)
+        let mentionNote = Event(context: context)
         mentionNote.content = "Hello, bob!"
         mentionNote.kind = 1
         mentionNote.createdAt = .now
         mentionNote.author = alice
-        let authorRef = AuthorReference(context: previewContext)
+        let authorRef = AuthorReference(context: context)
         authorRef.pubkey = bob.hexadecimalPublicKey
         mentionNote.authorReferences = NSMutableOrderedSet(array: [authorRef])
         try? mentionNote.sign(withKey: KeyFixture.alice)
-        try? previewContext.save()
+        try? context.save()
         return mentionNote
     }()
         

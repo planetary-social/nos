@@ -154,7 +154,7 @@ struct BioSheet: View {
 }
 
 #Preview("BioSheet") {
-    var previewData = PreviewData()
+    @Previewable @State var previewData = PreviewData()
 
     return Group {
         BioSheet(author: previewData.eve)

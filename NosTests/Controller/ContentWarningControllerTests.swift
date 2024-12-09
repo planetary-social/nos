@@ -10,7 +10,7 @@ final class ContentWarningControllerTests: CoreDataTestCase {
     override func setUp() async throws {
         try await super.setUp()
         fixture = PreviewData()
-        fixture.previewContext = testContext
+        fixture.context = testContext
     }
 
     func test_noReports() throws {

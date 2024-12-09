@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed display of mastodon usernames so it shows @username@server.instance rather than username@instance-name.mostr.pub
 
 ### Internal Changes
+- Upgraded to Xcode 16. [#1570](https://github.com/planetary-social/nos/issues/1570)
 
 ## [1.0.3] - 2024-12-04Z
 
