@@ -7,11 +7,15 @@ extension AuthorList {
         NSFetchRequest<AuthorList>(entityName: "AuthorList")
     }
 
+    @NSManaged public var allTags: NSObject?
+    @NSManaged public var content: String?
     @NSManaged public var createdAt: Date
-    @NSManaged public var identifier: String
+    @NSManaged public var identifier: RawEventID?
     @NSManaged public var image: URL?
     @NSManaged public var kind: Int64
     @NSManaged public var listDescription: String?
+    @NSManaged public var replaceableIdentifier: String
+    @NSManaged public var signature: String?
     @NSManaged public var title: String?
 
     @NSManaged public var authors: Set<Author>

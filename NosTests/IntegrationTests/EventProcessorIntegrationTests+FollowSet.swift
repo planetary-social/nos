@@ -3,7 +3,7 @@ import XCTest
 extension EventProcessorIntegrationTests {
     @MainActor func test_parse_kind_30000_creates_follow_set() throws {
         // Arrange
-        let identifier = "listr-7ad818d7-1360-4fcb-8dbd-2ad76be88465"
+        let replaceableID = "listr-7ad818d7-1360-4fcb-8dbd-2ad76be88465"
         let ownerPubKey = "27cf2c68535ae1fc06510e827670053f5dcd39e6bd7e05f1ffb487ef2ac13549"
         let jsonData = try jsonData(filename: "follow_set")
         let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
@@ -14,7 +14,7 @@ extension EventProcessorIntegrationTests {
         // Assert
         let fetchResults = try testContext.fetch(
             AuthorList.authorList(
-                by: identifier,
+                by: replaceableID,
                 owner: try Author.findOrCreate(by: ownerPubKey, context: testContext),
                 kind: EventKind.followSet.rawValue
             )
@@ -24,7 +24,7 @@ extension EventProcessorIntegrationTests {
         let followSet = try XCTUnwrap(fetchResults.first)
         // swiftlint:disable:next number_separator
         XCTAssertEqual(followSet.createdAt, Date(timeIntervalSince1970: 1733516879))
-        XCTAssertEqual(followSet.identifier, identifier)
+        XCTAssertEqual(followSet.replaceableIdentifier, replaceableID)
         XCTAssertEqual(followSet.title, "A few good people")
         XCTAssertEqual(followSet.listDescription, "They're great. Trust me.")
         XCTAssertEqual(followSet.authors.count, 2)
@@ -40,7 +40,7 @@ extension EventProcessorIntegrationTests {
 
     @MainActor func test_parse_kind_30000_updates_existing_follow_set() throws {
         // Arrange
-        let identifier = "listr-7ad818d7-1360-4fcb-8dbd-2ad76be88465"
+        let replaceableID = "listr-7ad818d7-1360-4fcb-8dbd-2ad76be88465"
         let ownerPubKey = "27cf2c68535ae1fc06510e827670053f5dcd39e6bd7e05f1ffb487ef2ac13549"
         let data = try jsonData(filename: "follow_set")
         let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: data)
@@ -54,7 +54,7 @@ extension EventProcessorIntegrationTests {
         // Assert
         let fetchResults = try testContext.fetch(
             AuthorList.authorList(
-                by: identifier,
+                by: replaceableID,
                 owner: try Author.findOrCreate(by: ownerPubKey, context: testContext),
                 kind: EventKind.followSet.rawValue
             )
@@ -65,7 +65,7 @@ extension EventProcessorIntegrationTests {
 
         // swiftlint:disable:next number_separator
         XCTAssertEqual(followSet.createdAt, Date(timeIntervalSince1970: 1733765380))
-        XCTAssertEqual(followSet.identifier, identifier)
+        XCTAssertEqual(followSet.replaceableIdentifier, replaceableID)
         XCTAssertEqual(followSet.title, "A few good people")
         XCTAssertEqual(followSet.listDescription, "They're great. Trust me.")
         XCTAssertEqual(followSet.authors.count, 1)

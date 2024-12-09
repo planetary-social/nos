@@ -30,11 +30,14 @@
         </uniquenessConstraints>
     </entity>
     <entity name="AuthorList" representedClassName=".AuthorList" syncable="YES">
+        <attribute name="allTags" optional="YES" attributeType="Transformable"/>
+        <attribute name="content" optional="YES" attributeType="String"/>
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="identifier" attributeType="String"/>
         <attribute name="image" optional="YES" attributeType="URI"/>
         <attribute name="kind" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="listDescription" optional="YES" attributeType="String"/>
+        <attribute name="replaceableIdentifier" attributeType="String"/>
         <attribute name="signature" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="includedInLists" inverseEntity="Author"/>

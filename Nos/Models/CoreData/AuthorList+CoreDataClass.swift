@@ -19,8 +19,12 @@ public class AuthorList: NSManagedObject {
         let authorList = existingAuthorList ?? AuthorList(context: context)
         authorList.createdAt = jsonEvent.createdDate
         authorList.owner = owner
-        authorList.identifier = replaceableID
+        authorList.identifier = jsonEvent.id
+        authorList.replaceableIdentifier = replaceableID
         authorList.kind = EventKind.followSet.rawValue
+        authorList.signature = jsonEvent.signature
+        authorList.allTags = jsonEvent.tags as NSObject
+        authorList.content = jsonEvent.content
 
         let tags = jsonEvent.tags
 
@@ -51,7 +55,7 @@ public class AuthorList: NSManagedObject {
     ) -> NSFetchRequest<AuthorList> {
         let fetchRequest = NSFetchRequest<AuthorList>(entityName: "AuthorList")
         fetchRequest.predicate = NSPredicate(
-            format: "identifier = %@ AND owner = %@ AND kind = %i",
+            format: "replaceableIdentifier = %@ AND owner = %@ AND kind = %i",
             replaceableID,
             owner,
             kind
@@ -59,5 +63,28 @@ public class AuthorList: NSManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \AuthorList.identifier, ascending: true)]
         fetchRequest.fetchLimit = 1
         return fetchRequest
+    }
+}
+
+extension AuthorList: VerifiableEvent {
+    var pubKey: String { owner.hexadecimalPublicKey ?? "" }
+
+    var serializedListForSigning: [Any?] {
+        [
+            0,
+            owner.hexadecimalPublicKey,
+            Int64(createdAt.timeIntervalSince1970),
+            kind,
+            allTags,
+            content
+        ]
+    }
+
+    func calculateIdentifier() throws -> String {
+        let serializedEventData = try JSONSerialization.data(
+            withJSONObject: serializedListForSigning,
+            options: [.withoutEscapingSlashes]
+        )
+        return serializedEventData.sha256
     }
 }
