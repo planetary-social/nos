@@ -54,7 +54,7 @@ import Logger
     }
 
     var hasMostrNIP05: Bool {
-        nip05?.hasSuffix("@mostr.pub") == true
+        nip05?.hasSuffix(".mostr.pub") == true
     }
 
     var nip05Parts: (username: String, domain: String)? {
