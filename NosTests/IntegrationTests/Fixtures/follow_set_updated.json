@@ -1,0 +1,14 @@
+{
+  "kind": 30000,
+  "id": "5115b27d32361a09ebd8746cd5f17806c5aa7010a2ac151cc5a1e3c516f05311",
+  "pubkey": "27cf2c68535ae1fc06510e827670053f5dcd39e6bd7e05f1ffb487ef2ac13549",
+  "created_at": 1733765380,
+  "tags": [
+    ["p", "27cf2c68535ae1fc06510e827670053f5dcd39e6bd7e05f1ffb487ef2ac13549"],
+    ["title", "A few good people"],
+    ["description", "They're great. Trust me."],
+    ["d", "listr-7ad818d7-1360-4fcb-8dbd-2ad76be88465"]
+  ],
+  "content": "",
+  "sig":   "a49bb7f2797ea41334643500c0f8809ace7f0379d7a57d6629a2c4b2a9b76db92cfc3585e43fa0c67c8ae71e26d81df96ba1582e30c3edca709e2b1aa1dcdd28"
+}
