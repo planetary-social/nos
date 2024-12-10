@@ -50,13 +50,14 @@ struct TabBarController: UIViewControllerRepresentable {
 class WorkaroundTabBarController: UITabBarController {
     init() {
         super.init(nibName: nil, bundle: nil)
-        traitOverrides.horizontalSizeClass = .compact
 
         // Fix for macOS Sequoia: without this, the tabs appear twice and the view crashes regularly.
         if #available(iOS 18, *), ProcessInfo.processInfo.isiOSAppOnMac {
             // Hides the top tabs
-            self.mode = .tabSidebar
-            self.sidebar.isHidden = true
+            mode = .tabSidebar
+            sidebar.isHidden = true
+            traitOverrides.horizontalSizeClass = .compact
+            additionalSafeAreaInsets.bottom = 10
         }
     }
 
