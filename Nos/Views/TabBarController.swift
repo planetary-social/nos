@@ -56,8 +56,11 @@ class WorkaroundTabBarController: UITabBarController {
             // Hides the top tabs
             mode = .tabSidebar
             sidebar.isHidden = true
-            traitOverrides.horizontalSizeClass = .compact
             additionalSafeAreaInsets.bottom = 10
+            traitOverrides.horizontalSizeClass = .compact
+        } else if traitCollection.userInterfaceIdiom == .pad {
+            additionalSafeAreaInsets.bottom = 10
+            traitOverrides.horizontalSizeClass = .compact
         }
     }
 
