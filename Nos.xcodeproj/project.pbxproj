@@ -13,8 +13,6 @@
 		030036AB2C5D872B002C71F5 /* NewNotesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030036AA2C5D872B002C71F5 /* NewNotesButton.swift */; };
 		0303B1532D025C9A00077929 /* AuthorList+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0303B13E2D025BDD00077929 /* AuthorList+CoreDataProperties.swift */; };
 		0303B1542D025C9A00077929 /* AuthorList+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0303B13E2D025BDD00077929 /* AuthorList+CoreDataProperties.swift */; };
-		0303B15E2D025DC100077929 /* AuthorList+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0303B15D2D025DC100077929 /* AuthorList+CoreDataClass.swift */; };
-		0303B15F2D025DC100077929 /* AuthorList+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0303B15D2D025DC100077929 /* AuthorList+CoreDataClass.swift */; };
 		0304D0A72C9B4BF2001D16C7 /* OpenGraphMetatdata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */; };
 		0304D0A82C9B4BF2001D16C7 /* OpenGraphMetatdata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */; };
 		0304D0B22C9B731F001D16C7 /* MockOpenGraphService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */; };
@@ -45,6 +43,8 @@
 		0326347A2C10C57A00E489B5 /* FileStorageAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032634792C10C57A00E489B5 /* FileStorageAPIClient.swift */; };
 		0326347B2C10C57A00E489B5 /* FileStorageAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032634792C10C57A00E489B5 /* FileStorageAPIClient.swift */; };
 		033C19DC2D03A34F00B5529D /* EventProcessorIntegrationTests+FollowSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033C19DB2D03A34F00B5529D /* EventProcessorIntegrationTests+FollowSet.swift */; };
+		033E940B2D08F14900C6FB03 /* AuthorList+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E940A2D08F14900C6FB03 /* AuthorList+CoreDataClass.swift */; };
+		033E940C2D08F14900C6FB03 /* AuthorList+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E940A2D08F14900C6FB03 /* AuthorList+CoreDataClass.swift */; };
 		0348342A2C9A02FC0050CF51 /* MockOpenGraphParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034834292C9A02FC0050CF51 /* MockOpenGraphParser.swift */; };
 		034EBDBA2C24895E006BA35A /* CurrentUserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034EBDB92C24895E006BA35A /* CurrentUserError.swift */; };
 		034EBDC72C2489B4006BA35A /* CurrentUserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034EBDB92C24895E006BA35A /* CurrentUserError.swift */; };
@@ -615,7 +615,6 @@
 		030036AA2C5D872B002C71F5 /* NewNotesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNotesButton.swift; sourceTree = "<group>"; };
 		0303B11E2D0257D400077929 /* Nos 21.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 21.xcdatamodel"; sourceTree = "<group>"; };
 		0303B13E2D025BDD00077929 /* AuthorList+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthorList+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0303B15D2D025DC100077929 /* AuthorList+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AuthorList+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGraphMetatdata.swift; sourceTree = "<group>"; };
 		0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOpenGraphService.swift; sourceTree = "<group>"; };
 		030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedAuthor.swift; sourceTree = "<group>"; };
@@ -641,6 +640,7 @@
 		032634792C10C57A00E489B5 /* FileStorageAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageAPIClient.swift; sourceTree = "<group>"; };
 		033B288D2C419E7600E325E8 /* Nos 16.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 16.xcdatamodel"; sourceTree = "<group>"; };
 		033C19DB2D03A34F00B5529D /* EventProcessorIntegrationTests+FollowSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventProcessorIntegrationTests+FollowSet.swift"; sourceTree = "<group>"; };
+		033E940A2D08F14900C6FB03 /* AuthorList+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthorList+CoreDataClass.swift"; sourceTree = "<group>"; };
 		034834292C9A02FC0050CF51 /* MockOpenGraphParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOpenGraphParser.swift; sourceTree = "<group>"; };
 		034EBDB92C24895E006BA35A /* CurrentUserError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserError.swift; sourceTree = "<group>"; };
 		0350F10B2C0A46760024CC15 /* new_contact_list.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = new_contact_list.json; sourceTree = "<group>"; };
@@ -1093,7 +1093,7 @@
 			isa = PBXGroup;
 			children = (
 				C9DEC04329894BED0078B43A /* Author+CoreDataClass.swift */,
-				0303B15D2D025DC100077929 /* AuthorList+CoreDataClass.swift */,
+				033E940A2D08F14900C6FB03 /* AuthorList+CoreDataClass.swift */,
 				3F43C47529A9625700E896A0 /* AuthorReference+CoreDataClass.swift */,
 				C9DEC03F29894BED0078B43A /* Event+CoreDataClass.swift */,
 				5044546D2C90726A00251A7E /* Event+Fetching.swift */,
@@ -2456,7 +2456,6 @@
 				04C9D7972CC29E4A00EAAD4D /* FeaturedAuthor+Cohort4.swift in Sources */,
 				C9A0DAE029C697A100466635 /* AboutView.swift in Sources */,
 				0496D6312C975E6900D29375 /* FlagOptionPicker.swift in Sources */,
-				0303B15E2D025DC100077929 /* AuthorList+CoreDataClass.swift in Sources */,
 				04F16AA72CBDBD91003AD693 /* DeleteConfirmationView.swift in Sources */,
 				A351E1A229BA92240009B7F6 /* ProfileEditView.swift in Sources */,
 				C9DFA969299BEC33006929C1 /* CardStyle.swift in Sources */,
@@ -2597,6 +2596,7 @@
 				CD09A74629A50F750063464F /* SideMenuContent.swift in Sources */,
 				030E56F32CC2836D00A4A51E /* CopyKeyView.swift in Sources */,
 				C9DFA971299BF8CD006929C1 /* NoteView.swift in Sources */,
+				033E940B2D08F14900C6FB03 /* AuthorList+CoreDataClass.swift in Sources */,
 				037071272C90C5FA00BEAEC4 /* OpenGraphService.swift in Sources */,
 				C974652E2A3B86600031226F /* NoteCardHeader.swift in Sources */,
 				C9CF23172A38A58B00EBEC31 /* ParseQueue.swift in Sources */,
@@ -2681,7 +2681,6 @@
 				C9F64D8D29ED840700563F2B /* Zipper.swift in Sources */,
 				C98298342ADD7F9A0096C5B5 /* DeepLinkService.swift in Sources */,
 				03D1B42D2C3C1B0D001778CD /* TLVElement.swift in Sources */,
-				0303B15F2D025DC100077929 /* AuthorList+CoreDataClass.swift in Sources */,
 				03E711822C936DD1000B6F96 /* OpenGraphParser.swift in Sources */,
 				CD09A75929A521D20063464F /* Color+Hex.swift in Sources */,
 				5B88051D2A2104CC00E21F06 /* SHA256Key.swift in Sources */,
@@ -2796,6 +2795,7 @@
 				0315B5F02C7E451C0020E707 /* MockMediaService.swift in Sources */,
 				C9646EAA29B7A506007239A4 /* Analytics.swift in Sources */,
 				C9736E5E2C13B718005BCE70 /* EventFixture.swift in Sources */,
+				033E940C2D08F14900C6FB03 /* AuthorList+CoreDataClass.swift in Sources */,
 				035729AF2BE4167E005FEE85 /* KeyPairTests.swift in Sources */,
 				0383CD722C767966007DB0E4 /* LinearGradient+Planetary.swift in Sources */,
 				035729AE2BE4167E005FEE85 /* FollowTests.swift in Sources */,

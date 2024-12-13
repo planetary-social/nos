@@ -12,13 +12,12 @@ enum EventProcessor {
         skipVerification: Bool = false
     ) throws -> Event? {
         if jsonEvent.kind == EventKind.followSet.rawValue {
-            try saveFollowSet(
+            return try saveFollowSet(
                 jsonEvent: jsonEvent,
                 relay: relay,
                 parseContext: parseContext,
                 skipVerification: skipVerification
             )
-            return nil
         } else if let event = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
             try updateEvent(
                 event: event,
@@ -73,7 +72,7 @@ extension EventProcessor {
         relay: Relay?,
         parseContext: NSManagedObjectContext,
         skipVerification: Bool
-    ) throws {
+    ) throws -> AuthorList {
         let authorList = try AuthorList.createOrUpdate(from: jsonEvent, in: parseContext)
         if skipVerification == false {
             guard try authorList.verifySignature() else {
@@ -83,6 +82,7 @@ extension EventProcessor {
             }
             authorList.isVerified = true
         }
+        return authorList
     }
 
     private static func updateEvent(

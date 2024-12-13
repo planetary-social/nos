@@ -40,7 +40,7 @@ final class AuthorListTests: CoreDataTestCase {
         XCTAssertEqual(list.kind, EventKind.followSet.rawValue)
         XCTAssertEqual(list.identifier, "85e1542678164c321c413706b9c029da2355809884902dbbfd6879917148c221")
         XCTAssertEqual(
-            list.owner.hexadecimalPublicKey,
+            list.author?.hexadecimalPublicKey,
             "27cf2c68535ae1fc06510e827670053f5dcd39e6bd7e05f1ffb487ef2ac13549"
         )
         // swiftlint:disable:next number_separator

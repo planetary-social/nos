@@ -2,7 +2,7 @@ import Foundation
 import CoreData
 
 @objc(AuthorList)
-public class AuthorList: NSManagedObject {
+public class AuthorList: Event {
     static func createOrUpdate(
         from jsonEvent: JSONEvent,
         in context: NSManagedObjectContext
@@ -14,14 +14,14 @@ public class AuthorList: NSManagedObject {
         // Fetch existing AuthorList if it exists
         let fetchRequest = AuthorList.authorList(by: replaceableID, owner: owner, kind: EventKind.followSet.rawValue)
         let existingAuthorList = try context.fetch(fetchRequest).first
-        existingAuthorList?.authors.removeAll()
+        existingAuthorList?.authors = Set()
 
         let authorList = existingAuthorList ?? AuthorList(context: context)
         authorList.createdAt = jsonEvent.createdDate
-        authorList.owner = owner
+        authorList.author = owner
         authorList.identifier = jsonEvent.id
         authorList.replaceableIdentifier = replaceableID
-        authorList.kind = EventKind.followSet.rawValue
+        authorList.kind = jsonEvent.kind
         authorList.signature = jsonEvent.signature
         authorList.allTags = jsonEvent.tags as NSObject
         authorList.content = jsonEvent.content
@@ -55,7 +55,7 @@ public class AuthorList: NSManagedObject {
     ) -> NSFetchRequest<AuthorList> {
         let fetchRequest = NSFetchRequest<AuthorList>(entityName: "AuthorList")
         fetchRequest.predicate = NSPredicate(
-            format: "replaceableIdentifier = %@ AND owner = %@ AND kind = %i",
+            format: "replaceableIdentifier = %@ AND author = %@ AND kind = %i",
             replaceableID,
             owner,
             kind
@@ -63,28 +63,5 @@ public class AuthorList: NSManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \AuthorList.identifier, ascending: true)]
         fetchRequest.fetchLimit = 1
         return fetchRequest
-    }
-}
-
-extension AuthorList: VerifiableEvent {
-    var pubKey: String { owner.hexadecimalPublicKey ?? "" }
-
-    var serializedListForSigning: [Any?] {
-        [
-            0,
-            owner.hexadecimalPublicKey,
-            Int64(createdAt.timeIntervalSince1970),
-            kind,
-            allTags,
-            content
-        ]
-    }
-
-    func calculateIdentifier() throws -> String {
-        let serializedEventData = try JSONSerialization.data(
-            withJSONObject: serializedListForSigning,
-            options: [.withoutEscapingSlashes]
-        )
-        return serializedEventData.sha256
     }
 }

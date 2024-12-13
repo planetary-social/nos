@@ -21,7 +21,7 @@
         <relationship name="follows" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Follow" inverseName="source" inverseEntity="Follow"/>
         <relationship name="includedInLists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AuthorList" inverseName="authors" inverseEntity="AuthorList"/>
         <relationship name="incomingNotifications" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NosNotification" inverseName="user" inverseEntity="NosNotification"/>
-        <relationship name="lists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AuthorList" inverseName="owner" inverseEntity="AuthorList"/>
+        <relationship name="lists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AuthorList"/>
         <relationship name="relays" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="authors" inverseEntity="Relay"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -29,20 +29,11 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="AuthorList" representedClassName=".AuthorList" syncable="YES">
-        <attribute name="allTags" optional="YES" attributeType="Transformable"/>
-        <attribute name="content" optional="YES" attributeType="String"/>
-        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="identifier" attributeType="String"/>
+    <entity name="AuthorList" representedClassName=".AuthorList" parentEntity="Event" syncable="YES">
         <attribute name="image" optional="YES" attributeType="URI"/>
-        <attribute name="isVerified" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="kind" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="listDescription" optional="YES" attributeType="String"/>
-        <attribute name="replaceableIdentifier" attributeType="String"/>
-        <attribute name="signature" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="includedInLists" inverseEntity="Author"/>
-        <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="lists" inverseEntity="Author"/>
     </entity>
     <entity name="AuthorReference" representedClassName="AuthorReference" syncable="YES">
         <attribute name="pubkey" optional="YES" attributeType="String"/>
