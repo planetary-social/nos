@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Nos now publishes the hashtags it finds in your note when you post. This means it works the way you’ve always expected it to work. [#44](https://github.com/verse-pbc/issues/issues/44)
 
 ### Internal Changes
+- Upgraded to Xcode 16. [#1570](https://github.com/planetary-social/nos/issues/1570)
 
 ## [1.0.3] - 2024-12-04Z
 
