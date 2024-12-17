@@ -21,7 +21,7 @@
         <relationship name="follows" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Follow" inverseName="source" inverseEntity="Follow"/>
         <relationship name="includedInLists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AuthorList" inverseName="authors" inverseEntity="AuthorList"/>
         <relationship name="incomingNotifications" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NosNotification" inverseName="user" inverseEntity="NosNotification"/>
-        <relationship name="lists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AuthorList"/>
+        <relationship name="lists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AuthorList" inverseName="owner" inverseEntity="AuthorList"/>
         <relationship name="relays" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="authors" inverseEntity="Relay"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -34,6 +34,7 @@
         <attribute name="listDescription" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="includedInLists" inverseEntity="Author"/>
+        <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="lists" inverseEntity="Author"/>
     </entity>
     <entity name="AuthorReference" representedClassName="AuthorReference" syncable="YES">
         <attribute name="pubkey" optional="YES" attributeType="String"/>

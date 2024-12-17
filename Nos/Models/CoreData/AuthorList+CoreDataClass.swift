@@ -19,6 +19,7 @@ public class AuthorList: Event {
         let authorList = existingAuthorList ?? AuthorList(context: context)
         authorList.createdAt = jsonEvent.createdDate
         authorList.author = owner
+        authorList.owner = owner
         authorList.identifier = jsonEvent.id
         authorList.replaceableIdentifier = replaceableID
         authorList.kind = jsonEvent.kind
@@ -55,7 +56,7 @@ public class AuthorList: Event {
     ) -> NSFetchRequest<AuthorList> {
         let fetchRequest = NSFetchRequest<AuthorList>(entityName: "AuthorList")
         fetchRequest.predicate = NSPredicate(
-            format: "replaceableIdentifier = %@ AND author = %@ AND kind = %i",
+            format: "replaceableIdentifier = %@ AND owner = %@ AND kind = %i",
             replaceableID,
             owner,
             kind

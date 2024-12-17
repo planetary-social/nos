@@ -7,9 +7,20 @@ extension AuthorList {
         NSFetchRequest<AuthorList>(entityName: "AuthorList")
     }
 
+    /// The URL of an image representing the list.
     @NSManaged public var image: URL?
+
+    /// The description of the list.
     @NSManaged public var listDescription: String?
+
+    /// The title of the list.
     @NSManaged public var title: String?
+
+    /// The owner of the list; the ``Author`` who created it.
+    /// Duplicates ``author`` but Core Data won't allow for multiple relationships to have the same inverse.
+    @NSManaged public var owner: Author?
+
+    /// The set of unique authors in this list.
     @NSManaged public var authors: Set<Author>
 }
 

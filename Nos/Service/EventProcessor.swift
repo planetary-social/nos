@@ -74,7 +74,7 @@ extension EventProcessor {
         skipVerification: Bool
     ) throws -> AuthorList {
         let authorList = try AuthorList.createOrUpdate(from: jsonEvent, in: parseContext)
-        if skipVerification == false {
+        if !skipVerification {
             guard try authorList.verifySignature() else {
                 parseContext.delete(authorList)
                 Log.info("Invalid signature on author list: \(jsonEvent) from \(relay?.address ?? "error")")
@@ -104,7 +104,7 @@ extension EventProcessor {
             throw EventError.missingAuthor
         }
 
-        if skipVerification == false {
+        if !skipVerification {
             guard try event.verifySignature(for: publicKey) else {
                 parseContext.delete(event)
                 Log.info("Invalid signature on event: \(jsonEvent) from \(relay?.address ?? "error")")
