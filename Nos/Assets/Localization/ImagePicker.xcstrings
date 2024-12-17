@@ -193,6 +193,12 @@
             "value" : "El maximo tamaño para publicacion de achivos gratis es %@. Para subir archives mas grande puedes pagar para subscribir a una cuenta Nostr.build pro."
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حداکثر حجم فایل برای بارگذاری رایگان رسانه %@ است. برای بارگذاری فایل های بزرگتر، به حساب حرفه ای Nostr.build ارتقاء دهید."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -220,6 +226,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Registarse para una cuenta pro de Nostr.build para la abilidad de subir archivos mas grande"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "یک حساب Nostr.build برای بارگذاری فایل های بزرگتر بگیرید"
           }
         },
         "ko" : {
@@ -316,6 +328,12 @@
             "value" : "Hubo un error en el intento de subir el archivo. El mensaje de error era\"%@\""
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هنگام بارگذاری فایلی که دادید خطایی رخ داد. پیغام خطا: \"%@\""
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -349,6 +367,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Registar una Cuenta"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ایجاد حساب"
           }
         },
         "ko" : {
@@ -620,6 +644,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tomar una foto"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عکس گرفتن"
           }
         },
         "ko" : {

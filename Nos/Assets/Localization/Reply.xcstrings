@@ -16,6 +16,12 @@
             "value" : "en discusión"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "در مباحثه"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -49,6 +55,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unirse a la discusión"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "به این بحث بپیوندید"
           }
         },
         "ko" : {
@@ -514,6 +526,12 @@
             "value" : "⚡ ¡te mando un zap!"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡️ به شما زپ زد!"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -562,6 +580,24 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "⚡ ¡te mando un zap de %ld sats!"
+                }
+              }
+            }
+          }
+        },
+        "fa" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "⚡️ %ld ساتوشی به شما زپ زد!"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : ""
                 }
               }
             }

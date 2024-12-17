@@ -712,6 +712,12 @@
             "value" : "Acoso"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مزاحمت"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1205,6 +1211,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "NSFW"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نامناسب برای خانواده و محیط کار"
           }
         },
         "ko" : {
