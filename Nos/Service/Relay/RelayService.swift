@@ -271,10 +271,27 @@ extension RelayService {
         return await fetchEvents(matching: contactFilter)
     }
     
+    func requestAuthorLists(
+        for authorKey: RawAuthorID?,
+        since: Date?
+    ) async -> SubscriptionCancellable {
+        guard let authorKey else {
+            return SubscriptionCancellable.empty()
+        }
+        
+        let followSetFilter = Filter(
+            authorKeys: [authorKey],
+            kinds: [.followSet],
+            since: since
+        )
+        return await fetchEvents(matching: followSetFilter)
+    }
+    
     func requestProfileData(
         for authorKey: RawAuthorID?,
         lastUpdateMetadata: Date?,
-        lastUpdatedContactList: Date?
+        lastUpdatedContactList: Date?,
+        lastUpdatedFollowSets: Date?
     ) async -> SubscriptionCancellable {
         var subscriptions = SubscriptionCancellables()
         guard let authorKey else {
@@ -283,7 +300,8 @@ extension RelayService {
         
         subscriptions.append(await requestMetadata(for: authorKey, since: lastUpdateMetadata))
         subscriptions.append(await requestContactList(for: authorKey, since: lastUpdatedContactList))
-        
+        subscriptions.append(await requestAuthorLists(for: authorKey, since: lastUpdatedFollowSets))
+
         return SubscriptionCancellable(cancellables: subscriptions, relayService: self)
     }
     
