@@ -12,8 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Release Notes
 - Fixed display of mastodon usernames so it shows @username@server.instance rather than username@instance-name.mostr.pub
+- Nos now publishes the hashtags it finds in your note when you post. This means it works the way you’ve always expected it to work. [#44](https://github.com/verse-pbc/issues/issues/44)
 
 ### Internal Changes
+- Upgraded to Xcode 16. [#1570](https://github.com/planetary-social/nos/issues/1570)
 - Download and parse an author’s lists when viewing their profile. [#49](https://github.com/verse-pbc/issues/issues/49)
 
 ## [1.0.3] - 2024-12-04Z

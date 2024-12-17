@@ -152,7 +152,7 @@ struct UsernameView: View {
     func save() async {
         usernameState = .loading
 
-        guard let author = await currentUser.author,
+        guard let author = currentUser.author,
             let keyPair = currentUser.keyPair else {
             usernameState = .errorAlert
             return

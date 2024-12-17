@@ -598,6 +598,12 @@
             "state" : "translated",
             "value" : "Al continuar, acepto los [Términos de servicio](https://nos.social/terms-of-service) y la [Política de privacidad](https://nos.social/privacy)"
           }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "در ادامه، با [شرایط استفاده](https://nos.social/terms-of-service) و [سیاست های حریم خصوصی](https://nos.social/privacy) موافقت می کنم"
+          }
         }
       }
     },
@@ -610,6 +616,12 @@
             "state" : "translated",
             "value" : "The app couldn't save your chosen Display Name or Username. You can set these up later in your Profile."
           }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اپ نتوانست اسم نمایشی یا نام کاربری انتخابی شما را ذخیره کند. می توانید بعدا این موارد در نمایه تنظیم کنید."
+          }
         }
       }
     },
@@ -621,6 +633,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You've finished setting up your account, but..."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "شما تنظیمات حسابتان را کامل کردید، ولی..."
           }
         }
       }
@@ -644,6 +662,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cuentas que sigo"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حساب هایی که دنبال می کنم"
           }
         },
         "fr" : {
@@ -687,6 +711,12 @@
             "state" : "translated",
             "value" : "Now that you know who you are on Nostr, let’s find other people to follow!"
           }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حالا که می‌دانید در ناستر کی هستید، بیاید دیگران را دنبال کنید!"
+          }
         }
       }
     },
@@ -698,6 +728,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You've finished setting up your account!"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "شما تنظیمات حسابتان را کامل کردید!"
           }
         },
         "ko" : {
@@ -727,6 +763,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Actividad"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فعالیت"
           }
         },
         "fr" : {
@@ -1061,6 +1103,12 @@
             "state" : "translated",
             "value" : "For legal reasons, we need to make sure you're over this age to use Nos."
           }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "به دلایل قانونی باید مطمئن شویم بزرگتر از این سن هستید تا از نوس استفاده کنید."
+          }
         }
       }
     },
@@ -1072,6 +1120,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you over 16 years old?"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "آیا بزرگتر از 16 ساله هستید؟"
           }
         },
         "ko" : {
@@ -1487,6 +1541,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No, gracias. Ya tengo un NIP-05"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نه ممنون، من یک NIP-05 دارم"
           }
         },
         "fr" : {
@@ -2248,6 +2308,12 @@
             "value" : "Este usuario no ha escrito una biografía aún 👻"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "این کاربر هنوز یک معرفی ننوشته است 👻"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2299,6 +2365,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Crea tu red!"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "شبکه خود را بسازید!"
           }
         },
         "ko" : {

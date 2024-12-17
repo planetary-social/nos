@@ -38,7 +38,7 @@ struct ReplyPreview: View {
 }
 
 #Preview {
-    var previewData = PreviewData()
+    @Previewable @State var previewData = PreviewData()
     
     return ReplyPreview(note: previewData.longNote)
         .background(Color.appBg)

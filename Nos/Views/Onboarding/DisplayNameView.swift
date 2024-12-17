@@ -73,7 +73,7 @@ struct DisplayNameView: View {
 
     /// Saves the display name locally and publishes the event to relays. Sets `showError` if it fails.
     func save() async {
-        guard let author = await currentUser.author else {
+        guard let author = currentUser.author else {
             showError = true
             return
         }
