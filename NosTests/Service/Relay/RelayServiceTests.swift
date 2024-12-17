@@ -26,7 +26,7 @@ class RelayServiceTests: XCTestCase {
         )
         let mockSubscriptionManager = MockRelaySubscriptionManager()
         let subject = RelayService(subscriptionManager: mockSubscriptionManager)
-        _ = await subject.requestFollowSets(for: "test", since: since)
+        _ = await subject.requestAuthorLists(for: "test", since: since)
 
         let resultFilter = try XCTUnwrap(mockSubscriptionManager.queueSubscriptionFilter)
         XCTAssertEqual(resultFilter, expectedFilter)
