@@ -82,13 +82,13 @@ Push a new Nos Release build to TestFlight
 
 Mark a deployed commit as having been deployed to our public beta testers
 
-### ios certs
+### ios recreate_certs
 
 ```sh
-[bundle exec] fastlane ios certs
+[bundle exec] fastlane ios recreate_certs
 ```
 
-Refresh certificates in the match repo
+Revoke and delete old certificates in the match repo and request new ones
 
 ### ios nuke_certs
 
