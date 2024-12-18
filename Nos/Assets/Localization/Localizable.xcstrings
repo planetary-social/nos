@@ -2395,6 +2395,12 @@
             "state" : "translated",
             "value" : "Tu feed solo está formado por cuentas que sigues. Nos no usa algoritmos para controlar lo que ves."
           }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "خبرنامه شما فقط شامل حساب هایی است که دنبال می کنید. نوس از هیچ الگوریتمی برای کنترل آنچه که می بینید استفاده نمی کند."
+          }
         }
       }
     },
@@ -2520,6 +2526,12 @@
             "value" : "Elige tu nombre"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هندل خود را انتخاب کنید"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2571,6 +2583,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Así es como otros te verán en Nos, y también una URL pública para tu perfil.\n\nPuedes cambiar esto más tarde."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دیگران شما را به این شکل در ناستر می بینند، همچنین با یک آدرس اینترنتی عمومی به نمایه شما. \nبعدا می توانید این را تغییر دهید."
           }
         },
         "fr" : {
@@ -2626,6 +2644,12 @@
             "value" : "Bienvenido a Nos, donde importa tu voz. Comienza tu viaje asegurando tu **@username**.nos.social\n\n¡Únete en el mundo descentralizado!"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "به نوس خوش آمدید، جایی که صدای شما مهم است. سفر خود را دریافت یک **@نام کاربری**.nos.social یکتا آغاز کنید.\n\nدر دنیای نامتمرکز متمایز باشید!"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2677,6 +2701,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Solicitar tu identidad única en Nostr"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هویت یکتای خود را در ناستر بگیرید"
           }
         },
         "fr" : {
@@ -2732,6 +2762,12 @@
             "value" : "Registrar lo ahora"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "همین حالا بگیرید"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2783,6 +2819,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Inscribir tu @username y destaca en el mundo descentralizado!"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نام کاربری خود را بگیرید و در دنیای نامتمرکز متمایز باشید!"
           }
         },
         "fr" : {
@@ -3170,6 +3212,12 @@
             "value" : "Confirmar Borrar"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تایید حذف"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3535,6 +3583,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Copiado!"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "کپی شد!"
           }
         },
         "fr" : {
@@ -3929,6 +3983,12 @@
             "value" : "Copy private key"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "کپی کردن کلید خصوصی"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3945,6 +4005,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copy public key"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "کپی کردن کلید عمومی"
           }
         },
         "ko" : {
@@ -4238,6 +4304,12 @@
             "value" : "Create Account"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ایجاد حساب"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4261,6 +4333,12 @@
             "state" : "translated",
             "value" : "We've simplified management of your account credentials. Nos uses public-private key encryption to verify your identity."
           }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ما مدیریت رمزهای حساب شما را آسان کرده ایم. نوس از رمزنگاری کلید عمومی-خصوصی برای تایید هویت استفاده می کند."
+          }
         }
       }
     },
@@ -4272,6 +4350,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Say goodbye to usernames and passwords!"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "با نام کاربری و گذرواژه خداحافظی کنید!"
           }
         }
       }
@@ -4552,6 +4636,12 @@
             "value" : "Borrar"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4585,6 +4675,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminar Cuenta"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف حساب کاربری"
           }
         },
         "ko" : {
@@ -4622,6 +4718,12 @@
             "value" : "Eliminar tu cuenta borrará todos tus datos de los servidores de Nos y solicitará a todos tus relays hacer lo mismo."
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف کردن حساب در اینجا تمام داده های شما را از سرورهای نوس پاک می کند و به رله ها نیز در خواست پاک کردن می فرستد."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4644,6 +4746,12 @@
             "state" : "translated",
             "value" : "Deleting your account will delete all your data from Nos servers and ask all your relays to do the same."
           }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف کردن حساب در اینجا تمام داده های شما را از سرورهای نوس پاک می کند و به رله ها نیز در خواست پاک کردن می فرستد."
+          }
         }
       }
     },
@@ -4660,6 +4768,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminar mi Cuenta"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حساب کاربری من را حذف کن"
           }
         },
         "ko" : {
@@ -4875,6 +4989,12 @@
             "value" : "Borrar republicación"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف بازنشر"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4934,6 +5054,12 @@
             "value" : "Sí, borrar mi Nostr nombre (NIP-05)"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بله، NIP-05 من را حذف کن"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4987,6 +5113,12 @@
             "value" : "¿Está seguro de querer eliminar tu Nostr nombre (NIP-05)?"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مطمئنید می خواهید NIP-05 خود را حذف کنید؟"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5038,6 +5170,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cambiar o eliminar tu apodo puede causar que los enlaces web se desconecten de tu identidad. **Procede con precaución.**"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تغییر یا حذف هندل وب شما ممکن است باعث قطع ارتباط هویت شما شود. \n**با احتیاط انجام دهید.**"
           }
         },
         "fr" : {
@@ -5419,6 +5557,12 @@
             "state" : "translated",
             "value" : "This is how others will see you when they view your notes. You can always change it."
           }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "این همان طوری است که دیگران شما را هنگام بازدید یادداشت هایتان می بینند. بعدا می توانید تغییرش دهید."
+          }
         }
       }
     },
@@ -5430,6 +5574,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Display Name"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نام نمایشی"
           }
         },
         "ko" : {
@@ -5454,6 +5604,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your display name"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نام نمایشی شما"
           }
         },
         "ko" : {
@@ -6358,6 +6514,12 @@
             "value" : "Activistas"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فعالان"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6409,6 +6571,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Todo"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "همه"
           }
         },
         "fr" : {
@@ -6464,6 +6632,12 @@
             "value" : "Arte"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هنر"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6499,6 +6673,12 @@
             "value" : "Español"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اسپانیایی"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6514,6 +6694,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Food"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غذا"
           }
         },
         "ko" : {
@@ -6543,6 +6729,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Videojuegos"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بازی"
           }
         },
         "fr" : {
@@ -6604,6 +6796,12 @@
             "value" : "Salud"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سلامت"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6651,6 +6849,12 @@
             "value" : "Lifestyle"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سبک زندگی"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6678,6 +6882,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Música"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "موسیقی"
           }
         },
         "fr" : {
@@ -6739,6 +6949,12 @@
             "value" : "Nuevo"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جدید"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6798,6 +7014,12 @@
             "value" : "Noticias"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اخبار"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6845,6 +7067,12 @@
             "value" : "NZ / Australia"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نیوزلند/استرالیا"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6860,6 +7088,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Photography"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عکاسی"
           }
         },
         "ko" : {
@@ -6879,6 +7113,12 @@
             "value" : "Politics"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سیاست"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6896,6 +7136,12 @@
             "value" : "Random"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تصادفی"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6911,6 +7157,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sci-Fi"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "علمی تخیلی"
           }
         },
         "ko" : {
@@ -6940,6 +7192,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Deportes"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ورزشی"
           }
         },
         "ko" : {
@@ -6993,6 +7251,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tecnología"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فناوری"
           }
         },
         "fr" : {
@@ -7215,6 +7479,12 @@
             "value" : "filtro"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فیلتر"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7256,6 +7526,12 @@
             "value" : "Encuentra gente"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "یافتن مردم"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7277,6 +7553,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Marcar Contenido"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "گزارش محتوا"
           }
         },
         "ko" : {
@@ -7308,6 +7590,12 @@
             "value" : "Selecciona una etiqueta para el contenido"
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "یک موضوع برای محتوا انتخاب کنید"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7335,6 +7623,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Crear un reporte de contenido para esta nota que otros usuarios de la red puedan ver."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "یک موضوع برای این پست ایجاد کنید که کاربران دیگر در شبکه شما ببینند."
           }
         },
         "ko" : {
@@ -7366,6 +7660,12 @@
             "value" : "Respuestas o menciones dañinas y no deseadas."
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "پاسخ ها یا اشاره های مضر یا ناخواسته."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7393,6 +7693,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Acoso & Blasfemia"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مزاحمت و توهین"
           }
         },
         "ko" : {
