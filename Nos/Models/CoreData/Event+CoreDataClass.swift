@@ -492,13 +492,18 @@ public class Event: NosManagedObject, VerifiableEvent {
 
     /// This tracks which relays this event is deleted on. Hide posts with deletedOn.count > 0
     func trackDelete(on relay: Relay, context: NSManagedObjectContext) throws {
-        if EventKind(rawValue: kind) == .delete, let eTags = allTags as? [[String]] {
-            for deletedEventId in eTags.map({ $0[1] }) {
-                if let deletedEvent = Event.find(by: deletedEventId, context: context),
-                    deletedEvent.author?.hexadecimalPublicKey == author?.hexadecimalPublicKey {
-                    print("\(deletedEvent.identifier ?? "n/a") was deleted on \(relay.address ?? "unknown")")
-                    deletedEvent.deletedOn.insert(relay)
-                }
+        guard EventKind(rawValue: kind) == .delete,
+            let tags = allTags as? [[String]] else {
+            return
+        }
+        
+        let eTags = tags.filter { $0.first == "e" && $0.count >= 2 }
+        
+        for deletedEventId in eTags.map({ $0[1] }) {
+            if let deletedEvent = Event.find(by: deletedEventId, context: context),
+                deletedEvent.author?.hexadecimalPublicKey == author?.hexadecimalPublicKey {
+                print("\(deletedEvent.identifier ?? "n/a") was deleted on \(relay.address ?? "unknown")")
+                deletedEvent.deletedOn.insert(relay)
             }
         }
     }
