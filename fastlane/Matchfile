@@ -1,8 +1,8 @@
-git_url("git@github.com:planetary-social/nos-ios-appstore-certificates.git")
+git_url("git@github.com:verse-pbc/fastlane_certs.git")
 
 storage_mode("git")
 
-type("development") # The default type, can be: appstore, adhoc, enterprise or development
+type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
 
 app_identifier(["com.verse.Nos", "com.verse.Nos-dev", "com.verse.Nos-staging"])
 
