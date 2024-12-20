@@ -156,15 +156,14 @@ platform :ios do
     push_to_git_remote
   end
 
-  desc "Refresh certificates in the match repo"
-  lane :certs do
+  desc "Revoke and delete old certificates in the match repo and request new ones"
+  lane :recreate_certs do
     app_store_connect_api_key(
       key_id: asc_key_id,
       issuer_id: asc_issuer_id,
       key_content: asc_key_content
     )
-    match(type: "appstore", app_identifier: ["com.verse.Nos", "com.verse.Nos-dev", "com.verse.Nos-staging"])
-    match(type: "development", app_identifier: ["com.verse.Nos", "com.verse.Nos-dev", "com.verse.Nos-staging"])
+    match(type: "appstore", force: true, app_identifier: ["com.verse.Nos", "com.verse.Nos-dev", "com.verse.Nos-staging"])
   end
 
   desc "Clean App Store Connect of certificates"
