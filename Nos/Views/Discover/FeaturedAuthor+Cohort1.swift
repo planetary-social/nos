@@ -28,11 +28,6 @@ extension FeaturedAuthor {
             categories: [.music]
         ),
         FeaturedAuthor(
-            name: "Judson McKinney and the Wanderers",
-            npub: "npub1jvt2hacqqzvwjkum30mlvmy52jer4p4crfh0veqstpk58rr9e7ms2fwh74",
-            categories: [.music]
-        ),
-        FeaturedAuthor(
             name: "Black in Aquatics",
             npub: "npub1ee852umhw26afdfwgf90cky9ufaythwyarttqu59lazcrx56z0tsmx3mkz",
             categories: [.sports]

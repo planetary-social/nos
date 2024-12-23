@@ -41,11 +41,6 @@ extension FeaturedAuthor {
             name: "Rabble",
             npub: "npub1wmr34t36fy03m8hvgl96zl3znndyzyaqhwmwdtshwmtkg03fetaqhjg240",
             categories: [.activists, .tech]
-        ),
-        FeaturedAuthor(
-            name: "Edward Snowden",
-            npub: "npub1sn0wdenkukak0d9dfczzeacvhkrgz92ak56egt7vdgzn8pv2wfqqhrjdv9",
-            categories: [.activists, .tech]
         )
     ]
 }
@@ -106,16 +101,6 @@ extension FeaturedAuthor {
             name: "Lucire",
             npub: "npub1l4s4mtt96znwu3plfeyupk37y63xfapw5e7kjn7uavuw02lvav5q3ngc3s",
             categories: [.news, .nzAustralia]
-        ),
-        FeaturedAuthor(
-            name: "Ian Griffin",
-            npub: "npub19p6edn6lvz9dmegm7s8vyz9w5w0ejzgztke8rcswxgmqr35h8feszt36jc",
-            categories: [.sciFi, .nzAustralia]
-        ),
-        FeaturedAuthor(
-            name: "Morvin",
-            npub: "npub1030nmrre84tzpq2de535pd6up2x74c32n6r5xsw2kf0zf58j333sxssyu7",
-            categories: [.art]
         ),
         FeaturedAuthor(
             name: "David Hood",

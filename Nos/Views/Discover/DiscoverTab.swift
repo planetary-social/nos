@@ -19,7 +19,6 @@ struct DiscoverTab: View {
 
     @State private var searchController = SearchController()
 
-    @State var predicate: NSPredicate = .false
     @FocusState private var isSearching: Bool
 
     let goToFeedTip = GoToFeedTip()
