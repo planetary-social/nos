@@ -27,7 +27,8 @@ struct HomeFeedView: View {
     let welcomeTip = WelcomeToFeedTip()
 
     @State private var showRelayPicker = false
-    @State private var selectedRelay: Relay? 
+    @State private var selectedRelay: Relay?
+    @State private var pickerSelected = FeedSource.following
 
     init(user: Author) {
         self.user = user
@@ -75,6 +76,8 @@ struct HomeFeedView: View {
                     .tipBackground(LinearGradient.horizontalAccentReversed)
                     .tipViewStyle(.inline)
 
+                FeedPicker(author: user, selectedSource: $pickerSelected)
+                
                 PagedNoteListView(
                     refreshController: $refreshController,
                     databaseFilter: homeFeedFetchRequest,
@@ -137,6 +140,12 @@ struct HomeFeedView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 SideMenuButton()
             }
+            ToolbarItem(placement: .principal) {
+                Image.nosLogo
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 20)
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     withAnimation {
@@ -150,8 +159,10 @@ struct HomeFeedView: View {
                 .frame(minWidth: 40, minHeight: 40)
             }
         }
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
+        .navigationBarTitle("", displayMode: .inline)
         .padding(.top, 1)
-        .nosNavigationBar(navigationBarTitle)
         .onAppear {
             if router.selectedTab == .home {
                 isVisible = true
