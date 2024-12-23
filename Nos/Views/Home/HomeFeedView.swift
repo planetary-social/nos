@@ -20,6 +20,8 @@ struct HomeFeedView: View {
     /// The amount of time (in seconds) the loading indicator will be shown when showTimedLoadingIndicator is set to 
     /// true.
     static let staticLoadTime: TimeInterval = 2
+    
+    private let stackSpacing: CGFloat = 8
 
     let user: Author
     
@@ -68,7 +70,7 @@ struct HomeFeedView: View {
 
     var body: some View {
         ZStack {
-            VStack(spacing: 8) {
+            VStack(spacing: stackSpacing) {
                 TipView(welcomeTip)
                     .padding(.top, 20)
                     .padding(.horizontal, 16)
@@ -77,6 +79,7 @@ struct HomeFeedView: View {
                     .tipViewStyle(.inline)
 
                 FeedPicker(author: user, selectedSource: $pickerSelected)
+                    .padding(.bottom, -stackSpacing)    // remove the padding below the picker
                 
                 PagedNoteListView(
                     refreshController: $refreshController,
