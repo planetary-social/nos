@@ -118,11 +118,6 @@ extension FeaturedAuthor {
             categories: [.tech, .activists]
         ),
         FeaturedAuthor(
-            name: "Strypey",
-            npub: "npub1pwwm8s9zxssfm3aqv3g4fvqfh9kglr76m5z434cymju9gp9jhwwqdqtc65",
-            categories: [.tech, .activists]
-        ),
-        FeaturedAuthor(
             name: "Cecilia",
             npub: "npub1paftqx5zvj0gjtu3whudejxdgv4vdn27paw4lzaauc43kgfxxaqs75c5a7",
             categories: [.art]
@@ -218,11 +213,6 @@ extension FeaturedAuthor {
             categories: [.news, .nzAustralia]
         ),
         FeaturedAuthor(
-            name: "Ian Griffin",
-            npub: "npub19p6edn6lvz9dmegm7s8vyz9w5w0ejzgztke8rcswxgmqr35h8feszt36jc",
-            categories: [.sciFi, .nzAustralia]
-        ),
-        FeaturedAuthor(
             name: "JSM",
             npub: "npub1uqeexjx2djkfwzxdnrnrrch5h2k4xn0uapcgsxm94ftaxrlhy5lqywjckg",
             categories: [.tech]
@@ -266,11 +256,6 @@ extension FeaturedAuthor {
             name: "Nacho",
             npub: "npub1daajnadf0f0s7uz3yftur8434rtz2s949gkdpx7uyeapm9rlt0qq9q8w5z",
             categories: [.lifestyle]
-        ),
-        FeaturedAuthor(
-            name: "Morvin",
-            npub: "npub1030nmrre84tzpq2de535pd6up2x74c32n6r5xsw2kf0zf58j333sxssyu7",
-            categories: [.art]
         )
     ]
 }

@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded to Xcode 16. [#1570](https://github.com/planetary-social/nos/issues/1570)
 - Download and parse an author’s lists when viewing their profile. [#49](https://github.com/verse-pbc/issues/issues/49)
 - Updated fastlane scripts to fix the TestFlight deployment pipeline. [#97](https://github.com/verse-pbc/issues/issues/97)
+- Removed inactive accounts from Discover tab. [#94](https://github.com/verse-pbc/issues/issues/94)
 
 ## [1.0.3] - 2024-12-04Z
 

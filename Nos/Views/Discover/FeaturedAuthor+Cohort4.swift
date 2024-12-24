@@ -13,11 +13,6 @@ extension FeaturedAuthor {
             categories: [.art]
         ),
         FeaturedAuthor(
-            name: "Neigsendoig Cocules",
-            npub: "npub1372csjhjv35sxcqm90ca2d0cfxsl6xku7j6hhswynwdy9m7zl98scn950w",
-            categories: [.music]
-        ),
-        FeaturedAuthor(
             name: "Lexie Bean",
             npub: "npub1s8c5mk68qn0erxrx5waqz7xxk39x5xx2367879eqcv270tqs4tvsf5ewgf",
             categories: [.activists]
