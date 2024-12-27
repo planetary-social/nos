@@ -202,7 +202,6 @@
 		503CA9532D19ACCC00805EF8 /* HorizontalLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503CA9522D19ACC800805EF8 /* HorizontalLine.swift */; };
 		503CA9792D19C39F00805EF8 /* FeedCustomizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503CA9782D19C39800805EF8 /* FeedCustomizerView.swift */; };
 		503CAAF12D1AFF8900805EF8 /* BeveledContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503CAAF02D1AFF8400805EF8 /* BeveledContainerView.swift */; };
-		503CAB4F2D1D8FB300805EF8 /* FeedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503CAB4E2D1D8FAF00805EF8 /* FeedController.swift */; };
 		503CAB502D1D8FB300805EF8 /* FeedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503CAB4E2D1D8FAF00805EF8 /* FeedController.swift */; };
 		503CAB6E2D1DA17400805EF8 /* FeedToggleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503CAB6D2D1DA17100805EF8 /* FeedToggleRow.swift */; };
 		503CAC612D1EF71B00805EF8 /* FeedSourceToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503CAC602D1EF71700805EF8 /* FeedSourceToggleView.swift */; };
@@ -2680,7 +2679,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				03F7C4F32C10DF79006FF613 /* URLSessionProtocol.swift in Sources */,
-				503CAB4F2D1D8FB300805EF8 /* FeedController.swift in Sources */,
 				0320C1152BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift in Sources */,
 				C993148E2C5BD8FC00224BA6 /* NoteEditorController.swift in Sources */,
 				035729CB2BE41770005FEE85 /* ContentWarningController.swift in Sources */,
