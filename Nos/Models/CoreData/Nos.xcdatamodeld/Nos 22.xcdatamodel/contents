@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="23H222" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Author" representedClassName=".Author" syncable="YES">
+        <attribute name="about" optional="YES" attributeType="String"/>
+        <attribute name="displayName" optional="YES" attributeType="String"/>
+        <attribute name="hexadecimalPublicKey" attributeType="String"/>
+        <attribute name="lastUpdatedContactList" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastUpdatedMetadata" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastUpdatedMuteList" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="muted" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="nip05" optional="YES" attributeType="String"/>
+        <attribute name="profilePhotoURL" optional="YES" attributeType="URI"/>
+        <attribute name="pronouns" optional="YES" attributeType="String"/>
+        <attribute name="rawMetadata" optional="YES" attributeType="Binary"/>
+        <attribute name="rawMetadata1" optional="YES" attributeType="Binary"/>
+        <attribute name="website" optional="YES" attributeType="String"/>
+        <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="author" inverseEntity="Event"/>
+        <relationship name="followers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Follow" inverseName="destination" inverseEntity="Follow"/>
+        <relationship name="followNotifications" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NosNotification" inverseName="follower" inverseEntity="NosNotification"/>
+        <relationship name="follows" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Follow" inverseName="source" inverseEntity="Follow"/>
+        <relationship name="includedInLists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AuthorList" inverseName="authors" inverseEntity="AuthorList"/>
+        <relationship name="incomingNotifications" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NosNotification" inverseName="user" inverseEntity="NosNotification"/>
+        <relationship name="lists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AuthorList" inverseName="owner" inverseEntity="AuthorList"/>
+        <relationship name="relays" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="authors" inverseEntity="Relay"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="hexadecimalPublicKey"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="AuthorList" representedClassName=".AuthorList" parentEntity="Event" syncable="YES">
+        <attribute name="image" optional="YES" attributeType="URI"/>
+        <attribute name="isFeedEnabled" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="listDescription" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="includedInLists" inverseEntity="Author"/>
+        <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="lists" inverseEntity="Author"/>
+    </entity>
+    <entity name="AuthorReference" representedClassName="AuthorReference" syncable="YES">
+        <attribute name="pubkey" optional="YES" attributeType="String"/>
+        <attribute name="recommendedRelayUrl" optional="YES" attributeType="String"/>
+        <relationship name="event" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="authorReferences" inverseEntity="Event"/>
+    </entity>
+    <entity name="Event" representedClassName=".Event" syncable="YES">
+        <attribute name="allTags" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName"/>
+        <attribute name="content" optional="YES" attributeType="String"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="expirationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="identifier" optional="YES" attributeType="String"/>
+        <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isVerified" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="kind" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="receivedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="replaceableIdentifier" optional="YES" attributeType="String"/>
+        <attribute name="sendAttempts" optional="YES" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="signature" optional="YES" attributeType="String"/>
+        <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="events" inverseEntity="Author"/>
+        <relationship name="authorReferences" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="AuthorReference" inverseName="event" inverseEntity="AuthorReference"/>
+        <relationship name="deletedOn" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="deletedEvents" inverseEntity="Relay"/>
+        <relationship name="eventReferences" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="EventReference" inverseName="referencingEvent" inverseEntity="EventReference"/>
+        <relationship name="publishedTo" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="publishedEvents" inverseEntity="Relay"/>
+        <relationship name="referencingEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EventReference" inverseName="referencedEvent" inverseEntity="EventReference"/>
+        <relationship name="seenOnRelays" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="events" inverseEntity="Relay"/>
+        <relationship name="shouldBePublishedTo" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relay" inverseName="shouldBePublishedEvents" inverseEntity="Relay"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="identifier"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="EventReference" representedClassName="EventReference" syncable="YES">
+        <attribute name="eventId" optional="YES" attributeType="String"/>
+        <attribute name="marker" optional="YES" attributeType="String"/>
+        <attribute name="recommendedRelayUrl" optional="YES" attributeType="String"/>
+        <relationship name="referencedEvent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="referencingEvents" inverseEntity="Event"/>
+        <relationship name="referencingEvent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="eventReferences" inverseEntity="Event"/>
+    </entity>
+    <entity name="Follow" representedClassName=".Follow" syncable="YES">
+        <attribute name="petName" optional="YES" attributeType="String"/>
+        <relationship name="destination" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="followers" inverseEntity="Author"/>
+        <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="follows" inverseEntity="Author"/>
+    </entity>
+    <entity name="NosNotification" representedClassName="NosNotification" syncable="YES">
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="eventID" optional="YES" attributeType="String"/>
+        <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <relationship name="follower" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="followNotifications" inverseEntity="Author"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="incomingNotifications" inverseEntity="Author"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="eventID"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="Relay" representedClassName=".Relay" syncable="YES">
+        <attribute name="address" attributeType="String"/>
+        <attribute name="contact" optional="YES" attributeType="String"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="isFeedEnabled" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="metadataFetchedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="pubkey" optional="YES" attributeType="String"/>
+        <attribute name="relayDescription" optional="YES" attributeType="String"/>
+        <attribute name="software" optional="YES" attributeType="String"/>
+        <attribute name="supportedNIPs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
+        <attribute name="version" optional="YES" attributeType="String"/>
+        <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="relays" inverseEntity="Author"/>
+        <relationship name="deletedEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="deletedOn" inverseEntity="Event"/>
+        <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="seenOnRelays" inverseEntity="Event"/>
+        <relationship name="publishedEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="publishedTo" inverseEntity="Event"/>
+        <relationship name="shouldBePublishedEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="shouldBePublishedTo" inverseEntity="Event"/>
+    </entity>
+</model>
