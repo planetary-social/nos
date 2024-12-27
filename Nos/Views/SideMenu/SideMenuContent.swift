@@ -1,12 +1,14 @@
 import SwiftUI
 import MessageUI
 import Dependencies
+import Inject
 
 struct SideMenuContent: View {
     
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
+    @ObserveInjection var inject
     
     @State private var isShowingReportABugMailView = false
     @State private var shareNosPressed = false
@@ -118,6 +120,7 @@ struct SideMenuContent: View {
                 ProfileEditView(author: destination.profile)
             }
         }
+        .enableInjection()
     }
 }
 
