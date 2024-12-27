@@ -1,5 +1,6 @@
 import SwiftUI
 import Dependencies
+import Inject
 
 struct AppView: View {
 
@@ -14,6 +15,7 @@ struct AppView: View {
     @Dependency(\.userDefaults) private var userDefaults
     @Environment(CurrentUser.self) var currentUser
     @Environment(RelayService.self) private var relayService
+    @ObserveInjection var inject
 
     @State private var lastSelectedTab = AppDestination.home
     @State private var showNIP05Wizard = false
@@ -47,6 +49,7 @@ struct AppView: View {
         }
         .task { await presentNIP05SheetIfNeeded() }
         .tint(.primaryTxt)
+        .enableInjection()
     }
 
     private var tabView: some View {

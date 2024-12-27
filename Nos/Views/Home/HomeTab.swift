@@ -1,16 +1,19 @@
 import SwiftUI
 import Dependencies
+import Inject
 
 struct HomeTab: View {
     
     @ObservedObject var user: Author
     
     @EnvironmentObject private var router: Router
+    @ObserveInjection var inject
     
     var body: some View {
         NosNavigationStack(path: $router.homeFeedPath) {
             HomeFeedView(user: user)
         }
+        .enableInjection()
     }
 }
 
