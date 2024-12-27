@@ -5,7 +5,7 @@ import Inject
 struct AppView: View {
 
     @State var showNewPost = false
-    @State var newPostContents: String?
+    @State var newPostContents: String? 
 
     @Environment(AppController.self) var appController
     @EnvironmentObject private var router: Router
@@ -22,15 +22,126 @@ struct AppView: View {
 
     var body: some View {
         ZStack {
-            switch appController.currentState {
-            case .loading:
-                SplashScreenView()
-                    .ignoresSafeArea()
-            case .onboarding:
+            if appController.currentState == .onboarding {
                 OnboardingView(completion: appController.completeOnboarding)
-            case .loggedIn:
-                tabView
-
+            } else {
+                TabView(selection: $router.selectedTab) {
+                    if let author = currentUser.author {
+                        HomeTab(user: author)
+                            .tabItem {
+                                VStack {
+                                    let text = Text("homeFeed")
+                                    if $router.selectedTab.wrappedValue == .home {
+                                        Image.tabIconHomeSelected
+                                        text
+                                    } else {
+                                        Image.tabIconHome
+                                        text.foregroundColor(.secondaryTxt)
+                                    }
+                                }
+                            }
+                            .toolbarBackground(.visible, for: .tabBar)
+                            .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                            .tag(AppDestination.home)
+                            .onAppear {
+                                // TODO: Move this somewhere better like CurrentUser when it becomes the source of truth
+                                // for who is logged in
+                                if let keyPair = currentUser.keyPair {
+                                    analytics.identify(
+                                        with: keyPair,
+                                        nip05: currentUser.author?.nip05
+                                    )
+                                    crashReporting.identify(with: keyPair)
+                                }
+                            }
+                    }
+                    
+                    DiscoverTab()
+                        .tabItem {
+                            VStack {
+                                let text = Text("discover")
+                                if $router.selectedTab.wrappedValue == .discover {
+                                    Image.tabIconEveryoneSelected
+                                    text.foregroundColor(.primaryTxt)
+                                } else {
+                                    Image.tabIconEveryone
+                                    text.foregroundColor(.secondaryTxt)
+                                }
+                            }
+                        }
+                        .toolbarBackground(.visible, for: .tabBar)
+                        .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                        .tag(AppDestination.discover)
+                    
+                    VStack {}
+                        .tabItem {
+                            VStack {
+                                Image.newPostButton
+                                Text("post")
+                            }
+                        }
+                    .tag(AppDestination.noteComposer(nil))
+                    
+                    NotificationsView(user: currentUser.author)
+                        .tabItem {
+                            VStack {
+                                let text = Text("notifications")
+                                if $router.selectedTab.wrappedValue == .notifications {
+                                    Image.tabIconNotificationsSelected
+                                    text.foregroundColor(.primaryTxt)
+                                } else {
+                                    Image.tabIconNotifications
+                                    text.foregroundColor(.secondaryTxt)
+                                }
+                            }
+                        }
+                        .toolbarBackground(.visible, for: .tabBar)
+                        .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                        .tag(AppDestination.notifications)
+                        .badge(pushNotificationService.badgeCount)
+                    
+                    if let author = currentUser.author {
+                        ProfileTab(author: author, path: $router.profilePath)
+                            .tabItem {
+                                VStack {
+                                    let text = Text("profileTitle")
+                                    if $router.selectedTab.wrappedValue == .profile {
+                                        Image.tabProfileSelected
+                                        text.foregroundColor(.primaryTxt)
+                                    } else {
+                                        Image.tabProfile
+                                        text.foregroundColor(.secondaryTxt)
+                                    }
+                                }
+                            }
+                            .toolbarBackground(.visible, for: .tabBar)
+                            .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                            .tag(AppDestination.profile)
+                    }
+                }
+                .onChange(of: router.selectedTab) { _, newTab in
+                    if case let AppDestination.noteComposer(contents) = newTab {
+                        newPostContents = contents
+                        showNewPost = true
+                        router.selectedTab = lastSelectedTab
+                    } else if !showNewPost {
+                        lastSelectedTab = newTab
+                    }
+                }
+                .overlay {
+                    if router.isLoading {
+                        ZStack {
+                            Rectangle().fill(.black.opacity(0.4))
+                            ProgressView()
+                        }
+                    }
+                }
+                .sheet(isPresented: $showNewPost, content: {
+                    NoteComposer(initialContents: newPostContents, isPresented: $showNewPost)
+                        .environment(currentUser)
+                        .interactiveDismissDisabled()
+                })
+                
                 SideMenu(
                     menuWidth: 300,
                     menuOpened: router.sideMenuOpened,
