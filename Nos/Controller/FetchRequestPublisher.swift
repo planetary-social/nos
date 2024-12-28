@@ -3,7 +3,7 @@ import Combine
 import CoreData
 
 /// Create by passing in a FetchedResultsController
-/// This will perform the fetch request on the correct queue and publish the resutls on the
+/// This will perform the fetch request on the correct queue and publish the results on the
 /// publishers.
 /// source: https://gist.github.com/josephlord/0d6a9d0871bd2e1b3a3bdbf20c184f88
 /// 

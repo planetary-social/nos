@@ -22,6 +22,9 @@ extension AuthorList {
 
     /// The set of unique authors in this list.
     @NSManaged public var authors: Set<Author>
+    
+    /// Whether or not this list should be visible in the ``FeedPicker``.
+    @NSManaged public var isFeedEnabled: Bool
 }
 
 // MARK: Generated accessors for authors

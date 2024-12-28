@@ -12,10 +12,13 @@ struct HomeFeedView: View {
 
     @State private var refreshController = RefreshController(lastRefreshDate: Date.now + Self.staticLoadTime)
     @State private var isVisible = false
+    @State private var feedController = FeedController()
     
     /// When set to true this will display a fullscreen progress wheel for a set amount of time to give us a chance
     /// to get some data from relay. The amount of time is defined in `staticLoadTime`.
     @State private var showTimedLoadingIndicator = true
+    
+    @State private var shouldNavigateToRelaysOnAppear = false
     
     /// The amount of time (in seconds) the loading indicator will be shown when showTimedLoadingIndicator is set to 
     /// true.
@@ -78,7 +81,7 @@ struct HomeFeedView: View {
                     .tipBackground(LinearGradient.horizontalAccentReversed)
                     .tipViewStyle(.inline)
 
-                FeedPicker(author: user, selectedSource: $pickerSelected)
+                FeedPicker()
                     .padding(.bottom, -stackSpacing)    // remove the padding below the picker
                 
                 PagedNoteListView(
@@ -114,21 +117,22 @@ struct HomeFeedView: View {
             } 
             
             if showRelayPicker {
-                RelayPicker(
-                    selectedRelay: $selectedRelay,
-                    defaultSelection: String(localized: "accountsIFollow"),
-                    author: user,
-                    isPresented: $showRelayPicker
-                )
-                .onChange(of: selectedRelay) { _, _ in
-                    showTimedLoadingIndicator = true
-                    refreshController.lastRefreshDate = .now + Self.staticLoadTime
-                    Task {
-                        withAnimation {
+                Color.black.opacity(0.5)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        // Close on tap
+                        withAnimation(.easeInOut(duration: 0.3)) {
                             showRelayPicker = false
                         }
                     }
+                    .transition(.opacity)
+                
+                VStack {
+                    FeedCustomizerView(author: user, shouldNavigateToRelays: $shouldNavigateToRelaysOnAppear)
+                    Spacer()
                 }
+                .transition(.move(edge: .top))
+                .zIndex(99) // Fixes dismissal animation
             }
         }
         .doubleTapToPop(tab: .home) { _ in
@@ -155,17 +159,19 @@ struct HomeFeedView: View {
                         showRelayPicker.toggle()
                     }
                 } label: {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
+                    Image(systemName: showRelayPicker ? "xmark.circle.fill" : "line.3.horizontal.decrease.circle")
                         .foregroundStyle(Color.secondaryTxt)
                         .accessibilityLabel("filter")
                 }
                 .frame(minWidth: 40, minHeight: 40)
             }
         }
+        .animation(.easeOut, value: showRelayPicker)
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
         .navigationBarTitle("", displayMode: .inline)
         .padding(.top, 1)
+        .environment(feedController)
         .onAppear {
             if router.selectedTab == .home {
                 isVisible = true
@@ -177,6 +183,20 @@ struct HomeFeedView: View {
                 analytics.showedHome()
                 GoToFeedTip.viewedFeed.sendDonation()
             }
+        }
+        .onChange(of: shouldNavigateToRelaysOnAppear) {
+            if shouldNavigateToRelaysOnAppear {
+                showRelayPicker = false
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                    router.push(RelaysDestination(author: user, relays: []))
+                }
+                
+                shouldNavigateToRelaysOnAppear = false
+            }
+        }
+        .navigationDestination(for: RelaysDestination.self) { destination in
+            RelayView(author: destination.author)
         }
     }
 }
