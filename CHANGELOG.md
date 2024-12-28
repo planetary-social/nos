@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added feed picker view (UI only). [#103](https://github.com/verse-pbc/issues/issues/103)
 - Added feed source customizer drop-down view. [#102](https://github.com/verse-pbc/issues/issues/102)
 - Make feed source selector work.
+- Add empty state for lists/relays drop-down.
 
 ### Internal Changes
 - Upgraded to Xcode 16. [#1570](https://github.com/planetary-social/nos/issues/1570)

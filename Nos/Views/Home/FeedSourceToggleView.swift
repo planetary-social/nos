@@ -1,23 +1,26 @@
 import SwiftUI
 
-struct FeedSourceToggleView<Content: View>: View {
+struct FeedSourceToggleView<Content: View, EmptyPlaceholder: View>: View {
     @Environment(FeedController.self) var feedController
     
     let author: Author
     let headerText: Text
     let items: [FeedToggleRow.Item]
     let footer: () -> Content
+    let noContent: () -> EmptyPlaceholder
     
     init(
         author: Author,
         headerText: Text,
         items: [FeedToggleRow.Item],
-        @ViewBuilder footer: @escaping () -> Content
+        @ViewBuilder footer: @escaping () -> Content,
+        @ViewBuilder noContent: @escaping () -> EmptyPlaceholder
     ) {
         self.author = author
         self.headerText = headerText
         self.items = items
         self.footer = footer
+        self.noContent = noContent
     }
     
     var body: some View {
@@ -35,35 +38,41 @@ struct FeedSourceToggleView<Content: View>: View {
             .foregroundStyle(Color.primaryTxt)
             .padding()
             
-            let rows = Group {
-                ForEach(items) { item in
-                    VStack(spacing: 0) {
-                        BeveledSeparator()
-                        
-                        FeedToggleRow(item: item)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(.vertical, 4)
-                            .onChange(of: item.isOn) { _, _ in
-                                feedController.toggleSourceEnabled(item.source)
-                            }
+            if !items.isEmpty {
+                let rows = Group {
+                    ForEach(items) { item in
+                        VStack(spacing: 0) {
+                            BeveledSeparator()
+                            
+                            FeedToggleRow(item: item)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.vertical, 4)
+                                .onChange(of: item.isOn) { _, _ in
+                                    feedController.toggleSourceEnabled(item.source)
+                                }
+                        }
+                    }
+                    
+                    BeveledSeparator()
+                }
+                    .padding(.horizontal, 16)
+                
+                ViewThatFits(in: .vertical) {
+                    VStack {
+                        rows
+                        Spacer()
+                    }
+                    
+                    ScrollView {
+                        rows
                     }
                 }
-                
-                BeveledSeparator()
+                .geometryGroup()
+            } else {
+                Spacer()
+                noContent()
+                Spacer()
             }
-            .padding(.horizontal, 16)
-            
-            ViewThatFits(in: .vertical) {
-                VStack {
-                    rows
-                    Spacer()
-                }
-                
-                ScrollView {
-                    rows
-                }
-            }
-            .geometryGroup()
             
             footer()
         }
