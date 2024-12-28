@@ -39,7 +39,29 @@ enum FeedSource: Hashable, Equatable {
     @ObservationIgnored @Dependency(\.currentUser) private var currentUser
     
     var enabledSources: [FeedSource] = [.following]
-    var selectedSource: FeedSource = .following
+    
+    private(set) var selectedList: AuthorList?
+    private(set) var selectedRelay: Relay?
+    var selectedSource: FeedSource = .following {
+        didSet {
+            switch selectedSource {
+            case .relay(let address, _):
+                if let relay = relays.first(where: { $0.host == address }) {
+                    selectedRelay = relay
+                    selectedList = nil
+                }
+            case .list(let title, _):
+                // TODO: Needs to use replaceableID instead of title
+                if let list = lists.first(where: { $0.title == title }) {
+                    selectedList = list
+                    selectedRelay = nil
+                }
+            default:
+                selectedList = nil
+                selectedRelay = nil
+            }
+        }
+    }
     
     private(set) var listRowItems: [FeedToggleRow.Item] = []
     private(set) var relayRowItems: [FeedToggleRow.Item] = []
