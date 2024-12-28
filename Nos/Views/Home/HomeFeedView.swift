@@ -65,6 +65,9 @@ struct HomeFeedView: View {
     var body: some View {
         ZStack {
             VStack(spacing: stackSpacing) {
+                FeedPicker()
+                    .padding(.bottom, -stackSpacing)    // remove the padding below the picker
+                
                 TipView(welcomeTip)
                     .padding(.top, 20)
                     .padding(.horizontal, 16)
@@ -72,9 +75,6 @@ struct HomeFeedView: View {
                     .tipBackground(LinearGradient.horizontalAccentReversed)
                     .tipViewStyle(.inline)
 
-                FeedPicker()
-                    .padding(.bottom, -stackSpacing)    // remove the padding below the picker
-                
                 PagedNoteListView(
                     refreshController: $refreshController,
                     databaseFilter: homeFeedFetchRequest,

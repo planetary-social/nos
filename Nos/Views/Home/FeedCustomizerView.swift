@@ -28,7 +28,9 @@ struct FeedCustomizerView: View {
                     footer: {
                         Group {
                             Text("Create your own lists on ") +
-                            Text("Listr 🔗")
+                            Text("Listr ")
+                                .foregroundStyle(Color.accent) +
+                            Text(Image(systemName: "link"))
                                 .foregroundStyle(Color.accent)
                         }
                         .padding()
@@ -37,24 +39,30 @@ struct FeedCustomizerView: View {
                                 UIApplication.shared.open(url)
                             }
                         }
+                    },
+                    noContent: {
+                        Text("It doesn’t look like you have created any lists.")    // TODO: localize
                     }
                 )
             } else {
                 FeedSourceToggleView(
                     author: author,
-                    headerText: Text("Select relays to show on your feed."),
+                    headerText: Text("Select relays to show on your feed."),    // TODO: localize
                     items: feedController.relayRowItems,
                     footer: {
                         Group {
                             Text("Manage these on the ") +
-                            Text("Relays")
-                                .foregroundStyle(Color.accent) +
+                            (Text("Relays")
+                                .foregroundStyle(Color.accent)) +
                             Text(" screen")
                         }
                         .padding()
                         .onTapGesture {
                             shouldNavigateToRelays = true
                         }
+                    },
+                    noContent: {
+                        Text("It doesn’t look like you have any relays.")   // TODO: localize
                     }
                 )
             }
