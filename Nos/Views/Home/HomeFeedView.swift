@@ -22,53 +22,44 @@ struct HomeFeedView: View {
     
     /// The amount of time (in seconds) the loading indicator will be shown when showTimedLoadingIndicator is set to 
     /// true.
-    static let staticLoadTime: TimeInterval = 2
+    private static let staticLoadTime: TimeInterval = 2
     
     private let stackSpacing: CGFloat = 8
 
     let user: Author
     
     /// A tip to display at the top of the feed.
-    let welcomeTip = WelcomeToFeedTip()
+    private let welcomeTip = WelcomeToFeedTip()
 
-    @State private var showRelayPicker = false
-    @State private var selectedRelay: Relay?
-    @State private var pickerSelected = FeedSource.following
-
-    init(user: Author) {
-        self.user = user
-    }
+    @State private var showFeedSelector = false
     
-    var homeFeedFetchRequest: NSFetchRequest<Event> {
+    private var homeFeedFetchRequest: NSFetchRequest<Event> {
         Event.homeFeed(
             for: user,
             before: refreshController.lastRefreshDate,
-            seenOn: selectedRelay
+            seenOn: feedController.selectedRelay,
+            from: feedController.selectedList?.authors
         )
     }
 
-    var newNotesRequest: NSFetchRequest<Event> {
+    private var newNotesRequest: NSFetchRequest<Event> {
         Event.homeFeed(
             for: user,
             after: refreshController.lastRefreshDate,
-            seenOn: selectedRelay
+            seenOn: feedController.selectedRelay
         )
     }
 
-    var homeFeedFilter: Filter {
+    private var homeFeedFilter: Filter {
         var filter = Filter(kinds: [.text, .delete, .repost, .longFormContent, .report])
-        if selectedRelay == nil {
-            filter.authorKeys = user.followedKeys.sorted()
-        } 
-        return filter
-    }
-    
-    var navigationBarTitle: LocalizedStringKey {
-        if let relayName = selectedRelay?.host {
-            LocalizedStringKey(stringLiteral: relayName)
-        } else {
-            "accountsIFollow"
+        if feedController.selectedRelay == nil {
+            if let list = feedController.selectedList {
+                filter.authorKeys = list.authors.compactMap { $0.hexadecimalPublicKey }.filter { $0.isValid }
+            } else {
+                filter.authorKeys = user.followedKeys.sorted()
+            }
         }
+        return filter
     }
 
     var body: some View {
@@ -88,7 +79,7 @@ struct HomeFeedView: View {
                     refreshController: $refreshController,
                     databaseFilter: homeFeedFetchRequest,
                     relayFilter: homeFeedFilter,
-                    relay: selectedRelay,
+                    relay: feedController.selectedRelay,
                     managedObjectContext: viewContext,
                     tab: .home,
                     header: {
@@ -116,13 +107,12 @@ struct HomeFeedView: View {
                 )
             } 
             
-            if showRelayPicker {
+            if showFeedSelector {
                 Color.black.opacity(0.5)
                     .ignoresSafeArea()
                     .onTapGesture {
-                        // Close on tap
                         withAnimation(.easeInOut(duration: 0.3)) {
-                            showRelayPicker = false
+                            showFeedSelector = false
                         }
                     }
                     .transition(.opacity)
@@ -156,17 +146,17 @@ struct HomeFeedView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     withAnimation {
-                        showRelayPicker.toggle()
+                        showFeedSelector.toggle()
                     }
                 } label: {
-                    Image(systemName: showRelayPicker ? "xmark.circle.fill" : "line.3.horizontal.decrease.circle")
+                    Image(systemName: showFeedSelector ? "xmark.circle.fill" : "line.3.horizontal.decrease.circle")
                         .foregroundStyle(Color.secondaryTxt)
                         .accessibilityLabel("filter")
                 }
                 .frame(minWidth: 40, minHeight: 40)
             }
         }
-        .animation(.easeOut, value: showRelayPicker)
+        .animation(.easeOut, value: showFeedSelector)
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
         .navigationBarTitle("", displayMode: .inline)
@@ -186,7 +176,7 @@ struct HomeFeedView: View {
         }
         .onChange(of: shouldNavigateToRelaysOnAppear) {
             if shouldNavigateToRelaysOnAppear {
-                showRelayPicker = false
+                showFeedSelector = false
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                     router.push(RelaysDestination(author: user, relays: []))

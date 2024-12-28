@@ -321,7 +321,8 @@ extension Event {
         for user: Author,
         before: Date? = nil,
         after: Date? = nil,
-        seenOn relay: Relay? = nil
+        seenOn relay: Relay? = nil,
+        from authors: Set<Author>? = nil
     ) -> NSPredicate {
         let kind1Predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
             NSPredicate(format: "kind = 1"),
@@ -366,6 +367,12 @@ extension Event {
                 NSPredicate(format: "(ANY author.followers.source = %@ OR author = %@)", user, user)
             )
         }
+        
+        if let authors {
+            andPredicates.append(
+                NSPredicate(format: "author IN %@", authors)
+            )
+        }
 
         return NSCompoundPredicate(andPredicateWithSubpredicates: andPredicates)
     }
@@ -373,11 +380,12 @@ extension Event {
     @nonobjc public class func homeFeed(
         for user: Author,
         before: Date,
-        seenOn relay: Relay? = nil
+        seenOn relay: Relay? = nil,
+        from authors: Set<Author>? = nil
     ) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = homeFeedPredicate(for: user, before: before, seenOn: relay)
+        fetchRequest.predicate = homeFeedPredicate(for: user, before: before, seenOn: relay, from: authors)
         return fetchRequest
     }
 
