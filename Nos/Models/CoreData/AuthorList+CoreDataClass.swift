@@ -1,10 +1,23 @@
 import Foundation
 import CoreData
+import NostrSDK
+
+/// This class is needed only as a utility. The protocol functions only work on instances,
+/// (as opposed to classes in static functions).
+fileprivate final class TagInterpreter: PrivateTagInterpreting, DirectMessageEncrypting {
+}
+
+extension Keypair {
+    static func withNosKeyPair(_ keyPair: KeyPair) -> Keypair? {
+        Keypair(nsec: keyPair.nsec)
+    }
+}
 
 @objc(AuthorList)
 public class AuthorList: Event {
     static func createOrUpdate(
         from jsonEvent: JSONEvent,
+        keyPair: KeyPair? = nil,
         in context: NSManagedObjectContext
     ) throws -> AuthorList {
         guard jsonEvent.kind == EventKind.followSet.rawValue else { throw AuthorListError.invalidKind }
@@ -45,7 +58,21 @@ public class AuthorList: Event {
                 authorList.listDescription = tag[safe: 1]
             }
         }
-
+        
+        if !jsonEvent.content.isEmpty,
+            let keyPair,
+            let nostrSDKKeypair = Keypair.withNosKeyPair(keyPair) {
+            let authorIDs = TagInterpreter().valuesForPrivateTags(
+                from: jsonEvent.content,
+                withName: .pubkey,
+                using: nostrSDKKeypair
+            )
+            for authorID in authorIDs {
+                let author = try Author.findOrCreate(by: authorID, context: context)
+                authorList.addToPrivateAuthors(author)
+            }
+        }
+        
         return authorList
     }
 
@@ -64,5 +91,9 @@ public class AuthorList: Event {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \AuthorList.identifier, ascending: true)]
         fetchRequest.fetchLimit = 1
         return fetchRequest
+    }
+    
+    var allAuthors: Set<Author> {
+        authors.union(privateAuthors)
     }
 }
