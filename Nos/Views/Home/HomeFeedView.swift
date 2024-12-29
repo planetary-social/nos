@@ -54,7 +54,8 @@ struct HomeFeedView: View {
         var filter = Filter(kinds: [.text, .delete, .repost, .longFormContent, .report])
         if feedController.selectedRelay == nil {
             if let list = feedController.selectedList {
-                filter.authorKeys = list.authors.compactMap { $0.hexadecimalPublicKey }.filter { $0.isValid }
+                let authors = list.authors.union(list.privateAuthors)
+                filter.authorKeys = authors.compactMap { $0.hexadecimalPublicKey }.filter { $0.isValid }
             } else {
                 filter.authorKeys = user.followedKeys.sorted()
             }
