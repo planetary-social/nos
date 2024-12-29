@@ -398,7 +398,12 @@ extension RelayService {
                     let relay = self.relay(from: socket, in: self.persistenceController.parseContext)
                     do {
                         let context = self.persistenceController.parseContext
-                        if try EventProcessor.parse(jsonEvent: event, from: relay, in: context, keyPair: keyPair) != nil {
+                        if try EventProcessor.parse(
+                            jsonEvent: event,
+                            from: relay,
+                            in: context,
+                            keyPair: keyPair
+                        ) != nil {
                             savedEvents += 1
                         }
                     } catch {
