@@ -92,4 +92,8 @@ public class AuthorList: Event {
         fetchRequest.fetchLimit = 1
         return fetchRequest
     }
+    
+    var allAuthors: Set<Author> {
+        authors.union(privateAuthors)
+    }
 }

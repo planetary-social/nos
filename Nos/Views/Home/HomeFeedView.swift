@@ -38,7 +38,7 @@ struct HomeFeedView: View {
             for: user,
             before: refreshController.lastRefreshDate,
             seenOn: feedController.selectedRelay,
-            from: feedController.selectedList?.authors
+            from: feedController.selectedList?.allAuthors
         )
     }
 
@@ -54,8 +54,7 @@ struct HomeFeedView: View {
         var filter = Filter(kinds: [.text, .delete, .repost, .longFormContent, .report])
         if feedController.selectedRelay == nil {
             if let list = feedController.selectedList {
-                let authors = list.authors.union(list.privateAuthors)
-                filter.authorKeys = authors.compactMap { $0.hexadecimalPublicKey }.filter { $0.isValid }
+                filter.authorKeys = list.allAuthors.compactMap { $0.hexadecimalPublicKey }.filter { $0.isValid }
             } else {
                 filter.authorKeys = user.followedKeys.sorted()
             }
