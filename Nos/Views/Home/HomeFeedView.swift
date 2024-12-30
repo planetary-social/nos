@@ -27,6 +27,8 @@ struct HomeFeedView: View {
     private let stackSpacing: CGFloat = 8
 
     let user: Author
+    @Binding var showFeedTip: Bool
+    @Binding var scrollOffsetY: CGFloat
     
     /// A tip to display at the top of the feed.
     private let welcomeTip = WelcomeToFeedTip()
@@ -77,6 +79,7 @@ struct HomeFeedView: View {
 
                 PagedNoteListView(
                     refreshController: $refreshController,
+                    scrollOffsetY: $scrollOffsetY,
                     databaseFilter: homeFeedFetchRequest,
                     relayFilter: homeFeedFilter,
                     relay: feedController.selectedRelay,
@@ -147,6 +150,7 @@ struct HomeFeedView: View {
                 Button {
                     withAnimation {
                         showFeedSelector.toggle()
+                        showFeedTip = false
                     }
                 } label: {
                     Image(systemName: showFeedSelector ? "xmark.circle.fill" : "line.3.horizontal.decrease.circle")
@@ -207,7 +211,7 @@ struct HomeFeedView: View {
     }
     
     return NavigationStack {
-        HomeFeedView(user: previewData.alice)
+        HomeFeedView(user: previewData.alice, showFeedTip: .constant(false), scrollOffsetY: .constant(0))
     }
     .inject(previewData: previewData)
     .onAppear {
