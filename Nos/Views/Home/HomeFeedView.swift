@@ -28,6 +28,7 @@ struct HomeFeedView: View {
 
     let user: Author
     @Binding var showFeedTip: Bool
+    @Binding var scrollOffsetY: CGFloat
     
     /// A tip to display at the top of the feed.
     private let welcomeTip = WelcomeToFeedTip()
@@ -78,6 +79,7 @@ struct HomeFeedView: View {
 
                 PagedNoteListView(
                     refreshController: $refreshController,
+                    scrollOffsetY: $scrollOffsetY,
                     databaseFilter: homeFeedFetchRequest,
                     relayFilter: homeFeedFilter,
                     relay: feedController.selectedRelay,
@@ -209,7 +211,7 @@ struct HomeFeedView: View {
     }
     
     return NavigationStack {
-        HomeFeedView(user: previewData.alice, showFeedTip: .constant(false))
+        HomeFeedView(user: previewData.alice, showFeedTip: .constant(false), scrollOffsetY: .constant(0))
     }
     .inject(previewData: previewData)
     .onAppear {

@@ -1,4 +1,3 @@
-import Dependencies
 import SwiftUI
 
 /// A styled tip view that contains the text provided.
@@ -6,7 +5,7 @@ import SwiftUI
 /// Caution: As of iOS 18, TipKit does not allow styling of popover-style tips, so this
 /// is a custom replication of TipKit's popover with custom styling. This is a bespoke
 /// solution for the specific view it is in and will need to be modified to suit other views.
-struct PopoverTipView: View {
+fileprivate struct PopoverTipView: View {
     let text: String
     
     var body: some View {
@@ -55,21 +54,24 @@ struct PopoverTipView: View {
     }
 }
 
-let hasShownFeedTip = "com.verse.nos.Home.hasShownFeedTip"
-
 struct HomeTab: View {
-    @Dependency(\.userDefaults) private var userDefaults
-    
     @ObservedObject var user: Author
     
     @EnvironmentObject private var router: Router
     
+    @State private var feedTip = FeedSelectorTip()
     @State private var showFeedTip = false
+    @State private var timer: Timer?
+    @State private var scrollOffsetY: CGFloat = 0
     
     var body: some View {
         ZStack {
             NosNavigationStack(path: $router.homeFeedPath) {
-                HomeFeedView(user: user, showFeedTip: $showFeedTip)
+                HomeFeedView(
+                    user: user,
+                    showFeedTip: $showFeedTip,
+                    scrollOffsetY: $scrollOffsetY
+                )
             }
             
             if showFeedTip {
@@ -93,16 +95,32 @@ struct HomeTab: View {
             }
         }
         .onAppear {
-            if !userDefaults.bool(forKey: hasShownFeedTip) {
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
-                    withAnimation {
-                        showFeedTip = true
-                    }
+            if !feedTip.hasShown {
+                timer = Timer.scheduledTimer(withTimeInterval: FeedSelectorTip.maximumDelay, repeats: false) { _ in
+                    showTip()
                 }
-                
-                userDefaults.set(true, forKey: hasShownFeedTip)
             }
         }
+        .onDisappear {
+            timer?.invalidate()
+            timer = nil
+        }
+        .onChange(of: scrollOffsetY) {
+            if scrollOffsetY > FeedSelectorTip.minimumScrollOffset {
+                showTip()
+            }
+        }
+    }
+    
+    private func showTip() {
+        guard !feedTip.hasShown else {
+            return
+        }
+        
+        withAnimation {
+            showFeedTip = true
+        }
+        feedTip.hasShown = true
     }
 }
 
@@ -112,8 +130,12 @@ struct HomeTab_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            HomeFeedView(user: previewData.currentUser.author!, showFeedTip: .constant(false))
-                .inject(previewData: previewData)
+            HomeFeedView(
+                user: previewData.currentUser.author!,
+                showFeedTip: .constant(false),
+                scrollOffsetY: .constant(0)
+            )
+            .inject(previewData: previewData)
         }
     }
 }
