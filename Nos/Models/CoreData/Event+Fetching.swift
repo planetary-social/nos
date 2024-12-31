@@ -392,11 +392,12 @@ extension Event {
     @nonobjc public class func homeFeed(
         for user: Author,
         after: Date,
-        seenOn relay: Relay? = nil
+        seenOn relay: Relay? = nil,
+        from authors: Set<Author>? = nil
     ) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        fetchRequest.predicate = homeFeedPredicate(for: user, after: after, seenOn: relay)
+        fetchRequest.predicate = homeFeedPredicate(for: user, after: after, seenOn: relay, from: authors)
         return fetchRequest
     }
 

@@ -48,7 +48,8 @@ struct HomeFeedView: View {
         Event.homeFeed(
             for: user,
             after: refreshController.lastRefreshDate,
-            seenOn: feedController.selectedRelay
+            seenOn: feedController.selectedRelay,
+            from: feedController.selectedList?.allAuthors
         )
     }
 
