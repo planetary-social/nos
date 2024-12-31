@@ -37,6 +37,5 @@ struct NosSegmentedPicker<Item: NosSegmentedPickerItem>: View {
         }
         .padding(.top, 12)
         .padding(.bottom, 15)
-        .border(.green)
     }
 }
