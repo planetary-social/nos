@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for decrypting private tags in kind 30000 lists.
 - Added pop-up tip for feed customization. [#101](https://github.com/verse-pbc/issues/issues/101)
 - Added remembering which feed source is selected.
+- Factored out the segmented picker on the ProfileHeader for reusability.
 
 ### Internal Changes
 - Upgraded to Xcode 16. [#1570](https://github.com/planetary-social/nos/issues/1570)

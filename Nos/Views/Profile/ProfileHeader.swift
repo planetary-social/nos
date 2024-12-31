@@ -70,7 +70,7 @@ struct ProfileHeader: View {
                 y: 1
             )
     }
-
+    
     var body: some View {
         ZStack {
             VStack(alignment: .leading) {
@@ -204,8 +204,11 @@ struct ProfileHeader: View {
                 .frame(maxWidth: .infinity)
 
                 divider
-
-                profileHeaderTab
+                
+                NosSegmentedPicker(
+                    items: [ProfileFeedType.notes, ProfileFeedType.activity],
+                    selectedItem: $selectedTab
+                )
             }
             .frame(maxWidth: 500)
         }
@@ -234,46 +237,6 @@ struct ProfileHeader: View {
             }
             .presentationDetents([.medium, .large])
         }
-    }
-
-    private var profileHeaderTab: some View {
-        HStack {
-            Button {
-                selectedTab = .notes
-            } label: {
-                HStack {
-                    Spacer()
-                    let color = selectedTab == .notes ? Color.primaryTxt : .secondaryTxt
-                    Image.profilePosts
-                        .renderingMode(.template)
-                        .foregroundColor(color)
-                    Text("notes")
-                        .font(.subheadline.weight(.medium))
-                        .foregroundColor(color)
-                    Spacer()
-                }
-            }
-            .frame(maxWidth: .infinity)
-
-            Button {
-                selectedTab = .activity
-            } label: {
-                HStack {
-                    Spacer()
-                    let color = selectedTab == .activity ? Color.primaryTxt : .secondaryTxt
-                    Image.profileFeed
-                        .renderingMode(.template)
-                        .foregroundColor(color)
-                    Text("activity")
-                        .foregroundColor(color)
-                        .font(.subheadline.weight(.medium))
-                    Spacer()
-                }
-            }
-            .frame(maxWidth: .infinity)
-        }
-        .padding(.top, 12)
-        .padding(.bottom, 15)
     }
 }
 
