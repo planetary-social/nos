@@ -1,26 +1,52 @@
 import SwiftUI
 
+enum FeedTab: String {
+    case lists
+    case relays
+}
+
+extension FeedTab: NosSegmentedPickerItem {
+    var id: String {
+        rawValue
+    }
+    
+    var titleKey: LocalizedStringKey {
+        switch self {
+        case .lists:
+            "Lists"
+        case .relays:
+            "Relays"
+        }
+    }
+    
+    var image: Image {
+        switch self {
+        case .lists:
+            Image(systemName: "person.2")
+        case .relays:
+            Image(systemName: "dot.radiowaves.left.and.right")
+        }
+    }
+}
+
 struct FeedCustomizerView: View {
     
     @Environment(FeedController.self) var feedController
     let author: Author
     @Binding var shouldNavigateToRelays: Bool
     
-    @AppStorage("selectedFeedTogglesTab") private var selectedTab = "Lists"
+    @AppStorage("selectedFeedTogglesTab") private var selectedTab = FeedTab.lists
     
     var body: some View {
         VStack(spacing: 0) {
             BeveledContainerView {
-                Picker("", selection: $selectedTab) {
-                    Text("Lists").tag("Lists")
-                    Text("Relays").tag("Relays")
-                }
-                .pickerStyle(.segmented)
-                .padding(.vertical, 10)
-                .padding(.horizontal, 16)
+                NosSegmentedPicker(
+                    items: [FeedTab.lists, FeedTab.relays],
+                    selectedItem: $selectedTab
+                )
             }
             
-            if selectedTab == "Lists" {
+            if selectedTab == .lists {
                 FeedSourceToggleView(
                     author: author,
                     headerText: Text("Add lists to your feed to filter by topic."),
