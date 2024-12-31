@@ -4,7 +4,7 @@ import Dependencies
 import SwiftUI
 
 /// The source to be used for a feed of notes.
-enum FeedSource: Hashable, Equatable {
+enum FeedSource: RawRepresentable, Hashable, Equatable {
     case following
     case relay(String, String?)
     case list(String, String?)
@@ -31,6 +31,44 @@ enum FeedSource: Hashable, Equatable {
         default: false
         }
     }
+    
+    // Note: RawRepresentable conformance is required for use of @AppStorage for persistence.
+    var rawValue: String {
+        switch self {
+        case .following:
+            "following"
+        case .relay(let host, let description):
+            "relay:|\(host):|\(description ?? "")"
+        case .list(let name, let description):
+            "list:|\(name):|\(description ?? "")"
+        }
+    }
+    
+    init?(rawValue: String) {
+        let components = rawValue.split(separator: ":|").map { String($0) }
+        guard let caseName = components.first else {
+            return nil
+        }
+        
+        switch caseName {
+        case "following":
+            self = .following
+        case "relay":
+            guard components.count >= 2 else {
+                return nil
+            }
+            let description = components.count >= 3 ? components[2] : ""
+            self = .relay(components[1], description)
+        case "list":
+            guard components.count >= 2 else {
+                return nil
+            }
+            let description = components.count >= 3 ? components[2] : ""
+            self = .list(components[1], description)
+        default:
+            return nil
+        }
+    }
 }
 
 @Observable @MainActor final class FeedController {
@@ -42,24 +80,13 @@ enum FeedSource: Hashable, Equatable {
     
     private(set) var selectedList: AuthorList?
     private(set) var selectedRelay: Relay?
-    var selectedSource: FeedSource = .following {
+    
+    @ObservationIgnored @AppStorage("selectedFeedSource") private var persistedSelectedSource = FeedSource.following
+    
+    var selectedSource = FeedSource.following {
         didSet {
-            switch selectedSource {
-            case .relay(let address, _):
-                if let relay = relays.first(where: { $0.host == address }) {
-                    selectedRelay = relay
-                    selectedList = nil
-                }
-            case .list(let title, _):
-                // TODO: Needs to use replaceableID instead of title
-                if let list = lists.first(where: { $0.title == title }) {
-                    selectedList = list
-                    selectedRelay = nil
-                }
-            default:
-                selectedList = nil
-                selectedRelay = nil
-            }
+            updateSelectedListOrRelay()
+            persistedSelectedSource = selectedSource
         }
     }
     
@@ -82,6 +109,12 @@ enum FeedSource: Hashable, Equatable {
     init() {
         observeLists()
         observeRelays()
+        
+        // The delay here is an unfortunate workaround. Without it, the feed always resumes to
+        // the default value of FeedSource.following.
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+            self.selectedSource = self.persistedSelectedSource
+        }
     }
     
     private func observeLists() {
@@ -134,6 +167,25 @@ enum FeedSource: Hashable, Equatable {
                 self?.relays = relays
             })
             .store(in: &cancellables)
+    }
+    
+    private func updateSelectedListOrRelay() {
+        switch selectedSource {
+        case .relay(let address, _):
+            if let relay = relays.first(where: { $0.host == address }) {
+                selectedRelay = relay
+                selectedList = nil
+            }
+        case .list(let title, _):
+            // TODO: Needs to use replaceableID instead of title
+            if let list = lists.first(where: { $0.title == title }) {
+                selectedList = list
+                selectedRelay = nil
+            }
+        default:
+            selectedList = nil
+            selectedRelay = nil
+        }
     }
     
     private func updateEnabledSources() {
