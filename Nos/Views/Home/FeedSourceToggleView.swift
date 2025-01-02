@@ -46,7 +46,7 @@ struct FeedSourceToggleView<Content: View, EmptyPlaceholder: View>: View {
                             
                             FeedToggleRow(item: item)
                                 .fixedSize(horizontal: false, vertical: true)
-                                .padding(.vertical, 4)
+                                .padding(.vertical, 10)
                                 .onChange(of: item.isOn) { _, _ in
                                     feedController.toggleSourceEnabled(item.source)
                                 }
@@ -58,13 +58,15 @@ struct FeedSourceToggleView<Content: View, EmptyPlaceholder: View>: View {
                     .padding(.horizontal, 16)
                 
                 ViewThatFits(in: .vertical) {
-                    VStack {
+                    VStack(spacing: 0) {
                         rows
                         Spacer()
                     }
                     
                     ScrollView {
-                        rows
+                        VStack(spacing: 0) {
+                            rows
+                        }
                     }
                 }
                 .geometryGroup()
