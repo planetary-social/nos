@@ -177,7 +177,7 @@ import Dependencies
     }
 
     /// Subscribes to relays for important events concerning the current user like their latest contact list, 
-    /// notifications, reports, mutes, zaps, etc.
+    /// notifications, reports, mutes, zaps, lists etc.
     @MainActor func subscribe() async {
         guard let key = publicKeyHex, let author else {
             return
@@ -189,6 +189,11 @@ import Dependencies
         // Always make a request for the latest contact list
         subscriptions.append(
             await relayService.requestContactList(for: key, since: author.lastUpdatedContactList)
+        )
+        
+        // Always request the user's lists
+        subscriptions.append(
+            await relayService.requestAuthorLists(for: key, since: nil)
         )
         
         // Subscribe to important events we may not get incidentally while browsing the feed

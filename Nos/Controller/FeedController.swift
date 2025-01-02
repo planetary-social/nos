@@ -74,7 +74,8 @@ enum FeedSource: RawRepresentable, Hashable, Equatable {
 @Observable @MainActor final class FeedController {
     
     @ObservationIgnored @Dependency(\.persistenceController) private var persistenceController
-    @ObservationIgnored @Dependency(\.currentUser) private var currentUser
+    
+    let author: Author
     
     var enabledSources: [FeedSource] = [.following]
     
@@ -106,7 +107,8 @@ enum FeedSource: RawRepresentable, Hashable, Equatable {
     
     private var cancellables = Set<AnyCancellable>()
     
-    init() {
+    init(author: Author) {
+        self.author = author
         observeLists()
         observeRelays()
         
@@ -118,10 +120,6 @@ enum FeedSource: RawRepresentable, Hashable, Equatable {
     }
     
     private func observeLists() {
-        guard let author = currentUser.author else {
-            return
-        }
-        
         let request = NSFetchRequest<AuthorList>(entityName: "AuthorList")
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         request.predicate = NSPredicate(
@@ -147,10 +145,6 @@ enum FeedSource: RawRepresentable, Hashable, Equatable {
     }
     
     private func observeRelays() {
-        guard let author = currentUser.author else {
-            return
-        }
-        
         let request = Relay.relays(for: author)
         
         let relayWatcher = NSFetchedResultsController(
