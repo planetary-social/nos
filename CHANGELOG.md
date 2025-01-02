@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added remembering which feed source is selected.
 - Factored out the segmented picker on the ProfileHeader for reusability.
 - Fixed a case where lists don't show up immediately after signing in.
+- Fixed a minor cell layout issue on feed customizer drop-down view.
 
 ### Internal Changes
 - Upgraded to Xcode 16. [#1570](https://github.com/planetary-social/nos/issues/1570)
