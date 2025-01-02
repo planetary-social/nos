@@ -12,7 +12,7 @@ struct HomeFeedView: View {
 
     @State private var refreshController = RefreshController(lastRefreshDate: Date.now + Self.staticLoadTime)
     @State private var isVisible = false
-    @State private var feedController = FeedController()
+    @State private var feedController: FeedController
     
     /// When set to true this will display a fullscreen progress wheel for a set amount of time to give us a chance
     /// to get some data from relay. The amount of time is defined in `staticLoadTime`.
@@ -29,6 +29,13 @@ struct HomeFeedView: View {
     let user: Author
     @Binding var showFeedTip: Bool
     @Binding var scrollOffsetY: CGFloat
+    
+    init(user: Author, showFeedTip: Binding<Bool>, scrollOffsetY: Binding<CGFloat>) {
+        self.user = user
+        self._showFeedTip = showFeedTip
+        self._scrollOffsetY = scrollOffsetY
+        _feedController = State(initialValue: FeedController(author: user))
+    }
     
     /// A tip to display at the top of the feed.
     private let welcomeTip = WelcomeToFeedTip()
