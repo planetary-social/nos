@@ -1,3 +1,4 @@
 import Foundation
 
-extension UserDefaults: @unchecked @retroactive Sendable {}
+extension UserDefaults: @unchecked Sendable {}
+extension AttributedString: @unchecked Sendable {}

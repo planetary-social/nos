@@ -11,7 +11,6 @@
 		030036852C5D39DD002C71F5 /* RefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030036842C5D39DD002C71F5 /* RefreshController.swift */; };
 		030036942C5D3AD3002C71F5 /* RefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030036842C5D39DD002C71F5 /* RefreshController.swift */; };
 		030036AB2C5D872B002C71F5 /* NewNotesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030036AA2C5D872B002C71F5 /* NewNotesButton.swift */; };
-		0301495C2CFFA8B7000A0152 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0301495B2CFFA8B7000A0152 /* TabBarController.swift */; };
 		0303B1532D025C9A00077929 /* AuthorList+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0303B13E2D025BDD00077929 /* AuthorList+CoreDataProperties.swift */; };
 		0303B1542D025C9A00077929 /* AuthorList+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0303B13E2D025BDD00077929 /* AuthorList+CoreDataProperties.swift */; };
 		0304D0A72C9B4BF2001D16C7 /* OpenGraphMetatdata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */; };
@@ -139,8 +138,6 @@
 		03ED93472C46C48400C8D443 /* JSONEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03ED93462C46C48400C8D443 /* JSONEventTests.swift */; };
 		03F7C4F32C10DF79006FF613 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */; };
 		03F7C4F42C10E05B006FF613 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */; };
-		03F866692CF7D39900527C39 /* Foundation+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F866682CF7D39900527C39 /* Foundation+Sendable.swift */; };
-		03F8666A2CF7D39900527C39 /* Foundation+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F866682CF7D39900527C39 /* Foundation+Sendable.swift */; };
 		03FE3F792C87A9D900D25810 /* EventError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FE3F782C87A9D900D25810 /* EventError.swift */; };
 		03FE3F7A2C87A9DC00D25810 /* EventError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FE3F782C87A9D900D25810 /* EventError.swift */; };
 		03FE3F7C2C87AC9900D25810 /* Event+InlineMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FE3F7B2C87AC9900D25810 /* Event+InlineMetadata.swift */; };
@@ -480,6 +477,8 @@
 		C9B5C78E2C24AF650070445B /* MockRelaySubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0320C1142BFE63DC00C4C080 /* MockRelaySubscriptionManager.swift */; };
 		C9B678DB29EEBF3B00303F33 /* DependencyInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */; };
 		C9B678DC29EEBF3B00303F33 /* DependencyInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */; };
+		C9B678DE29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */; };
+		C9B678DF29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */; };
 		C9B678E129EEC41000303F33 /* SocialGraphCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E029EEC41000303F33 /* SocialGraphCache.swift */; };
 		C9B678E229EEC41000303F33 /* SocialGraphCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E029EEC41000303F33 /* SocialGraphCache.swift */; };
 		C9B678E729F01A8500303F33 /* FullscreenProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */; };
@@ -615,7 +614,6 @@
 		030036842C5D39DD002C71F5 /* RefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshController.swift; sourceTree = "<group>"; };
 		030036AA2C5D872B002C71F5 /* NewNotesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNotesButton.swift; sourceTree = "<group>"; };
 		0303B11E2D0257D400077929 /* Nos 21.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 21.xcdatamodel"; sourceTree = "<group>"; };
-		0301495B2CFFA8B7000A0152 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		0303B13E2D025BDD00077929 /* AuthorList+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthorList+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGraphMetatdata.swift; sourceTree = "<group>"; };
 		0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOpenGraphService.swift; sourceTree = "<group>"; };
@@ -710,7 +708,6 @@
 		03EB47062CB080110004FF35 /* BrokenLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrokenLinkView.swift; sourceTree = "<group>"; };
 		03ED93462C46C48400C8D443 /* JSONEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONEventTests.swift; sourceTree = "<group>"; };
 		03F7C4F22C10DF79006FF613 /* URLSessionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionProtocol.swift; sourceTree = "<group>"; };
-		03F866682CF7D39900527C39 /* Foundation+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Sendable.swift"; sourceTree = "<group>"; };
 		03FE3F782C87A9D900D25810 /* EventError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventError.swift; sourceTree = "<group>"; };
 		03FE3F7B2C87AC9900D25810 /* Event+InlineMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+InlineMetadata.swift"; sourceTree = "<group>"; };
 		03FE3F8A2C87BC9500D25810 /* text_note_multiple_media.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = text_note_multiple_media.json; sourceTree = "<group>"; };
@@ -964,6 +961,7 @@
 		C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Nos.swift"; sourceTree = "<group>"; };
 		C9B597642BBC8300002EC76A /* ImagePickerUIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerUIViewController.swift; sourceTree = "<group>"; };
 		C9B678DA29EEBF3B00303F33 /* DependencyInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyInjection.swift; sourceTree = "<group>"; };
+		C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Sendable.swift"; sourceTree = "<group>"; };
 		C9B678E029EEC41000303F33 /* SocialGraphCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialGraphCache.swift; sourceTree = "<group>"; };
 		C9B678E629F01A8500303F33 /* FullscreenProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenProgressView.swift; sourceTree = "<group>"; };
 		C9B708BA2A13BE41006C613A /* NoteTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTextEditor.swift; sourceTree = "<group>"; };
@@ -1898,7 +1896,7 @@
 				C9F84C1B298DBBF400C6714D /* Data+Sha.swift */,
 				C942566829B66A2800C4202C /* Date+Elapsed.swift */,
 				C987F85729BA981800B44E7A /* Font+Clarity.swift */,
-				03F866682CF7D39900527C39 /* Foundation+Sendable.swift */,
+				C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */,
 				C9F0BB6829A5039D000547FC /* Int+Bool.swift */,
 				C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */,
 				C97A1C8D29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift */,
@@ -1906,7 +1904,6 @@
 				C93EC2F329C34C860012EE2A /* NSPredicate+Bool.swift */,
 				50E2EB712C86175900D4B360 /* NSRegularExpression+Replacement.swift */,
 				C93EC2F629C351470012EE2A /* Optional+Unwrap.swift */,
-				045EDD042CAC025700B67964 /* ScrollViewProxy+Animate.swift */,
 				C99721CA2AEBED26004EBEAB /* String+Empty.swift */,
 				C9ADB13729928CC30075E7F8 /* String+Hex.swift */,
 				C9DEC002298945150078B43A /* String+Lorem.swift */,
@@ -1914,6 +1911,7 @@
 				DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */,
 				C92DF80429C25DE900400561 /* URL+Extensions.swift */,
 				C9C2B77B29E072E400548B4A /* WebSocket+Nos.swift */,
+				045EDD042CAC025700B67964 /* ScrollViewProxy+Animate.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2028,7 +2026,6 @@
 			children = (
 				C9F84C20298DC36800C6714D /* AppView.swift */,
 				030024182CC00DF70073ED56 /* SplashScreenView.swift */,
-				0301495B2CFFA8B7000A0152 /* TabBarController.swift */,
 				5B79F6402BA11618002DA9BE /* Components */,
 				65BD8DC12BDAF2C300802039 /* Discover */,
 				03618B112C825D8700BCBC55 /* Fixtures */,
@@ -2149,7 +2146,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1610;
+				LastUpgradeCheck = 1530;
 				TargetAttributes = {
 					C90862BA29E9804B00C35A71 = {
 						CreatedOnToolsVersion = 14.2;
@@ -2363,6 +2360,7 @@
 				50089A0C2C97182200834588 /* CurrentUser+PublishEvents.swift in Sources */,
 				C97A1C8E29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift in Sources */,
 				5BBA5E9C2BAE052F00D57D76 /* NiceWorkSheet.swift in Sources */,
+				C9B678DE29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */,
 				5B88051A2A21027C00E21F06 /* SHA256Key.swift in Sources */,
 				C9B71DC22A9003670031ED9F /* CrashReporting.swift in Sources */,
 				C987F81729BA4C6A00B44E7A /* BigActionButton.swift in Sources */,
@@ -2482,8 +2480,6 @@
 				C9F84C27298DC98800C6714D /* KeyPair.swift in Sources */,
 				5B8C96B629DDD3B200B73AEC /* NoteUITextViewRepresentable.swift in Sources */,
 				C93EC2F129C337EB0012EE2A /* RelayPicker.swift in Sources */,
-				0301495C2CFFA8B7000A0152 /* TabBarController.swift in Sources */,
-				03F866692CF7D39900527C39 /* Foundation+Sendable.swift in Sources */,
 				5BBA5E912BADF98E00D57D76 /* AlreadyHaveANIP05View.swift in Sources */,
 				C9F0BB6F29A50437000547FC /* NostrIdentifierPrefix.swift in Sources */,
 				C96D39272B61B6D200D3D0A1 /* RawNostrID.swift in Sources */,
@@ -2727,6 +2723,7 @@
 				03E711672C935114000B6F96 /* SoupOpenGraphParserTests.swift in Sources */,
 				C9C5475C2A4F1D8C006B0741 /* NosNotification+CoreDataProperties.swift in Sources */,
 				03C49AC32C938DE100502321 /* SoupOpenGraphParser.swift in Sources */,
+				C9B678DF29EEC35B00303F33 /* Foundation+Sendable.swift in Sources */,
 				03EB470C2CB080180004FF35 /* BrokenLinkView.swift in Sources */,
 				A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */,
 				C9ADB13E29929EEF0075E7F8 /* Bech32.swift in Sources */,
@@ -2784,7 +2781,6 @@
 				C9DEC06F2989668E0078B43A /* Relay+CoreDataClass.swift in Sources */,
 				C9ADB13F29929F1F0075E7F8 /* String+Hex.swift in Sources */,
 				500899F32C95C1F900834588 /* PushNotificationRegistrar.swift in Sources */,
-				03F8666A2CF7D39900527C39 /* Foundation+Sendable.swift in Sources */,
 				C973AB622A323167002AED16 /* Author+CoreDataProperties.swift in Sources */,
 				C93EC2F529C34C860012EE2A /* NSPredicate+Bool.swift in Sources */,
 				C9DEC05B298950A90078B43A /* String+Lorem.swift in Sources */,
@@ -2986,6 +2982,7 @@
 		5B7888CD2B5A0FB800B6761F /* Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
 				CODE_SIGN_STYLE = Automatic;
@@ -3159,6 +3156,7 @@
 		5BE460732BAB3028004B83ED /* Dev */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
 				CODE_SIGN_STYLE = Automatic;
@@ -3486,6 +3484,7 @@
 		C9DEBFFC298941020078B43A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
 				CODE_SIGN_STYLE = Automatic;
@@ -3515,6 +3514,7 @@
 		C9DEBFFD298941020078B43A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
 				CODE_SIGN_STYLE = Automatic;

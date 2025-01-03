@@ -145,14 +145,15 @@ struct RelayPickerRow: View {
 }
 
 #Preview("Without ScrollView") {
-    @Previewable @State var selectedRelay: Relay?
-    @Previewable @State var previewData = PreviewData()
 
+    @State var selectedRelay: Relay?
+    var previewData = PreviewData()
+    
     func createTestData() {
         let user = previewData.alice
         let addresses = ["wss://nostr.com", "wss://nos.social", "wss://alongdomainnametoseewhathappens.com"]
         addresses.forEach { address in
-            let relay = try? Relay.findOrCreate(by: address, context: previewData.context)
+            let relay = try? Relay.findOrCreate(by: address, context: previewData.previewContext)
             relay?.relayDescription = "A Nostr relay that aims to cultivate a healthy community."
             relay?.addToAuthors(user)
         }
@@ -170,14 +171,15 @@ struct RelayPickerRow: View {
 }
 
 #Preview("With ScrollView") {
-    @Previewable @State var selectedRelay: Relay?
-    @Previewable @State var previewData = PreviewData()
+
+    @State var selectedRelay: Relay?
+    var previewData = PreviewData()
     
     func createTestData() {
         let user = previewData.alice
         let addresses = Relay.allKnown
         addresses.forEach { address in
-            let relay = try? Relay.findOrCreate(by: address, context: previewData.context)
+            let relay = try? Relay.findOrCreate(by: address, context: previewData.previewContext)
             relay?.relayDescription = "A Nostr relay that aims to cultivate a healthy community."
             relay?.addToAuthors(user)
         }

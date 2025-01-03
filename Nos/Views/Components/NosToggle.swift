@@ -24,7 +24,7 @@ struct NosToggle: View {
 }
 
 #Preview {
-    @Previewable @State var isOn = true
+    @State var isOn = true
 
     return NosToggle(
         "useReportsFromFollows",
