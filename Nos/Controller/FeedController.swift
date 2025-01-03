@@ -44,11 +44,13 @@ import SwiftUI
         observeLists()
         observeRelays()
         
+        // TODO: I commented this code out because it wasn't fixing the bug it was intended to yet. Let's come back to 
+        // it. https://github.com/planetary-social/nos/pull/1720#issuecomment-2569529771
         // The delay here is an unfortunate workaround. Without it, the feed always resumes to
         // the default value of FeedSource.following.
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1500)) {
-            self.selectedSource = self.persistedSelectedSource
-        }
+        // DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1500)) {
+        //    self.selectedSource = self.persistedSelectedSource
+        //}
     }
     
     private func observeLists() {
