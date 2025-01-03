@@ -50,7 +50,7 @@ import SwiftUI
         // the default value of FeedSource.following.
         // DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1500)) {
         //    self.selectedSource = self.persistedSelectedSource
-        //}
+        // }
     }
     
     private func observeLists() {
