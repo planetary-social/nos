@@ -9,10 +9,6 @@ enum AppDestination: Hashable, Equatable {
     case noteComposer(String?)
     case profile
     
-    static var tabDestinations: [AppDestination] {
-        [.home, .discover, .noteComposer(nil), .notifications, .profile]
-    }
-    
     var destinationString: String {
         switch self {
         case .home:
@@ -30,15 +26,5 @@ enum AppDestination: Hashable, Equatable {
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(destinationString)
-    }
-    
-    var tabIndex: Int {
-        switch self {
-        case .home: return 0
-        case .discover: return 1
-        case .noteComposer: return 2
-        case .notifications: return 3
-        case .profile: return 4
-        }
     }
 }

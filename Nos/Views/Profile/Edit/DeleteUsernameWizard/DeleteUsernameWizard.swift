@@ -16,7 +16,7 @@ struct DeleteUsernameWizard: View {
 }
 
 #Preview {
-    @Previewable @State var previewData = PreviewData()
+    var previewData = PreviewData()
     return Color.clear.sheet(isPresented: .constant(true)) {
         DeleteUsernameWizard(
             author: previewData.alice,

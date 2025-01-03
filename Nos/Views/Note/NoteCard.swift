@@ -225,7 +225,7 @@ struct NoteCard_Previews: PreviewProvider {
                 }
             }
         }
-        .environment(\.managedObjectContext, previewData.context)
+        .environment(\.managedObjectContext, previewData.previewContext)
         .environment(previewData.relayService)
         .environmentObject(previewData.router)
         .environment(previewData.currentUser)

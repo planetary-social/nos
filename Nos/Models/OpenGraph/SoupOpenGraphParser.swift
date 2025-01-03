@@ -4,10 +4,8 @@ import SwiftSoup
 /// Parses the Open Graph metadata from an HTML document using SwiftSoup.
 struct SoupOpenGraphParser: OpenGraphParser {
     func metadata(html: Data) -> OpenGraphMetadata? {
-        guard
-            let htmlString = String(data: html, encoding: .utf8),
-            let document = try? SwiftSoup.parse(htmlString)
-        else { return nil }
+        let htmlString = String(decoding: html, as: UTF8.self)
+        guard let document = try? SwiftSoup.parse(htmlString) else { return nil }
 
         let title = stringValue(.title, from: document)
         let type = typeMetadata(from: document)
