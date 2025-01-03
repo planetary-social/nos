@@ -24,7 +24,7 @@ extension FeedTab: NosSegmentedPickerItem {
         case .lists:
             Image(systemName: "person.2")
         case .relays:
-            Image(systemName: "dot.radiowaves.left.and.right")
+            Image(systemName: "antenna.radiowaves.left.and.right")
         }
     }
 }

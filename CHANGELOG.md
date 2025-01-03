@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a case where lists don't show up immediately after signing in.
 - Fixed a minor cell layout issue on feed customizer drop-down view.
 - Fixed issue where feed shows following content rather than selected list after app restart. [#114](https://github.com/verse-pbc/issues/issues/114)
+- Update relays icon on the feed customizer view to match the one in side menu.
 
 ### Internal Changes
 - Upgraded to Xcode 16. [#1570](https://github.com/planetary-social/nos/issues/1570)
