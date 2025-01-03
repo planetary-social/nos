@@ -13,9 +13,7 @@ public class Relay: NosManagedObject {
     static var recommended: [String] {
         [
         nosAddress.absoluteString,
-        "wss://relay.damus.io",
-        "wss://purplepag.es",
-        "wss://nos.lol",
+        "wss://news.nos.social",
         "wss://relay.mostr.pub",
         ]
     }
