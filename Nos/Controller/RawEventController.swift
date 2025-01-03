@@ -59,7 +59,7 @@ protocol RawEventViewModel {
                 withJSONObject: note.jsonRepresentation ?? [:],
                 options: [.prettyPrinted]
             )
-            rawMessage = String(data: data, encoding: .utf8) ?? "error"
+            rawMessage = String(decoding: data, as: UTF8.self)
         } catch {
             rawMessage = note.content ?? "error"
         }

@@ -399,7 +399,7 @@ struct NoteComposer: View {
 }
 
 #Preview {
-    @Previewable @State var previewData = PreviewData()
+    var previewData = PreviewData()
 
     return NoteComposer(replyTo: previewData.longNote, isPresented: .constant(true))
         .inject(previewData: previewData)

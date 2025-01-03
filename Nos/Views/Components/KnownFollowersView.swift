@@ -94,7 +94,7 @@ struct KnownFollowersView: View {
 }
 
 #Preview {
-    @Previewable @State var previewData = PreviewData()
+    var previewData = PreviewData()
     
     return VStack {
         KnownFollowersView(source: previewData.currentUser.author, destination: previewData.alice)

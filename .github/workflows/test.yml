@@ -11,7 +11,7 @@ on:
   push:
     branches: main
 env:
-  SIMULATOR: platform=iOS Simulator,name=iPhone 16,OS=18.1
+  SIMULATOR: platform=iOS Simulator,name=iPhone 15,OS=17.4
     
 jobs:
   unit_test:
@@ -38,6 +38,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: SwiftLint
-        uses: docker://norionomura/swiftlint:0.57.1
+        uses: docker://norionomura/swiftlint:0.55.1
         with:
           args: swiftlint --strict --reporter github-actions-logging

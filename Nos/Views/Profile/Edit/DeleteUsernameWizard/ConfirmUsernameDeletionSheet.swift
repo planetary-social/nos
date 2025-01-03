@@ -166,7 +166,7 @@ fileprivate enum DeleteError: LocalizedError {
 }
 
 #Preview {
-    @Previewable @State var previewData = PreviewData()
+    var previewData = PreviewData()
     return Color.clear.sheet(isPresented: .constant(true)) {
         ConfirmUsernameDeletionSheet(
             author: previewData.alice,

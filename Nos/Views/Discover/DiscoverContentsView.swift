@@ -82,7 +82,7 @@ struct DiscoverContentsView: View {
                 LazyVStack {
                     categoryPicker
                     
-                    ForEach(featuredAuthorIDs, id: \.self) { authorID in
+                    ForEach(featuredAuthorIDs) { authorID in
                         AuthorObservationView(authorID: authorID) { author in
                             VStack {
                                 if author.lastUpdatedMetadata != nil {
