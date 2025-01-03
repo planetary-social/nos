@@ -165,7 +165,7 @@ struct ContentWarningMessage: View {
 }
 
 #Preview {
-    @Previewable @State var previewData = PreviewData()
+    var previewData = PreviewData()
     
     return VStack {
         ContentWarningMessage(reports: [previewData.shortNoteReportOne], type: .author)

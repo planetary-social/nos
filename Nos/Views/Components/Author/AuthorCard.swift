@@ -93,7 +93,7 @@ struct AuthorCard: View {
 }
 
 #Preview {
-    @Previewable @State var previewData = PreviewData()
+    var previewData = PreviewData()
     
     return VStack {
         AuthorCard(author: previewData.alice)

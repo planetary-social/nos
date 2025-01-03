@@ -29,7 +29,7 @@ struct ActivityPubBadgeView: View {
 }
 
 #Preview {
-    @Previewable @State var previewData = PreviewData()
+    var previewData = PreviewData()
 
     return VStack {
         ActivityPubBadgeView(author: previewData.alice)
