@@ -83,7 +83,7 @@ import Dependencies
         self.socialGraph = SocialGraphCache(userKey: nil, context: persistenceController.newBackgroundContext())
         if let privateKeyData = keychain.load(key: keychain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
-            let hexString = String(data: privateKeyData, encoding: .utf8)
+            let hexString = String(decoding: privateKeyData, as: UTF8.self)
             _privateKeyHex = hexString
             setUp()
             if let keyPair {
@@ -291,10 +291,8 @@ import Dependencies
     
     // MARK: - NSFetchedResultsControllerDelegate
     
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        Task { @MainActor in
-            author = controller.fetchedObjects?.first as? Author
-        }
+    @MainActor func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        author = controller.fetchedObjects?.first as? Author
     }
 }
 // swiftlint:enable type_body_length

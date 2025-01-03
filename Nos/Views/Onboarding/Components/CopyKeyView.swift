@@ -45,11 +45,11 @@ struct CopyKeyView: View {
 }
 
 #Preview {
-    @Previewable @State var privateKey = KeyFixture.nsec
-    @Previewable @State var privateCopyButtonState = CopyButtonState.copy
+    @State var privateKey = KeyFixture.nsec
+    @State var privateCopyButtonState = CopyButtonState.copy
 
-    @Previewable @State var publicKey = KeyFixture.npub
-    @Previewable @State var publicCopyButtonState = CopyButtonState.copied
+    @State var publicKey = KeyFixture.npub
+    @State var publicCopyButtonState = CopyButtonState.copied
 
     return VStack(spacing: 40) {
         CopyKeyView("copyPrivateKey", keyString: $privateKey, copyButtonState: $privateCopyButtonState)

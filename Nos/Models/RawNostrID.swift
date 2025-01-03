@@ -20,7 +20,7 @@ public typealias RawEventID = RawNostrID
 /// An alias for a RawNostrID that we know is for an Author. See docs for `RawNostrID`.
 public typealias RawAuthorID = RawNostrID
 
-extension RawNostrID {
+extension RawNostrID: Identifiable {
     
     public var id: String {
         self

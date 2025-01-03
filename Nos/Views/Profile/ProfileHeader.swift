@@ -241,7 +241,7 @@ struct ProfileHeader: View {
 }
 
 #Preview {
-    @Previewable @State var previewData = PreviewData()
+    var previewData = PreviewData()
     
     return Group {
         // ProfileHeader(author: author)
@@ -253,28 +253,28 @@ struct ProfileHeader: View {
 }
 
 #Preview {
-    @Previewable @State var previewData = PreviewData()
+    var previewData = PreviewData()
 
     var author: Author {
-        let context = previewData.context
-        let author = Author(context: context)
+        let previewContext = previewData.previewContext
+        let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.pubKeyHex
-        author.add(relay: Relay(context: context))
+        author.add(relay: Relay(context: previewContext))
         author.name = "Sebastian Heit"
         author.nip05 = "chardot@nostr.fan"
         author.about = "Go programmer working on Nos/Planetary. You can find me at various European events related to" +
         " Chaos Computer Club, the hacker community and free software."
-        let first = Author(context: context)
+        let first = Author(context: previewContext)
         first.name = "Craig Nichols"
 
-        let second = Author(context: context)
+        let second = Author(context: previewContext)
         second.name = "Justin Pool"
 
-        let firstFollow = Follow(context: context)
+        let firstFollow = Follow(context: previewContext)
         firstFollow.source = first
         firstFollow.destination = author
 
-        let secondFollow = Follow(context: context)
+        let secondFollow = Follow(context: previewContext)
         secondFollow.source = second
         secondFollow.destination = author
 
@@ -287,6 +287,7 @@ struct ProfileHeader: View {
         ProfileHeader(author: author, selectedTab: .constant(.activity))
     }
     .inject(previewData: previewData)
+    .previewDevice("iPhone SE (2nd generation)")
     .padding()
     .background(Color.previewBg)
 }

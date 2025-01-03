@@ -145,9 +145,6 @@ struct ReportRequest {
         }
         
         let data = try JSONSerialization.data(withJSONObject: dictionary)
-        guard let string = String(data: data, encoding: .utf8) else {
-            throw ReportError.encodingFailed("Could not convert JSON data to a String")
-        }
-        return string
+        return String(decoding: data, as: UTF8.self)
     }
 }
