@@ -50,7 +50,7 @@ platform :ios do
       )
       match(
           type: "appstore",  
-          readonly: true,
+          readonly: false,
           app_identifier: options[:appidentifier],
           keychain_name: "keychain",
           keychain_password: keychain_pass

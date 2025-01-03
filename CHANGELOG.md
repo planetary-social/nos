@@ -15,6 +15,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Nos now publishes the hashtags it finds in your note when you post. This means it works the way you’ve always expected it to work. [#44](https://github.com/verse-pbc/issues/issues/44)
 - Fixed crash related to tracking delete events. [#96](https://github.com/verse-pbc/issues/issues/96)
 - Updated the default relays that are added when you create an account. [#17](https://github.com/verse-pbc/issues/issues/17)
+- Added feed picker view (UI only). [#103](https://github.com/verse-pbc/issues/issues/103)
+- Added feed source customizer drop-down view. [#102](https://github.com/verse-pbc/issues/issues/102)
+- Make feed source selector work.
+- Add empty state for lists/relays drop-down.
+- Added support for decrypting private tags in kind 30000 lists.
+- Added pop-up tip for feed customization. [#101](https://github.com/verse-pbc/issues/issues/101)
+- Added remembering which feed source is selected.
+- Factored out the segmented picker on the ProfileHeader for reusability.
+- Fixed a case where lists don't show up immediately after signing in.
+- Fixed a minor cell layout issue on feed customizer drop-down view.
+- Fixed issue where feed shows following content rather than selected list after app restart. [#114](https://github.com/verse-pbc/issues/issues/114)
+- Update relays icon on the feed customizer view to match the one in side menu.
 
 ### Internal Changes
 - Download and parse an author’s lists when viewing their profile. [#49](https://github.com/verse-pbc/issues/issues/49)

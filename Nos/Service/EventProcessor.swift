@@ -9,14 +9,16 @@ enum EventProcessor {
         jsonEvent: JSONEvent,
         from relay: Relay?,
         in parseContext: NSManagedObjectContext,
-        skipVerification: Bool = false
+        skipVerification: Bool = false,
+        keyPair: KeyPair? = nil
     ) throws -> Event? {
         if jsonEvent.kind == EventKind.followSet.rawValue {
             return try saveFollowSet(
                 jsonEvent: jsonEvent,
                 relay: relay,
                 parseContext: parseContext,
-                skipVerification: skipVerification
+                skipVerification: skipVerification,
+                keyPair: keyPair
             )
         } else if let event = try Event.createIfNecessary(jsonEvent: jsonEvent, relay: relay, context: parseContext) {
             try updateEvent(
@@ -67,13 +69,23 @@ enum EventProcessor {
 }
 
 extension EventProcessor {
+    
+    /// Creates or updates a kind 30000 Follow Set event into an ``AuthorList``.
+    /// - Parameters:
+    ///   - jsonEvent: The event to parse.
+    ///   - relay: The relay the event came from, if needed.
+    ///   - parseContext: The context to create or update the list in.
+    ///   - skipVerification: If true, skips verifying the signature on the event.
+    ///   - keyPair: The keypair to use for decrypting privately listed pubkeys.
+    /// - Returns: The list.
     private static func saveFollowSet(
         jsonEvent: JSONEvent,
         relay: Relay?,
         parseContext: NSManagedObjectContext,
-        skipVerification: Bool
+        skipVerification: Bool,
+        keyPair: KeyPair?
     ) throws -> AuthorList {
-        let authorList = try AuthorList.createOrUpdate(from: jsonEvent, in: parseContext)
+        let authorList = try AuthorList.createOrUpdate(from: jsonEvent, keyPair: keyPair, in: parseContext)
         if !skipVerification {
             guard try authorList.verifySignature() else {
                 parseContext.delete(authorList)

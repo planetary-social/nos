@@ -389,13 +389,19 @@ extension RelayService {
             return false
         } else {
             let remainingEventCount = await parseQueue.count
+            let keyPair = await currentUser.keyPair
             try await persistenceController.parseContext.perform {
                 var savedEvents = 0
                 for (event, socket) in eventData {
                     let relay = self.relay(from: socket, in: self.persistenceController.parseContext)
                     do {
                         let context = self.persistenceController.parseContext
-                        if try EventProcessor.parse(jsonEvent: event, from: relay, in: context) != nil {
+                        if try EventProcessor.parse(
+                            jsonEvent: event,
+                            from: relay,
+                            in: context,
+                            keyPair: keyPair
+                        ) != nil {
                             savedEvents += 1
                         }
                     } catch {

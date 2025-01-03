@@ -1,0 +1,22 @@
+{
+    "id": "642c786d6435f39833d5c045d76058b1607ed17e2ca44170da0a6d363e2b1797",
+    "pubkey": "ffd99f9e545b53e3291dab4b8cd6d25d12b9973c40f02e1938c0891d62e38e57",
+    "tags": [
+        [
+            "title",
+            "Private Only"
+        ],
+        [
+            "d",
+            "PrivateOnly"
+        ],
+        [
+            "description",
+            "This is a list for testing lists."
+        ]
+    ],
+    "content": "bKKE7/Xi/uBxRfCoAb0eQLUiwelbJrGVEkmL6JGHE2maGn6rp3QGQeU+pecz54B6aCUYKoyimzB0wSTXXuhirgeBtS4pTSH6QO4KHPSZJeRh8GDcr3e9bexATBb9X5R/tpuVb6Fgv0vYFAso3t9cmO5YCAM0O2H6fd/Fj/MyYp+3VVz0rOXi6MMuBmswmD2MbSq5OwmZqY7sC77F0BOkZceWQzUHmVXcmBSMz0t0DeVFq4DW395s9E0VKMTJPzejGYlF/+Eg/E9mBRVd7mLMEBZtf/3Rmq+hKGiladFFpE8=?iv=dL08cLM4R/gNzpoLlWWxdA==",
+    "sig": "7b95fce1ce83f4f116d74a105afc07984f39342fbbb483b1b99e0f757106538cf6c42e2d8b0837e4e6b40fc6fc37e82cc6c56d16ecab1ab109a11fd3640d7fb8",
+    "created_at": 1735477908,
+    "kind": 30000
+}

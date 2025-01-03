@@ -22,6 +22,12 @@ extension AuthorList {
 
     /// The set of unique authors in this list.
     @NSManaged public var authors: Set<Author>
+    
+    /// The set of privately listed unique authors.
+    @NSManaged public var privateAuthors: Set<Author>
+    
+    /// Whether or not this list should be visible in the ``FeedPicker``.
+    @NSManaged public var isFeedEnabled: Bool
 }
 
 // MARK: Generated accessors for authors
@@ -38,4 +44,16 @@ extension AuthorList {
 
     @objc(removeAuthors:)
     @NSManaged public func removeFromAuthors(_ values: NSSet)
+    
+    @objc(addPrivateAuthorsObject:)
+    @NSManaged public func addToPrivateAuthors(_ value: Author)
+
+    @objc(removePrivateAuthorsObject:)
+    @NSManaged public func removeFromPrivateAuthors(_ value: Author)
+
+    @objc(addPrivateAuthors:)
+    @NSManaged public func addToPrivateAuthors(_ values: NSSet)
+
+    @objc(removePrivateAuthors:)
+    @NSManaged public func removeFromPrivateAuthors(_ values: NSSet)
 }
