@@ -46,7 +46,7 @@ import SwiftUI
         
         // The delay here is an unfortunate workaround. Without it, the feed always resumes to
         // the default value of FeedSource.following.
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1500)) {
             self.selectedSource = self.persistedSelectedSource
         }
     }
