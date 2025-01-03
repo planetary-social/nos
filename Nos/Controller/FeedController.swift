@@ -3,74 +3,6 @@ import CoreData
 import Dependencies
 import SwiftUI
 
-/// The source to be used for a feed of notes.
-enum FeedSource: RawRepresentable, Hashable, Equatable {
-    case following
-    case relay(String, String?)
-    case list(String, String?)
-    
-    var displayName: String {
-        switch self {
-        case .following: String(localized: "following")
-        case .relay(let name, _), .list(let name, _): name
-        }
-    }
-    
-    var description: String? {
-        switch self {
-        case .following: nil
-        case .relay(_, let description), .list(_, let description): description
-        }
-    }
-    
-    static func == (lhs: FeedSource, rhs: FeedSource) -> Bool {
-        switch (lhs, rhs) {
-        case (.following, .following): true
-        case (.relay(let name1, _), .relay(let name2, _)): name1 == name2
-        case (.list(let name1, _), .list(let name2, _)): name1 == name2
-        default: false
-        }
-    }
-    
-    // Note: RawRepresentable conformance is required for use of @AppStorage for persistence.
-    var rawValue: String {
-        switch self {
-        case .following:
-            "following"
-        case .relay(let host, let description):
-            "relay:|\(host):|\(description ?? "")"
-        case .list(let name, let description):
-            "list:|\(name):|\(description ?? "")"
-        }
-    }
-    
-    init?(rawValue: String) {
-        let components = rawValue.split(separator: ":|").map { String($0) }
-        guard let caseName = components.first else {
-            return nil
-        }
-        
-        switch caseName {
-        case "following":
-            self = .following
-        case "relay":
-            guard components.count >= 2 else {
-                return nil
-            }
-            let description = components.count >= 3 ? components[2] : ""
-            self = .relay(components[1], description)
-        case "list":
-            guard components.count >= 2 else {
-                return nil
-            }
-            let description = components.count >= 3 ? components[2] : ""
-            self = .list(components[1], description)
-        default:
-            return nil
-        }
-    }
-}
-
 @Observable @MainActor final class FeedController {
     
     @ObservationIgnored @Dependency(\.persistenceController) private var persistenceController
@@ -190,7 +122,7 @@ enum FeedSource: RawRepresentable, Hashable, Equatable {
         var relayItems = [FeedToggleRow.Item]()
         
         for list in lists {
-            let source = FeedSource.list(list.title ?? "??", nil)
+            let source = FeedSource.list(name: list.title ?? "??", description: nil)
             
             if list.isFeedEnabled {
                 enabledSources.append(source)
@@ -200,7 +132,7 @@ enum FeedSource: RawRepresentable, Hashable, Equatable {
         }
         
         for relay in relays {
-            let source = FeedSource.relay(relay.host ?? "", relay.relayDescription)
+            let source = FeedSource.relay(host: relay.host ?? "", description: relay.relayDescription)
             
             if relay.isFeedEnabled {
                 enabledSources.append(source)

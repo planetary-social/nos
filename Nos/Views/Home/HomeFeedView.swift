@@ -110,6 +110,7 @@ struct HomeFeedView: View {
             NewNotesButton(fetchRequest: FetchRequest(fetchRequest: newNotesRequest)) {
                 refreshController.startRefresh = true
             }
+            .padding(.top, 44)
 
             if showTimedLoadingIndicator {
                 FullscreenProgressView(
