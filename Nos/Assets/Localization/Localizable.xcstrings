@@ -922,6 +922,17 @@
         }
       }
     },
+    "addListsDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add lists to your feed to filter by topic."
+          }
+        }
+      }
+    },
     "addRelay" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10412,6 +10423,17 @@
         }
       }
     },
+    "lists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lists"
+          }
+        }
+      }
+    },
     "loading" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -12403,6 +12425,17 @@
         }
       }
     },
+    "noLists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It doesn’t look like you have created any lists."
+          }
+        }
+      }
+    },
     "noNotifications" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -12488,6 +12521,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "目前（還）沒有通知！"
+          }
+        }
+      }
+    },
+    "noRelays" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It doesn’t look like you have any relays."
           }
         }
       }
@@ -16785,6 +16829,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "選擇"
+          }
+        }
+      }
+    },
+    "selectRelaysDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select relays to show on your feed."
           }
         }
       }
