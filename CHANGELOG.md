@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Release Notes
+
+- Fixed: adding/removing relays not reflected on feed filter. [#119](https://github.com/verse-pbc/issues/issues/119)
+
+### Internal Changes
+
 ## [1.1] - 2025-01-03Z
 
 ### Release Notes
