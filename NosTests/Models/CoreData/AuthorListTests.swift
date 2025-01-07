@@ -65,4 +65,44 @@ final class AuthorListTests: CoreDataTestCase {
         // Assert
         XCTAssertTrue(verified)
     }
+    
+    @MainActor func test_update_list_pubkeys() throws {
+        // Arrange
+        let data = try jsonData(filename: "follow_set_with_unknown_tag")
+        let event = try JSONDecoder().decode(JSONEvent.self, from: data)
+        let pubkeyToRemove = "27cf2c68535ae1fc06510e827670053f5dcd39e6bd7e05f1ffb487ef2ac13549"
+        let pubkeyToAdd = "76c71aae3a491f1d9eec47cba17e229cda4113a0bbb6e6ae1776d7643e29cafa"
+
+        // Act
+        let list = try AuthorList.createOrUpdate(from: event, in: testContext)
+        let author = try XCTUnwrap(list.author)
+        
+        let replaceableIdentifier = try XCTUnwrap(list.replaceableIdentifier)
+        
+        // remove an author
+        let authorToRemove = try XCTUnwrap(list.authors.first(where: { $0.hexadecimalPublicKey == pubkeyToRemove }))
+        list.authors.remove(authorToRemove)
+        
+        // add an author
+        let rabble = try Author.findOrCreate(by: pubkeyToAdd, context: testContext)
+        list.addToAuthors(rabble)
+        
+        try testContext.save()
+        
+        // Assert
+        let request = AuthorList.event(
+            by: replaceableIdentifier,
+            author: author,
+            kind: EventKind.followSet.rawValue
+        )
+        
+        let editedListResult = try testContext.fetch(request)
+        let editedList = try XCTUnwrap(editedListResult.first as? AuthorList)
+        
+        XCTAssertFalse(editedList.authors.contains(where: { $0.hexadecimalPublicKey == pubkeyToRemove }))
+        XCTAssertTrue(editedList.authors.contains(where: { $0.hexadecimalPublicKey == pubkeyToAdd }))
+        
+        let tags = try XCTUnwrap(editedList.allTags as? [[String]])
+        XCTAssertTrue(tags.contains(where: { $0.first == "unknown-tag" }))
+    }
 }
