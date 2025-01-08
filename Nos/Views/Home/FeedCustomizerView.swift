@@ -13,9 +13,9 @@ extension FeedTab: NosSegmentedPickerItem {
     var titleKey: LocalizedStringKey {
         switch self {
         case .lists:
-            "Lists"
+            "lists"
         case .relays:
-            "Relays"
+            "relays"
         }
     }
     
@@ -49,7 +49,7 @@ struct FeedCustomizerView: View {
             if selectedTab == .lists {
                 FeedSourceToggleView(
                     author: author,
-                    headerText: Text("Add lists to your feed to filter by topic."),
+                    headerText: Text("addListsDescription"),
                     items: feedController.listRowItems,
                     footer: {
                         Group {
@@ -67,18 +67,18 @@ struct FeedCustomizerView: View {
                         }
                     },
                     noContent: {
-                        Text("It doesn’t look like you have created any lists.")    // TODO: localize
+                        Text("noLists")
                     }
                 )
             } else {
                 FeedSourceToggleView(
                     author: author,
-                    headerText: Text("Select relays to show on your feed."),    // TODO: localize
+                    headerText: Text("selectRelaysDescription"),
                     items: feedController.relayRowItems,
                     footer: {
                         Group {
                             Text("Manage these on the ") +
-                            (Text("Relays")
+                            (Text("relays")
                                 .foregroundStyle(Color.accent)) +
                             Text(" screen")
                         }
@@ -88,7 +88,7 @@ struct FeedCustomizerView: View {
                         }
                     },
                     noContent: {
-                        Text("It doesn’t look like you have any relays.")   // TODO: localize
+                        Text("noRelays")
                     }
                 )
             }
