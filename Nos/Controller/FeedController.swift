@@ -9,7 +9,7 @@ import SwiftUI
     
     let author: Author
     
-    var enabledSources: [FeedSource] = [.following]
+    private(set) var enabledSources: [FeedSource] = [.following]
     
     private(set) var selectedList: AuthorList?
     private(set) var selectedRelay: Relay?
@@ -37,6 +37,38 @@ import SwiftUI
         }
     }
     
+    @ObservationIgnored private lazy var listsPublisher = {
+        let request = NSFetchRequest<AuthorList>(entityName: "AuthorList")
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        request.predicate = NSPredicate(
+            format: "kind = %i AND author = %@ AND title != nil",
+            EventKind.followSet.rawValue,
+            author
+        )
+        
+        let listWatcher = NSFetchedResultsController(
+            fetchRequest: request,
+            managedObjectContext: persistenceController.viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: "FeedController.listWatcher"
+        )
+        
+        return FetchedResultsControllerPublisher(fetchedResultsController: listWatcher)
+    }()
+    
+    @ObservationIgnored private lazy var relaysPublisher = {
+        let request = Relay.relays(for: author)
+        
+        let relayWatcher = NSFetchedResultsController(
+            fetchRequest: request,
+            managedObjectContext: persistenceController.viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: "FeedController.relayWatcher"
+        )
+        
+        return FetchedResultsControllerPublisher(fetchedResultsController: relayWatcher)
+    }()
+    
     private var cancellables = Set<AnyCancellable>()
     
     init(author: Author) {
@@ -54,22 +86,7 @@ import SwiftUI
     }
     
     private func observeLists() {
-        let request = NSFetchRequest<AuthorList>(entityName: "AuthorList")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        request.predicate = NSPredicate(
-            format: "kind = %i AND author = %@ AND title != nil",
-            EventKind.followSet.rawValue,
-            author
-        )
-        
-        let listWatcher = NSFetchedResultsController(
-            fetchRequest: request,
-            managedObjectContext: persistenceController.viewContext,
-            sectionNameKeyPath: nil,
-            cacheName: "FeedController.listWatcher"
-        )
-        
-        FetchedResultsControllerPublisher(fetchedResultsController: listWatcher)
+        listsPublisher
             .publisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] lists in
@@ -79,16 +96,7 @@ import SwiftUI
     }
     
     private func observeRelays() {
-        let request = Relay.relays(for: author)
-        
-        let relayWatcher = NSFetchedResultsController(
-            fetchRequest: request,
-            managedObjectContext: persistenceController.viewContext,
-            sectionNameKeyPath: nil,
-            cacheName: "FeedController.relayWatcher"
-        )
-        
-        FetchedResultsControllerPublisher(fetchedResultsController: relayWatcher)
+        relaysPublisher
             .publisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] relays in

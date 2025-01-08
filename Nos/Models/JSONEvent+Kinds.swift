@@ -47,4 +47,39 @@ extension JSONEvent {
             content: reason ?? ""
         )
     }
+    
+    /// An event that represents a list of authors.
+    /// - Parameters:
+    ///   - pubKey: The public key of the user making the request.
+    ///   - title: The title of the list.
+    ///   - description: An optional description of the list.
+    ///   - replaceableID: The unique identifier of the list. If left nil, one will be provided as a UUID.
+    ///   - authorIDs: A list of author ids to add to the list.
+    /// - Returns: The ``JSONEvent`` representing the list.
+    static func followSet(
+        pubKey: String,
+        title: String,
+        description: String?,
+        replaceableID: RawReplaceableID?,
+        authorIDs: [RawAuthorID]
+    ) -> JSONEvent {
+        let identifier = replaceableID ?? UUID().uuidString
+        
+        var tags = [
+            ["d", identifier],
+            ["title", title]
+        ]
+        if let description {
+            tags.append(["description", description])
+        }
+        let pTags = authorIDs.map { ["p", $0] }
+        tags.append(contentsOf: pTags)
+        
+        return JSONEvent(
+            pubKey: pubKey,
+            kind: .followSet,
+            tags: tags,
+            content: ""
+        )
+    }
 }
