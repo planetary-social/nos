@@ -104,5 +104,6 @@ final class AuthorListTests: CoreDataTestCase {
         
         let tags = try XCTUnwrap(editedList.allTags as? [[String]])
         XCTAssertTrue(tags.contains(where: { $0.first == "unknown-tag" }))
+        XCTAssertEqual(tags.count, 6)
     }
 }
