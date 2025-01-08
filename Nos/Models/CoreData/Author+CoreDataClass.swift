@@ -406,4 +406,11 @@ import Logger
         // Publish the modified list
         await currentUser.publishMuteList(keys: Array(Set(mutedList)))
     }
+
+    /// Returns true if this event tagged the given author.
+    func this(author: Author) -> Bool {
+        followNotifications.contains(where: { element in
+            (element as? NosNotification)?.follower == author
+        })
+    }
 }

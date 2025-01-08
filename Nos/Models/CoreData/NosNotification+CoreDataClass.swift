@@ -1,10 +1,10 @@
 import Foundation
 import CoreData
 
-/// Represents a notification we will display to the user. We save records of them to the database in order to 
+/// Represents a notification we will display to the user. We save records of them to the database in order to
 /// de-duplicate them and keep track of whether they have been seen by the user.
 @objc(NosNotification)
-public class NosNotification: NSManagedObject {
+public class NosNotification: NosManagedObject {
 
     static func createIfNecessary(
         from eventID: RawEventID,
@@ -26,8 +26,8 @@ public class NosNotification: NSManagedObject {
             return notification
         }
     }
-    
-    static func find(by eventID: RawEventID, in context: NSManagedObjectContext) throws -> NosNotification? {
+
+    static func find(by eventID: RawNostrID, in context: NSManagedObjectContext) throws -> NosNotification? {
         let fetchRequest = request(by: eventID)
         if let notification = try context.fetch(fetchRequest).first {
             return notification
@@ -35,8 +35,8 @@ public class NosNotification: NSManagedObject {
         
         return nil
     }
-    
-    static func request(by eventID: RawEventID) -> NSFetchRequest<NosNotification> {
+
+    static func request(by eventID: RawNostrID) -> NSFetchRequest<NosNotification> {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
         fetchRequest.predicate = NSPredicate(format: "eventID = %@", eventID)
         fetchRequest.fetchLimit = 1
@@ -74,5 +74,47 @@ public class NosNotification: NSManagedObject {
     /// Two months before Date.now, and is used to delete old notifications from the db.
     static func staleNotificationCutoff() -> Date {
         Calendar.current.date(byAdding: .month, value: -2, to: .now) ?? .now
+    }
+
+    @nonobjc public class func emptyRequest() -> NSFetchRequest<NosNotification> {
+        let fetchRequest = NSFetchRequest<NosNotification>(entityName: "NosNotification")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \NosNotification.createdAt, ascending: true)]
+        fetchRequest.predicate = NSPredicate.false
+        return fetchRequest
+    }
+
+    /// A request for all notifications that the given user should receive a notification for.
+    /// - Parameters:
+    ///   - user: the author you want to view notifications for.
+    ///   - since: a date that will be used as a lower bound for the request.
+    ///   - limit: a max number of events to fetch.
+    /// - Returns: A fetch request for the events described.
+    @nonobjc public class func all(
+        notifying user: Author,
+        since: Date? = nil,
+        limit: Int? = nil
+    ) -> NSFetchRequest<NosNotification> {
+        let fetchRequest = NSFetchRequest<NosNotification>(entityName: "NosNotification")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \NosNotification.createdAt, ascending: false)]
+        if let limit {
+            fetchRequest.fetchLimit = limit
+        }
+
+        // A notification for the user
+        let forUserPredicate = NSPredicate(format: "user = %@", user)
+        // User is being followed
+        let isFollowPredicate = NSPredicate(format: "follower != nil")
+
+        var predicates: [NSPredicate] = [
+            NSCompoundPredicate(orPredicateWithSubpredicates: [forUserPredicate, isFollowPredicate])
+        ]
+
+        if let since {
+            predicates.append(NSPredicate(format: "createdAt >= %@", since as CVarArg))
+        }
+
+//        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+
+        return fetchRequest
     }
 }
