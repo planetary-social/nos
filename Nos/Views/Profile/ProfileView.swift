@@ -23,6 +23,7 @@ struct ProfileView: View {
     @State private var selectedTab: ProfileFeedType = .notes
 
     @State private var alert: AlertState<Never>?
+    @State private var scrollOffsetY: CGFloat = 0
 
     var isShowingLoggedInUser: Bool {
         author.hexadecimalPublicKey == currentUser.publicKeyHex
@@ -202,6 +203,7 @@ struct ProfileView: View {
     var noteListView: some View {
         PagedNoteListView(
             refreshController: $refreshController,
+            scrollOffsetY: .constant(0),
             databaseFilter: databaseFilter,
             relayFilter: selectedTab.relayFilter(author: author),
             relay: nil,
@@ -245,7 +247,7 @@ struct ProfileView: View {
 }
 
 #Preview("Generic user") {
-    @Previewable @State var previewData = PreviewData()
+    var previewData = PreviewData()
     
     return NavigationStack {
         ProfileView(author: previewData.previewAuthor)

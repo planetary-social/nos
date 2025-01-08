@@ -83,7 +83,7 @@ import Dependencies
         self.socialGraph = SocialGraphCache(userKey: nil, context: persistenceController.newBackgroundContext())
         if let privateKeyData = keychain.load(key: keychain.keychainPrivateKey) {
             Log.info("CurrentUser loaded a private key from keychain")
-            let hexString = String(data: privateKeyData, encoding: .utf8)
+            let hexString = String(decoding: privateKeyData, as: UTF8.self)
             _privateKeyHex = hexString
             setUp()
             if let keyPair {
@@ -177,7 +177,7 @@ import Dependencies
     }
 
     /// Subscribes to relays for important events concerning the current user like their latest contact list, 
-    /// notifications, reports, mutes, zaps, etc.
+    /// notifications, reports, mutes, zaps, lists etc.
     @MainActor func subscribe() async {
         guard let key = publicKeyHex, let author else {
             return
@@ -191,11 +191,16 @@ import Dependencies
             await relayService.requestContactList(for: key, since: author.lastUpdatedContactList)
         )
         
+        // Always request the user's lists
+        subscriptions.append(
+            await relayService.requestAuthorLists(for: key, since: nil)
+        )
+        
         // Subscribe to important events we may not get incidentally while browsing the feed
         let latestReceivedEvent = try? viewContext.fetch(Event.lastReceived(for: author)).first
         let importantEventsFilter = Filter(
             authorKeys: [key],
-            kinds: [.mute, .delete, .report, .contactList, .zapRequest],
+            kinds: [.mute, .delete, .report, .contactList, .zapRequest, .followSet],
             limit: 100,
             since: latestReceivedEvent?.receivedAt,
             keepSubscriptionOpen: true
@@ -286,10 +291,8 @@ import Dependencies
     
     // MARK: - NSFetchedResultsControllerDelegate
     
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        Task { @MainActor in
-            author = controller.fetchedObjects?.first as? Author
-        }
+    @MainActor func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        author = controller.fetchedObjects?.first as? Author
     }
 }
 // swiftlint:enable type_body_length

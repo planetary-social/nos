@@ -19,7 +19,10 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     /// Allows us to refresh the PagedNoteListView from outside this view itself, such as with a separate button.
     @Binding var refreshController: RefreshController
 
-    /// A fetch request that specifies the events that should be shown. The events should be sorted in 
+    /// Allows parent views to act when the offset reaches a certain point.
+    @Binding var scrollOffsetY: CGFloat
+    
+    /// A fetch request that specifies the events that should be shown. The events should be sorted in
     /// reverse-chronological order and should match the events returned by `relayFilter`.
     let databaseFilter: NSFetchRequest<Event>
     
@@ -45,7 +48,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     let emptyPlaceholder: () -> EmptyPlaceholder
 
     func makeCoordinator() -> Coordinator<Header, EmptyPlaceholder> {
-        Coordinator(refreshController: refreshController)
+        Coordinator(refreshController: refreshController, scrollOffsetY: $scrollOffsetY)
     }
 
     func makeUIView(context: Context) -> UICollectionView {
@@ -65,6 +68,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             emptyPlaceholder: emptyPlaceholder
         )
         collectionView.dataSource = dataSource
+        collectionView.delegate = context.coordinator
         collectionView.prefetchDataSource = dataSource
 
         let refreshControl = UIRefreshControl()
@@ -173,11 +177,12 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     
     // swiftlint:disable generic_type_name
     /// The coordinator mainly holds a strong reference to the `dataSource` and proxies pull-to-refresh events.
-    class Coordinator<CoordinatorHeader: View, CoordinatorEmptyPlaceholder: View> {
+    class Coordinator<CoordinatorHeader: View, CoordinatorEmptyPlaceholder: View>: NSObject, UICollectionViewDelegate {
         // swiftlint:enable generic_type_name
         
         /// Controls refresh actions. Used for setting the `lastRefreshDate` whenever the data is refreshed.
         let refreshController: RefreshController
+        @Binding var scrollOffsetY: CGFloat
 
         var dataSource: PagedNoteDataSource<CoordinatorHeader, CoordinatorEmptyPlaceholder>?
         var collectionView: UICollectionView?
@@ -186,8 +191,9 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
         /// Initializes a coordinator with the given refresh controller.
         /// - Parameter refreshController: Controls refresh actions. Used for setting the `lastRefreshDate`
         ///                                whenever the data is refreshed.
-        init(refreshController: RefreshController) {
+        init(refreshController: RefreshController, scrollOffsetY: Binding<CGFloat>) {
             self.refreshController = refreshController
+            self._scrollOffsetY = scrollOffsetY
         }
 
         func dataSource(
@@ -229,6 +235,10 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
                 }
             }
         }
+        
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            scrollOffsetY = scrollView.contentOffset.y
+        }
     }
 }
 
@@ -238,15 +248,16 @@ extension Notification.Name {
 }
 
 #Preview {
-    @Previewable @State var refreshController = RefreshController()
-    @Previewable @State var previewData = PreviewData()
-    
+    var previewData = PreviewData()
+    @State var refreshController = RefreshController()
+
     return PagedNoteListView(
         refreshController: $refreshController,
+        scrollOffsetY: .constant(0),
         databaseFilter: previewData.alice.allPostsRequest(onlyRootPosts: false),
         relayFilter: Filter(), 
         relay: nil,
-        managedObjectContext: previewData.context,
+        managedObjectContext: previewData.previewContext,
         tab: .home,
         header: {
             ProfileHeader(author: previewData.alice, selectedTab: .constant(.activity))
@@ -262,7 +273,7 @@ extension Notification.Name {
     .inject(previewData: previewData)
     .onAppear {
         for i in 0..<100 {
-            let note = Event(context: previewData.context)
+            let note = Event(context: previewData.previewContext)
             note.identifier = "ProfileNotesView-\(i)"
             note.kind = EventKind.text.rawValue
             note.content = "\(i)"

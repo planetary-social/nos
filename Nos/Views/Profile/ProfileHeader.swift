@@ -70,7 +70,7 @@ struct ProfileHeader: View {
                 y: 1
             )
     }
-
+    
     var body: some View {
         ZStack {
             VStack(alignment: .leading) {
@@ -204,8 +204,11 @@ struct ProfileHeader: View {
                 .frame(maxWidth: .infinity)
 
                 divider
-
-                profileHeaderTab
+                
+                NosSegmentedPicker(
+                    items: [ProfileFeedType.notes, ProfileFeedType.activity],
+                    selectedItem: $selectedTab
+                )
             }
             .frame(maxWidth: 500)
         }
@@ -235,50 +238,10 @@ struct ProfileHeader: View {
             .presentationDetents([.medium, .large])
         }
     }
-
-    private var profileHeaderTab: some View {
-        HStack {
-            Button {
-                selectedTab = .notes
-            } label: {
-                HStack {
-                    Spacer()
-                    let color = selectedTab == .notes ? Color.primaryTxt : .secondaryTxt
-                    Image.profilePosts
-                        .renderingMode(.template)
-                        .foregroundColor(color)
-                    Text("notes")
-                        .font(.subheadline.weight(.medium))
-                        .foregroundColor(color)
-                    Spacer()
-                }
-            }
-            .frame(maxWidth: .infinity)
-
-            Button {
-                selectedTab = .activity
-            } label: {
-                HStack {
-                    Spacer()
-                    let color = selectedTab == .activity ? Color.primaryTxt : .secondaryTxt
-                    Image.profileFeed
-                        .renderingMode(.template)
-                        .foregroundColor(color)
-                    Text("activity")
-                        .foregroundColor(color)
-                        .font(.subheadline.weight(.medium))
-                    Spacer()
-                }
-            }
-            .frame(maxWidth: .infinity)
-        }
-        .padding(.top, 12)
-        .padding(.bottom, 15)
-    }
 }
 
 #Preview {
-    @Previewable @State var previewData = PreviewData()
+    var previewData = PreviewData()
     
     return Group {
         // ProfileHeader(author: author)
@@ -290,28 +253,28 @@ struct ProfileHeader: View {
 }
 
 #Preview {
-    @Previewable @State var previewData = PreviewData()
+    var previewData = PreviewData()
 
     var author: Author {
-        let context = previewData.context
-        let author = Author(context: context)
+        let previewContext = previewData.previewContext
+        let author = Author(context: previewContext)
         author.hexadecimalPublicKey = KeyFixture.pubKeyHex
-        author.add(relay: Relay(context: context))
+        author.add(relay: Relay(context: previewContext))
         author.name = "Sebastian Heit"
         author.nip05 = "chardot@nostr.fan"
         author.about = "Go programmer working on Nos/Planetary. You can find me at various European events related to" +
         " Chaos Computer Club, the hacker community and free software."
-        let first = Author(context: context)
+        let first = Author(context: previewContext)
         first.name = "Craig Nichols"
 
-        let second = Author(context: context)
+        let second = Author(context: previewContext)
         second.name = "Justin Pool"
 
-        let firstFollow = Follow(context: context)
+        let firstFollow = Follow(context: previewContext)
         firstFollow.source = first
         firstFollow.destination = author
 
-        let secondFollow = Follow(context: context)
+        let secondFollow = Follow(context: previewContext)
         secondFollow.source = second
         secondFollow.destination = author
 
@@ -324,6 +287,7 @@ struct ProfileHeader: View {
         ProfileHeader(author: author, selectedTab: .constant(.activity))
     }
     .inject(previewData: previewData)
+    .previewDevice("iPhone SE (2nd generation)")
     .padding()
     .background(Color.previewBg)
 }

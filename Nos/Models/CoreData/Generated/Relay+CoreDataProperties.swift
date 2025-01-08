@@ -14,6 +14,8 @@ extension Relay {
     @NSManaged public var events: Set<Event>
     @NSManaged public var publishedEvents: Set<Event>
     @NSManaged public var shouldBePublishedEvents: Set<Event>
+    /// Whether or not this relay should be visible in the ``FeedPicker``.
+    @NSManaged public var isFeedEnabled: Bool
 
     // Metadata
     @NSManaged public var name: String?

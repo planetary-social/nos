@@ -61,10 +61,7 @@ extension CurrentUser {
         
         let jsonObject = buildMetadataJSONObject(author: author)
         let data = try JSONSerialization.data(withJSONObject: jsonObject)
-        guard let content = String(data: data, encoding: .utf8) else {
-            Log.error("Error: Couldn't convert data to string")
-            throw CurrentUserError.errorWhilePublishingToRelays
-        }
+        let content = String(decoding: data, as: UTF8.self)
 
         let jsonEvent = JSONEvent(
             pubKey: pubKey,
@@ -82,6 +79,32 @@ extension CurrentUser {
         } catch {
             Log.error(error.localizedDescription)
             throw CurrentUserError.errorWhilePublishingToRelays
+        }
+    }
+    
+    @MainActor func publishNewList(
+        withTitle title: String,
+        description: String?,
+        replaceableID: RawReplaceableID? = nil,
+        authorIDs: [RawAuthorID]
+    ) async {
+        guard let keyPair else {
+            Log.debug("Error: no pubKey")
+            return
+        }
+        
+        let jsonEvent = JSONEvent.followSet(
+            pubKey: keyPair.publicKeyHex,
+            title: title,
+            description: description,
+            replaceableID: replaceableID,
+            authorIDs: authorIDs
+        )
+        
+        do {
+            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
+        } catch {
+            Log.debug("Failed to create new list \(error.localizedDescription)")
         }
     }
     

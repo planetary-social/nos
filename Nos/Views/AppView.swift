@@ -50,90 +50,123 @@ struct AppView: View {
     }
 
     private var tabView: some View {
-        TabBarController(selectedIndex: $router.selectedTab, viewControllers: makeViewControllers())
-            .onChange(of: router.selectedTab) { _, newTab in
-                if case let AppDestination.noteComposer(contents) = newTab {
-                    newPostContents = contents
-                    showNewPost = true
-                    router.selectedTab = lastSelectedTab
-                } else if !showNewPost {
-                    lastSelectedTab = newTab
-                }
+        TabView(selection: $router.selectedTab) {
+            if let author = currentUser.author {
+                HomeTab(user: author)
+                    .tabItem {
+                        VStack {
+                            let text = Text("homeFeed")
+                            if $router.selectedTab.wrappedValue == .home {
+                                Image.tabIconHomeSelected
+                                text
+                            } else {
+                                Image.tabIconHome
+                                text.foregroundColor(.secondaryTxt)
+                            }
+                        }
+                    }
+                    .toolbarBackground(.visible, for: .tabBar)
+                    .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                    .tag(AppDestination.home)
+                    .onAppear {
+                        // TODO: Move this somewhere better like CurrentUser when it becomes the source of truth
+                        // for who is logged in
+                        if let keyPair = currentUser.keyPair {
+                            analytics.identify(
+                                with: keyPair,
+                                nip05: currentUser.author?.nip05
+                            )
+                            crashReporting.identify(with: keyPair)
+                        }
+                    }
             }
-            .overlay {
-                if router.isLoading {
-                    ZStack {
-                        Rectangle().fill(.black.opacity(0.4))
-                        ProgressView()
+
+            DiscoverTab()
+                .tabItem {
+                    VStack {
+                        let text = Text("discover")
+                        if $router.selectedTab.wrappedValue == .discover {
+                            Image.tabIconEveryoneSelected
+                            text.foregroundColor(.primaryTxt)
+                        } else {
+                            Image.tabIconEveryone
+                            text.foregroundColor(.secondaryTxt)
+                        }
                     }
                 }
-            }
-            .sheet(isPresented: $showNewPost) {
-                NoteComposer(initialContents: newPostContents, isPresented: $showNewPost)
-                    .environment(currentUser)
-                    .environment(relayService)
-                    .interactiveDismissDisabled()
-            }
-            .ignoresSafeArea()
-    }
+                .toolbarBackground(.visible, for: .tabBar)
+                .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                .tag(AppDestination.discover)
 
-    private func makeViewControllers() -> [UIViewController] {
-        guard let author = currentUser.author else { return [] }
-
-        var controllers: [UIViewController] = []
-
-        let homeVC = UIHostingController(rootView: HomeTab(user: author)
-            .onAppear {
-                if let keyPair = currentUser.keyPair {
-                    analytics.identify(
-                        with: keyPair,
-                        nip05: currentUser.author?.nip05
-                    )
-                    crashReporting.identify(with: keyPair)
+            VStack {}
+                .tabItem {
+                    VStack {
+                        Image.newPostButton
+                        Text("post")
+                    }
                 }
-            })
-        homeVC.tabBarItem = UITabBarItem(
-            title: String(localized: "homeFeed"),
-            image: UIImage.tabIconHome,
-            selectedImage: UIImage.tabIconHomeSelected
-        )
-        controllers.append(homeVC)
+                .tag(AppDestination.noteComposer(nil))
 
-        let discoverVC = UIHostingController(rootView: DiscoverTab())
-        discoverVC.tabBarItem = UITabBarItem(
-            title: String(localized: "discover"),
-            image: UIImage.tabIconEveryone,
-            selectedImage: UIImage.tabIconEveryoneSelected
-        )
-        controllers.append(discoverVC)
+            NotificationsView(user: currentUser.author)
+                .tabItem {
+                    VStack {
+                        let text = Text("notifications")
+                        if $router.selectedTab.wrappedValue == .notifications {
+                            Image.tabIconNotificationsSelected
+                            text.foregroundColor(.primaryTxt)
+                        } else {
+                            Image.tabIconNotifications
+                            text.foregroundColor(.secondaryTxt)
+                        }
+                    }
+                }
+                .toolbarBackground(.visible, for: .tabBar)
+                .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                .tag(AppDestination.notifications)
+                .badge(pushNotificationService.badgeCount)
 
-        let composerVC = UIViewController()
-        composerVC.tabBarItem = UITabBarItem(
-            title: String(localized: "post"),
-            image: UIImage.newPostButton,
-            selectedImage: UIImage.newPostButton
-        )
-        controllers.append(composerVC)
-
-        let notificationsVC = UIHostingController(rootView: NotificationsView(user: currentUser.author))
-        notificationsVC.tabBarItem = UITabBarItem(
-            title: String(localized: "notifications"),
-            image: UIImage.tabIconNotifications,
-            selectedImage: UIImage.tabIconNotificationsSelected
-        )
-        notificationsVC.tabBarItem.badgeValue =
-        pushNotificationService.badgeCount > 0 ? "\(pushNotificationService.badgeCount)" : nil
-        controllers.append(notificationsVC)
-
-        let profileVC = UIHostingController(rootView: ProfileTab(author: author, path: $router.profilePath))
-        profileVC.tabBarItem = UITabBarItem(
-            title: String(localized: "profileTitle"),
-            image: UIImage.tabProfile,
-            selectedImage: UIImage.tabProfileSelected
-        )
-        controllers.append(profileVC)
-
-        return controllers
+            if let author = currentUser.author {
+                ProfileTab(author: author, path: $router.profilePath)
+                    .tabItem {
+                        VStack {
+                            let text = Text("profileTitle")
+                            if $router.selectedTab.wrappedValue == .profile {
+                                Image.tabProfileSelected
+                                text.foregroundColor(.primaryTxt)
+                            } else {
+                                Image.tabProfile
+                                text.foregroundColor(.secondaryTxt)
+                            }
+                        }
+                    }
+                    .toolbarBackground(.visible, for: .tabBar)
+                    .toolbarBackground(Color.cardBgBottom, for: .tabBar)
+                    .tag(AppDestination.profile)
+            }
+        }
+        .onChange(of: router.selectedTab) { _, newTab in
+            if case let AppDestination.noteComposer(contents) = newTab {
+                newPostContents = contents
+                showNewPost = true
+                router.selectedTab = lastSelectedTab
+            } else if !showNewPost {
+                lastSelectedTab = newTab
+            }
+        }
+        .overlay {
+            if router.isLoading {
+                ZStack {
+                    Rectangle().fill(.black.opacity(0.4))
+                    ProgressView()
+                }
+            }
+        }
+        .sheet(isPresented: $showNewPost) {
+            NoteComposer(initialContents: newPostContents, isPresented: $showNewPost)
+                .environment(currentUser)
+                .environment(relayService)
+                .interactiveDismissDisabled()
+        }
     }
 }
 

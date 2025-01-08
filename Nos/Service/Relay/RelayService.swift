@@ -113,9 +113,7 @@ extension RelayService {
             await subscriptionManager.forceCloseSubscriptionCount(for: subscriptionID)
             let request: [Any] = ["CLOSE", subscriptionID]
             let requestData = try JSONSerialization.data(withJSONObject: request)
-            guard let requestString = String(data: requestData, encoding: .utf8) else {
-                throw RelayError.parseError
-            }
+            let requestString = String(decoding: requestData, as: UTF8.self)
             client.write(string: requestString)
         } catch {
             Log.error("Error: Could not send close \(error.localizedDescription)")
@@ -391,13 +389,19 @@ extension RelayService {
             return false
         } else {
             let remainingEventCount = await parseQueue.count
+            let keyPair = await currentUser.keyPair
             try await persistenceController.parseContext.perform {
                 var savedEvents = 0
                 for (event, socket) in eventData {
                     let relay = self.relay(from: socket, in: self.persistenceController.parseContext)
                     do {
                         let context = self.persistenceController.parseContext
-                        if try EventProcessor.parse(jsonEvent: event, from: relay, in: context) != nil {
+                        if try EventProcessor.parse(
+                            jsonEvent: event,
+                            from: relay,
+                            in: context,
+                            keyPair: keyPair
+                        ) != nil {
                             savedEvents += 1
                         }
                     } catch {
@@ -531,9 +535,7 @@ extension RelayService {
             
             let request: [Any] = ["AUTH", jsonEvent.dictionary]
             let requestData = try JSONSerialization.data(withJSONObject: request)
-            guard let string = String(data: requestData, encoding: .utf8) else {
-                throw RelayError.parseError
-            }
+            let string = String(decoding: requestData, as: UTF8.self)
             socket.write(string: string)
         } catch {
             Log.error("Error authenticating with \(relayAddress)", error.localizedDescription)

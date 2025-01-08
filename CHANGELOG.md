@@ -11,13 +11,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Release Notes
+
+- Fixed: adding/removing relays not reflected on feed filter. [#119](https://github.com/verse-pbc/issues/issues/119)
+
+### Internal Changes
+
+- Added function for creating a new list and a test verifying list editing. [#112](https://github.com/verse-pbc/issues/issues/112)
+
+## [1.1] - 2025-01-03Z
+
+### Release Notes
 - Fixed display of mastodon usernames so it shows @username@server.instance rather than username@instance-name.mostr.pub
 - Nos now publishes the hashtags it finds in your note when you post. This means it works the way you’ve always expected it to work. [#44](https://github.com/verse-pbc/issues/issues/44)
 - Fixed crash related to tracking delete events. [#96](https://github.com/verse-pbc/issues/issues/96)
 - Updated the default relays that are added when you create an account. [#17](https://github.com/verse-pbc/issues/issues/17)
+- Added feed picker view (UI only). [#103](https://github.com/verse-pbc/issues/issues/103)
+- Added feed source customizer drop-down view. [#102](https://github.com/verse-pbc/issues/issues/102)
+- Make feed source selector work.
+- Add empty state for lists/relays drop-down.
+- Added support for decrypting private tags in kind 30000 lists.
+- Added pop-up tip for feed customization. [#101](https://github.com/verse-pbc/issues/issues/101)
+- Added remembering which feed source is selected.
+- Factored out the segmented picker on the ProfileHeader for reusability.
+- Fixed a case where lists don't show up immediately after signing in.
+- Fixed a minor cell layout issue on feed customizer drop-down view.
+- Fixed issue where feed shows following content rather than selected list after app restart. [#114](https://github.com/verse-pbc/issues/issues/114)
+- Update relays icon on the feed customizer view to match the one in side menu.
 
 ### Internal Changes
-- Upgraded to Xcode 16. [#1570](https://github.com/planetary-social/nos/issues/1570)
 - Download and parse an author’s lists when viewing their profile. [#49](https://github.com/verse-pbc/issues/issues/49)
 - Updated fastlane scripts to fix the TestFlight deployment pipeline. [#97](https://github.com/verse-pbc/issues/issues/97)
 - Removed inactive accounts from Discover tab. [#94](https://github.com/verse-pbc/issues/issues/94)

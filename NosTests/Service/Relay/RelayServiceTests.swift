@@ -17,7 +17,7 @@ class RelayServiceTests: XCTestCase {
         XCTAssertEqual(resultFilter, expectedFilter)
     }
 
-    func test_requestFollowSets_uses_correct_filter() async throws {
+    func test_requestAuthorLists_uses_correct_filter() async throws {
         let since = Date()
         let expectedFilter = Filter(
             authorKeys: ["test"],
