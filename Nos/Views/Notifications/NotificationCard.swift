@@ -12,17 +12,32 @@ struct NotificationCard: View {
     let viewModel: NotificationViewModel
     @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var content: AttributedString?
-    
+
+    init(viewModel: NotificationViewModel) {
+        self.viewModel = viewModel
+    }
+
     func showNote() {
-        guard let note = Event.find(by: viewModel.noteID, context: viewContext) else {
-            return 
+        guard let note = Event.find(by: viewModel.noteID ?? "", context: viewContext) else {
+            return
         }
         router.push(note.referencedNote() ?? note)
     }
-    
+
+    private func showFollowProfile() {
+        guard let follower = try? Author.find(by: viewModel.authorID ?? "", context: viewContext) else {
+            return
+        }
+        router.push(follower)
+    }
+
     var body: some View {
         Button {
-            showNote()
+            switch viewModel.notificationType {
+            case .event: showNote()
+            case .follow : showFollowProfile()
+            }
+
         } label: {
             HStack {
                 AvatarView(imageUrl: viewModel.authorProfilePhotoURL, size: 40)
@@ -56,10 +71,12 @@ struct NotificationCard: View {
                 
                 VStack {
                     Spacer()
-                    Text(viewModel.date.distanceString())
-                        .lineLimit(1)
-                        .font(.clarity(.regular))
-                        .foregroundColor(.secondaryTxt)
+                    if let date = viewModel.date {
+                        Text(date.distanceString())
+                            .lineLimit(1)
+                            .font(.clarity(.regular))
+                            .foregroundColor(.secondaryTxt)
+                    }
                 }
                 .fixedSize()
             }
@@ -120,7 +137,7 @@ struct NotificationCard: View {
         
     return VStack {
         Spacer()
-        NotificationCard(viewModel: NotificationViewModel(note: note, user: bob))
+        NotificationCard(viewModel: NotificationViewModel(note: note, user: bob, date: Date()))
         Spacer()
     }
     .inject(previewData: previewData)

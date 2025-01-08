@@ -4,39 +4,41 @@ import CoreData
 import Dependencies
 import Logger
 
-/// Displays a list of cells that let the user know when other users interact with their notes.
+/// Displays a list of cells that let the user know when other users interact with their notes / follow them.
 struct NotificationsView: View {
-    
+
     @Environment(RelayService.self) private var relayService
     @EnvironmentObject private var router: Router
     @Dependency(\.analytics) private var analytics
     @Dependency(\.pushNotificationService) private var pushNotificationService
     @Dependency(\.persistenceController) private var persistenceController
 
-    @FetchRequest private var events: FetchedResults<Event>
+    @FetchRequest private var notifications: FetchedResults<NosNotification>
     @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var isVisible = false
-    
-    // Probably the logged in user should be in the @Environment eventually
-    private var user: Author?
+
+    @Environment(CurrentUser.self) private var currentUser
     private let maxNotificationsToShow = 100
-    
+
     init(user: Author?) {
-        self.user = user
         if let user {
-            _events = FetchRequest(fetchRequest: Event.all(notifying: user, limit: maxNotificationsToShow))
+            let request = NosNotification.all(
+                notifying: user,
+                limit: maxNotificationsToShow
+            )
+            _notifications = FetchRequest(fetchRequest: request)
         } else {
-            _events = FetchRequest(fetchRequest: Event.emptyRequest())
+            _notifications = FetchRequest(fetchRequest: NosNotification.emptyRequest())
         }
-    }    
-    
+    }
+
     func subscribeToNewEvents() async {
         await cancelSubscriptions()
-        
-        guard let currentUserKey = user?.hexadecimalPublicKey else {
+
+        guard let currentUserKey = currentUser.author?.hexadecimalPublicKey else {
             return
         }
-        
+
         let filter = Filter(
             kinds: [.text, .zapReceipt],
             pTags: [currentUserKey],
@@ -46,13 +48,13 @@ struct NotificationsView: View {
         let subscriptions = await relayService.fetchEvents(matching: filter)
         relaySubscriptions.append(subscriptions)
     }
-    
+
     func cancelSubscriptions() async {
         relaySubscriptions.removeAll()
     }
-    
+
     func markAllNotificationsRead() async {
-        if user != nil {
+        if currentUser.author != nil {
             do {
                 let backgroundContext = persistenceController.backgroundViewContext
                 try await NosNotification.markAllAsRead(in: backgroundContext)
@@ -62,28 +64,24 @@ struct NotificationsView: View {
             }
         }
     }
-    
+
     var body: some View {
         NosNavigationStack(path: $router.notificationsPath) {
             ScrollView(.vertical) {
                 LazyVStack {
                     /// The fetch request for events has a `fetchLimit` set but it doesn't work, so we limit the
-                    /// number of views displayed here and that appears to prevent @FetchRequest from loading all the
+                    /// number of views displayed here and ?that appears to prevent @FetchRequest from loading all the
                     /// records into memory.
                     ForEach(0..<maxNotificationsToShow, id: \.self) { index in
-                        if let event = events[safe: index], let user {
-                            NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
-                                .padding(.horizontal, 15)
-                                .padding(.bottom, 10)
-                                .readabilityPadding()
-                                .id(event.id)
+                        if let notification = notifications[safe: index], let user = currentUser.author {
+                            NotificationCell(notification: notification, user: user)
                         }
                     }
                 }
                 .padding(.top, 10)
             }
             .overlay(Group {
-                if events.isEmpty {
+                if notifications.isEmpty {
                     Text("noNotifications")
                 }
             })
@@ -103,7 +101,7 @@ struct NotificationsView: View {
             .onDisappear {
                 isVisible = false
             }
-            .onChange(of: isVisible) { 
+            .onChange(of: isVisible) {
                 Task { await markAllNotificationsRead() }
                 if isVisible {
                     analytics.showedNotifications()
@@ -115,10 +113,47 @@ struct NotificationsView: View {
                 }
             }
             .doubleTapToPop(tab: .notifications) { proxy in
-                if let firstEvent = events.first {
-                    proxy.scrollTo(firstEvent.id)
+                if let firstNotification = notifications.first {
+                    proxy.scrollTo(firstNotification.id)
                 }
             }
+        }
+    }
+}
+
+/// A single notification cell that contains a follow event or a other event types in the notifications list
+private struct NotificationCell: View {
+    @Dependency(\.persistenceController) private var persistenceController
+    let notification: NosNotification
+    let user: Author
+
+    var body: some View {
+        if let event = Event.find(by: notification.eventID ?? "", context: persistenceController.viewContext) {
+            NotificationCard(
+                viewModel: NotificationViewModel(
+                    note: event,
+                    user: user,
+                    date: notification.createdAt ?? .distantPast
+                )
+            )
+            .padding(.horizontal, 15)
+            .padding(.bottom, 10)
+            .readabilityPadding()
+            .id(notification.id)
+        } else if let followerKey = notification.follower?.hexadecimalPublicKey, let follower = try? Author.find(
+            by: followerKey,
+            context: persistenceController.viewContext
+        ) {
+            NotificationCard(
+                viewModel: NotificationViewModel(
+                    follower: follower,
+                    date: notification.createdAt ?? .distantPast
+                )
+            )
+            .padding(.horizontal, 15)
+            .padding(.bottom, 10)
+            .readabilityPadding()
+            .id(notification.id)
         }
     }
 }
