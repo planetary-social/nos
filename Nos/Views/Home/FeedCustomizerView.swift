@@ -33,6 +33,7 @@ struct FeedCustomizerView: View {
     
     @Environment(FeedController.self) var feedController
     let author: Author
+    @Binding var shouldNavigateToLists: Bool
     @Binding var shouldNavigateToRelays: Bool
     
     @AppStorage("selectedFeedTogglesTab") private var selectedTab = FeedTab.lists
@@ -53,18 +54,30 @@ struct FeedCustomizerView: View {
                     items: feedController.listRowItems,
                     footer: {
                         Group {
-                            Text("Create your own lists on ") +
-                            Text("Listr ")
-                                .foregroundStyle(Color.accent) +
-                            Text(Image(systemName: "link"))
-                                .foregroundStyle(Color.accent)
-                        }
-                        .padding()
-                        .onTapGesture {
-                            if let url = URL(string: "https://listr.lol/feed") {
-                                UIApplication.shared.open(url)
+                            if feedController.listRowItems.isEmpty {
+                                Group {
+                                    Text("Create your own lists on ") +
+                                    Text("Listr ")
+                                        .foregroundStyle(Color.accent) +
+                                    Text(Image(systemName: "link"))
+                                        .foregroundStyle(Color.accent)
+                                }
+                                .onTapGesture {
+                                    if let url = URL(string: "https://listr.lol/feed") {
+                                        UIApplication.shared.open(url)
+                                    }
+                                }
+                            } else {
+                                SecondaryActionButton(
+                                    "manageYourLists",
+                                    font: .clarity(.semibold, textStyle: .footnote),
+                                    image: Image(systemName: "slider.horizontal.3")
+                                ) {
+                                    shouldNavigateToLists = true
+                                }
                             }
                         }
+                        .padding()
                     },
                     noContent: {
                         Text("It doesn’t look like you have created any lists.")    // TODO: localize

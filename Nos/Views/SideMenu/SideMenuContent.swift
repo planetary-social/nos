@@ -77,6 +77,11 @@ struct SideMenuContent: View {
                         destination: .relays
                     )
                     SideMenuRow(
+                        "lists",
+                        image: Image(systemName: "person.2"),
+                        destination: .lists
+                    )
+                    SideMenuRow(
                         "about",
                         image: Image(systemName: "questionmark.circle"),
                         destination: .about
@@ -108,6 +113,8 @@ struct SideMenuContent: View {
                     SettingsView()
                 case .relays:
                     RelayView(author: currentUser.author!)
+                case .lists:
+                    ListsView(author: currentUser.author!)
                 case .profile:
                     ProfileView(author: currentUser.author!)
                 case .about:
@@ -151,6 +158,9 @@ struct SideMenuRow: View {
         } label: {
             HStack(alignment: .center) {
                 image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(maxWidth: 28)
                 Text(title)
                     .foregroundColor(.primaryTxt)
                 Spacer()

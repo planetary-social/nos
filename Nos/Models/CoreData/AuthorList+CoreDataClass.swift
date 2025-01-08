@@ -96,4 +96,15 @@ public class AuthorList: Event {
     var allAuthors: Set<Author> {
         authors.union(privateAuthors)
     }
+    
+    static func authorLists(ownedBy owner: Author) -> NSFetchRequest<AuthorList> {
+        let request = NSFetchRequest<AuthorList>(entityName: "AuthorList")
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        request.predicate = NSPredicate(
+            format: "kind = %i AND author = %@ AND title != nil AND deletedOn.@count = 0",
+            EventKind.followSet.rawValue,
+            owner
+        )
+        return request
+    }
 }

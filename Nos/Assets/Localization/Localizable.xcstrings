@@ -4755,6 +4755,17 @@
         }
       }
     },
+    "deleteList" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete List"
+          }
+        }
+      }
+    },
     "deleteMyAccount" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5818,6 +5829,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "編輯"
+          }
+        }
+      }
+    },
+    "editListInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit List Info"
           }
         }
       }
@@ -10412,6 +10434,17 @@
         }
       }
     },
+    "lists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lists"
+          }
+        }
+      }
+    },
     "loading" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10883,6 +10916,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "登出"
+          }
+        }
+      }
+    },
+    "manageUsers" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage Users"
+          }
+        }
+      }
+    },
+    "manageYourLists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage Your Lists"
           }
         }
       }
@@ -20309,6 +20364,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你必須在設置中輸入私鑰才能發佈帖子。"
+          }
+        }
+      }
+    },
+    "yourLists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Lists"
           }
         }
       }
