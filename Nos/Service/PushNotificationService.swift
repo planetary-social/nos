@@ -19,7 +19,7 @@ import Combine
     private let showPushNotificationsAfterKey = "PushNotificationService.notificationCutoff"
 
     /// Used to limit which notifications are displayed to the user as push notifications.
-    /// 
+    ///
     /// When the user first opens the app it is initialized to Date.now.
     /// This is to prevent us showing tons of push notifications on first login.
     /// Then after that it is set to the date of the last notification that we showed.
@@ -50,7 +50,7 @@ import Combine
     
     private var notificationWatcher: NSFetchedResultsController<Event>?
     private var relaySubscription: SubscriptionCancellable?
-    private var currentAuthor: Author? 
+    private var currentAuthor: Author?
     @ObservationIgnored private lazy var modelContext = persistenceController.newBackgroundContext()
     
     @ObservationIgnored private lazy var registrar = PushNotificationRegistrar()
@@ -140,8 +140,7 @@ import Combine
     }
     
     // MARK: - Internal
-    
-    /// Tells the system to display a notification for the given event if it's appropriate. This will create a 
+    /// Tells the system to display a notification for the given event if it's appropriate. This will create a
     /// NosNotification record in the database.
     @MainActor private func showNotificationIfNecessary(for eventID: RawEventID) async {
         guard let authorKey = currentAuthor?.hexadecimalPublicKey else {
@@ -150,34 +149,33 @@ import Combine
         
         let viewModel: NotificationViewModel? = await modelContext.perform { () -> NotificationViewModel? in
             guard let event = Event.find(by: eventID, context: self.modelContext),
-                let eventCreated = event.createdAt,
-                let coreDataNotification = try? NosNotification.createIfNecessary(
-                    from: eventID,
-                    date: eventCreated,
+                let eventCreated = event.createdAt else {
+                return nil
+            }
+
+            // For follow events, create a follow notification
+            if event.kind == EventKind.contactList.rawValue {
+                return self.handleFollowEvent(
+                    event: event,
                     authorKey: authorKey,
-                    in: self.modelContext
-                ) else {
-                // We already have a notification for this event.
-                return nil
+                    eventCreated: eventCreated
+                )
             }
-            
-            defer { try? self.modelContext.save() }
-            
-            // Don't alert for old notifications or muted authors
-            guard let eventCreated = event.createdAt, 
-                eventCreated > self.showPushNotificationsAfter,
-                event.author?.muted == false else { 
-                coreDataNotification.isRead = true
-                return nil
-            }
-            
-            return NotificationViewModel(coreDataModel: coreDataNotification, context: self.modelContext) 
+
+            // Handle other event notifications
+            return self.handleGenericNotificationEvent(
+                eventID: eventID,
+                event: event,
+                authorKey: authorKey,
+                eventCreated: eventCreated
+            )
         }
         
         if let viewModel {
             // Leave an hour of margin on the showPushNotificationsAfter date to allow for events arriving slightly 
             // out of order.
-            showPushNotificationsAfter = viewModel.date.addingTimeInterval(-60 * 60)
+            guard let date = viewModel.date else { return }
+            showPushNotificationsAfter = date.addingTimeInterval(-60 * 60)
             await viewModel.loadContent(in: self.persistenceController.backgroundViewContext)
             
             do {
@@ -188,7 +186,76 @@ import Combine
             }
         }
     }
-    
+
+    /// Processes a contact list event and creates a notification for new followers
+    /// - Parameters:
+    ///   - event: The Nostr event containing the contact list information
+    ///   - authorKey: The public key of the author receiving the follow
+    ///   - eventCreated: The timestamp when the event was created
+    /// - Returns: A `NotificationViewModel` if the notification should be displayed, nil otherwise
+    private func handleFollowEvent(event: Event, authorKey: String, eventCreated: Date) -> NotificationViewModel? {
+        guard let follower = event.author else { return nil }
+
+        // Get the current author in this context
+        guard let currentAuthorInContext = try? Author.findOrCreate(by: authorKey, context: self.modelContext) else {
+            return nil
+        }
+
+        let notification = NosNotification(context: self.modelContext)
+        notification.user = currentAuthorInContext
+        notification.follower = follower
+        notification.createdAt = eventCreated
+
+        try? self.modelContext.save()
+
+        // Don't alert for old notifications or muted authors
+        guard eventCreated > self.showPushNotificationsAfter, follower.muted == false else {
+            notification.isRead = true
+            return nil
+        }
+
+        return NotificationViewModel(coreDataModel: notification, context: self.modelContext, createdAt: eventCreated)
+    }
+
+    /// Processes a generic notification event and creates a notification if necessary
+    /// - Parameters:
+    ///   - eventID: The unique identifier of the Nostr event
+    ///   - event: The Nostr event to process
+    ///   - authorKey: The public key of the author receiving the notification
+    ///   - eventCreated: The timestamp when the event was created
+    /// - Returns: A `NotificationViewModel` if the notification should be displayed, nil otherwise
+    private func handleGenericNotificationEvent(
+        eventID: String,
+        event: Event,
+        authorKey: String,
+        eventCreated: Date
+    ) -> NotificationViewModel? {
+        guard let coreDataNotification = try? NosNotification.createIfNecessary(
+            from: eventID,
+            date: eventCreated,
+            authorKey: authorKey,
+            in: self.modelContext
+        ) else {
+            // We already have a notification for this event.
+            return nil
+        }
+
+        defer { try? self.modelContext.save() }
+
+        // Don't alert for old notifications or muted authors
+        guard eventCreated > self.showPushNotificationsAfter,
+            event.author?.muted == false else {
+            coreDataNotification.isRead = true
+            return nil
+        }
+
+        return NotificationViewModel(
+            coreDataModel: coreDataNotification,
+            context: self.modelContext,
+            createdAt: eventCreated
+        )
+    }
+
     // MARK: - UNUserNotificationCenterDelegate
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
@@ -200,18 +267,12 @@ import Combine
                 !eventID.isEmpty {
                 
                 Task { @MainActor in
-                    guard let event = Event.find(by: eventID, context: self.persistenceController.viewContext) else {
-                        return
-                    }
-                    self.router.selectedTab = .notifications
-                    self.router.push(event.referencedNote() ?? event)
-                }
-            } else if let data = userInfo["data"] as? [AnyHashable: Any] {
-                if let followPubkeys = data["follows"] as? [String],
-                    let firstPubkey = followPubkeys.first,
-                    let publicKey = PublicKey.build(npubOrHex: firstPubkey) {
-                    Task { @MainActor in
-                        self.router.pushAuthor(id: publicKey.hex)
+                    if let follower = try? Author.find(by: eventID, context: self.persistenceController.viewContext) {
+                        self.router.selectedTab = .notifications
+                        self.router.push(follower)
+                    } else if let event = Event.find(by: eventID, context: self.persistenceController.viewContext) {
+                        self.router.selectedTab = .notifications
+                        self.router.push(event.referencedNote() ?? event)
                     }
                 }
             }
@@ -219,7 +280,7 @@ import Combine
     }
     
     func userNotificationCenter(
-        _ center: UNUserNotificationCenter, 
+        _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
         analytics.displayedNotification()
@@ -229,10 +290,10 @@ import Combine
     // MARK: - NSFetchedResultsControllerDelegate
     
     nonisolated func controller(
-        _ controller: NSFetchedResultsController<NSFetchRequestResult>, 
-        didChange anObject: Any, 
-        at indexPath: IndexPath?, 
-        for type: NSFetchedResultsChangeType, 
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChange anObject: Any,
+        at indexPath: IndexPath?,
+        for type: NSFetchedResultsChangeType,
         newIndexPath: IndexPath?
     ) {
         guard type == .insert else {
@@ -245,6 +306,36 @@ import Combine
         }
         
         Task { await showNotificationIfNecessary(for: eventID) }
+    }
+
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) async {
+        if let data = userInfo["data"] as? [AnyHashable: Any], let followPubkeys = data["follows"] as? [String],
+           let firstPubkey = followPubkeys.first,
+           let followerKey = PublicKey.build(npubOrHex: firstPubkey)?.hex {
+
+            // Create Event for the follow
+            await modelContext.perform { [weak self] in
+                guard let self else { return }
+
+                do {
+                    let event = Event(context: self.modelContext)
+                    event.identifier = UUID().uuidString
+                    event.author = try Author.findOrCreate(by: followerKey, context: self.modelContext)
+                    event.kind = EventKind.contactList.rawValue
+                    event.createdAt = .now
+
+                    try self.modelContext.save()
+
+                    // Show notification for the follow
+                    Task { @MainActor in
+                        guard let identifier = event.identifier else { return }
+                        await self.showNotificationIfNecessary(for: identifier)
+                    }
+                } catch {
+                    Log.optional(error, "Error creating follow notification for \(followerKey)")
+                }
+            }
+        }
     }
 }
 
