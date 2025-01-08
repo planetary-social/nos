@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Download and parse an author’s lists when viewing their profile. [#49](https://github.com/verse-pbc/issues/issues/49)
 - Updated fastlane scripts to fix the TestFlight deployment pipeline. [#97](https://github.com/verse-pbc/issues/issues/97)
 - Removed inactive accounts from Discover tab. [#94](https://github.com/verse-pbc/issues/issues/94)
+- Added the Inject framework for hot reloading. [#1710](https://github.com/planetary-social/nos/pull/1710)
 
 ## [1.0.3] - 2024-12-04Z
 
