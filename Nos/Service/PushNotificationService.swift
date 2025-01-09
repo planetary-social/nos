@@ -61,7 +61,7 @@ import Combine
         relaySubscription = nil
 
         guard let author = user.author,
-              let authorKey = author.hexadecimalPublicKey else {
+            let authorKey = author.hexadecimalPublicKey else {
             notificationWatcher = NSFetchedResultsController(
                 fetchRequest: Event.emptyRequest(),
                 managedObjectContext: modelContext,
@@ -149,7 +149,7 @@ import Combine
 
         let viewModel: NotificationViewModel? = await modelContext.perform { () -> NotificationViewModel? in
             guard let event = Event.find(by: eventID, context: self.modelContext),
-                  let eventCreated = event.createdAt else {
+                let eventCreated = event.createdAt else {
                 return nil
             }
 
@@ -244,7 +244,7 @@ import Combine
 
         // Don't alert for old notifications or muted authors
         guard eventCreated > self.showPushNotificationsAfter,
-              event.author?.muted == false else {
+            event.author?.muted == false else {
             coreDataNotification.isRead = true
             return nil
         }
@@ -264,7 +264,7 @@ import Combine
 
             let userInfo = response.notification.request.content.userInfo
             if let eventID = userInfo["eventID"] as? String,
-               !eventID.isEmpty {
+            !eventID.isEmpty {
 
                 Task { @MainActor in
                     if let follower = try? Author.find(by: eventID, context: self.persistenceController.viewContext) {
@@ -301,7 +301,7 @@ import Combine
         }
 
         guard let event = anObject as? Event,
-              let eventID = event.identifier else {
+            let eventID = event.identifier else {
             return
         }
 
@@ -310,8 +310,8 @@ import Combine
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) async {
         if let data = userInfo["data"] as? [AnyHashable: Any], let followPubkeys = data["follows"] as? [String],
-           let firstPubkey = followPubkeys.first,
-           let followerKey = PublicKey.build(npubOrHex: firstPubkey)?.hex {
+        let firstPubkey = followPubkeys.first,
+        let followerKey = PublicKey.build(npubOrHex: firstPubkey)?.hex {
 
             // Create Event for the follow
             await modelContext.perform { [weak self] in
