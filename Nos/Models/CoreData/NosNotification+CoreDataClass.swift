@@ -21,8 +21,15 @@ public class NosNotification: NosManagedObject {
         } else {
             let notification = NosNotification(context: context)
             notification.eventID = eventID
-            notification.user = author
             notification.createdAt = date
+            notification.user = author
+            // Only set follower relationship if this is a follow event
+            if let event = Event.find(by: eventID, context: context) {
+                if event.kind == EventKind.contactList.rawValue {
+                    notification.follower = event.author
+                }
+            }
+
             return notification
         }
     }
@@ -32,7 +39,7 @@ public class NosNotification: NosManagedObject {
         if let notification = try context.fetch(fetchRequest).first {
             return notification
         }
-        
+
         return nil
     }
 
@@ -43,13 +50,13 @@ public class NosNotification: NosManagedObject {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \NosNotification.eventID, ascending: false)]
         return fetchRequest
     }
-    
+
     static func unreadCount(in context: NSManagedObjectContext) throws -> Int {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
         fetchRequest.predicate = NSPredicate(format: "isRead != 1")
         return try context.count(for: fetchRequest)
     }
-    
+
     // TODO: user is unused; is this a bug?
     static func markAllAsRead(in context: NSManagedObjectContext) async throws {
         try await context.perform {
@@ -59,7 +66,7 @@ public class NosNotification: NosManagedObject {
             for notification in unreadNotifications {
                 notification.isRead = true
             }
-            
+
             try? context.saveIfNeeded()
         }
     }
@@ -99,22 +106,6 @@ public class NosNotification: NosManagedObject {
         if let limit {
             fetchRequest.fetchLimit = limit
         }
-
-        // A notification for the user
-        let forUserPredicate = NSPredicate(format: "user = %@", user)
-        // User is being followed
-        let isFollowPredicate = NSPredicate(format: "follower != nil")
-
-        var predicates: [NSPredicate] = [
-            NSCompoundPredicate(orPredicateWithSubpredicates: [forUserPredicate, isFollowPredicate])
-        ]
-
-        if let since {
-            predicates.append(NSPredicate(format: "createdAt >= %@", since as CVarArg))
-        }
-
-//        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-
         return fetchRequest
     }
 }

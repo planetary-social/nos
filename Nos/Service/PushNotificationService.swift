@@ -10,9 +10,9 @@ import Combine
 /// all new events and creates `NosNotification`s and displays them when appropriate.
 @MainActor @Observable class PushNotificationService:
     NSObject, NSFetchedResultsControllerDelegate, UNUserNotificationCenterDelegate {
-    
+
     // MARK: - Public Properties
-    
+
     /// The number of unread notifications that should be displayed as a badge
     private(set) var badgeCount = 0
 
@@ -37,9 +37,9 @@ import Combine
             userDefaults.set(newValue.timeIntervalSince1970, forKey: showPushNotificationsAfterKey)
         }
     }
-    
+
     // MARK: - Private Properties
-    
+
     @ObservationIgnored @Dependency(\.relayService) private var relayService
     @ObservationIgnored @Dependency(\.persistenceController) private var persistenceController
     @ObservationIgnored @Dependency(\.router) private var router
@@ -47,50 +47,50 @@ import Combine
     @ObservationIgnored @Dependency(\.crashReporting) private var crashReporting
     @ObservationIgnored @Dependency(\.userDefaults) private var userDefaults
     @ObservationIgnored @Dependency(\.currentUser) private var currentUser
-    
+
     private var notificationWatcher: NSFetchedResultsController<Event>?
     private var relaySubscription: SubscriptionCancellable?
     private var currentAuthor: Author?
     @ObservationIgnored private lazy var modelContext = persistenceController.newBackgroundContext()
-    
+
     @ObservationIgnored private lazy var registrar = PushNotificationRegistrar()
-    
+
     // MARK: - Setup
-    
+
     func listen(for user: CurrentUser) async {
         relaySubscription = nil
-        
+
         guard let author = user.author,
-            let authorKey = author.hexadecimalPublicKey else {
+              let authorKey = author.hexadecimalPublicKey else {
             notificationWatcher = NSFetchedResultsController(
-                fetchRequest: Event.emptyRequest(), 
+                fetchRequest: Event.emptyRequest(),
                 managedObjectContext: modelContext,
                 sectionNameKeyPath: nil,
                 cacheName: nil
             )
             return
         }
-        
+
         currentAuthor = author
         notificationWatcher = NSFetchedResultsController(
-            fetchRequest: Event.all(notifying: author, since: showPushNotificationsAfter), 
+            fetchRequest: Event.all(notifying: author, since: showPushNotificationsAfter),
             managedObjectContext: modelContext,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
         notificationWatcher?.delegate = self
         await modelContext.perform { [weak self] in
-            do { 
+            do {
                 try self?.notificationWatcher?.performFetch()
             } catch {
                 Log.error("Error watching notifications:")
                 self?.crashReporting.report(error)
             }
         }
-        
+
         let userMentionsFilter = Filter(
-            kinds: [.text], 
-            pTags: [authorKey], 
+            kinds: [.text],
+            pTags: [authorKey],
             limit: 50,
             keepSubscriptionOpen: true
         )
@@ -99,18 +99,18 @@ import Combine
         )
 
         await updateBadgeCount()
-        
+
         do {
             try await registrar.register(user, context: modelContext)
         } catch {
             Log.optional(error, "failed to register for push notifications")
         }
     }
-    
+
     func registerForNotifications(_ user: CurrentUser, with deviceToken: Data) async throws {
         try await registrar.register(user, with: deviceToken, context: modelContext)
     }
-    
+
     // MARK: - Helpers
 
     func requestNotificationPermissionsFromUser() {
@@ -124,7 +124,7 @@ import Combine
             }
         }
     }
-    
+
     /// Recomputes the number of unread notifications for the `currentAuthor`, publishes the new value to
     /// `badgeCount`, and updates the application badge icon.
     func updateBadgeCount() async {
@@ -134,11 +134,11 @@ import Combine
                 (try? NosNotification.unreadCount(in: self.modelContext)) ?? 0
             }
         }
-        
+
         self.badgeCount = badgeCount
         try? await UNUserNotificationCenter.current().setBadgeCount(badgeCount)
     }
-    
+
     // MARK: - Internal
     /// Tells the system to display a notification for the given event if it's appropriate. This will create a
     /// NosNotification record in the database.
@@ -146,10 +146,10 @@ import Combine
         guard let authorKey = currentAuthor?.hexadecimalPublicKey else {
             return
         }
-        
+
         let viewModel: NotificationViewModel? = await modelContext.perform { () -> NotificationViewModel? in
             guard let event = Event.find(by: eventID, context: self.modelContext),
-                let eventCreated = event.createdAt else {
+                  let eventCreated = event.createdAt else {
                 return nil
             }
 
@@ -170,14 +170,14 @@ import Combine
                 eventCreated: eventCreated
             )
         }
-        
+
         if let viewModel {
-            // Leave an hour of margin on the showPushNotificationsAfter date to allow for events arriving slightly 
+            // Leave an hour of margin on the showPushNotificationsAfter date to allow for events arriving slightly
             // out of order.
             guard let date = viewModel.date else { return }
             showPushNotificationsAfter = date.addingTimeInterval(-60 * 60)
             await viewModel.loadContent(in: self.persistenceController.backgroundViewContext)
-            
+
             do {
                 try await UNUserNotificationCenter.current().add(viewModel.notificationCenterRequest)
                 await updateBadgeCount()
@@ -244,7 +244,7 @@ import Combine
 
         // Don't alert for old notifications or muted authors
         guard eventCreated > self.showPushNotificationsAfter,
-            event.author?.muted == false else {
+              event.author?.muted == false else {
             coreDataNotification.isRead = true
             return nil
         }
@@ -257,15 +257,15 @@ import Combine
     }
 
     // MARK: - UNUserNotificationCenterDelegate
-    
+
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
             analytics.tappedNotification()
-            
+
             let userInfo = response.notification.request.content.userInfo
             if let eventID = userInfo["eventID"] as? String,
-                !eventID.isEmpty {
-                
+               !eventID.isEmpty {
+
                 Task { @MainActor in
                     if let follower = try? Author.find(by: eventID, context: self.persistenceController.viewContext) {
                         self.router.selectedTab = .notifications
@@ -278,7 +278,7 @@ import Combine
             }
         }
     }
-    
+
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
@@ -286,9 +286,9 @@ import Combine
         analytics.displayedNotification()
         return [.list, .banner, .badge, .sound]
     }
-    
+
     // MARK: - NSFetchedResultsControllerDelegate
-    
+
     nonisolated func controller(
         _ controller: NSFetchedResultsController<NSFetchRequestResult>,
         didChange anObject: Any,
@@ -299,12 +299,12 @@ import Combine
         guard type == .insert else {
             return
         }
-        
+
         guard let event = anObject as? Event,
-            let eventID = event.identifier else {
+              let eventID = event.identifier else {
             return
         }
-        
+
         Task { await showNotificationIfNecessary(for: eventID) }
     }
 
