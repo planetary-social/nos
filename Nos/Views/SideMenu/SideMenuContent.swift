@@ -79,7 +79,7 @@ struct SideMenuContent: View {
                         destination: .relays
                     )
                     SideMenuRow(
-                        "lists",
+                        "yourLists",
                         image: Image(systemName: "person.2"),
                         destination: .lists
                     )

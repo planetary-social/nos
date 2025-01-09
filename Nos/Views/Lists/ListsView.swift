@@ -24,11 +24,28 @@ struct ListsView: View {
             
             Group {
                 if lists.isEmpty {
-                    VStack {
-                        Image(systemName: "person.2")
+                    VStack(spacing: 40) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.white)
+                                .frame(width: 80, height: 80)
+                            
+                            Image(systemName: "person.2")
+                                .resizable()
+                                .fontWeight(.semibold)
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 48)
+                                .foregroundStyle(Color.black)
+                        }
                         
-                        Text("Add your favorite accounts to public lists and pin them to your home feed")
+                        Text("listsDescription")
+                            .font(.subheadline.weight(.medium))
+                            .multilineTextAlignment(.center)
+                        
+                        Spacer()
                     }
+                    .padding(.top, 100)
+                    .padding(.horizontal, 60)
                 } else {
                     ScrollView {
                         VStack(spacing: 0) {
@@ -88,7 +105,7 @@ struct ListsView: View {
     }
     
     private func newButtonPressed() {
-        
+        // TODO
     }
 }
 
@@ -97,9 +114,10 @@ extension AuthorList {
     var rowDescription: String {
         var descriptionComponents = [String]()
         let authorCount = allAuthors.count
-        descriptionComponents.append("\(authorCount) users")
+        let countString = String.localizedStringWithFormat(String(localized: "xUsers"), authorCount)
+        descriptionComponents.append(countString)
         
-        descriptionComponents.append(listDescription ?? "No Description")
+        descriptionComponents.append(listDescription ?? String(localized: "noDescription"))
         return descriptionComponents.joined(separator: " • ")
     }
 }

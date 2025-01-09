@@ -10456,6 +10456,17 @@
         }
       }
     },
+    "listsDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add your favorite users to public lists and pin them to your home feed"
+          }
+        }
+      }
+    },
     "loading" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -12299,6 +12310,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "否"
+          }
+        }
+      }
+    },
+    "noDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Description"
           }
         }
       }
@@ -20230,6 +20252,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你有 %@ 个新关注者！"
+          }
+        }
+      }
+    },
+    "xUsers" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld user"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld users"
+                }
+              }
+            }
           }
         }
       }
