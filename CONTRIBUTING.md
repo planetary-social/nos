@@ -53,6 +53,10 @@ For now `main` is the main branch and code improvements are made in topic branch
 
 A maintainer will review your code and merge it when it has the required number of approvals.
 
+## Hot Reloading
+
+We make use of the [Inject](https://github.com/krzysztofzablocki/Inject) framework for hot reloading debug builds. To set up hot reloading, follow the [documentation](https://github.com/krzysztofzablocki/Inject?tab=readme-ov-file#individual-developer-setup-once-per-machine).
+
 ## Dependency Management
 
 We prefer to install dependencies using the Swift Package Manager. 
