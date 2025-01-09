@@ -20,6 +20,7 @@ struct ListsView: View {
     var body: some View {
         ZStack {
             Color.appBg
+                .ignoresSafeArea()
             
             Group {
                 if lists.isEmpty {
@@ -37,11 +38,9 @@ struct ListsView: View {
                                         Text(list.title ?? "")
                                             .font(.body)
                                         
-                                        if let description = list.listDescription {
-                                            Text(description)
-                                                .foregroundStyle(Color.secondaryTxt)
-                                                .font(.footnote)
-                                        }
+                                        Text(list.rowDescription)
+                                            .foregroundStyle(Color.secondaryTxt)
+                                            .font(.footnote)
                                     }
                                     
                                     Spacer()
@@ -90,5 +89,17 @@ struct ListsView: View {
     
     private func newButtonPressed() {
         
+    }
+}
+
+extension AuthorList {
+    
+    var rowDescription: String {
+        var descriptionComponents = [String]()
+        let authorCount = allAuthors.count
+        descriptionComponents.append("\(authorCount) users")
+        
+        descriptionComponents.append(listDescription ?? "No Description")
+        return descriptionComponents.joined(separator: " • ")
     }
 }
