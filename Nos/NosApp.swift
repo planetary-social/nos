@@ -2,6 +2,7 @@ import SwiftUI
 import Logger
 import Dependencies
 import TipKit
+import Inject
 
 @main
 struct NosApp: App {
@@ -15,6 +16,7 @@ struct NosApp: App {
     private let appController = AppController()
     @Environment(\.scenePhase) private var scenePhase
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @ObserveInjection var inject
     
     init() {
         _ = crashReporting // force crash reporting init as early as possible
@@ -24,6 +26,11 @@ struct NosApp: App {
         UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .systemBlue
         persistenceController.scheduleBackgroundCleanupTask()
         try? Tips.configure()
+        
+        #if DEBUG
+        Bundle(path: "/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle")?.load()
+        InjectConfiguration.animation = .interactiveSpring()
+        #endif
     }
     
     var body: some Scene {

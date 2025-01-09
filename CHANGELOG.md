@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Release Notes
+- Fixed: adding/removing relays not reflected on feed filter. [#119](https://github.com/verse-pbc/issues/issues/119)
+
+### Internal Changes
+- Added function for creating a new list and a test verifying list editing. [#112](https://github.com/verse-pbc/issues/issues/112)
+- Localized strings on the feed filter drop-down view.
+
 ## [1.1] - 2025-01-03Z
 
 ### Release Notes
@@ -34,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Download and parse an author’s lists when viewing their profile. [#49](https://github.com/verse-pbc/issues/issues/49)
 - Updated fastlane scripts to fix the TestFlight deployment pipeline. [#97](https://github.com/verse-pbc/issues/issues/97)
 - Removed inactive accounts from Discover tab. [#94](https://github.com/verse-pbc/issues/issues/94)
+- Added the Inject framework for hot reloading. [#1710](https://github.com/planetary-social/nos/pull/1710)
 
 ## [1.0.3] - 2024-12-04Z
 

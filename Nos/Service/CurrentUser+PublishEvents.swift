@@ -82,6 +82,32 @@ extension CurrentUser {
         }
     }
     
+    @MainActor func publishNewList(
+        withTitle title: String,
+        description: String?,
+        replaceableID: RawReplaceableID? = nil,
+        authorIDs: [RawAuthorID]
+    ) async {
+        guard let keyPair else {
+            Log.debug("Error: no pubKey")
+            return
+        }
+        
+        let jsonEvent = JSONEvent.followSet(
+            pubKey: keyPair.publicKeyHex,
+            title: title,
+            description: description,
+            replaceableID: replaceableID,
+            authorIDs: authorIDs
+        )
+        
+        do {
+            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
+        } catch {
+            Log.debug("Failed to create new list \(error.localizedDescription)")
+        }
+    }
+    
     @MainActor func publishMuteList(keys: [String]) async {
         guard let pubKey = publicKeyHex else {
             Log.debug("Error: no pubKey")

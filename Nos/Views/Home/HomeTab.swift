@@ -1,4 +1,5 @@
 import SwiftUI
+import Inject
 
 /// A styled tip view that contains the text provided.
 ///
@@ -58,7 +59,7 @@ struct HomeTab: View {
     @ObservedObject var user: Author
     
     @EnvironmentObject private var router: Router
-    
+    @ObserveInjection var inject
     @State private var feedTip = FeedSelectorTip()
     @State private var showFeedTip = false
     @State private var timer: Timer?
@@ -110,6 +111,7 @@ struct HomeTab: View {
                 showTip()
             }
         }
+        .enableInjection()
     }
     
     private func showTip() {

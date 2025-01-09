@@ -3,12 +3,14 @@ import CoreData
 import Combine
 import Dependencies
 import TipKit
+import Inject
 
 struct HomeFeedView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     @ObservationIgnored @Dependency(\.analytics) private var analytics
+    @ObserveInjection var inject
 
     @State private var refreshController = RefreshController(lastRefreshDate: Date.now + Self.staticLoadTime)
     @State private var isVisible = false
@@ -201,6 +203,7 @@ struct HomeFeedView: View {
         .navigationDestination(for: RelaysDestination.self) { destination in
             RelayView(author: destination.author)
         }
+        .enableInjection()
     }
 }
 
