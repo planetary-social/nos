@@ -3,12 +3,12 @@ import Dependencies
 
 /// A view that details some interaction (reply, like, follow, etc.) with one of your notes.
 struct NotificationCard: View {
-    
+
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     @Environment(RelayService.self) private var relayService
     @Dependency(\.persistenceController) private var persistenceController
-    
+
     let viewModel: NotificationViewModel
     @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var content: AttributedString?
@@ -35,14 +35,13 @@ struct NotificationCard: View {
         Button {
             switch viewModel.notificationType {
             case .event: showNote()
-            case .follow : showFollowProfile()
+            case .follow: showFollowProfile()
             }
-
         } label: {
             HStack {
                 AvatarView(imageUrl: viewModel.authorProfilePhotoURL, size: 40)
                     .shadow(radius: 10, y: 4)
-                
+
                 VStack {
                     HStack {
                         Text(viewModel.actionText)
@@ -57,7 +56,7 @@ struct NotificationCard: View {
                                 .foregroundColor(.primaryTxt)
                                 .tint(.accent)
                                 .handleURLsInRouter()
-                            
+
                             if viewModel.content == nil {
                                 contentText.redacted(reason: .placeholder)
                             } else {
@@ -68,7 +67,7 @@ struct NotificationCard: View {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                
+
                 VStack {
                     Spacer()
                     if let date = viewModel.date {
@@ -110,17 +109,17 @@ struct NotificationCard: View {
 
 #Preview {
     var previewData = PreviewData()
-    
+
     let previewContext = previewData.previewContext
-    
+
     var alice: Author {
         previewData.alice
     }
-    
+
     var bob: Author {
         previewData.bob
     }
-    
+
     let note: Event = {
         let mentionNote = Event(context: previewContext)
         mentionNote.content = "Hello, bob!"
@@ -134,7 +133,7 @@ struct NotificationCard: View {
         try? previewContext.save()
         return mentionNote
     }()
-        
+
     return VStack {
         Spacer()
         NotificationCard(viewModel: NotificationViewModel(note: note, user: bob, date: Date()))
