@@ -4766,6 +4766,17 @@
         }
       }
     },
+    "deleteList" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete List"
+          }
+        }
+      }
+    },
     "deleteMyAccount" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5829,6 +5840,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "編輯"
+          }
+        }
+      }
+    },
+    "editListInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit List Info"
           }
         }
       }
@@ -10434,6 +10456,17 @@
         }
       }
     },
+    "listsDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add your favorite users to public lists and pin them to your home feed"
+          }
+        }
+      }
+    },
     "loading" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10905,6 +10938,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "登出"
+          }
+        }
+      }
+    },
+    "manageUsers" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage Users"
+          }
+        }
+      }
+    },
+    "manageYourLists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage Your Lists"
           }
         }
       }
@@ -12255,6 +12310,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "否"
+          }
+        }
+      }
+    },
+    "noDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Description"
           }
         }
       }
@@ -20190,6 +20256,29 @@
         }
       }
     },
+    "xUsers" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld user"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld users"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "yes" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -20364,6 +20453,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你必須在設置中輸入私鑰才能發佈帖子。"
+          }
+        }
+      }
+    },
+    "yourLists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Lists"
           }
         }
       }
