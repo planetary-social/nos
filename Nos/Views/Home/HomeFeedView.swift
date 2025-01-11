@@ -217,7 +217,7 @@ struct HomeFeedView: View {
             }
         }
         .navigationDestination(for: ListsDestination.self) { destination in
-            ListsView(author: destination.author)
+            AuthorListsView(author: destination.author)
         }
         .navigationDestination(for: RelaysDestination.self) { destination in
             RelayView(author: destination.author)

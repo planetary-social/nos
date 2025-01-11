@@ -5,7 +5,8 @@ struct ListsDestination: Hashable {
     let author: Author
 }
 
-struct ListsView: View {
+/// A view that displays a list of an ``Author``'s ``AuthorList``s.
+struct AuthorListsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     let author: Author

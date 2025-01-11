@@ -116,7 +116,7 @@ struct SideMenuContent: View {
                 case .relays:
                     RelayView(author: currentUser.author!)
                 case .lists:
-                    ListsView(author: currentUser.author!)
+                    AuthorListsView(author: currentUser.author!)
                 case .profile:
                     ProfileView(author: currentUser.author!)
                 case .about:
