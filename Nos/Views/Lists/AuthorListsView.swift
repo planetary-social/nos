@@ -13,6 +13,9 @@ struct AuthorListsView: View {
     
     @FetchRequest var lists: FetchedResults<AuthorList>
     
+    @State private var selectedList: AuthorList?
+    @State private var showingCreateList = false
+    
     init(author: Author) {
         self.author = author
         _lists = FetchRequest(fetchRequest: AuthorList.authorLists(ownedBy: author))
@@ -65,7 +68,7 @@ struct AuthorListsView: View {
                                     
                                     Menu {
                                         Button("editListInfo") {
-                                            // TODO: Edit List Info
+                                            selectedList = list
                                         }
                                         Button("manageUsers") {
                                             // TODO: Manage Users
@@ -77,9 +80,10 @@ struct AuthorListsView: View {
                                         Image(systemName: "ellipsis")
                                             .foregroundStyle(Color.secondaryTxt)
                                             .fontWeight(.bold)
+                                            .padding()
                                     }
                                 }
-                                .padding(.horizontal, 16)
+                                .padding(.leading, 16)
                                 .padding(.vertical, 12)
                                 .frame(minHeight: 50)
                                 
@@ -103,10 +107,19 @@ struct AuthorListsView: View {
             }
         }
         .nosNavigationBar("yourLists")
+        .sheet(item: $selectedList) { list in
+            EditAuthorListView(list: list)
+                .onDisappear {
+                    selectedList = nil
+                }
+        }
+        .sheet(isPresented: $showingCreateList) {
+            EditAuthorListView()
+        }
     }
     
     private func newButtonPressed() {
-        // TODO
+        showingCreateList = true
     }
 }
 
