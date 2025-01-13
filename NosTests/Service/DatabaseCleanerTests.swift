@@ -171,7 +171,41 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         let events = try testContext.fetch(Event.allEventsRequest())
         XCTAssertEqual(events, [newEvent])
     }
-    
+
+    @MainActor func test_cleanup_deletesOldNotifications() async throws {
+        // Arrange
+        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+
+        // Creates old notification (2 months + 1 day old)
+        let oldDate = Calendar.current.date(byAdding: .day, value: -61, to: .now)!
+        let oldNotification = NosNotification(context: testContext)
+        oldNotification.createdAt = oldDate
+        oldNotification.user = alice
+
+        // Creates recent notification (1 day old)
+        let recentDate = Calendar.current.date(byAdding: .day, value: -1, to: .now)!
+        let recentNotification = NosNotification(context: testContext)
+        recentNotification.createdAt = recentDate
+        recentNotification.user = alice
+
+        try testContext.save()
+
+        // Verify initial notifications before cleanup.
+        let initialCount = try testContext.fetch(NosNotification.fetchRequest()).count
+        XCTAssertEqual(initialCount, 2)
+
+        // Act
+        try await DatabaseCleaner.cleanupEntities(
+            for: KeyFixture.alice.publicKeyHex,
+            in: testContext
+        )
+
+        // Assert
+        let remainingNotifications = try testContext.fetch(NosNotification.fetchRequest())
+        XCTAssertEqual(remainingNotifications.count, 1)
+        XCTAssertEqual(remainingNotifications.first?.createdAt, recentDate)
+    }
+
     // MARK: - Authors
     
     @MainActor func test_cleanup_keepsInNetworkAuthors() async throws {
