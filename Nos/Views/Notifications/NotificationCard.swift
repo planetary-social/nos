@@ -18,25 +18,16 @@ struct NotificationCard: View {
     }
 
     func showNote() {
-        guard let note = Event.find(by: viewModel.noteID ?? "", context: viewContext) else {
+        guard let noteID = viewModel.noteID,
+              let note = Event.find(by: noteID, context: viewContext) else {
             return
         }
         router.push(note.referencedNote() ?? note)
     }
 
-    private func showFollowProfile() {
-        guard let follower = try? Author.find(by: viewModel.authorID ?? "", context: viewContext) else {
-            return
-        }
-        router.push(follower)
-    }
-
     var body: some View {
         Button {
-            switch viewModel.notificationType {
-            case .event: showNote()
-            case .follow: showFollowProfile()
-            }
+            showNote()
         } label: {
             HStack {
                 AvatarView(imageUrl: viewModel.authorProfilePhotoURL, size: 40)
