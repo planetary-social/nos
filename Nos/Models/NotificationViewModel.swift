@@ -48,7 +48,7 @@ class NotificationViewModel: ObservableObject, Identifiable {
             return nil
         }
 
-        if let eventID = coreDataModel.eventID, let note = Event.find(by: eventID, context: context) {
+        if let eventID = coreDataModel.event?.identifier, let note = Event.find(by: eventID, context: context) {
             self.init(note: note, user: user, date: createdAt)
         } else if let follower = coreDataModel.follower {
             self.init(follower: follower, date: createdAt)
