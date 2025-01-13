@@ -109,7 +109,7 @@ public class NosNotification: NosManagedObject {
         return fetchRequest
     }
 
-    /// A request for all ot-Of-Network notifications that the given user should receive.
+    /// A request for all out-Of-Network notifications that the given user should receive.
     /// - Parameters:
     ///   - currentUser: the author you want to view notifications for.
     ///   - limit: a max number of notifications to fetch.
