@@ -9,30 +9,81 @@ struct NotificationsView: View {
 
     @Environment(RelayService.self) private var relayService
     @EnvironmentObject private var router: Router
+    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
     @Dependency(\.pushNotificationService) private var pushNotificationService
     @Dependency(\.persistenceController) private var persistenceController
 
     @FetchRequest private var notifications: FetchedResults<NosNotification>
+    @FetchRequest private var outOfNetworkNotifications: FetchedResults<NosNotification>
+    @FetchRequest private var inNetworkNotifications: FetchedResults<NosNotification>
+    @FetchRequest private var followNotifications: FetchedResults<NosNotification>
+
     @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var isVisible = false
+    @State private var selectedTab = 0
 
-    @Environment(CurrentUser.self) private var currentUser
     private let maxNotificationsToShow = 100
 
     init(user: Author?) {
+        let mainRequests = Self.createMainFetchRequests(for: user, limit: maxNotificationsToShow)
+        let networkRequests = Self.createNetworkFetchRequests(for: user, limit: maxNotificationsToShow)
+
+        _notifications = FetchRequest(fetchRequest: mainRequests.all)
+        _followNotifications = FetchRequest(fetchRequest: mainRequests.follows)
+        _outOfNetworkNotifications = FetchRequest(fetchRequest: networkRequests.outOfNetwork)
+        _inNetworkNotifications = FetchRequest(fetchRequest: networkRequests.inNetwork)
+    }
+
+    /// Creates the main notification fetch requests for all notifications and follows.
+    ///
+    /// This is implemented as a static function because it's used during initialization
+    /// and doesn't require access to instance properties.
+    ///
+    /// - Parameters:
+    ///   - user: The user to fetch notifications for. If nil, returns empty requests.
+    ///   - limit: The maximum number of notifications to fetch.
+    /// - Returns: A tuple containing fetch requests for all notifications and follow notifications.
+    private static func createMainFetchRequests(for user: Author?, limit: Int) -> (
+        all: NSFetchRequest<NosNotification>,
+        follows: NSFetchRequest<NosNotification>
+    ) {
         if let user {
-            let request = NosNotification.all(
-                notifying: user,
-                limit: maxNotificationsToShow
+            return (
+                all: NosNotification.allRequest(for: user, limit: limit),
+                follows: NosNotification.followsRequest(for: user, limit: limit)
             )
-            _notifications = FetchRequest(fetchRequest: request)
         } else {
-            _notifications = FetchRequest(fetchRequest: NosNotification.emptyRequest())
+            let emptyRequest = NosNotification.emptyRequest()
+            return (all: emptyRequest, follows: emptyRequest)
         }
     }
 
-    func subscribeToNewEvents() async {
+    /// Creates the network-specific notification fetch requests.
+    ///
+    /// This is implemented as a static function because it's used during initialization
+    /// and doesn't require access to instance properties.
+    ///
+    /// - Parameters:
+    ///   - user: The user to fetch notifications for. If nil, returns empty requests.
+    ///   - limit: The maximum number of notifications to fetch.
+    /// - Returns: A tuple containing fetch requests for in-network and out-of-network notifications.
+    private static func createNetworkFetchRequests(for user: Author?, limit: Int) -> (
+        outOfNetwork: NSFetchRequest<NosNotification>,
+        inNetwork: NSFetchRequest<NosNotification>
+    ) {
+        if let user {
+            return (
+                outOfNetwork: NosNotification.outOfNetworkRequest(for: user, limit: limit),
+                inNetwork: NosNotification.inNetworkRequest(for: user, limit: limit)
+            )
+        } else {
+            let emptyRequest = NosNotification.emptyRequest()
+            return (outOfNetwork: emptyRequest, inNetwork: emptyRequest)
+        }
+    }
+
+    private func subscribeToNewEvents() async {
         await cancelSubscriptions()
 
         guard let currentUserKey = currentUser.author?.hexadecimalPublicKey else {
@@ -49,11 +100,11 @@ struct NotificationsView: View {
         relaySubscriptions.append(subscriptions)
     }
 
-    func cancelSubscriptions() async {
+    private func cancelSubscriptions() async {
         relaySubscriptions.removeAll()
     }
 
-    func markAllNotificationsRead() async {
+    private func markAllNotificationsRead() async {
         if currentUser.author != nil {
             do {
                 let backgroundContext = persistenceController.backgroundViewContext
@@ -67,24 +118,7 @@ struct NotificationsView: View {
 
     var body: some View {
         NosNavigationStack(path: $router.notificationsPath) {
-            ScrollView(.vertical) {
-                LazyVStack {
-                    /// The fetch request for events has a `fetchLimit` set but it doesn't work, so we limit the
-                    /// number of views displayed here and ?that appears to prevent @FetchRequest from loading all the
-                    /// records into memory.
-                    ForEach(0..<maxNotificationsToShow, id: \.self) { index in
-                        if let notification = notifications[safe: index], let user = currentUser.author {
-                            NotificationCell(notification: notification, user: user)
-                        }
-                    }
-                }
-                .padding(.top, 10)
-            }
-            .overlay(Group {
-                if notifications.isEmpty {
-                    Text("noNotifications")
-                }
-            })
+            tabBarContent
             .background(Color.appBg)
             .padding(.top, 1)
             .nosNavigationBar("notifications")
@@ -119,6 +153,69 @@ struct NotificationsView: View {
             }
         }
     }
+
+    private var tabBarContent: some View {
+        VStack(spacing: 0) {
+            // Custom tab bar at the top
+            Divider()
+                .overlay(Color.cardDividerTop)
+                .shadow(color: .cardDividerTopShadow, radius: 0, x: 0, y: 1)
+            HStack {
+                TabButton(title: "Follows", isSelected: selectedTab == 0) {
+                    selectedTab = 0
+                }
+                Spacer()
+                TabButton(title: "In Network", isSelected: selectedTab == 1) {
+                    selectedTab = 1
+                }
+                Spacer()
+                TabButton(title: "Out of Network", isSelected: selectedTab == 2) {
+                    selectedTab = 2
+                }
+            }
+            .padding(.vertical, 12)
+            .padding(.horizontal, 36)
+            .background(LinearGradient.cardBackground)
+            .background(
+                Color.card3d
+                    .offset(y: 4.5)
+                    .shadow(
+                        color: Color.cardShadowBottom,
+                        radius: 5,
+                        x: 0,
+                        y: 4
+                    )
+            )
+
+            // Content based on selected tab
+            TabView(selection: $selectedTab) {
+                NotificationTabView(
+                    notifications: followNotifications,
+                    currentUser: currentUser,
+                    maxNotificationsToShow: maxNotificationsToShow,
+                    tag: 0
+                )
+                .tag(0)
+
+                NotificationTabView(
+                    notifications: inNetworkNotifications,
+                    currentUser: currentUser,
+                    maxNotificationsToShow: maxNotificationsToShow,
+                    tag: 1
+                )
+                .tag(1)
+
+                NotificationTabView(
+                    notifications: outOfNetworkNotifications,
+                    currentUser: currentUser,
+                    maxNotificationsToShow: maxNotificationsToShow,
+                    tag: 2
+                )
+                .tag(2)
+            }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+        }
+    }
 }
 
 /// A single notification cell that contains a follow event or a other event types in the notifications list
@@ -128,7 +225,11 @@ private struct NotificationCell: View {
     let user: Author
 
     var body: some View {
-        if let event = Event.find(by: notification.eventID ?? "", context: persistenceController.viewContext) {
+        if let eventID = notification.event?.identifier,
+            let event = Event.find(
+            by: eventID,
+            context: persistenceController.viewContext
+            ) {
             NotificationCard(
                 viewModel: NotificationViewModel(
                     note: event,
@@ -136,74 +237,141 @@ private struct NotificationCell: View {
                     date: notification.createdAt ?? .distantPast
                 )
             )
-            .padding(.horizontal, 15)
-            .padding(.bottom, 10)
             .readabilityPadding()
             .id(notification.id)
         } else if let followerKey = notification.follower?.hexadecimalPublicKey, let follower = try? Author.find(
             by: followerKey,
             context: persistenceController.viewContext
         ) {
-            NotificationCard(
+            FollowsNotificationCard(
+                author: follower,
                 viewModel: NotificationViewModel(
                     follower: follower,
                     date: notification.createdAt ?? .distantPast
                 )
             )
-            .padding(.horizontal, 15)
-            .padding(.bottom, 10)
             .readabilityPadding()
             .id(notification.id)
         }
     }
 }
 
+/// A custom tab button that displays a title and changes appearance based on selection state.
+/// Used in the notifications view's tab bar for switching between different notification categories.
+private struct TabButton: View {
+    let title: String
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.subheadline)
+                .fontWeight(.bold)
+                .padding(.vertical, 8)
+                .foregroundColor(isSelected ? .primaryTxt : .secondaryTxt)
+                .cornerRadius(8)
+        }
+    }
+}
+
+/// A scrollable view that displays a list of notifications for a specific category
+/// (follows, in-network, or out-of-network).
+private struct NotificationTabView: View {
+    let notifications: FetchedResults<NosNotification>
+    let currentUser: CurrentUser
+    let maxNotificationsToShow: Int
+    let tag: Int
+    var body: some View {
+        ScrollView(.vertical) {
+            LazyVStack {
+                /// The fetch request for events has a `fetchLimit` set but it doesn't work, so we limit the
+                /// number of views displayed here and that appears to prevent @FetchRequest from loading all the
+                /// records into memory.
+                ForEach(0..<maxNotificationsToShow, id: \.self) { index in
+                    if let notification = notifications[safe: index], let user = currentUser.author {
+                        NotificationCell(notification: notification, user: user)
+                            .tag(tag)
+                            .padding(.horizontal, 11)
+                            .padding(.top, 20)
+                    }
+                }
+            }
+        }
+        .overlay(Group {
+            if notifications.isEmpty {
+                Text("noNotifications")
+            }
+        })
+    }
+}
+
 struct NotificationsView_Previews: PreviewProvider {
-    
+
     static var previewData = PreviewData()
-    
+
     static var previewContext = previewData.previewContext
-    
+
     static var alice: Author {
         previewData.alice
     }
-    
+
     static var bob: Author {
         previewData.bob
     }
-    
+
+    static var eve: Author {
+        previewData.eve
+    }
+
     static func createTestData(in context: NSManagedObjectContext) {
-        let mentionNote = Event(context: context)
-        mentionNote.content = "Hello, bob!"
-        mentionNote.kind = 1
-        mentionNote.createdAt = .now
-        mentionNote.author = alice
-        let authorRef = AuthorReference(context: context)
-        authorRef.pubkey = bob.hexadecimalPublicKey
-        mentionNote.authorReferences = NSMutableOrderedSet(array: [authorRef])
-        try? mentionNote.sign(withKey: KeyFixture.alice)
-        
-        let bobNote = Event(context: context)
-        bobNote.content = "Hello, world!"
-        bobNote.kind = 1
-        bobNote.author = bob
-        bobNote.createdAt = .now
-        try? bobNote.sign(withKey: KeyFixture.bob)
-        
-        let replyNote = Event(context: context)
-        replyNote.content = "Top of the morning to you, bob! This text should be truncated."
-        replyNote.kind = 1
-        replyNote.createdAt = .now
-        replyNote.author = alice
-        let eventRef = EventReference(context: context)
-        eventRef.referencedEvent = bobNote
-        eventRef.referencingEvent = replyNote
-        replyNote.eventReferences = NSMutableOrderedSet(array: [eventRef])
-        try? replyNote.sign(withKey: KeyFixture.alice)
-        
+        // Sets up network relationship
+        let bobFollowsAlice = Follow(context: context)
+        bobFollowsAlice.source = bob
+        bobFollowsAlice.destination = alice
+        bob.addToFollows(bobFollowsAlice)
+
+        // Creates a follow notification
+        let followNotification = NosNotification(context: context)
+        followNotification.createdAt = .now
+        followNotification.user = bob
+        followNotification.follower = alice
+        followNotification.event?.kind = 3
+
+        // Creates mention note from Alice (in-network since Bob follows Alice)
+        let inNetworkNote = Event(context: context)
+        inNetworkNote.content = "Hello @bob!"
+        inNetworkNote.kind = EventKind.text.rawValue
+        inNetworkNote.createdAt = .now
+        inNetworkNote.author = alice
+        let inNetworkAuthorRef = AuthorReference(context: context)
+        inNetworkAuthorRef.pubkey = bob.hexadecimalPublicKey
+        inNetworkNote.authorReferences = NSMutableOrderedSet(array: [inNetworkAuthorRef])
+        try? inNetworkNote.sign(withKey: KeyFixture.alice)
+
+        let inNetworkNotification = NosNotification(context: context)
+        inNetworkNotification.createdAt = .now
+        inNetworkNotification.user = bob
+        inNetworkNotification.event = inNetworkNote
+
+        // Creates mention from Eve (out-of-network since Bob doesn't follow Eve)
+        let outNetworkNote = Event(context: context)
+        outNetworkNote.content = "Hey @bob!"
+        outNetworkNote.createdAt = .now
+        outNetworkNote.author = eve
+        let outNetworkAuthorRef = AuthorReference(context: context)
+        outNetworkAuthorRef.pubkey = bob.hexadecimalPublicKey
+        outNetworkNote.authorReferences = NSMutableOrderedSet(array: [outNetworkAuthorRef])
+        try? outNetworkNote.sign(withKey: KeyFixture.eve)
+
+        let outNetworkNotification = NosNotification(context: context)
+        outNetworkNotification.createdAt = .now
+        outNetworkNotification.user = bob
+        outNetworkNotification.event = outNetworkNote
+
         try? context.save()
     }
-    
+
     static var previews: some View {
         NavigationView {
             NotificationsView(user: bob)
