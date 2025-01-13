@@ -50,7 +50,7 @@ struct FollowsNotificationCard: View {
                             }
                         }
 
-                        Text("started following you")
+                        Text(viewModel.actionText)
                             .lineLimit(2)
                     }
 

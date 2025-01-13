@@ -70,7 +70,7 @@ class NotificationViewModel: ObservableObject, Identifiable {
         var range = Range(uncheckedBounds: (authorName.startIndex, authorName.endIndex))
         authorName[range].font = .boldSystemFont(ofSize: 17)
 
-        actionText = authorName + AttributedString(String(localized: "followed you"))
+        actionText = authorName + AttributedString(String(localized: "startedFollowingYou"))
         range = Range(uncheckedBounds: (actionText.startIndex, actionText.endIndex))
         actionText[range].foregroundColor = .primaryTxt
         self.actionText = actionText

@@ -19,7 +19,7 @@ struct NotificationCard: View {
 
     func showNote() {
         guard let noteID = viewModel.noteID,
-              let note = Event.find(by: noteID, context: viewContext) else {
+            let note = Event.find(by: noteID, context: viewContext) else {
             return
         }
         router.push(note.referencedNote() ?? note)

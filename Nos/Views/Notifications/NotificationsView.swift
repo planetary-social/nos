@@ -161,15 +161,24 @@ struct NotificationsView: View {
                 .overlay(Color.cardDividerTop)
                 .shadow(color: .cardDividerTopShadow, radius: 0, x: 0, y: 1)
             HStack {
-                TabButton(title: "Follows", isSelected: selectedTab == 0) {
+                TabButton(
+                    title: String(localized: "follows"),
+                    isSelected: selectedTab == 0
+                ) {
                     selectedTab = 0
                 }
                 Spacer()
-                TabButton(title: "In Network", isSelected: selectedTab == 1) {
+                TabButton(
+                    title: String(localized: "inNetwork"),
+                    isSelected: selectedTab == 1
+                ) {
                     selectedTab = 1
                 }
                 Spacer()
-                TabButton(title: "Out of Network", isSelected: selectedTab == 2) {
+                TabButton(
+                    title: String(localized: "outOfNetwork"),
+                    isSelected: selectedTab == 2
+                ) {
                     selectedTab = 2
                 }
             }
@@ -355,19 +364,19 @@ struct NotificationsView_Previews: PreviewProvider {
         inNetworkNotification.event = inNetworkNote
 
         // Creates mention from Eve (out-of-network since Bob doesn't follow Eve)
-        let outNetworkNote = Event(context: context)
-        outNetworkNote.content = "Hey @bob!"
-        outNetworkNote.createdAt = .now
-        outNetworkNote.author = eve
-        let outNetworkAuthorRef = AuthorReference(context: context)
-        outNetworkAuthorRef.pubkey = bob.hexadecimalPublicKey
-        outNetworkNote.authorReferences = NSMutableOrderedSet(array: [outNetworkAuthorRef])
-        try? outNetworkNote.sign(withKey: KeyFixture.eve)
+        let outOfNetworkNote = Event(context: context)
+        outOfNetworkNote.content = "Hey @bob!"
+        outOfNetworkNote.createdAt = .now
+        outOfNetworkNote.author = eve
+        let outOfNetworkAuthorRef = AuthorReference(context: context)
+        outOfNetworkAuthorRef.pubkey = bob.hexadecimalPublicKey
+        outOfNetworkNote.authorReferences = NSMutableOrderedSet(array: [outOfNetworkAuthorRef])
+        try? outOfNetworkNote.sign(withKey: KeyFixture.eve)
 
-        let outNetworkNotification = NosNotification(context: context)
-        outNetworkNotification.createdAt = .now
-        outNetworkNotification.user = bob
-        outNetworkNotification.event = outNetworkNote
+        let outOfNetworkNotification = NosNotification(context: context)
+        outOfNetworkNotification.createdAt = .now
+        outOfNetworkNotification.user = bob
+        outOfNetworkNotification.event = outOfNetworkNote
 
         try? context.save()
     }
