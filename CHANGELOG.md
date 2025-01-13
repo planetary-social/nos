@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Internal Changes
 - Added function for creating a new list and a test verifying list editing. [#112](https://github.com/verse-pbc/issues/issues/112)
 - Localized strings on the feed filter drop-down view.
+- Disabled automatic tracking in Sentry. [#126](https://github.com/verse-pbc/issues/issues/126)
 - Added functionality to get follows notifications in the Notifications tab. [#127](https://github.com/verse-pbc/issues/issues/127)
 
 ## [1.1] - 2025-01-03Z
