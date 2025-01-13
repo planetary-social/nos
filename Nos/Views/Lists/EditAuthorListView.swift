@@ -29,56 +29,54 @@ struct EditAuthorListView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color.appBg
-                    .ignoresSafeArea()
+        ZStack {
+            Color.appBg
+                .ignoresSafeArea()
+            
+            VStack(alignment: .leading) {
+                if mode == .create {
+                    Text("listStep1")
+                        .font(.clarity(.medium, textStyle: .subheadline))
+                        .foregroundColor(Color.secondaryTxt)
+                        .padding(EdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 16))
+                }
                 
-                VStack(alignment: .leading) {
-                    if mode == .create {
-                        Text("listStep1")
-                            .font(.clarity(.medium, textStyle: .subheadline))
-                            .foregroundColor(Color.secondaryTxt)
-                            .padding(EdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 16))
+                NosForm {
+                    NosFormSection("listName") {
+                        NosTextField(text: $title)
+                            .padding(20)
+                            .focused($focusedField, equals: .title)
                     }
+                    .padding(.top, 20)
                     
-                    NosForm {
-                        NosFormSection("listName") {
-                            NosTextField(text: $title)
-                                .padding(20)
-                                .focused($focusedField, equals: .title)
-                        }
-                        .padding(.top, 20)
-                        
-                        NosFormSection("description") {
-                            NosTextEditor(text: $description)
-                                .focused($focusedField, equals: .description)
-                                .padding()
-                                .frame(minHeight: 200, maxHeight: 250)
-                        }
-                        .padding(.top, 20)
+                    NosFormSection("description") {
+                        NosTextEditor(text: $description)
+                            .focused($focusedField, equals: .description)
+                            .padding()
+                            .frame(minHeight: 200, maxHeight: 250)
                     }
+                    .padding(.top, 20)
                 }
             }
-            .nosNavigationBar(mode == .create ? "newList" : "editListInfo")
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("cancel") {
-                        dismiss()
-                    }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    ActionButton(mode == .create ? "next" : "save", action: saveButtonPressed)
-                        .frame(height: 22)
-                        .padding(.bottom, 3)
+        }
+        .nosNavigationBar(mode == .create ? "newList" : "editListInfo")
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("cancel") {
+                    dismiss()
                 }
             }
-            .onAppear {
-                title = list?.title ?? ""
-                description = list?.listDescription ?? ""
-                
-                focusedField = .title
+            ToolbarItem(placement: .topBarTrailing) {
+                ActionButton(mode == .create ? "next" : "save", action: saveButtonPressed)
+                    .frame(height: 22)
+                    .padding(.bottom, 3)
             }
+        }
+        .onAppear {
+            title = list?.title ?? ""
+            description = list?.listDescription ?? ""
+            
+            focusedField = .title
         }
     }
     

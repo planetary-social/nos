@@ -13,7 +13,7 @@ struct AuthorListsView: View {
     
     @FetchRequest var lists: FetchedResults<AuthorList>
     
-    @State private var selectedList: AuthorList?
+    @State private var listToEditInfo: AuthorList?
     @State private var showingCreateList = false
     
     init(author: Author) {
@@ -68,7 +68,7 @@ struct AuthorListsView: View {
                                     
                                     Menu {
                                         Button("editListInfo") {
-                                            selectedList = list
+                                            listToEditInfo = list
                                         }
                                         Button("manageUsers") {
                                             // TODO: Manage Users
@@ -107,14 +107,18 @@ struct AuthorListsView: View {
             }
         }
         .nosNavigationBar("yourLists")
-        .sheet(item: $selectedList) { list in
-            EditAuthorListView(list: list)
-                .onDisappear {
-                    selectedList = nil
-                }
+        .sheet(item: $listToEditInfo) { list in
+            NavigationStack {
+                EditAuthorListView(list: list)
+                    .onDisappear {
+                        listToEditInfo = nil
+                    }
+            }
         }
         .sheet(isPresented: $showingCreateList) {
-            EditAuthorListView()
+            NavigationStack {
+                EditAuthorListView()
+            }
         }
     }
     
