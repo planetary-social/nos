@@ -28,9 +28,6 @@ class CrashReporting {
             #elseif DEV
             options.environment = "debug"
             #endif
-            options.enableTracing = true
-            options.tracesSampleRate = 0.3 // tracing must be enabled for profiling
-            options.profilesSampleRate = 0.3 // see also `profilesSampler` if you need custom sampling logic
             // Enable all experimental features
             options.attachViewHierarchy = true
             options.enablePreWarmedAppStartTracing = true
