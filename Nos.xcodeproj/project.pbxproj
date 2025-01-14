@@ -227,6 +227,7 @@
 		50EA86D52D28150F001E62CC /* FeedSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50EA86D32D28150D001E62CC /* FeedSource.swift */; };
 		50EA885C2D2D523F001E62CC /* follow_set_with_unknown_tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 50EA885B2D2D5235001E62CC /* follow_set_with_unknown_tag.json */; };
 		50EA886F2D2D5783001E62CC /* AuthorListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50EA886E2D2D5780001E62CC /* AuthorListsView.swift */; };
+		50EA89A62D3010EA001E62CC /* EditAuthorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50EA89A52D3010EA001E62CC /* EditAuthorListView.swift */; };
 		50F695072C6392C4000E4C74 /* zap_receipt.json in Resources */ = {isa = PBXBuildFile; fileRef = 50F695062C6392C4000E4C74 /* zap_receipt.json */; };
 		5B098DBC2BDAF6CB00500A1B /* NoteParserTests+NIP08.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B098DBB2BDAF6CB00500A1B /* NoteParserTests+NIP08.swift */; };
 		5B098DC62BDAF73500500A1B /* AttributedString+Links.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B098DC52BDAF73500500A1B /* AttributedString+Links.swift */; };
@@ -796,6 +797,7 @@
 		50EA86D32D28150D001E62CC /* FeedSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedSource.swift; sourceTree = "<group>"; };
 		50EA885B2D2D5235001E62CC /* follow_set_with_unknown_tag.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = follow_set_with_unknown_tag.json; sourceTree = "<group>"; };
 		50EA886E2D2D5780001E62CC /* AuthorListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorListsView.swift; sourceTree = "<group>"; };
+		50EA89A52D3010EA001E62CC /* EditAuthorListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAuthorListView.swift; sourceTree = "<group>"; };
 		50F695062C6392C4000E4C74 /* zap_receipt.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = zap_receipt.json; sourceTree = "<group>"; };
 		5B098DBB2BDAF6CB00500A1B /* NoteParserTests+NIP08.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoteParserTests+NIP08.swift"; sourceTree = "<group>"; };
 		5B098DC52BDAF73500500A1B /* AttributedString+Links.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributedString+Links.swift"; sourceTree = "<group>"; };
@@ -1588,6 +1590,7 @@
 			isa = PBXGroup;
 			children = (
 				50EA886E2D2D5780001E62CC /* AuthorListsView.swift */,
+				50EA89A52D3010EA001E62CC /* EditAuthorListView.swift */,
 			);
 			path = Lists;
 			sourceTree = "<group>";
@@ -2680,6 +2683,7 @@
 				501728B42D16EFB000CF2A07 /* FeedPicker.swift in Sources */,
 				5B503F622A291A1A0098805A /* JSONRelayMetadata.swift in Sources */,
 				C98298332ADD7F9A0096C5B5 /* DeepLinkService.swift in Sources */,
+				50EA89A62D3010EA001E62CC /* EditAuthorListView.swift in Sources */,
 				03F7C4F42C10E05B006FF613 /* URLSessionProtocol.swift in Sources */,
 				CD09A74829A51EFC0063464F /* Router.swift in Sources */,
 				2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */,

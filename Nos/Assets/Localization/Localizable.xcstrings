@@ -10445,6 +10445,17 @@
         }
       }
     },
+    "listName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "List Name"
+          }
+        }
+      }
+    },
     "lists" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10463,6 +10474,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add your favorite users to public lists and pin them to your home feed"
+          }
+        }
+      }
+    },
+    "listStep1" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step 1: list info"
           }
         }
       }
@@ -11594,6 +11616,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "您有一位新关注者！"
+          }
+        }
+      }
+    },
+    "newList" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New List"
           }
         }
       }

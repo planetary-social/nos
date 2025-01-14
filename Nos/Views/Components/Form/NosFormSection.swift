@@ -18,7 +18,7 @@ struct NosFormSection<Content: View>: View {
                     Text(label)
                         .font(.clarity(.semibold, textStyle: .headline))
                         .foregroundColor(.primaryTxt)
-                        .padding(.top, 16)
+                        .padding(EdgeInsets(top: 16, leading: 8, bottom: 2, trailing: 0))
                     
                     Spacer()
                 }
