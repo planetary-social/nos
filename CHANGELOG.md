@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Internal Changes
 - Added function for creating a new list and a test verifying list editing. [#112](https://github.com/verse-pbc/issues/issues/112)
 - Localized strings on the feed filter drop-down view.
+- Improved naming of a couple list-related classes.
 
 ## [1.1] - 2025-01-03Z
 

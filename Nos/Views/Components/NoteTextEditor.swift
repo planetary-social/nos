@@ -34,7 +34,7 @@ struct NoteTextEditor: View {
         .background { Color.appBg }
         .sheet(isPresented: $controller.showMentionsAutocomplete) {
             NavigationStack {
-                AuthorListView(
+                AuthorSearchView(
                     isPresented: $controller.showMentionsAutocomplete,
                     relatedAuthors: relatedAuthors
                 ) { [weak controller] author in

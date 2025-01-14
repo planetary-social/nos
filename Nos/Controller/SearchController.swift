@@ -27,7 +27,7 @@ enum SearchOrigin {
     /// Search initiated from the Discover tab
     case discover
 
-    /// Search initiated from the mentions `AuthorListView`
+    /// Search initiated from the mentions `AuthorSearchView`
     case mentions
 }
 
