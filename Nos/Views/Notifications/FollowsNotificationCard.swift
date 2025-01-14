@@ -41,7 +41,7 @@ struct FollowsNotificationCard: View {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(author.safeName)
-                                    .lineLimit(1)
+                                    .lineLimit(2)
                                     .font(.title3)
                                     .fontWeight(.bold)
                                     .foregroundColor(Color.primaryTxt)
@@ -50,21 +50,23 @@ struct FollowsNotificationCard: View {
                             }
                         }
 
-                        Text(viewModel.actionText)
+                        Text(String(localized: "startedFollowingYou"))
                             .lineLimit(2)
+                            .font(.callout)
                     }
 
                     if let date = viewModel.date {
                         Text(date.distanceString())
                             .lineLimit(1)
-                            .font(.clarity(.regular))
+                            .font(.callout)
                             .foregroundColor(.secondaryTxt)
                     }
                 }
             }
-            .padding(.top, 20)
+            .padding(.top, 13)
             .padding(.bottom, 12)
-            .padding(.horizontal, 15)
+            .padding(.leading, 12)
+            .padding(.trailing, 12)
             .background(LinearGradient.cardBackground)
             .cornerRadius(cornerRadius)
         }

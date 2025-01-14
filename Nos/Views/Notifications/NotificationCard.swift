@@ -64,7 +64,7 @@ struct NotificationCard: View {
                     if let date = viewModel.date {
                         Text(date.distanceString())
                             .lineLimit(1)
-                            .font(.clarity(.regular))
+                            .font(.callout)
                             .foregroundColor(.secondaryTxt)
                     }
                 }

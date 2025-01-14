@@ -14,7 +14,6 @@ struct NotificationsView: View {
     @Dependency(\.pushNotificationService) private var pushNotificationService
     @Dependency(\.persistenceController) private var persistenceController
 
-    @FetchRequest private var notifications: FetchedResults<NosNotification>
     @FetchRequest private var outOfNetworkNotifications: FetchedResults<NosNotification>
     @FetchRequest private var inNetworkNotifications: FetchedResults<NosNotification>
     @FetchRequest private var followNotifications: FetchedResults<NosNotification>
@@ -26,16 +25,15 @@ struct NotificationsView: View {
     private let maxNotificationsToShow = 100
 
     init(user: Author?) {
-        let mainRequests = Self.createMainFetchRequests(for: user, limit: maxNotificationsToShow)
+        let followsRequest = Self.createFollowsFetchRequest(for: user, limit: maxNotificationsToShow)
         let networkRequests = Self.createNetworkFetchRequests(for: user, limit: maxNotificationsToShow)
 
-        _notifications = FetchRequest(fetchRequest: mainRequests.all)
-        _followNotifications = FetchRequest(fetchRequest: mainRequests.follows)
+        _followNotifications = FetchRequest(fetchRequest: followsRequest)
         _outOfNetworkNotifications = FetchRequest(fetchRequest: networkRequests.outOfNetwork)
         _inNetworkNotifications = FetchRequest(fetchRequest: networkRequests.inNetwork)
     }
 
-    /// Creates the main notification fetch requests for all notifications and follows.
+    /// Creates the follows notification fetch requests for all notifications and follows.
     ///
     /// This is implemented as a static function because it's used during initialization
     /// and doesn't require access to instance properties.
@@ -43,19 +41,13 @@ struct NotificationsView: View {
     /// - Parameters:
     ///   - user: The user to fetch notifications for. If nil, returns empty requests.
     ///   - limit: The maximum number of notifications to fetch.
-    /// - Returns: A tuple containing fetch requests for all notifications and follow notifications.
-    private static func createMainFetchRequests(for user: Author?, limit: Int) -> (
-        all: NSFetchRequest<NosNotification>,
-        follows: NSFetchRequest<NosNotification>
-    ) {
+    /// - Returns: A fetch request for follows notifications.
+    private static func createFollowsFetchRequest(for user: Author?, limit: Int) -> NSFetchRequest<NosNotification> {
         if let user {
-            return (
-                all: NosNotification.allRequest(for: user, limit: limit),
-                follows: NosNotification.followsRequest(for: user, limit: limit)
-            )
+            return NosNotification.followsRequest(for: user, limit: limit)
         } else {
             let emptyRequest = NosNotification.emptyRequest()
-            return (all: emptyRequest, follows: emptyRequest)
+            return emptyRequest
         }
     }
 
@@ -144,11 +136,6 @@ struct NotificationsView: View {
                     }
                 } else {
                     Task { await cancelSubscriptions() }
-                }
-            }
-            .doubleTapToPop(tab: .notifications) { proxy in
-                if let firstNotification = notifications.first {
-                    proxy.scrollTo(firstNotification.id)
                 }
             }
         }
@@ -246,8 +233,7 @@ private struct NotificationCell: View {
                     date: notification.createdAt ?? .distantPast
                 )
             )
-            .readabilityPadding()
-            .id(notification.id)
+            .id(event.id)
         } else if let followerKey = notification.follower?.hexadecimalPublicKey, let follower = try? Author.find(
             by: followerKey,
             context: persistenceController.viewContext
@@ -259,8 +245,7 @@ private struct NotificationCell: View {
                     date: notification.createdAt ?? .distantPast
                 )
             )
-            .readabilityPadding()
-            .id(notification.id)
+            .id(notification.event?.id)
         }
     }
 }
@@ -302,16 +287,23 @@ private struct NotificationTabView: View {
                         NotificationCell(notification: notification, user: user)
                             .tag(tag)
                             .padding(.horizontal, 11)
-                            .padding(.top, 20)
+                            .padding(.top, 16)
+                            .readabilityPadding()
                     }
                 }
             }
+            .padding(.vertical, 16)
         }
         .overlay(Group {
             if notifications.isEmpty {
                 Text("noNotifications")
             }
         })
+        .doubleTapToPop(tab: .notifications) { proxy in
+            if let firstNotification = notifications.first {
+                proxy.scrollTo(firstNotification.id)
+            }
+        }
     }
 }
 
