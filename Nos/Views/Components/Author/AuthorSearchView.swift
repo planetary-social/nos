@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-struct AuthorListView: View {
+struct AuthorSearchView: View {
     
     @Binding var isPresented: Bool
     

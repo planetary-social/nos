@@ -12,13 +12,13 @@ struct FollowersDestination: Hashable {
     var followers: [Author]
 }
 
-/// Displays a list of people someone is following.
-struct FollowsView: View {
+/// Displays a list of authors.
+struct AuthorsView: View {
     /// Screen title
-    var title: LocalizedStringKey
+    let title: LocalizedStringKey
 
     /// Sorted list of authors to display in the list
-    var authors: [Author]
+    let authors: [Author]
 
     /// Subscriptions for metadata requests from the relay service, keyed by author ID.
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
@@ -28,12 +28,10 @@ struct FollowsView: View {
 
     init(
         _ title: LocalizedStringKey,
-        authors: [Author],
-        subscriptions: [ObjectIdentifier: SubscriptionCancellable] = [ObjectIdentifier: SubscriptionCancellable]()
+        authors: [Author]
     ) {
         self.title = title
         self.authors = authors
-        self.subscriptions = subscriptions
     }
     
     var body: some View {
