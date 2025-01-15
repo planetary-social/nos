@@ -1,10 +1,10 @@
 import Foundation
 import CoreData
 
-/// Represents a notification we will display to the user. We save records of them to the database in order to 
+/// Represents a notification we will display to the user. We save records of them to the database in order to
 /// de-duplicate them and keep track of whether they have been seen by the user.
 @objc(NosNotification)
-public class NosNotification: NSManagedObject {
+public class NosNotification: NosManagedObject {
 
     static func createIfNecessary(
         from eventID: RawEventID,
@@ -20,36 +20,43 @@ public class NosNotification: NSManagedObject {
             return nil
         } else {
             let notification = NosNotification(context: context)
-            notification.eventID = eventID
-            notification.user = author
             notification.createdAt = date
+            notification.user = author
+            // Only set follower relationship if this is a follow event
+            if let event = Event.find(by: eventID, context: context) {
+                notification.event = event
+                if event.kind == EventKind.contactList.rawValue {
+                    notification.follower = event.author
+                }
+            }
+
             return notification
         }
     }
-    
-    static func find(by eventID: RawEventID, in context: NSManagedObjectContext) throws -> NosNotification? {
+
+    static func find(by eventID: RawNostrID, in context: NSManagedObjectContext) throws -> NosNotification? {
         let fetchRequest = request(by: eventID)
         if let notification = try context.fetch(fetchRequest).first {
             return notification
         }
-        
+
         return nil
     }
-    
-    static func request(by eventID: RawEventID) -> NSFetchRequest<NosNotification> {
+
+    static func request(by eventID: RawNostrID) -> NSFetchRequest<NosNotification> {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
-        fetchRequest.predicate = NSPredicate(format: "eventID = %@", eventID)
+        fetchRequest.predicate = NSPredicate(format: "event.identifier = %@", eventID)
         fetchRequest.fetchLimit = 1
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \NosNotification.eventID, ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \NosNotification.event, ascending: false)]
         return fetchRequest
     }
-    
+
     static func unreadCount(in context: NSManagedObjectContext) throws -> Int {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
         fetchRequest.predicate = NSPredicate(format: "isRead != 1")
         return try context.count(for: fetchRequest)
     }
-    
+
     // TODO: user is unused; is this a bug?
     static func markAllAsRead(in context: NSManagedObjectContext) async throws {
         try await context.perform {
@@ -59,7 +66,7 @@ public class NosNotification: NSManagedObject {
             for notification in unreadNotifications {
                 notification.isRead = true
             }
-            
+
             try? context.saveIfNeeded()
         }
     }
@@ -74,5 +81,102 @@ public class NosNotification: NSManagedObject {
     /// Two months before Date.now, and is used to delete old notifications from the db.
     static func staleNotificationCutoff() -> Date {
         Calendar.current.date(byAdding: .month, value: -2, to: .now) ?? .now
+    }
+
+    @nonobjc public class func emptyRequest() -> NSFetchRequest<NosNotification> {
+        let fetchRequest = NSFetchRequest<NosNotification>(entityName: "NosNotification")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \NosNotification.createdAt, ascending: true)]
+        fetchRequest.predicate = NSPredicate.false
+        return fetchRequest
+    }
+
+    /// A request for all notifications that the given user should receive a notification for.
+    /// - Parameters:
+    ///   - currentUser: the author you want to view notifications for.
+    ///   - since: a date that will be used as a lower bound for the request.
+    ///   - limit: a max number of notifications to fetch.
+    /// - Returns: A fetch request for all notifications.
+    @nonobjc public class func allRequest(
+        for currentUser: Author,
+        since: Date? = nil,
+        limit: Int? = nil
+    ) -> NSFetchRequest<NosNotification> {
+        let fetchRequest = NSFetchRequest<NosNotification>(entityName: "NosNotification")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \NosNotification.createdAt, ascending: false)]
+        if let limit {
+            fetchRequest.fetchLimit = limit
+        }
+        return fetchRequest
+    }
+
+    /// A request for all out-Of-Network notifications that the given user should receive.
+    /// - Parameters:
+    ///   - currentUser: the author you want to view notifications for.
+    ///   - limit: a max number of notifications to fetch.
+    /// - Returns: A fetch request for outOfNetwork notifications.
+    @nonobjc public class func outOfNetworkRequest(
+        for currentUser: Author,
+        limit: Int? = nil
+    ) -> NSFetchRequest<NosNotification> {
+        let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \NosNotification.createdAt, ascending: false)]
+        if let limit {
+            fetchRequest.fetchLimit = limit
+        }
+
+        fetchRequest.predicate = NSPredicate(
+            format: "follower == nil " +
+            "AND (event.author.followers.@count == 0 " +
+            "OR NOT (ANY event.author.followers.source IN %@.follows.destination " +
+            "OR event.author IN %@.follows.destination))",
+            currentUser,
+            currentUser
+        )
+        return fetchRequest
+    }
+    /// A request for all in-Network notifications that the given user should receive.
+    /// - Parameters:
+    ///   - currentUser: the author you want to view notifications for.
+    ///   - limit: a max number of notifications to fetch.
+    /// - Returns: A fetch request for inNetwork notifications.
+    @nonobjc public class func inNetworkRequest(
+        for currentUser: Author,
+        limit: Int? = nil
+    ) -> NSFetchRequest<NosNotification> {
+        let fetchRequest = NSFetchRequest<NosNotification>(entityName: String(describing: NosNotification.self))
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \NosNotification.createdAt, ascending: false)]
+
+        if let limit {
+            fetchRequest.fetchLimit = limit
+        }
+
+        fetchRequest.predicate = NSPredicate(
+            format: "follower == nil " +
+            "AND (ANY event.author.followers.source IN %@.follows.destination) " +
+            "OR event.author IN %@.follows.destination AND follower == nil",
+            currentUser,
+            currentUser
+        )
+        return fetchRequest
+    }
+
+    /// A request for all follow notifications that the given user should receive.
+    /// - Parameters:
+    ///   - currentUser: the author you want to view notifications for.
+    ///   - limit: a max number of notifications to fetch.
+    /// - Returns: A fetch request for follow notifications.
+    @nonobjc public class func followsRequest(
+        for currentUser: Author,
+        limit: Int? = nil
+    ) -> NSFetchRequest<NosNotification> {
+        let fetchRequest = NSFetchRequest<NosNotification>(entityName: "NosNotification")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \NosNotification.createdAt, ascending: false)]
+        if let limit {
+            fetchRequest.fetchLimit = limit
+        }
+
+        fetchRequest.predicate = NSPredicate(format: "follower != nil")
+
+        return fetchRequest
     }
 }

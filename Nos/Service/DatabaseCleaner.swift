@@ -56,6 +56,7 @@ enum DatabaseCleaner {
             
             try batchDelete(
                 objectsMatching: [
+                    NosNotification.oldNotificationsRequest(),
                     // delete all events before deleteBefore that aren't protected or referenced
                     Event.cleanupRequest(before: deleteBefore, for: currentUser),
                     Event.expiredRequest(),
@@ -65,7 +66,6 @@ enum DatabaseCleaner {
                     Author.orphaned(for: currentUser),
                     Follow.orphanedRequest(),
                     Relay.orphanedRequest(),
-                    NosNotification.oldNotificationsRequest(),
                 ],
                 in: context
             )
