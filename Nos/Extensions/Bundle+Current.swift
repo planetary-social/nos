@@ -27,6 +27,9 @@ extension Bundle {
         "\(self.version) (\(self.build))"
     }
 
+    /// > Warning: This method relies on undocumented implementation details to determine the installation source
+    /// and may break in future iOS releases.
+    /// https://gist.github.com/lukaskubanek/cbfcab29c0c93e0e9e0a16ab09586996
     /// Checks the app's receipt URL to determine if it contains the TestFlight-specific
     /// "sandboxReceipt" identifier.
     /// - Returns: `true` if the app was installed through TestFlight, `false` otherwise.

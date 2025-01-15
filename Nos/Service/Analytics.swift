@@ -157,11 +157,11 @@ class Analytics {
 
     /// Tracks the source of the app download when the user launches the app.
     func trackInstallationSourceIfNeeded() {
-        let installSourceKey = "TrackedAppInstallationSource"
         let source = Bundle.main.installationSource
-
         // Make sure we don't track in debug mode.
         guard source != .debug else { return }
+
+        let installSourceKey = "TrackedAppInstallationSource"
 
         // Check if we've already tracked this installation.
         if UserDefaults.standard.bool(forKey: installSourceKey) {
