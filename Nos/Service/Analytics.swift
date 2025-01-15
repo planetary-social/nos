@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 import PostHog
 import Dependencies
 import Logger
@@ -172,7 +172,8 @@ class Analytics {
             "Installation Source",
             properties: [
                 "source": source.rawValue,
-                "App Version": Bundle.current.versionAndBuild
+                "platform": UIDevice.platformName,
+                "app_version": Bundle.current.versionAndBuild
             ]
         )
         // Mark as tracked so we don't track again
