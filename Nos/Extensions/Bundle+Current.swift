@@ -27,7 +27,7 @@ extension Bundle {
         "\(self.version) (\(self.build))"
     }
 
-    /// checks the app's receipt URL to determine if it contains the TestFlight-specific
+    /// Checks the app's receipt URL to determine if it contains the TestFlight-specific
     /// "sandboxReceipt" identifier.
     /// - Returns: `true` if the app was installed through TestFlight, `false` otherwise.
     private var isTestFlight: Bool {
