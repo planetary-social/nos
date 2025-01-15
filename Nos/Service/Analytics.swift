@@ -155,6 +155,30 @@ class Analytics {
         postHog?.capture(eventName, properties: properties)
     }
 
+    /// Tracks the source of the app download when the user launches the app.
+    func trackInstallationSourceIfNeeded() {
+        let installSourceKey = "TrackedAppInstallationSource"
+        let source = Bundle.main.installationSource
+
+        // Make sure we don't track in debug mode.
+        guard source != .debug else { return }
+
+        // Check if we've already tracked this installation.
+        if UserDefaults.standard.bool(forKey: installSourceKey) {
+            return
+        }
+
+        track(
+            "Installation Source",
+            properties: [
+                "source": source.rawValue,
+                "App Version": Bundle.current.versionAndBuild
+            ]
+        )
+        // Mark as tracked so we don't track again
+        UserDefaults.standard.set(true, forKey: installSourceKey)
+    }
+
     /// Tracks when the user submits a search on the Discover screen.
     func searchedDiscover() {
         track("Discover Search Started")

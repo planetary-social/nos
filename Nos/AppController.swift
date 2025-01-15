@@ -20,6 +20,7 @@ import Logger
     init() {
         currentState = .loading
         Log.info("App Version: \(Bundle.current.versionAndBuild)")
+        analytics.trackInstallationSourceIfNeeded()
     }
     
     func configureCurrentState() {

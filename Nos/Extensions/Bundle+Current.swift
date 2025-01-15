@@ -3,6 +3,11 @@ import Foundation
 private class CurrentBundle {}
 
 extension Bundle {
+    enum InstallationSource: String {
+        case testFlight = "TestFlight"
+        case appStore = "App Store"
+        case debug = "Debug"
+    }
 
     static let current = Bundle(for: CurrentBundle.self)
     
@@ -20,5 +25,25 @@ extension Bundle {
     /// formatted as 1.2.3 (123).
     var versionAndBuild: String {
         "\(self.version) (\(self.build))"
+    }
+
+    /// checks the app's receipt URL to determine if it contains the TestFlight-specific
+    /// "sandboxReceipt" identifier.
+    /// - Returns: `true` if the app was installed through TestFlight, `false` otherwise.
+    private var isTestFlight: Bool {
+        Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+    }
+
+    /// Returns the app's installation source: debug, TestFlight, or App Store.
+    var installationSource: InstallationSource {
+    #if DEBUG
+        return .debug
+    #else
+        if isTestFlight {
+            return .testFlight
+        } else {
+            return .appStore
+        }
+    #endif
     }
 }
