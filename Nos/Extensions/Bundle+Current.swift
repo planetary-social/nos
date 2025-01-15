@@ -39,11 +39,7 @@ extension Bundle {
     #if DEBUG
         return .debug
     #else
-        if isTestFlight {
-            return .testFlight
-        } else {
-            return .appStore
-        }
+        return isTestFlight ? .testFlight : .appStore
     #endif
     }
 }
