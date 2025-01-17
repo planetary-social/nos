@@ -73,7 +73,16 @@ class NotificationViewModel: ObservableObject, Identifiable {
         actionText = authorName + AttributedString(String(localized: "startedFollowingYou"))
         range = Range(uncheckedBounds: (actionText.startIndex, actionText.endIndex))
         actionText[range].foregroundColor = .primaryTxt
-        self.actionText = actionText
+
+        /// For notification content, truncate the text only if more than
+        /// specified maximum length.
+        let maxLength = 100
+        if actionText.characters.count > maxLength {
+            let truncated = String(actionText.characters.prefix(maxLength)) + "..."
+            self.actionText = AttributedString(truncated)
+        } else {
+            self.actionText = actionText
+        }
 
         self.content = nil
     }

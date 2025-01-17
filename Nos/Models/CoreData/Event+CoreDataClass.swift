@@ -607,4 +607,12 @@ public class Event: NosManagedObject, VerifiableEvent {
         shouldBePublishedTo = Set()
     }
 }
+
+extension Event: NotificationDisplayable {
+    /// Returns self since an Event is its own associated event.
+    var event: Event? {
+        self
+    }
+}
+
 // swiftlint:enable file_length
