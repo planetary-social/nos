@@ -39,19 +39,22 @@ struct AuthorListDetailView: View {
             
             LazyVStack {
                 ForEach(list.allAuthors.sorted(by: { ($0.displayName ?? "") < ($1.displayName ?? "") })) { author in
-                    AuthorObservationView(authorID: author.hexadecimalPublicKey) { author in
-                        AuthorCard(author: author) {
-                            router.push(author)
-                        }
-                        .padding(.horizontal, 13)
-                        .padding(.top, 5)
-                        .readabilityPadding()
-                        .task {
-                            subscriptions[author.id] =
-                            await relayService.requestMetadata(
-                                for: author.hexadecimalPublicKey,
-                                since: author.lastUpdatedMetadata
-                            )
+                    NavigationLink {
+                        ProfileView(author: author)
+                    } label: {
+                        AuthorObservationView(authorID: author.hexadecimalPublicKey) { author in
+                            AuthorCard(author: author)
+                                .padding(.horizontal, 13)
+                                .padding(.top, 5)
+                                .readabilityPadding()
+                                .task {
+                                    subscriptions[author.id] =
+                                    await relayService.requestMetadata(
+                                        for: author.hexadecimalPublicKey,
+                                        since: author.lastUpdatedMetadata
+                                    )
+                                }
+                                .disabled(true) // skips the onTap action in AuthorCard
                         }
                     }
                 }
