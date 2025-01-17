@@ -13,7 +13,6 @@ struct AuthorListsView: View {
     
     @FetchRequest var lists: FetchedResults<AuthorList>
     
-    @State private var listToEditInfo: AuthorList?
     @State private var showingCreateList = false
     
     init(author: Author) {
@@ -29,18 +28,7 @@ struct AuthorListsView: View {
             Group {
                 if lists.isEmpty {
                     VStack(spacing: 40) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.white)
-                                .frame(width: 80, height: 80)
-                            
-                            Image(systemName: "person.2")
-                                .resizable()
-                                .fontWeight(.semibold)
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 48)
-                                .foregroundStyle(Color.black)
-                        }
+                        ListCircle()
                         
                         Text("listsDescription")
                             .font(.subheadline.weight(.medium))
@@ -54,38 +42,25 @@ struct AuthorListsView: View {
                     ScrollView {
                         VStack(spacing: 0) {
                             ForEach(lists) { list in
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text(list.title ?? "")
-                                            .font(.body)
+                                NavigationLink {
+                                    AuthorListDetailView(list: list)
+                                } label: {
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            Text(list.title ?? "")
+                                                .font(.body)
+                                            
+                                            Text(list.rowDescription)
+                                                .foregroundStyle(Color.secondaryTxt)
+                                                .font(.footnote)
+                                        }
                                         
-                                        Text(list.rowDescription)
-                                            .foregroundStyle(Color.secondaryTxt)
-                                            .font(.footnote)
+                                        Spacer()
                                     }
-                                    
-                                    Spacer()
-                                    
-                                    Menu {
-                                        Button("editListInfo") {
-                                            listToEditInfo = list
-                                        }
-                                        Button("manageUsers") {
-                                            // TODO: Manage Users
-                                        }
-                                        Button("deleteList", role: .destructive) {
-                                            // TODO: Delete List
-                                        }
-                                    } label: {
-                                        Image(systemName: "ellipsis")
-                                            .foregroundStyle(Color.secondaryTxt)
-                                            .fontWeight(.bold)
-                                            .padding()
-                                    }
+                                    .padding(.leading, 16)
+                                    .padding(.vertical, 12)
+                                    .frame(minHeight: 50)
                                 }
-                                .padding(.leading, 16)
-                                .padding(.vertical, 12)
-                                .frame(minHeight: 50)
                                 
                                 BeveledSeparator()
                             }
@@ -107,14 +82,6 @@ struct AuthorListsView: View {
             }
         }
         .nosNavigationBar("yourLists")
-        .sheet(item: $listToEditInfo) { list in
-            NavigationStack {
-                EditAuthorListView(list: list)
-                    .onDisappear {
-                        listToEditInfo = nil
-                    }
-            }
-        }
         .sheet(isPresented: $showingCreateList) {
             NavigationStack {
                 EditAuthorListView()
@@ -135,7 +102,8 @@ extension AuthorList {
         let countString = String.localizedStringWithFormat(String(localized: "xUsers"), authorCount)
         descriptionComponents.append(countString)
         
-        descriptionComponents.append(listDescription ?? String(localized: "noDescription"))
+        let description = listDescription?.isEmpty == false ? listDescription! : String(localized: "noDescription")
+        descriptionComponents.append(description)
         return descriptionComponents.joined(separator: " • ")
     }
 }
