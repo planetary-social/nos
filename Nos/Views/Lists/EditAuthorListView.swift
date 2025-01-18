@@ -26,6 +26,9 @@ struct EditAuthorListView: View {
     init(list: AuthorList? = nil) {
         self.list = list
         mode = list == nil ? .create : .update
+        
+        title = list?.title ?? ""
+        description = list?.listDescription ?? ""
     }
     
     var body: some View {
@@ -61,12 +64,12 @@ struct EditAuthorListView: View {
         }
         .nosNavigationBar(mode == .create ? "newList" : "editListInfo")
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItem(placement: .cancellationAction) {
                 Button("cancel") {
                     dismiss()
                 }
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .primaryAction) {
                 ActionButton(mode == .create ? "next" : "save", action: saveButtonPressed)
                     .frame(height: 22)
                     .padding(.bottom, 3)

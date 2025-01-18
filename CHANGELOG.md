@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed: adding/removing relays not reflected on feed filter. [#119](https://github.com/verse-pbc/issues/issues/119)
 - Added Lists view and two ways to navigate to it. [#133](https://github.com/verse-pbc/issues/issues/133)
 - Added view for editing a list's title and description. [#134](https://github.com/verse-pbc/issues/issues/134)
+- Added List detail view. [#155](https://github.com/verse-pbc/issues/issues/155)
 
 ### Internal Changes
 - Added function for creating a new list and a test verifying list editing. [#112](https://github.com/verse-pbc/issues/issues/112)

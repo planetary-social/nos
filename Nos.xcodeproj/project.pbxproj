@@ -220,6 +220,8 @@
 		509533002C62535400E0BACA /* zap_request.json in Resources */ = {isa = PBXBuildFile; fileRef = 509532FF2C62535400E0BACA /* zap_request.json */; };
 		5095330B2C625B5D00E0BACA /* zap_request_one_sat.json in Resources */ = {isa = PBXBuildFile; fileRef = 509533092C625B5D00E0BACA /* zap_request_one_sat.json */; };
 		5095330C2C625B5D00E0BACA /* zap_request_no_amount.json in Resources */ = {isa = PBXBuildFile; fileRef = 5095330A2C625B5D00E0BACA /* zap_request_no_amount.json */; };
+		50CBD7AB2D39341B00BF8A0B /* AuthorListDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CBD7AA2D39341700BF8A0B /* AuthorListDetailView.swift */; };
+		50CBD8152D3A8FED00BF8A0B /* ListCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CBD80F2D3A8B6D00BF8A0B /* ListCircle.swift */; };
 		50DE6B1B2C6B88FE0065665D /* View+StyledBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DE6B1A2C6B88FE0065665D /* View+StyledBorder.swift */; };
 		50E2EB722C86175900D4B360 /* NSRegularExpression+Replacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E2EB712C86175900D4B360 /* NSRegularExpression+Replacement.swift */; };
 		50E2EB7B2C8617C800D4B360 /* NSRegularExpression+Replacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E2EB712C86175900D4B360 /* NSRegularExpression+Replacement.swift */; };
@@ -792,6 +794,8 @@
 		509532FF2C62535400E0BACA /* zap_request.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = zap_request.json; sourceTree = "<group>"; };
 		509533092C625B5D00E0BACA /* zap_request_one_sat.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = zap_request_one_sat.json; sourceTree = "<group>"; };
 		5095330A2C625B5D00E0BACA /* zap_request_no_amount.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = zap_request_no_amount.json; sourceTree = "<group>"; };
+		50CBD7AA2D39341700BF8A0B /* AuthorListDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorListDetailView.swift; sourceTree = "<group>"; };
+		50CBD80F2D3A8B6D00BF8A0B /* ListCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCircle.swift; sourceTree = "<group>"; };
 		50DE6B1A2C6B88FE0065665D /* View+StyledBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+StyledBorder.swift"; sourceTree = "<group>"; };
 		50E2EB712C86175900D4B360 /* NSRegularExpression+Replacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSRegularExpression+Replacement.swift"; sourceTree = "<group>"; };
 		50EA86D32D28150D001E62CC /* FeedSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedSource.swift; sourceTree = "<group>"; };
@@ -1589,8 +1593,10 @@
 		50EA886D2D2D5776001E62CC /* Lists */ = {
 			isa = PBXGroup;
 			children = (
+				50CBD7AA2D39341700BF8A0B /* AuthorListDetailView.swift */,
 				50EA886E2D2D5780001E62CC /* AuthorListsView.swift */,
 				50EA89A52D3010EA001E62CC /* EditAuthorListView.swift */,
+				50CBD80F2D3A8B6D00BF8A0B /* ListCircle.swift */,
 			);
 			path = Lists;
 			sourceTree = "<group>";
@@ -2512,6 +2518,7 @@
 				3F30020D29C382EB003D4F8B /* OnboardingLoginView.swift in Sources */,
 				C9A25B3D29F174D200B39534 /* ReadabilityPadding.swift in Sources */,
 				04C9D7952CC29E0A00EAAD4D /* FeaturedAuthor+Cohort3.swift in Sources */,
+				50CBD8152D3A8FED00BF8A0B /* ListCircle.swift in Sources */,
 				C9DFA972299BF9E8006929C1 /* CompactNoteView.swift in Sources */,
 				C9AC31AD2A55E0BD00A94E5A /* NotificationViewModel.swift in Sources */,
 				0326347A2C10C57A00E489B5 /* FileStorageAPIClient.swift in Sources */,
@@ -2580,6 +2587,7 @@
 				C92DF80529C25DE900400561 /* URL+Extensions.swift in Sources */,
 				3F60F42929B27D3E000D62C4 /* ThreadView.swift in Sources */,
 				C9B678DB29EEBF3B00303F33 /* DependencyInjection.swift in Sources */,
+				50CBD7AB2D39341B00BF8A0B /* AuthorListDetailView.swift in Sources */,
 				5B098DC62BDAF73500500A1B /* AttributedString+Links.swift in Sources */,
 				65BD8DC42BDAF2C300802039 /* DiscoverContentsView.swift in Sources */,
 				C95D68A9299E709900429F86 /* LinearGradient+Planetary.swift in Sources */,
