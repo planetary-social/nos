@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Localized strings on the feed filter drop-down view.
 - Disabled automatic tracking in Sentry. [#126](https://github.com/verse-pbc/issues/issues/126)
 - Track TestFlight vs AppStore installations in Posthog. [#130](https://github.com/verse-pbc/issues/issues/130)
+- Track breadcrumbs in Sentry for all analytics events. [#125](https://github.com/verse-pbc/issues/issues/125)
 
 ## [1.1] - 2025-01-03Z
 
