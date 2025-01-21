@@ -51,7 +51,17 @@ class CrashReporting {
         Log.error("Reporting error to Crash Reporting service: \(errorMessage)")
         sentry.capture(message: errorMessage)
     }
-    
+
+    /// Adds a breadcrumb for the given event name for tracking in our error reporting tool (Sentry).
+    /// - Parameter eventName: The event for which to add a breadcrumb.
+    func trackBreadcrumb(_ eventName: String) {
+        let crumb = Breadcrumb()
+        crumb.level = SentryLevel.info
+        crumb.category = "analytics"
+        crumb.message = eventName
+        SentrySDK.addBreadcrumb(crumb)
+    }
+
     func logout() {
         SentrySDK.setUser(nil)
     }

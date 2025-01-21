@@ -1,15 +1,17 @@
-import UIKit
-import PostHog
 import Dependencies
 import Logger
-import Sentry
+import PostHog
 import Starscream
+import UIKit
 
 /// An object to manage analytics data, currently wired up to send data to PostHog and registered as a global
 /// dependency using the Dependencies library.
 class Analytics {
 
     private let postHog: PostHogSDK?
+
+    /// When an analytics event is tracked, we also create a breadcrumb in our crash reporter.
+    @Dependency(\.crashReporting) private var crashReporting
 
     required init(mock: Bool = false) {
         let apiKey = Bundle.main.infoDictionary?["POSTHOG_API_KEY"] as? String ?? ""
@@ -322,7 +324,7 @@ class Analytics {
 
 extension Analytics {
     /// Tracks the event with the given properties in the analytics provider.
-    /// Also calls `trackBreadcrumb` to track this event as a breadcrumb in our error reporting tool (Sentry).
+    /// Also calls ``CrashReporting/trackBreadcrumb(_:)`` to track this event as a breadcrumb in our crash reporter.
     /// - Parameters:
     ///   - eventName: The event name to track.
     ///   - properties: The properties to include with the event.
@@ -334,16 +336,6 @@ extension Analytics {
         }
         postHog?.capture(eventName, properties: properties)
 
-        trackBreadcrumb(eventName)
-    }
-    
-    /// Adds a breadcrumb for the given event name for tracking in our error reporting tool (Sentry).
-    /// - Parameter eventName: The event for which to add a breadcrumb.
-    private func trackBreadcrumb(_ eventName: String) {
-        let crumb = Breadcrumb()
-        crumb.level = SentryLevel.info
-        crumb.category = "analytics"
-        crumb.message = eventName
-        SentrySDK.addBreadcrumb(crumb)
+        crashReporting.trackBreadcrumb(eventName)
     }
 }
