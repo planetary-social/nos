@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 import PostHog
 import Dependencies
 import Logger
@@ -145,6 +145,31 @@ class Analytics {
     func logout() {
         track("Logged out")
         postHog?.reset()
+    }
+
+    /// Tracks the source of the app download when the user launches the app.
+    func trackInstallationSourceIfNeeded() {
+        let source = Bundle.main.installationSource
+        // Make sure we don't track in debug mode.
+        guard source != .debug else { return }
+
+        let installSourceKey = "TrackedAppInstallationSource"
+
+        // Check if we've already tracked this installation.
+        if UserDefaults.standard.bool(forKey: installSourceKey) {
+            return
+        }
+
+        track(
+            "Installation Source",
+            properties: [
+                "source": source.rawValue,
+                "platform": UIDevice.platformName,
+                "app_version": Bundle.current.versionAndBuild
+            ]
+        )
+        // Mark as tracked so we don't track again
+        UserDefaults.standard.set(true, forKey: installSourceKey)
     }
 
     /// Tracks when the user submits a search on the Discover screen.

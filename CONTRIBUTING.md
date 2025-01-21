@@ -55,7 +55,15 @@ A maintainer will review your code and merge it when it has the required number 
 
 ## Hot Reloading
 
-We make use of the [Inject](https://github.com/krzysztofzablocki/Inject) framework for hot reloading debug builds. To set up hot reloading, follow the [documentation](https://github.com/krzysztofzablocki/Inject?tab=readme-ov-file#individual-developer-setup-once-per-machine).
+We make use of the [Inject](https://github.com/krzysztofzablocki/Inject) framework for hot reloading debug builds. To set it up install the latest version of [InjectionIII](https://github.com/johnno1962/InjectionIII/releases). You can hot reload the app by:
+- Launching InjectionIII
+- Add `import Inject`, `@ObserveInjection var inject` to the top of the SwiftUI view you wish to reload, and add `.enableInjection()` as the last line in `body`.
+- Build and run the app. You should see something like `💉 InjectionIII connected /Users/you/nos/Nos.xcodeproj` in the console.
+- Change some code.
+- Hit command-S to save. You should see Inject recompile the file in the logs
+- For some reason our views don't update right away, but if you navigate away from the screen and back it should have reloaded.
+
+Full documentation is availabe [here](https://github.com/krzysztofzablocki/Inject?tab=readme-ov-file#workflow-integration)
 
 ## Dependency Management
 

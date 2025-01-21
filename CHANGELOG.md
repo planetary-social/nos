@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added function for creating a new list and a test verifying list editing. [#112](https://github.com/verse-pbc/issues/issues/112)
 - Localized strings on the feed filter drop-down view.
 - Disabled automatic tracking in Sentry. [#126](https://github.com/verse-pbc/issues/issues/126)
+- Track TestFlight vs AppStore installations in Posthog. [#130](https://github.com/verse-pbc/issues/issues/130)
 
 ## [1.1] - 2025-01-03Z
 
