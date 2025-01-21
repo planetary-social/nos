@@ -35,15 +35,19 @@ struct NoteTextEditor: View {
         .sheet(isPresented: $controller.showMentionsAutocomplete) {
             NavigationStack {
                 AuthorSearchView(
-                    isPresented: $controller.showMentionsAutocomplete,
-                    relatedAuthors: relatedAuthors
-                ) { [weak controller] author in
-                    /// Guard against double presses
-                    guard let controller, controller.showMentionsAutocomplete else { return }
-
-                    controller.insertMention(of: author)
-                    controller.showMentionsAutocomplete = false
-                }
+                    searchOrigin: .mentions,
+                    title: "mention",
+                    isModal: true,
+                    relatedAuthors: relatedAuthors,
+                    emptyPlaceholder: { EmptyView() },
+                    didSelectGesture: { [weak controller] author in
+                        /// Guard against double presses
+                        guard let controller, controller.showMentionsAutocomplete else { return }
+                        
+                        controller.insertMention(of: author)
+                        controller.showMentionsAutocomplete = false
+                    }
+                )
             }
         }
     }

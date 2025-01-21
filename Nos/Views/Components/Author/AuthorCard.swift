@@ -1,23 +1,38 @@
 import SwiftUI
 
+/// Modes for determining the state of the ``UserSelectionCircle`` on the ``AuthorCard``
+enum AvatarOverlayMode {
+    /// Uses following state by the current user
+    case follows
+    
+    /// Uses inclusion in the given set of ``Author``s
+    case inSet(authors: Set<Author>)
+    
+    /// Always displays the selected state
+    case alwaysSelected
+}
+
 /// This view displays the information we have for an author suitable for being used in a list.
-struct AuthorCard: View {
+struct AuthorCard<AvatarOverlay: View>: View {
+    
     @ObservedObject var author: Author
     @Environment(CurrentUser.self) var currentUser
 
-    /// Whether the follow button should be displayed or not.
-    let showsFollowButton: Bool
-
-    var tapAction: (() -> Void)?
+    let avatarOverlayView: () -> AvatarOverlay?
+    let tapAction: (() -> Void)?
     
     /// Initializes an `AuthorCard` with the given parameters.
     /// - Parameters:
     ///   - author: The author to show in the card.
-    ///   - showsFollowButton: Whether the follow button should be displayed or not. Defaults to `true`.
+    ///   - avatarOverlayView: The view to show as an overlay at the bottom right of the avatar.
     ///   - onTap: The action to take when this card is tapped, if any. Defaults to `nil`.
-    init(author: Author, showsFollowButton: Bool = true, onTap: (() -> Void)? = nil) {
+    init(
+        author: Author,
+        @ViewBuilder avatarOverlayView: @escaping () -> AvatarOverlay? = { nil as AnyView? },
+        onTap: (() -> Void)? = nil
+    ) {
         self.author = author
-        self.showsFollowButton = showsFollowButton
+        self.avatarOverlayView = avatarOverlayView
         self.tapAction = onTap
     }
 
@@ -30,7 +45,10 @@ struct AuthorCard: View {
                     ZStack(alignment: .bottomTrailing) {
                         AvatarView(imageUrl: author.profilePhotoURL, size: 80)
                             .padding(.trailing, 12)
-                        if showsFollowButton {
+                        
+                        if let overlay = avatarOverlayView() {
+                            overlay
+                        } else {
                             CircularFollowButton(author: author)
                         }
                     }
@@ -95,7 +113,7 @@ struct AuthorCard: View {
 #Preview {
     var previewData = PreviewData()
     
-    return VStack {
+    VStack {
         AuthorCard(author: previewData.alice)
         AuthorCard(author: previewData.bob)
     }

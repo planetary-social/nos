@@ -23,6 +23,8 @@ struct EditAuthorListView: View {
     @FocusState private var focusedField: Field?
     private let mode: Mode
     
+    @State private var showingManageUsers = false
+    
     init(list: AuthorList? = nil) {
         self.list = list
         mode = list == nil ? .create : .update
@@ -75,6 +77,9 @@ struct EditAuthorListView: View {
                     .padding(.bottom, 3)
             }
         }
+        .navigationDestination(isPresented: $showingManageUsers) {
+            AuthorListManageUsersView(title: title, description: description)
+        }
         .onAppear {
             title = list?.title ?? ""
             description = list?.listDescription ?? ""
@@ -99,7 +104,7 @@ struct EditAuthorListView: View {
                 title: title,
                 description: description,
                 replaceableID: list?.replaceableIdentifier,
-                authorIDs: []
+                authorIDs: list?.authors.compactMap { $0.hexadecimalPublicKey } ?? []
             )
             
             Task {
@@ -111,7 +116,7 @@ struct EditAuthorListView: View {
                 }
             }
         } else {
-            // TODO: Manage Users
+            showingManageUsers = true
         }
     }
 }
