@@ -29,18 +29,14 @@ extension Bundle {
     }
 
     /// > Warning: This method relies on undocumented implementation details to determine the installation source
-    /// and may break in future iOS releases.
-    /// https://gist.github.com/lukaskubanek/cbfcab29c0c93e0e9e0a16ab09586996
-    /// Checks the app's receipt URL to determine if it contains the TestFlight-specific
-    /// "sandboxReceipt" identifier.
-    /// - Returns: `true` if the app was installed through TestFlight, `false` otherwise.
-    private var isIosTestFlight: Bool {
-        Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
-    }
+    /// and may break in future iOS / macOS releases.
 
     /// Returns whether the bundle was signed for TestFlight beta distribution by checking
-    /// the existence of a specific extension (marker OID) on the code signing certificate.
+    /// the existence of a specific extension (marker OID) on the code signing certificate on macOS.
     ///
+    /// Checks the app's receipt URL to determine if it contains the TestFlight-specific
+    /// "sandboxReceipt" identifier on iOS.
+    /// - Returns: `true` if the app was installed through TestFlight, `false` otherwise.
     /// This routine is inspired by the source code from ProcInfo, the underlying library
     /// of the WhatsYourSign code signature checking tool developed by Objective-See. Initially,
     /// it checked the common name but was changed to an extension check to make it more
@@ -49,7 +45,7 @@ extension Bundle {
     /// For more information, see the following references:
     /// - https://github.com/objective-see/ProcInfo/blob/master/procInfo/Signing.m#L184-L247
     /// - https://gist.github.com/lukaskubanek/cbfcab29c0c93e0e9e0a16ab09586996#gistcomment-3993808
-    private var isMacTestFlight: Bool {
+    private var isTestFlight: Bool {
     #if os(macOS)
         var status = noErr
 
@@ -74,6 +70,8 @@ extension Bundle {
         )
 
         return status == errSecSuccess
+    #elseif os(iOS)
+        Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
     #else
         return false
     #endif
@@ -84,13 +82,7 @@ extension Bundle {
     #if DEBUG
         return .debug
     #else
-        #if os(iOS)
-            return isIosTestFlight ? .testFlight : .appStore
-        #elseif os(macOS)
-            return isMacTestFlight ? .testFlight : .appStore
-        #else
-            return .debug
-        #endif
+        return isTestFlight ? .testFlight : .appStore
     #endif
     }
 }
