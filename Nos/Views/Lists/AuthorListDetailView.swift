@@ -3,6 +3,8 @@ import SwiftUI
 
 struct AuthorListDetailView: View {
     
+    @Environment(\.dismiss) private var dismiss
+    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.relayService) private var relayService
     @EnvironmentObject private var router: Router
     
@@ -73,7 +75,7 @@ struct AuthorListDetailView: View {
                         // TODO: Manage Users
                     }
                     Button("deleteList", role: .destructive) {
-                        // TODO: Delete List
+                        deleteList()
                     }
                 } label: {
                     Image(systemName: "ellipsis")
@@ -87,6 +89,17 @@ struct AuthorListDetailView: View {
             NavigationStack {
                 EditAuthorListView(list: list)
             }
+        }
+    }
+    
+    private func deleteList() {
+        guard let replaceableID = list.replaceableIdentifier else {
+            return
+        }
+        
+        Task {
+            await currentUser.publishDelete(for: replaceableID, kind: list.kind)
+            dismiss()
         }
     }
 }
