@@ -113,7 +113,7 @@ struct AuthorCard<AvatarOverlay: View>: View {
 #Preview {
     var previewData = PreviewData()
     
-    VStack {
+    return VStack {
         AuthorCard(author: previewData.alice)
         AuthorCard(author: previewData.bob)
     }
