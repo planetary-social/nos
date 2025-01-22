@@ -78,7 +78,9 @@ struct EditAuthorListView: View {
             }
         }
         .navigationDestination(isPresented: $showingManageUsers) {
-            AuthorListManageUsersView(title: title, description: description)
+            AuthorListManageUsersView(title: title, description: description) {
+                dismiss()
+            }
         }
         .onAppear {
             title = list?.title ?? ""

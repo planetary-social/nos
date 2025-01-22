@@ -27,14 +27,22 @@ struct AuthorListManageUsersView: View {
     
     private var mode: Mode
     
+    /// An action that runs after successfully saving an ``AuthorList``.
+    ///
+    /// Leaving the value nil will cause the Environment's `dismiss()` to be called, which may appear
+    /// as a modal dismissal or a navigational pop depending on the presentation context.
+    private let onSave: (() -> Void)?
+    
     init(list: AuthorList) {
         mode = .update(list: list)
         _authors = State(initialValue: list.allAuthors)
+        onSave = nil
     }
     
-    init(title: String, description: String?) {
+    init(title: String, description: String?, onSave: (() -> Void)?) {
         mode = .create(title: title, description: description)
         _authors = State(initialValue: [])
+        self.onSave = onSave
     }
     
     var body: some View {
@@ -139,7 +147,12 @@ struct AuthorListManageUsersView: View {
         Task {
             do {
                 try await relayService.publishToAll(event: event, signingKey: keyPair, context: viewContext)
-                dismiss()
+                
+                if let onSave {
+                    onSave()
+                } else {
+                    dismiss()
+                }
             } catch {
                 Log.error("Error when creating list: \(error.localizedDescription)")
             }

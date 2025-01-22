@@ -52,6 +52,7 @@ struct AuthorListsView: View {
                                             Text(list.rowDescription)
                                                 .foregroundStyle(Color.secondaryTxt)
                                                 .font(.footnote)
+                                                .lineLimit(1)
                                         }
                                         
                                         Spacer()
