@@ -20,6 +20,7 @@ struct HomeFeedView: View {
     /// to get some data from relay. The amount of time is defined in `staticLoadTime`.
     @State private var showTimedLoadingIndicator = true
     
+    @State private var shouldNavigateToListsOnAppear = false
     @State private var shouldNavigateToRelaysOnAppear = false
     
     /// The amount of time (in seconds) the loading indicator will be shown when showTimedLoadingIndicator is set to 
@@ -132,7 +133,11 @@ struct HomeFeedView: View {
                     .transition(.opacity)
                 
                 VStack {
-                    FeedCustomizerView(author: user, shouldNavigateToRelays: $shouldNavigateToRelaysOnAppear)
+                    FeedCustomizerView(
+                        author: user,
+                        shouldNavigateToLists: $shouldNavigateToListsOnAppear,
+                        shouldNavigateToRelays: $shouldNavigateToRelaysOnAppear
+                    )
                     Spacer()
                 }
                 .transition(.move(edge: .top))
@@ -159,6 +164,12 @@ struct HomeFeedView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
+                    if showFeedSelector {
+                        analytics.feedCustomizerClosed()
+                    } else {
+                        analytics.feedCustomizerOpened()
+                    }
+                    
                     withAnimation {
                         showFeedSelector.toggle()
                         showFeedTip = false
@@ -189,6 +200,17 @@ struct HomeFeedView: View {
                 GoToFeedTip.viewedFeed.sendDonation()
             }
         }
+        .onChange(of: shouldNavigateToListsOnAppear) {
+            if shouldNavigateToListsOnAppear {
+                showFeedSelector = false
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                    router.push(ListsDestination(author: user))
+                }
+                
+                shouldNavigateToListsOnAppear = false
+            }
+        }
         .onChange(of: shouldNavigateToRelaysOnAppear) {
             if shouldNavigateToRelaysOnAppear {
                 showFeedSelector = false
@@ -199,6 +221,9 @@ struct HomeFeedView: View {
                 
                 shouldNavigateToRelaysOnAppear = false
             }
+        }
+        .navigationDestination(for: ListsDestination.self) { destination in
+            AuthorListsView(author: destination.author)
         }
         .navigationDestination(for: RelaysDestination.self) { destination in
             RelayView(author: destination.author)

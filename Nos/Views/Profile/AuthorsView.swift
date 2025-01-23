@@ -12,13 +12,17 @@ struct FollowersDestination: Hashable {
     var followers: [Author]
 }
 
-/// Displays a list of people someone is following.
-struct FollowsView: View {
+/// Displays a list of authors.
+struct AuthorsView: View {
     /// Screen title
-    var title: LocalizedStringKey
+    let title: LocalizedStringKey?
 
     /// Sorted list of authors to display in the list
-    var authors: [Author]
+    let authors: [Author]
+    
+    let avatarOverlayMode: AvatarOverlayMode
+    
+    let onTapGesture: ((Author) -> Void)?
 
     /// Subscriptions for metadata requests from the relay service, keyed by author ID.
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
@@ -27,13 +31,15 @@ struct FollowsView: View {
     @EnvironmentObject private var router: Router
 
     init(
-        _ title: LocalizedStringKey,
+        _ title: LocalizedStringKey? = nil,
         authors: [Author],
-        subscriptions: [ObjectIdentifier: SubscriptionCancellable] = [ObjectIdentifier: SubscriptionCancellable]()
+        avatarOverlayMode: AvatarOverlayMode = .follows,
+        onTapGesture: ((Author) -> Void)? = nil
     ) {
         self.title = title
         self.authors = authors
-        self.subscriptions = subscriptions
+        self.avatarOverlayMode = avatarOverlayMode
+        self.onTapGesture = onTapGesture
     }
     
     var body: some View {
@@ -41,9 +47,26 @@ struct FollowsView: View {
             LazyVStack {
                 ForEach(authors) { author in
                     AuthorObservationView(authorID: author.hexadecimalPublicKey) { author in
-                        AuthorCard(author: author) {
-                            router.push(author)
-                        }
+                        AuthorCard(
+                            author: author,
+                            avatarOverlayView: {
+                                switch avatarOverlayMode {
+                                case .follows:
+                                    AnyView(CircularFollowButton(author: author))
+                                case .alwaysSelected:
+                                    AnyView(UserSelectionCircle(diameter: 30, selected: true))
+                                case .inSet(let authors):
+                                    AnyView(UserSelectionCircle(diameter: 30, selected: authors.contains(author)))
+                                }
+                            },
+                            onTap: {
+                                if let onTapGesture {
+                                    onTapGesture(author)
+                                } else {
+                                    router.push(author)
+                                }
+                            }
+                        )
                         .padding(.horizontal, 13)
                         .padding(.top, 5)
                         .readabilityPadding()
@@ -60,6 +83,6 @@ struct FollowsView: View {
             .padding(.vertical, 12)
         }
         .background(Color.appBg)
-        .nosNavigationBar(title)
+        .nosNavigationBar(title ?? "")
     }
 }

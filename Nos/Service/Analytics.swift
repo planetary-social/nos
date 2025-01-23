@@ -320,6 +320,69 @@ class Analytics {
     func mentionsAutocompleteOpened() {
         track("Mentions Autocomplete Opened")
     }
+    
+    // MARK: - Feed Source
+    
+    /// Tracks when the user selects a list from the feed picker at the top of the home feed.
+    func listFeedOpened() {
+        track("List Feed Opened")
+    }
+    
+    /// Tracks when the user selects a relay from the feed picker at the top of the home feed.
+    func relayFeedOpened() {
+        track("Relay Feed Opened")
+    }
+    
+    /// Tracks when the user selects the Following feed at the top of the home feed.
+    func followFeedOpened() {
+        track("Follow Feed Opened")
+    }
+    
+    /// Tracks when the user opens the ``FeedCustomizerView``.
+    func feedCustomizerOpened() {
+        track("Feed Customizer Opened")
+    }
+    
+    /// Tracks when the user closes the ``FeedCustomizerView``.
+    func feedCustomizerClosed() {
+        track("Feed Customizer Closed")
+    }
+    
+    /// Tracks when the user toggles on a list in the ``FeedCustomizerView``.
+    func listPinned() {
+        track("List Pinned")
+    }
+    
+    /// Tracks when the user toggles off a list in the ``FeedCustomizerView``.
+    func listUnpinned() {
+        track("List Unpinned")
+    }
+    
+    /// Tracks when the user toggles on a relay in the ``FeedCustomizerView``.
+    func relayPinned() {
+        track("Relay Pinned")
+    }
+    
+    /// Tracks when the user toggles off a relay in the ``FeedCustomizerView``.
+    func relayUnpinned() {
+        track("Relay Unpinned")
+    }
+    
+    // MARK: - Lists
+    
+    /// Tracks when the user creates a new list.
+    func listCreated() {
+        track("List Created")
+    }
+    
+    /// Tracks when the user edits a list.
+    /// - Parameter numberOfUsers: The number of users in the list.
+    func listEdited(numberOfUsers: Int) {
+        track(
+            "List Edited",
+            properties: ["Number of users": numberOfUsers]
+        )
+    }
 }
 
 extension Analytics {

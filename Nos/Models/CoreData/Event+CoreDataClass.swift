@@ -506,6 +506,35 @@ public class Event: NosManagedObject, VerifiableEvent {
                 deletedEvent.deletedOn.insert(relay)
             }
         }
+        
+        // track deleted replaceable events
+        // ["a", "<kind>:<pubkey>:<d-identifier>"]
+        if let author, let createdAt {
+            let aTags = tags.filter { $0.first == "a" && $0.count >= 2 }
+            
+            for aTag in aTags.map({ $0[1] }) {
+                let components = aTag.split(separator: ":").map { String($0) }
+                let pubkey = components[1]
+                
+                guard pubkey == author.hexadecimalPublicKey else {
+                    // ensure that this delete event only affects events with the author's pubkey
+                    continue
+                }
+                
+                guard let kind = Int64(components[0]) else {
+                    continue
+                }
+                
+                let replaceableID = components[2]
+                let request = Event.event(by: replaceableID, author: author, kind: kind, before: createdAt)
+                
+                let results = try context.fetch(request)
+                for event in results {
+                    print("\(event.identifier ?? "n/a") was deleted on \(relay.address ?? "unknown")")
+                    event.deletedOn.insert(relay)
+                }
+            }
+        }
     }
     
     class func requestAuthorsMetadataIfNeeded(

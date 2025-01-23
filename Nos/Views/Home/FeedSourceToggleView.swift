@@ -1,6 +1,8 @@
+import Dependencies
 import SwiftUI
 
 struct FeedSourceToggleView<Content: View, EmptyPlaceholder: View>: View {
+    @Dependency(\.analytics) private var analytics
     @Environment(FeedController.self) var feedController
     
     let author: Author
@@ -48,6 +50,22 @@ struct FeedSourceToggleView<Content: View, EmptyPlaceholder: View>: View {
                                 .fixedSize(horizontal: false, vertical: true)
                                 .padding(.vertical, 10)
                                 .onChange(of: item.isOn) { _, _ in
+                                    switch item.source {
+                                    case .list:
+                                        if item.isOn {
+                                            analytics.listPinned()
+                                        } else {
+                                            analytics.listUnpinned()
+                                        }
+                                    case .relay:
+                                        if item.isOn {
+                                            analytics.relayPinned()
+                                        } else {
+                                            analytics.relayUnpinned()
+                                        }
+                                    default:
+                                        break
+                                    }
                                     feedController.toggleSourceEnabled(item.source)
                                 }
                         }

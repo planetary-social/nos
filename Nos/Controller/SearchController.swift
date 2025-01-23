@@ -26,8 +26,11 @@ enum SearchState {
 enum SearchOrigin {
     /// Search initiated from the Discover tab
     case discover
+    
+    /// Search initiated from ``AuthorListManageUsersView``
+    case lists
 
-    /// Search initiated from the mentions `AuthorListView`
+    /// Search initiated from the mentions `AuthorSearchView`
     case mentions
 }
 
@@ -91,6 +94,8 @@ enum SearchOrigin {
                     switch searchOrigin {
                     case .discover:
                         analytics.searchedDiscover()
+                    case .lists:
+                        break // TODO: Analytics
                     case .mentions:
                         analytics.mentionsAutocompleteCharactersEntered()
                     }
