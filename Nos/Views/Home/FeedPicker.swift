@@ -1,9 +1,11 @@
 import CoreData
+import Dependencies
 import SwiftUI
 
 /// A picker view used to pick which source a feed should show notes from.
 struct FeedPicker: View {
     @Environment(FeedController.self) var feedController
+    @Dependency(\.analytics) private var analytics
     
     var body: some View {
         BeveledContainerView {
@@ -12,6 +14,15 @@ struct FeedPicker: View {
                     HStack(spacing: 0) {
                         ForEach(feedController.enabledSources, id: \.self) { source in
                             Button(action: {
+                                switch source {
+                                case .following:
+                                    analytics.followFeedOpened()
+                                case .relay:
+                                    analytics.relayFeedOpened()
+                                case .list:
+                                    analytics.listFeedOpened()
+                                }
+                                
                                 withAnimation(nil) {
                                     feedController.selectedSource = source
                                 }

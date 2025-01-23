@@ -1,3 +1,4 @@
+import Dependencies
 import SwiftUI
 
 enum FeedTab: String {
@@ -31,6 +32,7 @@ extension FeedTab: NosSegmentedPickerItem {
 
 struct FeedCustomizerView: View {
     
+    @Dependency(\.analytics) private var analytics
     @Environment(FeedController.self) var feedController
     let author: Author
     @Binding var shouldNavigateToLists: Bool
@@ -73,6 +75,7 @@ struct FeedCustomizerView: View {
                                     font: .clarity(.semibold, textStyle: .footnote),
                                     image: Image(systemName: "slider.horizontal.3")
                                 ) {
+                                    analytics.feedCustomizerClosed()
                                     shouldNavigateToLists = true
                                 }
                             }
@@ -97,6 +100,7 @@ struct FeedCustomizerView: View {
                         }
                         .padding()
                         .onTapGesture {
+                            analytics.feedCustomizerClosed()
                             shouldNavigateToRelays = true
                         }
                     },
