@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added view for editing a list's title and description. [#134](https://github.com/verse-pbc/issues/issues/134)
 - Added List detail view. [#155](https://github.com/verse-pbc/issues/issues/155)
 - Added view for managing users in a list. [#135](https://github.com/verse-pbc/issues/issues/135)
+- Added ability to delete lists. [#136](https://github.com/verse-pbc/issues/issues/136)
 
 ### Internal Changes
 - Added function for creating a new list and a test verifying list editing. [#112](https://github.com/verse-pbc/issues/issues/112)

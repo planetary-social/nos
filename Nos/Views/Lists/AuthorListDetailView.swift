@@ -76,7 +76,7 @@ struct AuthorListDetailView: View {
                         showingManageUsers = true
                     }
                     Button("deleteList", role: .destructive) {
-                        // TODO: Delete List
+                        deleteList()
                     }
                 } label: {
                     Image(systemName: "ellipsis")
@@ -95,6 +95,17 @@ struct AuthorListDetailView: View {
             NavigationStack {
                 AuthorListManageUsersView(list: list)
             }
+        }
+    }
+    
+    private func deleteList() {
+        guard let replaceableID = list.replaceableIdentifier else {
+            return
+        }
+        
+        Task {
+            await currentUser.publishDelete(for: replaceableID, kind: list.kind)
+            dismiss()
         }
     }
 }

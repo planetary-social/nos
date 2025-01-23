@@ -271,16 +271,29 @@ extension Event {
     @nonobjc public class func event(
         by replaceableID: RawReplaceableID,
         author: Author,
-        kind: Int64
+        kind: Int64,
+        before: Date? = nil
     ) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
-        fetchRequest.predicate = NSPredicate(
-            format: "replaceableIdentifier = %@ AND author = %@ AND kind = %i",
-            replaceableID,
-            author,
-            kind
+        var andPredicates = [
+            NSPredicate(
+                format: "replaceableIdentifier = %@ AND author = %@ AND kind = %i",
+                replaceableID,
+                author,
+                kind
+            )
+        ]
+        
+        if let before {
+            andPredicates.append(NSPredicate(format: "createdAt <= %@", before as CVarArg))
+        }
+        
+        fetchRequest.predicate = NSCompoundPredicate(
+            type: .and,
+            subpredicates: andPredicates
         )
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.replaceableIdentifier, ascending: true)]
+        
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.fetchLimit = 1
         return fetchRequest
     }
