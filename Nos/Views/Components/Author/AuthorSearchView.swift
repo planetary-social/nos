@@ -1,22 +1,47 @@
 import Foundation
 import SwiftUI
 
-struct AuthorSearchView: View {
+struct AuthorSearchView<EmptyPlaceholder: View>: View {
     
-    @Binding var isPresented: Bool
+    @Environment(\.dismiss) private var dismiss
     
     @Environment(\.managedObjectContext) private var viewContext
 
-    @State private var searchController = SearchController(searchOrigin: .mentions)
+    @State private var searchController: SearchController
 
     @FocusState private var isSearching: Bool
     @State private var filteredAuthors: [Author] = []
-
+    
+    let title: LocalizedStringKey?
+    let isModal: Bool
+    let avatarOverlayMode: AvatarOverlayMode
+    
+    /// The view to show when the search bar is empty.
+    let emptyPlaceholder: () -> EmptyPlaceholder?
+    
     /// The authors are referenced in a note / who replied under the note the user is replying if any.
     var relatedAuthors: [Author]?
 
     var didSelectGesture: ((Author) -> Void)?
 
+    init(
+        searchOrigin: SearchOrigin,
+        title: LocalizedStringKey? = nil,
+        isModal: Bool,
+        avatarOverlayMode: AvatarOverlayMode = .follows,
+        relatedAuthors: [Author]? = nil,
+        @ViewBuilder emptyPlaceholder: @escaping () -> EmptyPlaceholder? = { nil },
+        didSelectGesture: ((Author) -> Void)? = nil
+    ) {
+        self.title = title
+        self.isModal = isModal
+        self.avatarOverlayMode = avatarOverlayMode
+        self.relatedAuthors = relatedAuthors
+        self.didSelectGesture = didSelectGesture
+        self.emptyPlaceholder = emptyPlaceholder
+        _searchController = State(initialValue: SearchController(searchOrigin: searchOrigin))
+    }
+    
     var body: some View {
         ScrollView(.vertical) {
             SearchBar(text: $searchController.query, isSearching: $isSearching)
@@ -25,19 +50,19 @@ struct AuthorSearchView: View {
                 .onSubmit {
                     searchController.submitSearch(query: searchController.query)
                 }
-            LazyVStack {
-                ForEach(filteredAuthors) { author in
-                    AuthorCard(author: author, showsFollowButton: false) {
-                        didSelectGesture?(author)
+            
+            if filteredAuthors.isEmpty {
+                emptyPlaceholder()
+            } else {
+                LazyVStack {
+                    ForEach(filteredAuthors) { author in
+                        row(forAuthor: author)
                     }
-                    .padding(.horizontal, 13)
-                    .padding(.top, 5)
-                    .readabilityPadding()
                 }
             }
         }
         .background(Color.appBg)
-        .nosNavigationBar("mention")
+        .nosNavigationBar(title ?? "")
         .onAppear {
             isSearching = true
 
@@ -55,14 +80,38 @@ struct AuthorSearchView: View {
         }
         .disableAutocorrection(true)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button(action: {
-                    isPresented = false
-                }, label: {
-                    Text("cancel")
-                        .foregroundColor(.primaryTxt)
-                })
+            if isModal {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(action: {
+                        dismiss()
+                    }, label: {
+                        Text("cancel")
+                            .foregroundColor(.primaryTxt)
+                    })
+                }
             }
         }
+    }
+    
+    private func row(forAuthor author: Author) -> some View {
+        AuthorCard(
+            author: author,
+            avatarOverlayView: {
+                switch avatarOverlayMode {
+                case .follows:
+                    AnyView(CircularFollowButton(author: author))
+                case .alwaysSelected:
+                    AnyView(UserSelectionCircle(diameter: 30, selected: true))
+                case .inSet(let authors):
+                    AnyView(UserSelectionCircle(diameter: 30, selected: authors.contains(author)))
+                }
+            },
+            onTap: {
+                didSelectGesture?(author)
+            }
+        )
+        .padding(.horizontal, 13)
+        .padding(.top, 5)
+        .readabilityPadding()
     }
 }
