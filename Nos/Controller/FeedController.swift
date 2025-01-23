@@ -82,7 +82,11 @@ import SwiftUI
             .publisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] lists in
-                self?.lists = lists
+                // ensure that we only publish the most recent list for each replaceable identifier
+                let grouped = Dictionary(grouping: lists, by: { $0.replaceableIdentifier ?? "" })
+                self?.lists = grouped.compactMap { _, events in
+                    events.max(by: { $0.createdAt ?? Date.distantPast < $1.createdAt ?? Date.distantPast })
+                }
             })
             .store(in: &cancellables)
     }

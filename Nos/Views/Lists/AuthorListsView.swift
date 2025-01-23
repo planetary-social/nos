@@ -7,7 +7,6 @@ struct ListsDestination: Hashable {
 
 /// A view that displays a list of an ``Author``'s ``AuthorList``s.
 struct AuthorListsView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     
     let author: Author
     
@@ -53,6 +52,7 @@ struct AuthorListsView: View {
                                             Text(list.rowDescription)
                                                 .foregroundStyle(Color.secondaryTxt)
                                                 .font(.footnote)
+                                                .lineLimit(1)
                                         }
                                         
                                         Spacer()

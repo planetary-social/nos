@@ -4,8 +4,8 @@ import SwiftUI
 struct AuthorListDetailView: View {
     
     @Environment(\.dismiss) private var dismiss
-    @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.relayService) private var relayService
+    @Environment(CurrentUser.self) private var currentUser
     @EnvironmentObject private var router: Router
     
     @ObservedObject var list: AuthorList
@@ -14,6 +14,7 @@ struct AuthorListDetailView: View {
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
     
     @State private var showingEditListInfo = false
+    @State private var showingManageUsers = false
 
     var body: some View {
         ScrollView {
@@ -45,7 +46,7 @@ struct AuthorListDetailView: View {
                         ProfileView(author: author)
                     } label: {
                         AuthorObservationView(authorID: author.hexadecimalPublicKey) { author in
-                            AuthorCard(author: author)
+                            AuthorCard(author: author, avatarOverlayView: { EmptyView() })
                                 .padding(.horizontal, 13)
                                 .padding(.top, 5)
                                 .readabilityPadding()
@@ -72,7 +73,7 @@ struct AuthorListDetailView: View {
                         showingEditListInfo = true
                     }
                     Button("manageUsers") {
-                        // TODO: Manage Users
+                        showingManageUsers = true
                     }
                     Button("deleteList", role: .destructive) {
                         deleteList()
@@ -88,6 +89,11 @@ struct AuthorListDetailView: View {
         .sheet(isPresented: $showingEditListInfo) {
             NavigationStack {
                 EditAuthorListView(list: list)
+            }
+        }
+        .sheet(isPresented: $showingManageUsers) {
+            NavigationStack {
+                AuthorListManageUsersView(list: list)
             }
         }
     }
