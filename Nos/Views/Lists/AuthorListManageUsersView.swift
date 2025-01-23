@@ -1,3 +1,4 @@
+import Dependencies
 import Logger
 import SwiftUI
 
@@ -19,6 +20,7 @@ struct AuthorListManageUsersView: View {
         }
     }
     
+    @Dependency(\.analytics) private var analytics
     @Environment(\.dismiss) private var dismiss
     @Environment(RelayService.self) private var relayService
     @Environment(CurrentUser.self) private var currentUser
@@ -152,6 +154,13 @@ struct AuthorListManageUsersView: View {
                     onSave()
                 } else {
                     dismiss()
+                }
+                
+                switch mode {
+                case .create:
+                    analytics.listCreated()
+                case .update:
+                    analytics.listEdited(numberOfUsers: authors.count)
                 }
             } catch {
                 Log.error("Error when creating list: \(error.localizedDescription)")

@@ -164,6 +164,12 @@ struct HomeFeedView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
+                    if showFeedSelector {
+                        analytics.feedCustomizerClosed()
+                    } else {
+                        analytics.feedCustomizerOpened()
+                    }
+                    
                     withAnimation {
                         showFeedSelector.toggle()
                         showFeedTip = false
