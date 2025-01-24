@@ -64,6 +64,7 @@ struct AuthorListManageUsersView: View {
                     searchOrigin: .lists,
                     isModal: false,
                     avatarOverlayMode: .inSet(authors: authors),
+                    routesMatchesAutomatically: false,
                     emptyPlaceholder: {
                         AuthorsView(
                             authors: Array(authors),

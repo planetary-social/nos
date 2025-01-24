@@ -30,6 +30,7 @@ struct AuthorSearchView<EmptyPlaceholder: View>: View {
         isModal: Bool,
         avatarOverlayMode: AvatarOverlayMode = .follows,
         relatedAuthors: [Author]? = nil,
+        routesMatchesAutomatically: Bool = true,
         @ViewBuilder emptyPlaceholder: @escaping () -> EmptyPlaceholder? = { nil },
         didSelectGesture: ((Author) -> Void)? = nil
     ) {
@@ -39,7 +40,12 @@ struct AuthorSearchView<EmptyPlaceholder: View>: View {
         self.relatedAuthors = relatedAuthors
         self.didSelectGesture = didSelectGesture
         self.emptyPlaceholder = emptyPlaceholder
-        _searchController = State(initialValue: SearchController(searchOrigin: searchOrigin))
+        _searchController = State(
+            initialValue: SearchController(
+                searchOrigin: searchOrigin,
+                routesMatchesAutomatically: routesMatchesAutomatically
+            )
+        )
     }
     
     var body: some View {
