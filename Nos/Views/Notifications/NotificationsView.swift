@@ -14,8 +14,8 @@ struct NotificationsView: View {
     @Dependency(\.pushNotificationService) private var pushNotificationService
     @Dependency(\.persistenceController) private var persistenceController
 
-    @FetchRequest private var outOfNetworkEvents: FetchedResults<Event>
-    @FetchRequest private var inNetworkEvents: FetchedResults<Event>
+    @FetchRequest private var outOfNetworkNotifications: FetchedResults<NosNotification>
+    @FetchRequest private var inNetworkNotifications: FetchedResults<NosNotification>
     @FetchRequest private var followNotifications: FetchedResults<NosNotification>
 
     @State private var relaySubscriptions = SubscriptionCancellables()
@@ -29,8 +29,8 @@ struct NotificationsView: View {
         let networkRequests = Self.createNetworkFetchRequests(for: user, limit: maxNotificationsToShow)
 
         _followNotifications = FetchRequest(fetchRequest: followsRequest)
-        _outOfNetworkEvents = FetchRequest(fetchRequest: networkRequests.outOfNetwork)
-        _inNetworkEvents = FetchRequest(fetchRequest: networkRequests.inNetwork)
+        _outOfNetworkNotifications = FetchRequest(fetchRequest: networkRequests.outOfNetwork)
+        _inNetworkNotifications = FetchRequest(fetchRequest: networkRequests.inNetwork)
     }
 
     /// Creates the follows notification fetch requests for all notifications and follows.
@@ -51,26 +51,26 @@ struct NotificationsView: View {
         }
     }
 
-    /// Creates the network-specific events fetch requests.
+    /// Creates the network-specific notification fetch requests.
     ///
     /// This is implemented as a static function because it's used during initialization
     /// and doesn't require access to instance properties.
     ///
     /// - Parameters:
-    ///   - user: The user to fetch events for. If nil, returns empty requests.
-    ///   - limit: The maximum number of events to fetch.
-    /// - Returns: A tuple containing fetch requests for in-network and out-of-network events.
+    ///   - user: The user to fetch notifications for. If nil, returns empty requests.
+    ///   - limit: The maximum number of notifications to fetch.
+    /// - Returns: A tuple containing fetch requests for in-network and out-of-network notifications.
     private static func createNetworkFetchRequests(for user: Author?, limit: Int) -> (
-        outOfNetwork: NSFetchRequest<Event>,
-        inNetwork: NSFetchRequest<Event>
+        outOfNetwork: NSFetchRequest<NosNotification>,
+        inNetwork: NSFetchRequest<NosNotification>
     ) {
         if let user {
             return (
-                outOfNetwork: Event.outOfNetworkRequest(for: user, limit: limit),
-                inNetwork: Event.inNetworkRequest(for: user, limit: limit)
+                outOfNetwork: NosNotification.outOfNetworkRequest(for: user, limit: limit),
+                inNetwork: NosNotification.inNetworkRequest(for: user, limit: limit)
             )
         } else {
-            let emptyRequest = Event.emptyRequest()
+            let emptyRequest = NosNotification.emptyRequest()
             return (outOfNetwork: emptyRequest, inNetwork: emptyRequest)
         }
     }
@@ -194,7 +194,7 @@ struct NotificationsView: View {
                 .tag(0)
 
                 NotificationTabView(
-                    notifications: inNetworkEvents,
+                    notifications: inNetworkNotifications,
                     currentUser: currentUser,
                     maxNotificationsToShow: maxNotificationsToShow,
                     tag: 1
@@ -202,7 +202,7 @@ struct NotificationsView: View {
                 .tag(1)
 
                 NotificationTabView(
-                    notifications: outOfNetworkEvents,
+                    notifications: outOfNetworkNotifications,
                     currentUser: currentUser,
                     maxNotificationsToShow: maxNotificationsToShow,
                     tag: 2
@@ -215,9 +215,9 @@ struct NotificationsView: View {
 }
 
 /// A single notification cell that contains a follow event or a other event types in the notifications list
-private struct NotificationCell<T: NotificationDisplayable>: View {
+private struct NotificationCell: View {
     @Dependency(\.persistenceController) private var persistenceController
-    let notification: T
+    let notification: NosNotification
     let user: Author
 
     var body: some View {
@@ -234,7 +234,7 @@ private struct NotificationCell<T: NotificationDisplayable>: View {
                 )
             )
             .id(event.id)
-        } else if let followerKey = notification.author?.hexadecimalPublicKey, let follower = try? Author.find(
+        } else if let followerKey = notification.follower?.hexadecimalPublicKey, let follower = try? Author.find(
             by: followerKey,
             context: persistenceController.viewContext
         ) {
@@ -271,8 +271,8 @@ private struct TabButton: View {
 
 /// A scrollable view that displays a list of notifications for a specific category
 /// (follows, in-network, or out-of-network).
-private struct NotificationTabView<T: NotificationDisplayable>: View {
-    let notifications: FetchedResults<T>
+private struct NotificationTabView: View {
+    let notifications: FetchedResults<NosNotification>
     let currentUser: CurrentUser
     let maxNotificationsToShow: Int
     let tag: Int

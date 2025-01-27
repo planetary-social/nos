@@ -1,4 +1,3 @@
-// swiftlint:disable file_length
 import CoreData
 
 extension Event {
@@ -97,90 +96,7 @@ extension Event {
         
         return fetchRequest
     }
-
-    /// A request for all out-Of-Network events that the given user should receive.
-    /// - Parameters:
-    ///   - currentUser: the author you want to view notifications for.
-    ///   - limit: a max number of events to fetch.
-    /// - Returns: A fetch request for outOfNetwork events.
-    @nonobjc public class func outOfNetworkRequest(
-        for currentUser: Author,
-        limit: Int? = nil
-    ) -> NSFetchRequest<Event> {
-        let fetchRequest = NSFetchRequest<Event>(entityName: String(describing: Event.self))
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        if let limit {
-            fetchRequest.fetchLimit = limit
-        }
-
-        let mentionsPredicate = allMentionsPredicate(for: currentUser)
-        let repliesPredicate = allRepliesPredicate(for: currentUser)
-        let zapsPredicate = allZapsPredicate(for: currentUser)
-
-        let notificationsPredicate = NSCompoundPredicate(
-            orPredicateWithSubpredicates: [mentionsPredicate, repliesPredicate, zapsPredicate]
-        )
-
-        // Out of network: has no followers OR not in follows network
-        let outOfNetworkPredicate = NSPredicate(
-            format: "author.followers.@count == 0 OR " +
-            "NOT (ANY author.followers.source IN %@.follows.destination " +
-            "OR author IN %@.follows.destination)",
-            currentUser,
-            currentUser
-        )
-
-        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-            notificationsPredicate,
-            outOfNetworkPredicate,
-            NSPredicate(format: "author != %@", currentUser),
-            NSPredicate(format: "author.muted = false")
-        ])
-
-        return fetchRequest
-    }
-
-    /// A request for all in-Network events that the given user should receive.
-    /// - Parameters:
-    ///   - currentUser: the author you want to view notifications for.
-    ///   - limit: a max number of events to fetch.
-    /// - Returns: A fetch request for inNetwork events.
-    @nonobjc public class func inNetworkRequest(
-        for currentUser: Author,
-        limit: Int? = nil
-    ) -> NSFetchRequest<Event> {
-        let fetchRequest = NSFetchRequest<Event>(entityName: String(describing: Event.self))
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        if let limit {
-            fetchRequest.fetchLimit = limit
-        }
-
-        let mentionsPredicate = allMentionsPredicate(for: currentUser)
-        let repliesPredicate = allRepliesPredicate(for: currentUser)
-        let zapsPredicate = allZapsPredicate(for: currentUser)
-
-        let notificationsPredicate = NSCompoundPredicate(
-            orPredicateWithSubpredicates: [mentionsPredicate, repliesPredicate, zapsPredicate]
-        )
-
-        // In network: in follows network
-        let inNetworkPredicate = NSPredicate(
-            format: "(ANY author.followers.source IN %@.follows.destination " +
-            "OR author IN %@.follows.destination)",
-            currentUser,
-            currentUser
-        )
-
-        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-            notificationsPredicate,
-            inNetworkPredicate,
-            NSPredicate(format: "author != %@", currentUser),
-            NSPredicate(format: "author.muted = false")
-        ])
-
-        return fetchRequest
-    }
-
+    
     @nonobjc public class func lastReceived(for user: Author) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "author != %@", user)
@@ -546,5 +462,3 @@ extension Event {
         return request
     }
 }
-
-// swiftlint:enable file_length
