@@ -185,7 +185,9 @@ extension Event {
         let readStoryClause = "(isRead = 1 AND receivedAt > %@)"
         let userReportClause = "(kind == \(EventKind.report.rawValue) AND " +
         "authorReferences.@count > 0 AND eventReferences.@count == 0)"
+        let notificationClause = "(notifications.@count = 0)"
         let clauses = "\(oldUnreferencedEventsClause) AND" +
+        "\(notificationClause) AND " +
         "\(notOwnEventClause) AND " +
         "NOT \(readStoryClause) AND " +
         "NOT \(userReportClause)"

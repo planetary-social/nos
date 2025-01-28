@@ -8,8 +8,8 @@ final class NotificationViewModelTests: CoreDataTestCase {
     func testZapProfileNotification() throws {
         let zapRequest = try zapRequestEvent(filename: "zap_request")
         let recipient = try XCTUnwrap(Author.findOrCreate(by: "alice", context: testContext))
-        let viewModel = NotificationViewModel(note: zapRequest, user: recipient)
-        
+        let viewModel = NotificationViewModel(note: zapRequest, user: recipient, date: Date())
+
         let notification = viewModel.notificationCenterRequest
         XCTAssertEqual(notification.content.title, "npub1vnz0m... ⚡️ zapped you 3,500 sats!")
         XCTAssertEqual(notification.content.body, "Zapped you!")
@@ -19,8 +19,8 @@ final class NotificationViewModelTests: CoreDataTestCase {
     func testZapProfileNotification_noAmount() throws {
         let zapRequest = try zapRequestEvent(filename: "zap_request_no_amount")
         let recipient = try XCTUnwrap(Author.findOrCreate(by: "alice", context: testContext))
-        let viewModel = NotificationViewModel(note: zapRequest, user: recipient)
-        
+        let viewModel = NotificationViewModel(note: zapRequest, user: recipient, date: Date())
+
         let notification = viewModel.notificationCenterRequest
         XCTAssertEqual(notification.content.title, "npub1vnz0m... ⚡️ zapped you!")
         XCTAssertEqual(notification.content.body, "Zap!")
@@ -30,7 +30,7 @@ final class NotificationViewModelTests: CoreDataTestCase {
     func testZapProfileNotification_oneSat() throws {
         let zapRequest = try zapRequestEvent(filename: "zap_request_one_sat")
         let recipient = try XCTUnwrap(Author.findOrCreate(by: "alice", context: testContext))
-        let viewModel = NotificationViewModel(note: zapRequest, user: recipient)
+        let viewModel = NotificationViewModel(note: zapRequest, user: recipient, date: Date())
         
         let notification = viewModel.notificationCenterRequest
         XCTAssertEqual(notification.content.title, "npub1vnz0m... ⚡️ zapped you 1 sat!")
