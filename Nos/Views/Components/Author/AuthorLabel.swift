@@ -2,7 +2,7 @@ import SwiftUI
 
 struct AuthorLabel: View {
     
-    @ObservedObject var author: Author
+    var author: Author
     var note: Event?
     
     private var attributedAuthor: AttributedString {

@@ -56,7 +56,7 @@ fileprivate struct PopoverTipView: View {
 }
 
 struct HomeTab: View {
-    @ObservedObject var user: Author
+    var user: Author
     
     @EnvironmentObject private var router: Router
     @ObserveInjection var inject

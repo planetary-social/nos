@@ -3,7 +3,7 @@ import SwiftUI
 
 struct BioView: View {
 
-    @ObservedObject var author: Author
+    var author: Author
 
     @Environment(\.managedObjectContext) private var viewContext
 
