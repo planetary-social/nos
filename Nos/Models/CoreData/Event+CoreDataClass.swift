@@ -514,9 +514,8 @@ public class Event: NosManagedObject, VerifiableEvent {
             
             for aTag in aTags.map({ $0[1] }) {
                 let components = aTag.split(separator: ":").map { String($0) }
-                let pubkey = components[1]
-                
-                guard pubkey == author.hexadecimalPublicKey else {
+                guard let pubkey = components[safe: 1],
+                    pubkey == author.hexadecimalPublicKey else {
                     // ensure that this delete event only affects events with the author's pubkey
                     continue
                 }
