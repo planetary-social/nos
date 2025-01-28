@@ -406,4 +406,40 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         relays = try testContext.fetch(allRelaysRequest)
         XCTAssertTrue(relays.isEmpty)
     }
+
+    @MainActor func test_deleteNotificationsAndEvents() async throws {
+        // Arrange
+        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
+        let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
+
+        // Create events
+        let event1 = try EventFixture.build(in: testContext, publicKey: KeyFixture.alice.publicKeyHex)
+        let event2 = try EventFixture.build(in: testContext, publicKey: KeyFixture.bob.publicKeyHex)
+
+        // Create notifications
+        let notification1 = NosNotification(context: testContext)
+        notification1.createdAt = Date()
+        notification1.user = alice
+        notification1.event = event1
+
+        let notification2 = NosNotification(context: testContext)
+        notification2.createdAt = Date()
+        notification2.user = bob
+        notification2.event = event2
+
+        try testContext.save()
+
+        // Verify initial state
+        XCTAssertEqual(try testContext.count(for: Event.allEventsRequest()), 2)
+        XCTAssertEqual(try testContext.count(for: NosNotification.fetchRequest()), 2)
+        XCTAssertEqual(try testContext.count(for: Author.allAuthorsRequest()), 2)
+
+        // Act
+        try await DatabaseCleaner.deleteNotificationsAndEvents(in: testContext)
+
+        // Assert
+        XCTAssertEqual(try testContext.count(for: Event.allEventsRequest()), 0)
+        XCTAssertEqual(try testContext.count(for: NosNotification.fetchRequest()), 0)
+        XCTAssertEqual(try testContext.count(for: Author.allAuthorsRequest()), 2)
+    }
 }
