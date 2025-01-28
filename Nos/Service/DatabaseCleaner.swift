@@ -159,7 +159,8 @@ enum DatabaseCleaner {
 
     /// Deletes all `NosNotification` and `Event` entities from the database.
     /// This is necessary because `NotificationsView` previously displayed events, but now displays `NosNotifications`.
-    /// Without this reset, old notifications might not appear since they were not initially created as `NosNotifications`.
+    /// Without this reset, old notifications might not appear since they were not initially
+    /// created as `NosNotifications`.
     /// After this operation, `NosNotifications` will be recreated when the Notifications tab is tapped.
     static func deleteNotificationsAndEvents(in context: NSManagedObjectContext) async throws {
         try batchDelete(objectsMatching: [
