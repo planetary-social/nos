@@ -103,10 +103,10 @@ struct ProfileView: View {
             MutesView()
         }
         .navigationDestination(for: FollowsDestination.self) { destination in
-            FollowsView("follows", authors: destination.follows)
+            AuthorsView("follows", authors: destination.follows)
         }
         .navigationDestination(for: FollowersDestination.self) { destination in
-            FollowsView("mutualFriends", authors: destination.followers)
+            AuthorsView("mutualFriends", authors: destination.followers)
         }
         .navigationDestination(for: RelaysDestination.self) { destination in
             RelayView(author: destination.author, editable: false)

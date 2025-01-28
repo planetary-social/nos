@@ -50,13 +50,13 @@ struct DiscoverContentsView: View {
                         ScrollView {
                             LazyVStack {
                                 ForEach(searchController.authorResults) { author in
-                                    AuthorCard(author: author) {
+                                    AuthorCard(author: author, onTap: {
                                         let resultsCount = searchController.authorResults.count
                                         analytics.displayedAuthorFromDiscoverSearch(
                                             resultsCount: resultsCount
                                         )
                                         router.push(author)
-                                    }
+                                    })
                                     .padding(.horizontal, 15)
                                     .padding(.top, 10)
                                     .readabilityPadding()
@@ -86,9 +86,9 @@ struct DiscoverContentsView: View {
                         AuthorObservationView(authorID: authorID) { author in
                             VStack {
                                 if author.lastUpdatedMetadata != nil {
-                                    AuthorCard(author: author) {
+                                    AuthorCard(author: author, onTap: {
                                         router.push(author)
-                                    }
+                                    })
                                     .padding(.horizontal, 13)
                                     .padding(.top, 5)
                                     .readabilityPadding()

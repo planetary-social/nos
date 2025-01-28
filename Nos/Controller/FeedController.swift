@@ -26,7 +26,7 @@ import SwiftUI
     private(set) var listRowItems: [FeedToggleRow.Item] = []
     private(set) var relayRowItems: [FeedToggleRow.Item] = []
     
-    private var lists: [AuthorList] = [] {
+    private(set) var lists: [AuthorList] = [] {
         didSet {
             updateEnabledSources()
         }
@@ -38,16 +38,8 @@ import SwiftUI
     }
     
     @ObservationIgnored private lazy var listsPublisher = {
-        let request = NSFetchRequest<AuthorList>(entityName: "AuthorList")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
-        request.predicate = NSPredicate(
-            format: "kind = %i AND author = %@ AND title != nil",
-            EventKind.followSet.rawValue,
-            author
-        )
-        
         let listWatcher = NSFetchedResultsController(
-            fetchRequest: request,
+            fetchRequest: AuthorList.authorLists(ownedBy: author),
             managedObjectContext: persistenceController.viewContext,
             sectionNameKeyPath: nil,
             cacheName: "FeedController.listWatcher"
@@ -90,7 +82,11 @@ import SwiftUI
             .publisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] lists in
-                self?.lists = lists
+                // ensure that we only publish the most recent list for each replaceable identifier
+                let grouped = Dictionary(grouping: lists, by: { $0.replaceableIdentifier ?? "" })
+                self?.lists = grouped.compactMap { _, events in
+                    events.max(by: { $0.createdAt ?? Date.distantPast < $1.createdAt ?? Date.distantPast })
+                }
             })
             .store(in: &cancellables)
     }

@@ -88,12 +88,23 @@ public class AuthorList: Event {
             owner,
             kind
         )
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \AuthorList.identifier, ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.fetchLimit = 1
         return fetchRequest
     }
     
     var allAuthors: Set<Author> {
         authors.union(privateAuthors)
+    }
+    
+    static func authorLists(ownedBy owner: Author) -> NSFetchRequest<AuthorList> {
+        let request = NSFetchRequest<AuthorList>(entityName: "AuthorList")
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        request.predicate = NSPredicate(
+            format: "kind = %i AND author = %@ AND title != nil AND title != '' AND deletedOn.@count = 0",
+            EventKind.followSet.rawValue,
+            owner
+        )
+        return request
     }
 }

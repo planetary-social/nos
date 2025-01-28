@@ -39,27 +39,10 @@ struct CircularFollowButton: View {
                 }
             }
         } label: {
-            ZStack {
-                Circle()
-                    .frame(width: diameter)
-                    .foregroundStyle(
-                        following ? LinearGradient.verticalAccentSecondary : LinearGradient.verticalAccentPrimary
-                    )
-                    .background(
-                        Circle()
-                            .frame(width: diameter)
-                            .offset(y: 1)
-                            .foregroundStyle(
-                                following ? Color.actionSecondaryBackground : Color.actionPrimaryBackground
-                            )
-                    )
-                if following {
-                    Image.followingIcon
-                        .padding(.top, 3) // the icon file isn't square so we need to shift it down
-                } else {
-                    Image.followIcon
-                }
-            }
+            UserSelectionCircle(
+                diameter: diameter,
+                selected: following
+            )
         }
         .disabled(disabled)
     }

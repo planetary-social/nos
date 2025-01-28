@@ -7,6 +7,7 @@ struct SideMenu: View {
     enum Destination {
         case settings
         case relays
+        case lists
         case profile
         case about
     }

@@ -3,21 +3,27 @@ import SwiftUINavigation
 
 struct NosTextField: View {
     
-    var label: LocalizedStringKey
+    let label: LocalizedStringKey?
     @Binding var text: String
     
-    init(_ label: LocalizedStringKey, text: Binding<String>) {
+    init(_ label: LocalizedStringKey? = nil, text: Binding<String>) {
         self.label = label
         self._text = text
     }
     
     var body: some View {
-        NosFormField(label) {
-            TextField("", text: $text)
-                .textInputAutocapitalization(.never)
-                .foregroundColor(.primaryTxt)
-                .autocorrectionDisabled()
+        Group {
+            if let label {
+                NosFormField(label) {
+                    TextField("", text: $text)
+                }
+            } else {
+                TextField("", text: $text)
+            }
         }
+        .textInputAutocapitalization(.never)
+        .foregroundColor(.primaryTxt)
+        .autocorrectionDisabled()
     }
 }
 

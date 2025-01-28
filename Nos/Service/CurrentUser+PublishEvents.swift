@@ -125,6 +125,22 @@ extension CurrentUser {
         }
     }
     
+    @MainActor func publishDelete(for replaceableID: RawReplaceableID, kind: Int64, reason: String = "") async {
+        guard let keyPair else {
+            Log.debug("Error: no keyPair")
+            return
+        }
+        
+        let tag = ["a", "\(kind):\(keyPair.publicKeyHex):\(replaceableID)"]
+        let jsonEvent = JSONEvent(pubKey: keyPair.publicKeyHex, kind: .delete, tags: [tag], content: reason)
+        
+        do {
+            try await relayService.publishToAll(event: jsonEvent, signingKey: keyPair, context: viewContext)
+        } catch {
+            Log.debug("Failed to delete events \(error.localizedDescription)")
+        }
+    }
+    
     @MainActor func publishDelete(for identifiers: [String], reason: String = "") async {
         guard let pubKey = publicKeyHex else {
             Log.debug("Error: no pubKey")

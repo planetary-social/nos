@@ -4766,6 +4766,17 @@
         }
       }
     },
+    "deleteList" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete List"
+          }
+        }
+      }
+    },
     "deleteMyAccount" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5829,6 +5840,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "編輯"
+          }
+        }
+      }
+    },
+    "editListInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit List Info"
           }
         }
       }
@@ -10434,6 +10456,17 @@
         }
       }
     },
+    "listName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "List Name"
+          }
+        }
+      }
+    },
     "lists" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10441,6 +10474,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lists"
+          }
+        }
+      }
+    },
+    "listsDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add your favorite users to public lists and pin them to your home feed"
+          }
+        }
+      }
+    },
+    "listStep1" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step 1: list info"
+          }
+        }
+      }
+    },
+    "listStep2" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step 2: add users"
           }
         }
       }
@@ -10916,6 +10982,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "登出"
+          }
+        }
+      }
+    },
+    "manageUsers" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage Users"
+          }
+        }
+      }
+    },
+    "manageYourLists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage Your Lists"
           }
         }
       }
@@ -11550,6 +11638,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "您有一位新关注者！"
+          }
+        }
+      }
+    },
+    "newList" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New List"
           }
         }
       }
@@ -12266,6 +12365,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "否"
+          }
+        }
+      }
+    },
+    "noDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Description"
           }
         }
       }
@@ -20223,6 +20333,29 @@
         }
       }
     },
+    "xUsers" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld user"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld users"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "yes" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -20397,6 +20530,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你必須在設置中輸入私鑰才能發佈帖子。"
+          }
+        }
+      }
+    },
+    "yourLists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Lists"
           }
         }
       }

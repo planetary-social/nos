@@ -26,8 +26,11 @@ enum SearchState {
 enum SearchOrigin {
     /// Search initiated from the Discover tab
     case discover
+    
+    /// Search initiated from ``AuthorListManageUsersView``
+    case lists
 
-    /// Search initiated from the mentions `AuthorListView`
+    /// Search initiated from the mentions `AuthorSearchView`
     case mentions
 }
 
@@ -46,7 +49,7 @@ enum SearchOrigin {
     
     /// Any and all authors in the search results. As of this writing, _only_ authors appear in search results,
     /// so this contains all search results, period.
-    var authorResults = [Author]()
+    private(set) var authorResults = [Author]()
 
     var state: SearchState = .noQuery
 
@@ -69,11 +72,15 @@ enum SearchOrigin {
 
     /// The origin of the current search.
     let searchOrigin: SearchOrigin
+    
+    /// If true, will automatically trigger routing to detail views for exact matches of NIP-05s, npubs, and note ids.
+    let routesMatchesAutomatically: Bool
 
     // MARK: - Init
     
-    init(searchOrigin: SearchOrigin = .discover) {
+    init(searchOrigin: SearchOrigin = .discover, routesMatchesAutomatically: Bool = true) {
         self.searchOrigin = searchOrigin
+        self.routesMatchesAutomatically = routesMatchesAutomatically
 
         queryPublisher
             .removeDuplicates()
@@ -91,6 +98,8 @@ enum SearchOrigin {
                     switch searchOrigin {
                     case .discover:
                         analytics.searchedDiscover()
+                    case .lists:
+                        break // TODO: Analytics
                     case .mentions:
                         analytics.mentionsAutocompleteCharactersEntered()
                     }
@@ -250,17 +259,27 @@ enum SearchOrigin {
             Task(priority: .userInitiated) {
                 if let publicKeyHex = await relayService.retrievePublicKeyFromUsername(trimmedQuery) {
                     Task { @MainActor in
-                        analytics.displayedAuthorFromDiscoverSearch(resultsCount: 1)
-                        router.pushAuthor(id: publicKeyHex)
+                        if let author = try? Author.findOrCreate(by: publicKeyHex, context: context) {
+                            if routesMatchesAutomatically {
+                                analytics.displayedAuthorFromDiscoverSearch(resultsCount: 1)
+                                router.push(author)
+                            } else {
+                                authorResults = [author]
+                            }
+                        }
                     }
                 }
             }
         } else if let author = author(fromPublicKey: trimmedQuery) {
             Task { @MainActor in
-                analytics.displayedAuthorFromDiscoverSearch(resultsCount: 1)
-                router.push(author)
+                if routesMatchesAutomatically {
+                    analytics.displayedAuthorFromDiscoverSearch(resultsCount: 1)
+                    router.push(author)
+                } else {
+                    authorResults = [author]
+                }
             }
-        } else if let note = note(fromPublicKey: trimmedQuery) {
+        } else if routesMatchesAutomatically, let note = note(fromPublicKey: trimmedQuery) {
             Task { @MainActor in
                 analytics.displayedNoteFromDiscoverSearch()
                 router.push(note)

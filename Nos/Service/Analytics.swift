@@ -1,14 +1,17 @@
-import UIKit
-import PostHog
 import Dependencies
 import Logger
+import PostHog
 import Starscream
+import UIKit
 
 /// An object to manage analytics data, currently wired up to send data to PostHog and registered as a global
 /// dependency using the Dependencies library.
 class Analytics {
 
     private let postHog: PostHogSDK?
+
+    /// When an analytics event is tracked, we also create a breadcrumb in our crash reporter.
+    @Dependency(\.crashReporting) private var crashReporting
 
     required init(mock: Bool = false) {
         let apiKey = Bundle.main.infoDictionary?["POSTHOG_API_KEY"] as? String ?? ""
@@ -144,15 +147,6 @@ class Analytics {
     func logout() {
         track("Logged out")
         postHog?.reset()
-    }
-    
-    private func track(_ eventName: String, properties: [String: Any] = [:]) {
-        if properties.isEmpty {
-            Log.info("Analytics: \(eventName)")
-        } else {
-            Log.info("Analytics: \(eventName): \(properties)")
-        }
-        postHog?.capture(eventName, properties: properties)
     }
 
     /// Tracks the source of the app download when the user launches the app.
@@ -325,5 +319,86 @@ class Analytics {
 
     func mentionsAutocompleteOpened() {
         track("Mentions Autocomplete Opened")
+    }
+    
+    // MARK: - Feed Source
+    
+    /// Tracks when the user selects a list from the feed picker at the top of the home feed.
+    func listFeedOpened() {
+        track("List Feed Opened")
+    }
+    
+    /// Tracks when the user selects a relay from the feed picker at the top of the home feed.
+    func relayFeedOpened() {
+        track("Relay Feed Opened")
+    }
+    
+    /// Tracks when the user selects the Following feed at the top of the home feed.
+    func followFeedOpened() {
+        track("Follow Feed Opened")
+    }
+    
+    /// Tracks when the user opens the ``FeedCustomizerView``.
+    func feedCustomizerOpened() {
+        track("Feed Customizer Opened")
+    }
+    
+    /// Tracks when the user closes the ``FeedCustomizerView``.
+    func feedCustomizerClosed() {
+        track("Feed Customizer Closed")
+    }
+    
+    /// Tracks when the user toggles on a list in the ``FeedCustomizerView``.
+    func listPinned() {
+        track("List Pinned")
+    }
+    
+    /// Tracks when the user toggles off a list in the ``FeedCustomizerView``.
+    func listUnpinned() {
+        track("List Unpinned")
+    }
+    
+    /// Tracks when the user toggles on a relay in the ``FeedCustomizerView``.
+    func relayPinned() {
+        track("Relay Pinned")
+    }
+    
+    /// Tracks when the user toggles off a relay in the ``FeedCustomizerView``.
+    func relayUnpinned() {
+        track("Relay Unpinned")
+    }
+    
+    // MARK: - Lists
+    
+    /// Tracks when the user creates a new list.
+    func listCreated() {
+        track("List Created")
+    }
+    
+    /// Tracks when the user edits a list.
+    /// - Parameter numberOfUsers: The number of users in the list.
+    func listEdited(numberOfUsers: Int) {
+        track(
+            "List Edited",
+            properties: ["Number of users": numberOfUsers]
+        )
+    }
+}
+
+extension Analytics {
+    /// Tracks the event with the given properties in the analytics provider.
+    /// Also calls ``CrashReporting/trackBreadcrumb(_:)`` to track this event as a breadcrumb in our crash reporter.
+    /// - Parameters:
+    ///   - eventName: The event name to track.
+    ///   - properties: The properties to include with the event.
+    private func track(_ eventName: String, properties: [String: Any] = [:]) {
+        if properties.isEmpty {
+            Log.info("Analytics: \(eventName)")
+        } else {
+            Log.info("Analytics: \(eventName): \(properties)")
+        }
+        postHog?.capture(eventName, properties: properties)
+
+        crashReporting.trackBreadcrumb(eventName)
     }
 }
