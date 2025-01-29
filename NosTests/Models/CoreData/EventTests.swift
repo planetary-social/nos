@@ -221,4 +221,23 @@ final class EventTests: CoreDataTestCase {
         // Assert
         XCTAssertEqual(references, [alice, bob])
     }
+    
+    // MARK: - Deletion
+    
+    // This is a quick test for a crash I found while doing some debugging.  
+    func test_trackDelete_givenMalformedListDeletionRequest() throws {
+        // Arrange
+        let jsonData = try jsonData(filename: "malformed_list_delete")
+        let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
+        let context = persistenceController.viewContext
+        let parsedEvent = try EventProcessor.parse(
+            jsonEvent: jsonEvent,
+            from: nil,
+            in: context,
+            skipVerification: true
+        )!
+        
+        // Act & Assert
+        XCTAssertNoThrow(try parsedEvent.trackDelete(on: Relay(), context: context))
+    }
 }
