@@ -3,7 +3,7 @@ import CoreData
 import Logger
 
 struct ProfileHeader: View {
-    @ObservedObject var author: Author
+    var author: Author
     @Environment(CurrentUser.self) private var currentUser
 
     @Binding private var selectedTab: ProfileFeedType

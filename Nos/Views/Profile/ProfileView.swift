@@ -6,7 +6,7 @@ import Logger
 
 struct ProfileView: View {
     
-    @ObservedObject var author: Author
+    var author: Author
     var addDoubleTapToPop = false
 
     @Environment(\.managedObjectContext) private var viewContext

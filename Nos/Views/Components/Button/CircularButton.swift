@@ -7,7 +7,7 @@ import SwiftUI
 /// Allows the current user to follow or unfollow the author,
 /// and updates its own appearance based on follow state.
 struct CircularFollowButton: View {
-    @ObservedObject var author: Author
+    var author: Author
     @Environment(CurrentUser.self) private var currentUser
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting

@@ -15,7 +15,7 @@ enum AvatarOverlayMode {
 /// This view displays the information we have for an author suitable for being used in a list.
 struct AuthorCard<AvatarOverlay: View>: View {
     
-    @ObservedObject var author: Author
+    var author: Author
     @Environment(CurrentUser.self) var currentUser
 
     let avatarOverlayView: () -> AvatarOverlay?
