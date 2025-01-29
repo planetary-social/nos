@@ -20,7 +20,7 @@ struct NotificationsView: View {
 
     @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var isVisible = false
-    @State private var selectedTab = 0
+    @State private var selectedTab = 1
 
     private let maxNotificationsToShow = 100
 
@@ -147,7 +147,7 @@ struct NotificationsView: View {
             Divider()
                 .overlay(Color.cardDividerTop)
                 .shadow(color: .cardDividerTopShadow, radius: 0, x: 0, y: 1)
-            HStack {
+            HStack(spacing: 0) {
                 TabButton(
                     title: String(localized: "follows"),
                     isSelected: selectedTab == 0
@@ -169,7 +169,8 @@ struct NotificationsView: View {
                     selectedTab = 2
                 }
             }
-            .padding(.vertical, 12)
+            // Constrains the width to prevent the content from becoming too wide
+            .frame(maxWidth: 600)
             .padding(.horizontal, 36)
             .background(LinearGradient.cardBackground)
             .background(
@@ -262,9 +263,8 @@ private struct TabButton: View {
             Text(title)
                 .font(.subheadline)
                 .fontWeight(.bold)
-                .padding(.vertical, 8)
+                .padding(.vertical, 12)
                 .foregroundColor(isSelected ? .primaryTxt : .secondaryTxt)
-                .cornerRadius(8)
         }
     }
 }
