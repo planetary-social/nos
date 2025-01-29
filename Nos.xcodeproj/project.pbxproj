@@ -535,6 +535,7 @@
 		C9CF23172A38A58B00EBEC31 /* ParseQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */; };
 		C9CF23182A38A58B00EBEC31 /* ParseQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */; };
 		C9D573492AB24B7300E06BB4 /* custom-xcassets.stencil in Resources */ = {isa = PBXBuildFile; fileRef = C9D573482AB24B7300E06BB4 /* custom-xcassets.stencil */; };
+		C9D846E92D43C7C900A71E30 /* malformed_list_delete.json in Resources */ = {isa = PBXBuildFile; fileRef = C9D846E82D43C7C900A71E30 /* malformed_list_delete.json */; };
 		C9DC6CBA2C1739AD00E1CFB3 /* View+HandleURLsInRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DC6CB92C1739AD00E1CFB3 /* View+HandleURLsInRouter.swift */; };
 		C9DEBFD2298941000078B43A /* NosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD1298941000078B43A /* NosApp.swift */; };
 		C9DEBFD4298941000078B43A /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DEBFD3298941000078B43A /* PersistenceController.swift */; };
@@ -1026,6 +1027,7 @@
 		C9CF23162A38A58B00EBEC31 /* ParseQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseQueue.swift; sourceTree = "<group>"; };
 		C9D2839E2CB9B177007ADCB9 /* Nos 17.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 17.xcdatamodel"; sourceTree = "<group>"; };
 		C9D573482AB24B7300E06BB4 /* custom-xcassets.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; name = "custom-xcassets.stencil"; path = "Nos/Assets/SwiftGen Stencils/custom-xcassets.stencil"; sourceTree = SOURCE_ROOT; };
+		C9D846E82D43C7C900A71E30 /* malformed_list_delete.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = malformed_list_delete.json; sourceTree = "<group>"; };
 		C9DC6CB92C1739AD00E1CFB3 /* View+HandleURLsInRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+HandleURLsInRouter.swift"; sourceTree = "<group>"; };
 		C9DEBFCE298941000078B43A /* Nos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9DEBFD1298941000078B43A /* NosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosApp.swift; sourceTree = "<group>"; };
@@ -1292,6 +1294,7 @@
 		03618AF72C82583D00BCBC55 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				C9D846E82D43C7C900A71E30 /* malformed_list_delete.json */,
 				C9BD91882B61BBEF00FDA083 /* bad_contact_list.json */,
 				0350F1162C0A47B20024CC15 /* contact_list.json */,
 				03C853C52D03A50900164D6C /* follow_set.json */,
@@ -2379,6 +2382,7 @@
 				03618C982C826F2100BCBC55 /* text_note_with_media_metadata.json in Resources */,
 				032634682C10C0D600E489B5 /* nostr_build_nip96_response.json in Resources */,
 				03FE3F8C2C87BC9500D25810 /* text_note_multiple_media.json in Resources */,
+				C9D846E92D43C7C900A71E30 /* malformed_list_delete.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
