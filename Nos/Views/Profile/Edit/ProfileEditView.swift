@@ -16,7 +16,7 @@ struct ProfileEditView: View {
 
     @Dependency(\.crashReporting) private var crashReporting
 
-    @ObservedObject var author: Author
+    var author: Author
     
     @State private var displayNameText: String = ""
     @State private var bioText: String = ""

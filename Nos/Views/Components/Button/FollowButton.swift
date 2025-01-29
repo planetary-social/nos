@@ -4,7 +4,7 @@ import CoreData
 
 struct FollowButton: View {
     @ObservedObject var currentUserAuthor: Author
-    @ObservedObject var author: Author
+    var author: Author
     /// A flag used to show a follow or unfollow icon in addition to Follow or
     /// Unfollow text.
     var shouldDisplayIcon = false
