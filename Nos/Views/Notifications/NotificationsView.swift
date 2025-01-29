@@ -170,19 +170,21 @@ struct NotificationsView: View {
                 }
             }
             // Constrains the width to prevent the content from becoming too wide
+            .padding(.horizontal, 20)
             .frame(maxWidth: 600)
-            .padding(.horizontal, 36)
             .background(LinearGradient.cardBackground)
-            .background(
-                Color.card3d
-                    .offset(y: 4.5)
-                    .shadow(
-                        color: Color.cardShadowBottom,
-                        radius: 5,
-                        x: 0,
-                        y: 4
-                    )
-            )
+
+            // Shadow rectangle below
+            Rectangle()
+                .fill(Color.card3d)
+                .frame(height: 4.5)
+                .frame(maxWidth: 600)
+                .shadow(
+                    color: Color.cardShadowBottom,
+                    radius: 5,
+                    x: 0,
+                    y: 4
+                )
 
             // Content based on selected tab
             TabView(selection: $selectedTab) {
@@ -211,6 +213,7 @@ struct NotificationsView: View {
                 .tag(2)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            .frame(maxWidth: 600)
         }
     }
 }
@@ -264,6 +267,7 @@ private struct TabButton: View {
                 .font(.subheadline)
                 .fontWeight(.bold)
                 .padding(.vertical, 12)
+                .padding(.horizontal, 16) // increase touch area width
                 .foregroundColor(isSelected ? .primaryTxt : .secondaryTxt)
         }
     }
