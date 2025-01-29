@@ -148,6 +148,7 @@ struct NotificationsView: View {
                 .overlay(Color.cardDividerTop)
                 .shadow(color: .cardDividerTopShadow, radius: 0, x: 0, y: 1)
             HStack(spacing: 0) {
+                Spacer()
                 TabButton(
                     title: String(localized: "follows"),
                     isSelected: selectedTab == 0
@@ -168,9 +169,8 @@ struct NotificationsView: View {
                 ) {
                     selectedTab = 2
                 }
+                Spacer()
             }
-            // Constrains the width to prevent the content from becoming too wide
-            .padding(.horizontal, 20)
             .frame(maxWidth: 600)
             .background(LinearGradient.cardBackground)
 
