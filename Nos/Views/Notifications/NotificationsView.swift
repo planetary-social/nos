@@ -94,25 +94,15 @@ struct NotificationsView: View {
             .refreshable {
                 await subscribeToNewEvents()
             }
-            .onAppear {
-                if router.selectedTab == .notifications {
-                    isVisible = true
-                }
+            .onTabAppear(.notifications) {
                 pushNotificationService.requestNotificationPermissionsFromUser()
+                analytics.showedNotifications()
+                await subscribeToNewEvents()
+                await markAllNotificationsRead()
             }
-            .onDisappear {
-                isVisible = false
-            }
-            .onChange(of: isVisible) { 
-                Task { await markAllNotificationsRead() }
-                if isVisible {
-                    analytics.showedNotifications()
-                    Task {
-                        await subscribeToNewEvents()
-                    }
-                } else {
-                    Task { await cancelSubscriptions() }
-                }
+            .onTabDisappear(.notifications) {
+                await cancelSubscriptions()
+                await markAllNotificationsRead()
             }
             .doubleTapToPop(tab: .notifications) { proxy in
                 if let firstEvent = events.first {

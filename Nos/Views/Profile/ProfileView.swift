@@ -6,7 +6,7 @@ import Logger
 
 struct ProfileView: View {
     
-    var author: Author
+    @ObservedObject var author: Author
     var addDoubleTapToPop = false
 
     @Environment(\.managedObjectContext) private var viewContext
@@ -189,14 +189,8 @@ struct ProfileView: View {
                 }
         )
         .alert(unwrapping: $alert)
-        .onAppear {
-            Task { 
-                await downloadAuthorData()
-            }
-            analytics.showedProfile()
-        }
-        .onDisappear {
-            relaySubscriptions.removeAll()
+        .task { 
+            await downloadAuthorData()
         }
     }
     
