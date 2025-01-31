@@ -19,6 +19,9 @@ struct ProfileView: View {
     @State private var showingOptions = false
     @State private var showingReportMenu = false
     @State private var relaySubscriptions = SubscriptionCancellables()
+    
+    /// Keep track of the last time we downloaded Author data so we don't do it too much.
+    @State private var lastDownloadedAuthorData: Date?
 
     @State private var selectedTab: ProfileFeedType = .notes
 
@@ -46,12 +49,16 @@ struct ProfileView: View {
         }
         
         // Profile data
+        // We use our own local date for fetching contact lists and follow sets, because we want to refresh them 
+        // when the page is opened, especially because a lot of contact list data gets purged during the DatabaseCleaner
+        // routine, but we don't want to end up in an infinite loop like in
+        // [#175](https://github.com/verse-pbc/issues/issues/175)
         relaySubscriptions.append(
             await relayService.requestProfileData(
                 for: authorKey, 
                 lastUpdateMetadata: author.lastUpdatedMetadata, 
-                lastUpdatedContactList: nil, // always grab contact list because we purge follows aggressively
-                lastUpdatedFollowSets: nil // TODO: consider how we want to do this
+                lastUpdatedContactList: lastDownloadedAuthorData, 
+                lastUpdatedFollowSets: lastDownloadedAuthorData
             )
         )
         
@@ -59,11 +66,13 @@ struct ProfileView: View {
         let reportFilter = Filter(
             kinds: [.report],
             pTags: [authorKey],
+            since: lastDownloadedAuthorData,
             keepSubscriptionOpen: true
         )
         relaySubscriptions.append(
             await relayService.fetchEvents(matching: reportFilter)
         )
+        lastDownloadedAuthorData = .now
     }
 
     private var title: AttributedString {
@@ -189,9 +198,12 @@ struct ProfileView: View {
                 }
         )
         .alert(unwrapping: $alert)
-        .task { 
+        .task {
             await downloadAuthorData()
         }
+        .onChange(of: refreshController.lastRefreshDate, { _, _ in
+            Task { await downloadAuthorData() }
+        })
     }
     
     var noteListView: some View {
