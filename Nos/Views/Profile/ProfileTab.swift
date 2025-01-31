@@ -5,7 +5,7 @@ import SwiftUI
 struct ProfileTab: View {
     
     @Environment(CurrentUser.self) var currentUser
-    var author: Author
+    @ObservedObject var author: Author
     
     @Binding var path: NavigationPath
 
