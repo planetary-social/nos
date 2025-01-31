@@ -3,7 +3,7 @@ import SwiftUI
 struct NoteCardHeader: View {
     
     @ObservedObject var note: Event
-    var author: Author
+    @ObservedObject var author: Author
     
     var body: some View {
         HStack(alignment: .center, spacing: 8) {

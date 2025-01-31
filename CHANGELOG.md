@@ -19,8 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added ability to delete lists. [#136](https://github.com/verse-pbc/issues/issues/136)
 - Added analytics for feed source selection and lists. [#129](https://github.com/verse-pbc/issues/issues/129)
 - Fixed: while searching for users to add to a list, NIP-05 searches dismiss the view. [#165](https://github.com/verse-pbc/issues/issues/165)
-- Fixed a performance issue that could occur after switching tabs. [#171](https://github.com/verse-pbc/issues/issues/171)
 - Fixed a crash when processing a malformed delete (kind 5) event. [#170](https://github.com/verse-pbc/issues/issues/170)
+- Fixed: tapping a user on a list causes a crash. [#172](https://github.com/verse-pbc/issues/issues/172)
 
 ### Internal Changes
 - Added function for creating a new list and a test verifying list editing. [#112](https://github.com/verse-pbc/issues/issues/112)
@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Track TestFlight vs AppStore installations in Posthog. [#130](https://github.com/verse-pbc/issues/issues/130)
 - Track breadcrumbs in Sentry for all analytics events. [#125](https://github.com/verse-pbc/issues/issues/125)
 - Added functionality to get follows notifications in the Notifications tab. [#127](https://github.com/verse-pbc/issues/issues/127)
+- Refactored the way the ProfileView downloads data and logs analytics events. [#1748](https://github.com/planetary-social/nos/pull/1748)
 
 ## [1.1] - 2025-01-03Z
 

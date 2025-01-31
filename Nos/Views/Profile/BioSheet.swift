@@ -3,7 +3,7 @@ import SwiftUI
 
 /// Shows the name, nip-05 and bio of a given user in a vertical stack.
 struct BioSheet: View {
-    var author: Author
+    @ObservedObject var author: Author
 
     @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.noteParser) private var noteParser
