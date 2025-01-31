@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved naming of a couple list-related classes.
 - Track TestFlight vs AppStore installations in Posthog. [#130](https://github.com/verse-pbc/issues/issues/130)
 - Track breadcrumbs in Sentry for all analytics events. [#125](https://github.com/verse-pbc/issues/issues/125)
+- Refactored the way the ProfileView downloads data and logs analytics events. [#1748](https://github.com/planetary-social/nos/pull/1748)
 
 ## [1.1] - 2025-01-03Z
 
