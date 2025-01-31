@@ -31,6 +31,8 @@ struct NosNavigationStack<Content: View>: View {
                         AuthorObservationView(authorID: authorID) { author in
                             ProfileView(author: author)
                         }
+                    case .list(let list):
+                        AuthorListDetailView(list: list)
                     case .url(let url):
                         URLView(url: url)
                     case .replyTo(let eventID):

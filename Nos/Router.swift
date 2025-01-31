@@ -118,6 +118,10 @@ import Dependencies
         }
     }
     
+    func pushList(_ list: AuthorList) {
+        push(.list(list))
+    }
+    
     /// Pushes a web view for the given url.
     func push(_ url: URL) {
         push(.url(url))
