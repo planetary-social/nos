@@ -6,6 +6,7 @@ struct DisplayNameView: View {
     @Environment(OnboardingState.self) private var state
     @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
+    @FocusState private var isTextFieldFocused: Bool
 
     @Dependency(\.crashReporting) private var crashReporting
 
@@ -16,7 +17,7 @@ struct DisplayNameView: View {
         ZStack {
             Color.appBg
                 .ignoresSafeArea()
-            ViewThatFits(in: .vertical) {
+            ViewThatFits {
                 displayNameStack
 
                 ScrollView {
@@ -25,6 +26,11 @@ struct DisplayNameView: View {
             }
         }
         .navigationBarHidden(true)
+        .onAppear {
+            isTextFieldFocused = true
+        }
+        .ignoresSafeArea(.keyboard)
+        .interactiveDismissDisabled()
         .alert("", isPresented: $showError) {
             Button {
                 nextStep()
@@ -55,6 +61,7 @@ struct DisplayNameView: View {
                 .foregroundStyle(Color.primaryTxt)
                 .fontWeight(.bold)
                 .autocorrectionDisabled()
+                .focused($isTextFieldFocused)
                 .padding()
                 .withStyledBorder()
             Spacer()
@@ -65,6 +72,7 @@ struct DisplayNameView: View {
         }
         .padding(40)
         .readabilityPadding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     func nextStep() {
