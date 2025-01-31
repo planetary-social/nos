@@ -56,20 +56,7 @@ struct FeedCustomizerView: View {
                     items: feedController.listRowItems,
                     footer: {
                         Group {
-                            if feedController.listRowItems.isEmpty {
-                                Group {
-                                    Text("Create your own lists on ") +
-                                    Text("Listr ")
-                                        .foregroundStyle(Color.accent) +
-                                    Text(Image(systemName: "link"))
-                                        .foregroundStyle(Color.accent)
-                                }
-                                .onTapGesture {
-                                    if let url = URL(string: "https://listr.lol/feed") {
-                                        UIApplication.shared.open(url)
-                                    }
-                                }
-                            } else {
+                            if !feedController.listRowItems.isEmpty {
                                 SecondaryActionButton(
                                     "manageYourLists",
                                     font: .clarity(.semibold, textStyle: .footnote),
@@ -83,7 +70,19 @@ struct FeedCustomizerView: View {
                         .padding()
                     },
                     noContent: {
-                        Text("noLists")
+                        VStack(spacing: 28) {
+                            Text("noLists")
+                                .font(.clarity(.medium))
+                                .multilineTextAlignment(.center)
+                            SecondaryActionButton(
+                                "createYourFirstList",
+                                font: .clarity(.semibold, textStyle: .footnote)
+                            ) {
+                                analytics.feedCustomizerClosed()
+                                shouldNavigateToLists = true
+                            }
+                        }
+                        .padding(24)
                     }
                 )
             } else {
