@@ -5,7 +5,7 @@ import SwiftUI
 /// impersonation attacks by making sure they choose the right person to follow, mention, message, etc. 
 struct KnownFollowersView: View {
     
-    var author: Author
+    @ObservedObject var author: Author
     
     /// The authors that the `source` author follows who also follow the `author`
     @FetchRequest private var knownFollowers: FetchedResults<Author>

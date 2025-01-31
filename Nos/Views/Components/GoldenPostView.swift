@@ -5,7 +5,7 @@ let goldenRatio: CGFloat = 0.618
 
 struct GoldenPostView: View {
 
-    var author: Author
+    @ObservedObject var author: Author
     @ObservedObject var note: Event
 
     @EnvironmentObject private var router: Router

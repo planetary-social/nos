@@ -3,7 +3,7 @@ import SwiftUI
 /// A view that displays a badge with an ActivityPub icon.
 struct ActivityPubBadgeView: View {
 
-    var author: Author
+    @ObservedObject var author: Author
 
     var fediverseServer: String {
         let regex = /[0-9A-Za-z._-]+@(?<fediverse>[0-9A-Za-z._-]+)\.mostr\.pub/

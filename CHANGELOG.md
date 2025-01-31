@@ -19,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added ability to delete lists. [#136](https://github.com/verse-pbc/issues/issues/136)
 - Added analytics for feed source selection and lists. [#129](https://github.com/verse-pbc/issues/issues/129)
 - Fixed: while searching for users to add to a list, NIP-05 searches dismiss the view. [#165](https://github.com/verse-pbc/issues/issues/165)
-- Fixed a performance issue that could occur after switching tabs. [#171](https://github.com/verse-pbc/issues/issues/171)
 - Fixed a crash when processing a malformed delete (kind 5) event. [#170](https://github.com/verse-pbc/issues/issues/170)
 
 ### Internal Changes

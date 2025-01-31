@@ -12,7 +12,7 @@ struct RelayView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(RelayService.self) private var relayService
     @Environment(CurrentUser.self) private var currentUser
-    var author: Author
+    @ObservedObject var author: Author
     
     @State var newRelayAddress: String = ""
     
