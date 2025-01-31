@@ -15,8 +15,6 @@ struct DiscoverTab: View {
 
     @State var columns: Int = 0
     
-    @State private var isVisible = false
-
     @State private var searchController = SearchController()
 
     @FocusState private var isSearching: Bool
@@ -56,18 +54,8 @@ struct DiscoverTab: View {
                 }
                 .background(Color.appBg)
                 .animation(.easeInOut, value: columns)
-                .onAppear {
-                    if router.selectedTab == .discover {
-                        isVisible = true
-                    }
-                }
-                .onDisappear {
-                    isVisible = false
-                }
-                .onChange(of: isVisible) {
-                    if isVisible {
-                        analytics.showedDiscover()
-                    }
+                .onTabAppear(.discover) { 
+                    analytics.showedDiscover()
                 }
                 .nosNavigationBar("discover")
                 .toolbarBackground(.visible, for: .navigationBar)

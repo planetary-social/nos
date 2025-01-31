@@ -126,7 +126,7 @@ struct AppView: View {
                 .badge(pushNotificationService.badgeCount)
 
             if let author = currentUser.author {
-                ProfileTab(author: author, path: $router.profilePath)
+                ProfileTab(author: author)
                     .tabItem {
                         VStack {
                             let text = Text("profileTitle")

@@ -48,11 +48,11 @@ class Analytics {
     }
 
     func showedHome() {
-        track("Home Tab Tapped")
+        track("Home Tab Opened")
     }
     
     func showedDiscover() {
-        track("Discover Tab Tapped")
+        track("Discover Tab Opened")
     }
     
     func showedNoteComposer() {
@@ -60,11 +60,15 @@ class Analytics {
     }
     
     func showedNotifications() {
-        track("Notifications Tab Tapped")
+        track("Notifications Tab Opened")
     }
     
     func showedProfile() {
         track("Profile View Opened")
+    }
+    
+    func showedProfileTab() {
+        track("Profile Tab Opened")
     }
     
     func showedThread() {
