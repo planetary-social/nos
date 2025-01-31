@@ -415,6 +415,7 @@
 		C98298332ADD7F9A0096C5B5 /* DeepLinkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98298322ADD7F9A0096C5B5 /* DeepLinkService.swift */; };
 		C98298342ADD7F9A0096C5B5 /* DeepLinkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98298322ADD7F9A0096C5B5 /* DeepLinkService.swift */; };
 		C98651102B0BD49200597B68 /* PagedNoteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C986510F2B0BD49200597B68 /* PagedNoteListView.swift */; };
+		C987153D2D4D198200EA2F56 /* OnTabAppearModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987153C2D4D198200EA2F56 /* OnTabAppearModifier.swift */; };
 		C987F81729BA4C6A00B44E7A /* BigActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F81629BA4C6900B44E7A /* BigActionButton.swift */; };
 		C987F81A29BA4D0E00B44E7A /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F81929BA4D0E00B44E7A /* ActionButton.swift */; };
 		C987F81D29BA6D9A00B44E7A /* ProfileTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = C987F81C29BA6D9A00B44E7A /* ProfileTab.swift */; };
@@ -956,6 +957,7 @@
 		C98298312ADD7EDB0096C5B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C98298322ADD7F9A0096C5B5 /* DeepLinkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkService.swift; sourceTree = "<group>"; };
 		C986510F2B0BD49200597B68 /* PagedNoteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagedNoteListView.swift; sourceTree = "<group>"; };
+		C987153C2D4D198200EA2F56 /* OnTabAppearModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTabAppearModifier.swift; sourceTree = "<group>"; };
 		C987F81629BA4C6900B44E7A /* BigActionButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BigActionButton.swift; sourceTree = "<group>"; };
 		C987F81929BA4D0E00B44E7A /* ActionButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		C987F81C29BA6D9A00B44E7A /* ProfileTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTab.swift; sourceTree = "<group>"; };
@@ -1875,12 +1877,13 @@
 				03C7E7A12CB9CD0B0054624C /* PointDownEmojiTipViewStyle.swift */,
 				C9A25B3C29F174D200B39534 /* ReadabilityPadding.swift */,
 				C9E37E0E2A1E7C32003D4B0A /* ReportMenuModifier.swift */,
+				C987153C2D4D198200EA2F56 /* OnTabAppearModifier.swift */,
 				C9A0DAE629C69FA000466635 /* Text+Gradient.swift */,
+				04C9D7262CBF09C200EAAD4D /* TextField+PlaceHolderStyle.swift */,
 				C9DC6CB92C1739AD00E1CFB3 /* View+HandleURLsInRouter.swift */,
 				50089A162C98678600834588 /* View+ListRowGradientBackground.swift */,
 				C93EC2FC29C3785C0012EE2A /* View+RoundedCorner.swift */,
 				50DE6B1A2C6B88FE0065665D /* View+StyledBorder.swift */,
-				04C9D7262CBF09C200EAAD4D /* TextField+PlaceHolderStyle.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -2582,7 +2585,6 @@
 				C98CA9042B14FA3D00929141 /* PagedRelaySubscription.swift in Sources */,
 				5B0D99032A94090A0039F0C5 /* DoubleTapToPopModifier.swift in Sources */,
 				030024192CC00DFC0073ED56 /* SplashScreenView.swift in Sources */,
-				50CBD8102D3A8B7000BF8A0B /* ListCircle.swift in Sources */,
 				0357299B2BE415E5005FEE85 /* ContentWarningController.swift in Sources */,
 				5BFF66B42A58853D00AA79DD /* PublishedEventsView.swift in Sources */,
 				03D1B42C2C3C1B0D001778CD /* TLVElement.swift in Sources */,
@@ -2633,6 +2635,7 @@
 				65BD8DC22BDAF2C300802039 /* DiscoverTab.swift in Sources */,
 				65BD8DC32BDAF2C300802039 /* FeaturedAuthorCategory.swift in Sources */,
 				C93F045E2B9B7A7000AD5872 /* ReplyPreview.swift in Sources */,
+				C987153D2D4D198200EA2F56 /* OnTabAppearModifier.swift in Sources */,
 				C97465312A3B89140031226F /* AuthorLabel.swift in Sources */,
 				C9C547592A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift in Sources */,
 				030AE4292BE3D63C004DEE02 /* FeaturedAuthor.swift in Sources */,

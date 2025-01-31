@@ -4,7 +4,7 @@ import SwiftUI
 
 /// Displays a user's NIP-05 in multiple colors and does some verification on it.
 struct NIP05View: View {
-    var author: Author
+    @ObservedObject var author: Author
 
     @State private var verifiedNip05Identifier: Bool?
     @Dependency(\.namesAPI) private var namesAPI

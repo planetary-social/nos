@@ -17,6 +17,7 @@ import Dependencies
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.relayService) private var relayService
     @Dependency(\.crashReporting) private var crashReporting
+    @Dependency(\.analytics) private var analytics
 
     /// The `NavigationPath` of the tab (or side menu) the user currently has open. 
     /// This has to be a two-way binding, but really the only things that should be modifying it are the `Router`
@@ -104,6 +105,7 @@ import Dependencies
     
     /// Pushes a profile view for the given author.
     func push(_ author: Author) {
+        analytics.showedProfile()
         push(.author(author.hexadecimalPublicKey))
     }
     
@@ -116,6 +118,10 @@ import Dependencies
             Log.optional(error)
             crashReporting.report(error)
         }
+    }
+    
+    func pushList(_ list: AuthorList) {
+        push(.list(list))
     }
     
     /// Pushes a web view for the given url.

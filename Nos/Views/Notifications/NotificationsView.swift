@@ -118,25 +118,14 @@ struct NotificationsView: View {
             .refreshable {
                 await subscribeToNewEvents()
             }
-            .onAppear {
-                if router.selectedTab == .notifications {
-                    isVisible = true
-                }
-                pushNotificationService.requestNotificationPermissionsFromUser()
+            .onTabAppear(.notifications) {
+                analytics.showedNotifications()
+                await subscribeToNewEvents()
+                await markAllNotificationsRead()
             }
-            .onDisappear {
-                isVisible = false
-            }
-            .onChange(of: isVisible) {
-                Task { await markAllNotificationsRead() }
-                if isVisible {
-                    analytics.showedNotifications()
-                    Task {
-                        await subscribeToNewEvents()
-                    }
-                } else {
-                    Task { await cancelSubscriptions() }
-                }
+            .onTabDisappear(.notifications) {
+                await cancelSubscriptions()
+                await markAllNotificationsRead()
             }
         }
     }

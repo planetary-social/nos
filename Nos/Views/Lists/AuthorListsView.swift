@@ -8,6 +8,7 @@ struct ListsDestination: Hashable {
 /// A view that displays a list of an ``Author``'s ``AuthorList``s.
 struct AuthorListsView: View {
     
+    @EnvironmentObject private var router: Router
     let author: Author
     
     @FetchRequest var lists: FetchedResults<AuthorList>
@@ -41,25 +42,24 @@ struct AuthorListsView: View {
                     ScrollView {
                         VStack(spacing: 0) {
                             ForEach(lists) { list in
-                                NavigationLink {
-                                    AuthorListDetailView(list: list)
-                                } label: {
-                                    HStack {
-                                        VStack(alignment: .leading) {
-                                            Text(list.title ?? "")
-                                                .font(.body)
-                                            
-                                            Text(list.rowDescription)
-                                                .foregroundStyle(Color.secondaryTxt)
-                                                .font(.footnote)
-                                                .lineLimit(1)
-                                        }
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text(list.title ?? "")
+                                            .font(.body)
                                         
-                                        Spacer()
+                                        Text(list.rowDescription)
+                                            .foregroundStyle(Color.secondaryTxt)
+                                            .font(.footnote)
+                                            .lineLimit(1)
                                     }
-                                    .padding(.leading, 16)
-                                    .padding(.vertical, 12)
-                                    .frame(minHeight: 50)
+                                    
+                                    Spacer()
+                                }
+                                .padding(.leading, 16)
+                                .padding(.vertical, 12)
+                                .frame(minHeight: 50)
+                                .onTapGesture {
+                                    router.pushList(list)
                                 }
                                 
                                 BeveledSeparator()
