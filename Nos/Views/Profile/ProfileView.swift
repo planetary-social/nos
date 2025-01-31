@@ -189,14 +189,8 @@ struct ProfileView: View {
                 }
         )
         .alert(unwrapping: $alert)
-        .onAppear {
-            Task { 
-                await downloadAuthorData()
-            }
-            analytics.showedProfile()
-        }
-        .onDisappear {
-            relaySubscriptions.removeAll()
+        .task { 
+            await downloadAuthorData()
         }
     }
     

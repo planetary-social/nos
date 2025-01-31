@@ -9,11 +9,10 @@ struct HomeFeedView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
-    @ObservationIgnored @Dependency(\.analytics) private var analytics
+    @Dependency(\.analytics) private var analytics
     @ObserveInjection var inject
 
     @State private var refreshController = RefreshController(lastRefreshDate: Date.now + Self.staticLoadTime)
-    @State private var isVisible = false
     @State private var feedController: FeedController
     
     /// When set to true this will display a fullscreen progress wheel for a set amount of time to give us a chance
@@ -188,17 +187,9 @@ struct HomeFeedView: View {
         .navigationBarTitle("", displayMode: .inline)
         .padding(.top, 1)
         .environment(feedController)
-        .onAppear {
-            if router.selectedTab == .home {
-                isVisible = true
-            }
-        }
-        .onDisappear { isVisible = false }
-        .onChange(of: isVisible) { 
-            if isVisible {
-                analytics.showedHome()
-                GoToFeedTip.viewedFeed.sendDonation()
-            }
+        .onTabAppear(.home) {
+            analytics.showedHome()
+            GoToFeedTip.viewedFeed.sendDonation()
         }
         .onChange(of: shouldNavigateToListsOnAppear) {
             if shouldNavigateToListsOnAppear {
