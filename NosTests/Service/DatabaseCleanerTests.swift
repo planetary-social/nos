@@ -176,8 +176,8 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         // Arrange
         let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
 
-        // Creates old notification (2 months + 1 day old)
-        let oldDate = Calendar.current.date(byAdding: .day, value: -61, to: .now)!
+        // Creates old notification (3 months)
+        let oldDate = Calendar.current.date(byAdding: .month, value: -3, to: .now) ?? .now
         let oldNotification = NosNotification(context: testContext)
         oldNotification.createdAt = oldDate
         oldNotification.user = alice
