@@ -4371,6 +4371,17 @@
         }
       }
     },
+    "createYourFirstList" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create your first list"
+          }
+        }
+      }
+    },
     "dayAbbreviated" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -12552,7 +12563,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "It doesn’t look like you have created any lists."
+            "value" : "It doesn’t look like you have created any lists. Add lists to your feed to filter by topic."
           }
         }
       }
@@ -14194,7 +14205,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your **@username** is your identity in the Nos community.\u2028\nChoose a name that reflects you or your organization. Make it memorable and distinct!"
+            "value" : "Your **@username** is your identity in the Nos community. \nChoose a name that reflects you or your organization. Make it memorable and distinct!"
           }
         },
         "es" : {
@@ -19452,7 +19463,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Well done, you've successfully claimed your **@username**!\u2028\nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
+            "value" : "Well done, you've successfully claimed your **@username**! \nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
           }
         },
         "es" : {
