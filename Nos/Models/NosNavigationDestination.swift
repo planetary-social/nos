@@ -4,6 +4,7 @@ import Foundation
 enum NosNavigationDestination: Hashable {
     case note(NoteIdentifiable)
     case author(RawAuthorID?)
+    case list(AuthorList)
     case url(URL)
     case replyTo(RawEventID?)
 }
