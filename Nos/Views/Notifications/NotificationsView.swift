@@ -149,36 +149,39 @@ struct NotificationsView: View {
                 .shadow(color: .cardDividerTopShadow, radius: 0, x: 0, y: 1)
             HStack(spacing: 0) {
                 Spacer()
-                TabButton(
-                    title: String(localized: "follows"),
-                    isSelected: selectedTab == 0
-                ) {
-                    selectedTab = 0
+                // Container to center tabs well on bigger screens.
+                HStack(spacing: 0) {
+                    TabButton(
+                        title: String(localized: "follows"),
+                        isSelected: selectedTab == 0
+                    ) {
+                        selectedTab = 0
+                    }
+                    Spacer()
+                    TabButton(
+                        title: String(localized: "inNetwork"),
+                        isSelected: selectedTab == 1
+                    ) {
+                        selectedTab = 1
+                    }
+                    Spacer()
+                    TabButton(
+                        title: String(localized: "outOfNetwork"),
+                        isSelected: selectedTab == 2
+                    ) {
+                        selectedTab = 2
+                    }
                 }
-                Spacer()
-                TabButton(
-                    title: String(localized: "inNetwork"),
-                    isSelected: selectedTab == 1
-                ) {
-                    selectedTab = 1
-                }
-                Spacer()
-                TabButton(
-                    title: String(localized: "outOfNetwork"),
-                    isSelected: selectedTab == 2
-                ) {
-                    selectedTab = 2
-                }
+                .readabilityPadding()
+
                 Spacer()
             }
-            .frame(maxWidth: 600)
             .background(LinearGradient.cardBackground)
 
             // Shadow rectangle below
             Rectangle()
                 .fill(Color.card3d)
                 .frame(height: 4.5)
-                .frame(maxWidth: 600)
                 .shadow(
                     color: Color.cardShadowBottom,
                     radius: 5,
@@ -213,7 +216,6 @@ struct NotificationsView: View {
                 .tag(2)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-            .frame(maxWidth: 600)
         }
     }
 }
@@ -297,6 +299,7 @@ private struct NotificationTabView: View {
                 }
             }
             .padding(.vertical, 16)
+            .frame(maxWidth: .infinity)
         }
         .overlay(Group {
             if notifications.isEmpty {
