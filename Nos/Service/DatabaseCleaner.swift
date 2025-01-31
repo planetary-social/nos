@@ -56,6 +56,7 @@ enum DatabaseCleaner {
             
             try batchDelete(
                 objectsMatching: [
+                    NosNotification.oldNotificationsRequest(),
                     // delete all events before deleteBefore that aren't protected or referenced
                     Event.cleanupRequest(before: deleteBefore, for: currentUser),
                     Event.expiredRequest(),
@@ -65,7 +66,6 @@ enum DatabaseCleaner {
                     Author.orphaned(for: currentUser),
                     Follow.orphanedRequest(),
                     Relay.orphanedRequest(),
-                    NosNotification.oldNotificationsRequest(),
                 ],
                 in: context
             )
@@ -155,5 +155,18 @@ enum DatabaseCleaner {
         }
         
         return deleteBefore
+    }
+
+    /// Deletes all `NosNotification` and `Event` entities from the database.
+    /// This is necessary because `NotificationsView` previously displayed events, but now displays `NosNotifications`.
+    /// Without this reset, old notifications might not appear since they were not initially
+    /// created as `NosNotifications`.
+    /// After this operation, `NosNotifications` will be recreated when the Notifications tab is tapped.
+    static func deleteNotificationsAndEvents(in context: NSManagedObjectContext) async throws {
+        try batchDelete(objectsMatching: [
+            NosNotification.fetchRequest(),
+            Event.fetchRequest()
+        ], in: context)
+        try context.saveIfNeeded()
     }
 }

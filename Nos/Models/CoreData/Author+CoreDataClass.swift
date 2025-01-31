@@ -406,4 +406,13 @@ import Logger
         // Publish the modified list
         await currentUser.publishMuteList(keys: Array(Set(mutedList)))
     }
+
+    // Checks if this author has received a follow notification from the specified author.
+    /// - Parameter author: The author to check for a follow relationship
+    /// - Returns: `true` if the specified author follows this author, `false` otherwise
+    func hasReceivedFollowNotification( from author: Author) -> Bool {
+        followNotifications.contains(where: { element in
+            (element as? NosNotification)?.follower == author
+        })
+    }
 }
