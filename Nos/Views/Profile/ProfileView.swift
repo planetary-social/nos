@@ -50,7 +50,7 @@ struct ProfileView: View {
         
         // Profile data
         // We use our own local date for fetching contact lists and follow sets, because we want to refresh them 
-        // when the page is opened, especially because a lot of contact list data gets purged during the DatabaseCleaner 
+        // when the page is opened, especially because a lot of contact list data gets purged during the DatabaseCleaner
         // routine, but we don't want to end up in an infinite loop like in
         // [#175](https://github.com/verse-pbc/issues/issues/175)
         relaySubscriptions.append(
