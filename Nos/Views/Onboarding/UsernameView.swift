@@ -16,6 +16,7 @@ struct UsernameView: View {
     @Environment(OnboardingState.self) private var state
     @Environment(CurrentUser.self) private var currentUser
     @Environment(\.managedObjectContext) private var viewContext
+    @FocusState private var isTextFieldFocused: Bool
 
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.namesAPI) private var namesAPI
@@ -47,15 +48,20 @@ struct UsernameView: View {
         ZStack {
             Color.appBg
                 .ignoresSafeArea()
-            ViewThatFits(in: .vertical) {
-                displayNameStack
-
+            ViewThatFits {
+                usernameStack
+                
                 ScrollView {
-                    displayNameStack
+                    usernameStack
                 }
             }
         }
         .navigationBarHidden(true)
+        .onAppear {
+            isTextFieldFocused = true
+        }
+        .ignoresSafeArea(.keyboard)
+        .interactiveDismissDisabled()
         .alert("", isPresented: showAlert) {
             Button {
                 nextStep()
@@ -67,7 +73,7 @@ struct UsernameView: View {
         }
     }
 
-    var displayNameStack: some View {
+    var usernameStack: some View {
         VStack(alignment: .leading, spacing: 20) {
             LargeNumberView(4)
             HStack(alignment: .firstTextBaseline) {
@@ -92,6 +98,7 @@ struct UsernameView: View {
                 .foregroundStyle(Color.primaryTxt)
                 .fontWeight(.bold)
                 .autocorrectionDisabled()
+                .focused($isTextFieldFocused)
                 .padding()
                 .withStyledBorder()
 
@@ -110,6 +117,7 @@ struct UsernameView: View {
         }
         .padding(40)
         .readabilityPadding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     var usernameAlreadyClaimedText: some View {
