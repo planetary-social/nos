@@ -8,13 +8,13 @@ struct PictureFirstNoteCard: View {
     let replyAction: ((Event) -> Void)?
     var body: some View {
         VStack(spacing: 0) {
-            if let title = note.tags.first(where: { $0[0] == "title" })?[1] {
+            if let title = (note.allTags as? [[String]])?.first(where: { $0[0] == "title" })?[1] {
                 Text(title)
                     .font(.headline)
                     .padding(.horizontal)
                     .padding(.top, 8)
             }
-            let imageMetaTags = note.tags.filter { $0[0] == "imeta" }
+            let imageMetaTags = ((note.allTags as? [[String]]) ?? []).filter { $0[0] == "imeta" }
             if !imageMetaTags.isEmpty {
                 TabView {
                     ForEach(imageMetaTags, id: \.self) { tag in
