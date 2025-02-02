@@ -33,8 +33,8 @@ struct PictureFirstNoteCard: View {
                 .tabViewStyle(.page)
                 .frame(height: 300)
             }
-            if ((note.content?.isEmpty) == nil) {
-                Text(note.content)
+            if let content = note.content, !content.isEmpty {
+                Text(content)
                     .padding()
             }
             if showsActions {
