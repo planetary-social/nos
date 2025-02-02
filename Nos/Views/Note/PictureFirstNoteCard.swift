@@ -1,5 +1,4 @@
 import SwiftUI
-
 struct PictureFirstNoteCard: View {
     let note: Event
     let showsActions: Bool
@@ -7,7 +6,6 @@ struct PictureFirstNoteCard: View {
     let showsRepostCount: Bool
     let cornerRadius: CGFloat
     let replyAction: ((Event) -> Void)?
-    
     var body: some View {
         VStack(spacing: 0) {
             if let title = note.tags.first(where: { $0[0] == "title" })?[1] {
@@ -16,7 +14,6 @@ struct PictureFirstNoteCard: View {
                     .padding(.horizontal)
                     .padding(.top, 8)
             }
-            
             let imageMetaTags = note.tags.filter { $0[0] == "imeta" }
             if !imageMetaTags.isEmpty {
                 TabView {
@@ -36,12 +33,10 @@ struct PictureFirstNoteCard: View {
                 .tabViewStyle(.page)
                 .frame(height: 300)
             }
-            
             if !note.content.isEmpty {
                 Text(note.content)
                     .padding()
             }
-            
             if showsActions {
                 BeveledSeparator()
                 HStack(spacing: 0) {
