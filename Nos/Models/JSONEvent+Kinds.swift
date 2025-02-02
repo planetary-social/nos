@@ -1,8 +1,6 @@
 import Foundation
 
 extension JSONEvent {
-    static let picturePost = 20
-    
     
     /// An event that represents the user's contact list (who they are following) and their relays.
     /// - Parameters:
