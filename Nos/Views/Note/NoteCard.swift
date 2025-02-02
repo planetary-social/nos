@@ -72,54 +72,13 @@ struct NoteCard: View {
         VStack(alignment: .leading, spacing: 0) {
             switch style {
             case .pictureFirst where note.kind == EventKind.picturePost.rawValue:
-                VStack(spacing: 0) {
-                    if let title = note.tags.first(where: { $0[0] == "title" })?[1] {
-                        Text(title)
-                            .font(.headline)
-                            .padding(.horizontal)
-                            .padding(.top, 8)
-                    }
-                    
-                    let imageMetaTags = note.tags.filter { $0[0] == "imeta" }
-                    if !imageMetaTags.isEmpty {
-                        TabView {
-                            ForEach(imageMetaTags, id: \.self) { tag in
-                                if let url = tag.first(where: { $0.hasPrefix("url ") })?.dropFirst(4) {
-                                    AsyncImage(url: URL(string: String(url))) { image in
-                                        image
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                    } placeholder: {
-                                        ProgressView()
-                                    }
-                                    .padding(.vertical)
-                                }
-                            }
-                        }
-                        .tabViewStyle(.page)
-                        .frame(height: 300)
-                    }
-                    
-                    if !note.content.isEmpty {
-                        Text(note.content)
-                            .padding()
-                    }
-                    
-                    if showsActions {
-                        BeveledSeparator()
-                        HStack(spacing: 0) {
-                            Spacer()
-                            RepostButton(note: note, showsCount: showsRepostCount)
-                            LikeButton(note: note, showsCount: showsLikeCount)
-                            ReplyButton(note: note, replyAction: replyAction)
-                        }
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 5)
-                    }
-                }
-                .background(
-                    LinearGradient.cardBackground
-                        .cornerRadius(cornerRadius)
+                PictureFirstNoteCard(
+                    note: note,
+                    showsActions: showsActions,
+                    showsLikeCount: showsLikeCount,
+                    showsRepostCount: showsRepostCount,
+                    cornerRadius: cornerRadius,
+                    replyAction: replyAction
                 )
             case .compact:
                 VStack(spacing: 0) {
