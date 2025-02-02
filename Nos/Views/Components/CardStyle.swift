@@ -7,4 +7,7 @@ enum CardStyle {
 
     /// A golden card is meant to be displayed in multi column grid layout
     case golden
+    
+    /// A picture-first card optimized for displaying NIP-68 picture posts
+    case pictureFirst
 }

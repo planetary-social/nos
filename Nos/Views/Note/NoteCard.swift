@@ -71,7 +71,7 @@ struct NoteCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             switch style {
-            case .pictureFirst where note.kind == JSONEvent.picturePost:
+            case .pictureFirst where note.kind == .picturePost:
                 VStack(spacing: 0) {
                     if let title = note.tags.first(where: { $0[0] == "title" })?[1] {
                         Text(title)
