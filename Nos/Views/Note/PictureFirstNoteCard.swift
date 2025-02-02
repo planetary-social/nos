@@ -33,7 +33,7 @@ struct PictureFirstNoteCard: View {
                 .tabViewStyle(.page)
                 .frame(height: 300)
             }
-            if !note.content.isEmpty {
+            if ((note.content?.isEmpty) == nil) {
                 Text(note.content)
                     .padding()
             }
