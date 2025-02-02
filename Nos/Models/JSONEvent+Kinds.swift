@@ -1,6 +1,8 @@
 import Foundation
 
 extension JSONEvent {
+    static let picturePost = 20
+    
     
     /// An event that represents the user's contact list (who they are following) and their relays.
     /// - Parameters:
@@ -45,6 +47,33 @@ extension JSONEvent {
             kind: .requestToVanish,
             tags: tags,
             content: reason ?? ""
+        )
+    }
+    
+    /// An event that represents a picture-first post (NIP-68).
+    /// - Parameters:
+    ///   - pubKey: The public key of the event creator.
+    ///   - title: The title of the post.
+    ///   - description: The description/content of the post.
+    ///   - imageMetadata: Array of image metadata including URLs and attributes.
+    ///   - tags: Additional tags like content warnings, location, etc.
+    /// - Returns: The ``JSONEvent`` representing the picture post.
+    static func picturePost(
+        pubKey: String,
+        title: String,
+        description: String,
+        imageMetadata: [[String]],
+        tags: [[String]] = []
+    ) -> JSONEvent {
+        var allTags = [["title", title]]
+        allTags.append(contentsOf: imageMetadata)
+        allTags.append(contentsOf: tags)
+        
+        return JSONEvent(
+            pubKey: pubKey,
+            kind: .picturePost,
+            tags: allTags,
+            content: description
         )
     }
     
