@@ -171,6 +171,8 @@ struct NoteButton: View {
                 }
             case .golden:
                 buttonOrLabel
+            case .pictureFirst:
+                buttonOrLabel
             }
         }
         .onAppear {
