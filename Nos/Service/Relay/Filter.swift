@@ -103,7 +103,11 @@ struct Filter: Hashable, Identifiable {
         }
 
         if !kinds.isEmpty {
-            filterDict["kinds"] = kinds.map({ $0.rawValue })
+            var requested = kinds
+            if requested.contains(.text) && !requested.contains(.picturePost) {
+                requested.append(.picturePost)
+            }
+            filterDict["kinds"] = requested.sorted(by: { $0.rawValue < $1.rawValue }).map({ $0.rawValue })
         }
 
         if !dTags.isEmpty {
