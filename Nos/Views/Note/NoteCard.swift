@@ -103,7 +103,9 @@ struct NoteCard: View {
                                 Spacer()
                             }
                             .padding(30)
-                        } else if note.kind == EventKind.picturePost.rawValue {
+                        } else if note.kind == EventKind.picturePost.rawValue ||
+                                  note.kind == EventKind.video.rawValue ||
+                                  note.kind == EventKind.shortVideo.rawValue {
                             PictureFirstNoteCard(
                                 note: note,
                                 showsLikeCount: showsLikeCount,
