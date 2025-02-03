@@ -370,9 +370,6 @@ extension RelayService {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: eventJSON)
             let jsonEvent = try JSONDecoder().decode(JSONEvent.self, from: jsonData)
-            if jsonEvent.kind == 20 {
-                Log.error("Got kind 20: \(jsonEvent)")
-            }
             await self.parseQueue.push(jsonEvent, from: socket)
             
             if let subscription = await subscriptionManager.subscription(from: subscriptionID) {

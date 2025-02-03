@@ -6,6 +6,22 @@ struct PictureFirstNoteCard: View {
     let showsRepostCount: Bool
     let cornerRadius: CGFloat
     let replyAction: ((Event) -> Void)?
+
+    // Provide default values here so they're optional parameters when creating a PictureFirstNoteCard.
+    init(note: Event,
+        showsActions: Bool = false,
+        showsLikeCount: Bool = false,
+        showsRepostCount: Bool = false,
+        cornerRadius: CGFloat,
+        replyAction: ((Event) -> Void)? = nil) {
+        self.note = note
+        self.showsActions = showsActions
+        self.showsLikeCount = showsLikeCount
+        self.showsRepostCount = showsRepostCount
+        self.cornerRadius = cornerRadius
+        self.replyAction = replyAction
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             if let title = (note.allTags as? [[String]])?.first(where: { $0[0] == "title" })?[1] {

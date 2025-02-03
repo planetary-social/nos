@@ -106,7 +106,6 @@ struct NoteCard: View {
                         } else if note.kind == EventKind.picturePost.rawValue {
                             PictureFirstNoteCard(
                                 note: note,
-                                showsActions: showsActions,
                                 showsLikeCount: showsLikeCount,
                                 showsRepostCount: showsRepostCount,
                                 cornerRadius: cornerRadius,

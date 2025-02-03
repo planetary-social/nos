@@ -84,3 +84,4 @@ fastlane/test_output
 
 .idea
 .vscode
+.aider*
