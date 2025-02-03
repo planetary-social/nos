@@ -274,6 +274,14 @@ extension Notification.Name {
     .onAppear {
         for i in 0..<100 {
             let note = Event(context: previewData.previewContext)
+            note.identifier = "ProfileNotesViewPicture-\(i)"
+            note.kind = EventKind.picturePost.rawValue
+            note.content = "\(i) picture"
+            note.author = previewData.alice
+            note.createdAt = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 - Double(i))
+        }
+        for i in 0..<100 {
+            let note = Event(context: previewData.previewContext)
             note.identifier = "ProfileNotesView-\(i)"
             note.kind = EventKind.text.rawValue
             note.content = "\(i)"

@@ -16,8 +16,6 @@ fileprivate extension CardStyle {
             return 16
         case .compact:
             return 21
-        case .pictureFirst:
-            return 12
         }
     }
 }

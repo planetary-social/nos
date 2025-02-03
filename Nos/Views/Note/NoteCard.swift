@@ -71,15 +71,6 @@ struct NoteCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             switch style {
-            case .pictureFirst where note.kind == EventKind.picturePost.rawValue:
-                PictureFirstNoteCard(
-                    note: note,
-                    showsActions: showsActions,
-                    showsLikeCount: showsLikeCount,
-                    showsRepostCount: showsRepostCount,
-                    cornerRadius: cornerRadius,
-                    replyAction: replyAction
-                )
             case .compact:
                 VStack(spacing: 0) {
                     HStack(alignment: .center, spacing: 0) {
@@ -99,7 +90,11 @@ struct NoteCard: View {
                     }
                     .padding(5)
                     .allowsHitTesting(!note.isPreview)
-                    Divider().overlay(Color.cardDividerTop).shadow(color: .cardDividerTopShadow, radius: 0, x: 0, y: 1)
+                    
+                    Divider()
+                        .overlay(Color.cardDividerTop)
+                        .shadow(color: .cardDividerTopShadow, radius: 0, x: 0, y: 1)
+                    
                     Group {
                         if note.isStub {
                             HStack {
@@ -108,61 +103,73 @@ struct NoteCard: View {
                                 Spacer()
                             }
                             .padding(30)
+                        } else if note.kind == EventKind.picturePost.rawValue {
+                            PictureFirstNoteCard(
+                                note: note,
+                                showsActions: showsActions,
+                                showsLikeCount: showsLikeCount,
+                                showsRepostCount: showsRepostCount,
+                                cornerRadius: cornerRadius,
+                                replyAction: replyAction
+                            )
                         } else {
                             CompactNoteView(
-                                note: note, 
-                                shouldTruncate: shouldTruncate, 
+                                note: note,
+                                shouldTruncate: shouldTruncate,
                                 showLinkPreviews: !warningController.showWarning
                             )
-                            .blur(radius: warningController.showWarning ? 6 : 0)
-                            .frame(maxWidth: .infinity)
-                            
-                            if rendersQuotedNotes, let quotedNote {
-                                Button {
-                                    router.push(quotedNote)
-                                } label: {
-                                    NoteCard(
-                                        note: quotedNote, 
-                                        hideOutOfNetwork: false, 
-                                        rendersQuotedNotes: false, 
-                                        showsActions: false
-                                    )
-                                    .withStyledBorder()
-                                    .padding(.horizontal, 16)
-                                    .padding(.bottom, 16)
-                                }
-                                .allowsHitTesting(!note.isPreview)
-                            }
                         }
-                        BeveledSeparator()
-                        HStack(spacing: 0) {
-                            if repliesDisplayType != .displayNothing {
-                                Button {
-                                    router.push(note)
-                                } label: {
-                                    RepliesLabel(
-                                        repliesDisplayType: repliesDisplayType,
-                                        for: note
-                                    )
-                                }
-                            }
-                            Spacer()
-                            if showsActions {
-                                RepostButton(note: note, showsCount: showsRepostCount)
-                                LikeButton(note: note, showsCount: showsLikeCount)
-                                ReplyButton(note: note, replyAction: replyAction)
-                            }
+                    }
+                    .blur(radius: warningController.showWarning ? 6 : 0)
+                    .frame(maxWidth: .infinity)
+                    
+                    if rendersQuotedNotes, let quotedNote = quotedNote {
+                        Button {
+                            router.push(quotedNote)
+                        } label: {
+                            NoteCard(
+                                note: quotedNote,
+                                hideOutOfNetwork: false,
+                                rendersQuotedNotes: false,
+                                showsActions: false
+                            )
+                            .withStyledBorder() // Check that this modifier is correctly defined.
+                            .padding(.horizontal, 16)
+                            .padding(.bottom, 16)
                         }
-                        .padding(.leading, 13)
-                        .padding(.trailing, 5)
-                        .padding(.vertical, 5)
                         .allowsHitTesting(!note.isPreview)
                     }
+                    
+                    BeveledSeparator()
+                    
+                    HStack(spacing: 0) {
+                        if repliesDisplayType != .displayNothing {
+                            Button {
+                                router.push(note)
+                            } label: {
+                                RepliesLabel(
+                                    repliesDisplayType: repliesDisplayType,
+                                    for: note
+                                )
+                            }
+                        }
+                        Spacer()
+                        if showsActions {
+                            RepostButton(note: note, showsCount: showsRepostCount)
+                            LikeButton(note: note, showsCount: showsLikeCount)
+                            ReplyButton(note: note, replyAction: replyAction)
+                        }
+                    }
+                    .padding(.leading, 13)
+                    .padding(.trailing, 5)
+                    .padding(.vertical, 5)
+                    .allowsHitTesting(!note.isPreview)
                 }
                 .blur(radius: warningController.showWarning ? 6 : 0)
                 .opacity(warningController.showWarning ? 0.3 : 1)
                 .frame(minHeight: warningController.showWarning ? 300 : nil)
                 .overlay(WarningView(controller: warningController))
+                
             case .golden:
                 if let author = note.author {
                     GoldenPostView(author: author, note: note)
@@ -210,8 +217,6 @@ struct NoteCard: View {
             return 15
         case .compact:
             return 20
-        case .pictureFirst:
-            return 12
         }
     }
 }

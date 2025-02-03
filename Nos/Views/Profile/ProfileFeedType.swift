@@ -14,7 +14,7 @@ enum ProfileFeedType {
         var kinds: [EventKind]
         switch self {
         case .activity:
-            kinds = [.text, .delete, .repost, .longFormContent] 
+            kinds = [.text, .delete, .repost, .longFormContent, .picturePost]
         case .notes:
             kinds = [.text, .delete]
         }

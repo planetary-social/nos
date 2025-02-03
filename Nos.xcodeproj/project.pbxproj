@@ -166,6 +166,9 @@
 		04F16AA72CBDBD91003AD693 /* DeleteConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F16AA62CBDBD91003AD693 /* DeleteConfirmationView.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
+		2DC90FEC2D5036C80065C468 /* PictureFirstNoteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC90FEB2D5036C80065C468 /* PictureFirstNoteCard.swift */; };
+		2DC90FED2D5036C80065C468 /* PictureFirstNoteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC90FEB2D5036C80065C468 /* PictureFirstNoteCard.swift */; };
+		2DC90FEE2D5036C80065C468 /* PictureFirstNoteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC90FEB2D5036C80065C468 /* PictureFirstNoteCard.swift */; };
 		3A1C296F2B2A537C0020B753 /* Moderation.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */; };
 		3A67449C2B294712002B8DE0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A67449B2B294712002B8DE0 /* Localizable.xcstrings */; };
 		3AAB61B52B24CD0000717A07 /* Date+ElapsedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAB61B42B24CD0000717A07 /* Date+ElapsedTests.swift */; };
@@ -759,6 +762,7 @@
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D3C71A52CEE6F7100625BCB /* Nos 20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 20.xcdatamodel"; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
+		2DC90FEB2D5036C80065C468 /* PictureFirstNoteCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureFirstNoteCard.swift; sourceTree = "<group>"; };
 		3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Moderation.xcstrings; sourceTree = "<group>"; };
 		3A67449B2B294712002B8DE0 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		3AAB61B42B24CD0000717A07 /* Date+ElapsedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+ElapsedTests.swift"; sourceTree = "<group>"; };
@@ -1434,6 +1438,7 @@
 		03618C6D2C8267E600BCBC55 /* Note */ = {
 			isa = PBXGroup;
 			children = (
+				2DC90FEB2D5036C80065C468 /* PictureFirstNoteCard.swift */,
 				C9DFA96A299BEE2C006929C1 /* CompactNoteView.swift */,
 				C9DFA964299BEB96006929C1 /* NoteCard.swift */,
 				C974652D2A3B86600031226F /* NoteCardHeader.swift */,
@@ -2426,6 +2431,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C90862BE29E9804B00C35A71 /* NosPerformanceTests.swift in Sources */,
+				2DC90FEE2D5036C80065C468 /* PictureFirstNoteCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2623,6 +2629,7 @@
 				5BE281CA2AE2CCEB00880466 /* HomeTab.swift in Sources */,
 				03C49AC22C938DE100502321 /* SoupOpenGraphParser.swift in Sources */,
 				506102882CC3D29B003DC0E3 /* TextDebouncer.swift in Sources */,
+				2DC90FEC2D5036C80065C468 /* PictureFirstNoteCard.swift in Sources */,
 				C94D14812A12B3F70014C906 /* SearchBar.swift in Sources */,
 				C92E7F672C4EFF3D00B80638 /* WebSocketErrorEvent.swift in Sources */,
 				0317263C2C7935220030EDCA /* AspectRatioContainer.swift in Sources */,
@@ -2847,6 +2854,7 @@
 				035729A02BE41653005FEE85 /* SocialGraphCacheTests.swift in Sources */,
 				508B2B622C9EF65300C14034 /* NSPersistentContainer+Nos.swift in Sources */,
 				03E9C6792C6FBBE400C9B843 /* ImageViewer.swift in Sources */,
+				2DC90FED2D5036C80065C468 /* PictureFirstNoteCard.swift in Sources */,
 				03D1B4292C3C1AC9001778CD /* NostrIdentifier.swift in Sources */,
 				A32B6C7129A672BC00653FF5 /* CurrentUser.swift in Sources */,
 				C98A32282A05795E00E3FA13 /* Task+Timeout.swift in Sources */,

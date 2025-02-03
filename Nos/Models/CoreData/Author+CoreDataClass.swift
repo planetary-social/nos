@@ -226,7 +226,7 @@ import Logger
     }
 
     @nonobjc func postsPredicate(before: Date) -> NSPredicate {
-        let onlyRootPostsClause = "(kind = 1 AND SUBQUERY(" +
+        let onlyRootPostsClause = "(kind = 1 or kind = 20 AND SUBQUERY(" +
             "eventReferences, " +
             "$reference, " +
             "$reference.marker = 'root' OR $reference.marker = 'reply' OR $reference.marker = nil" +
