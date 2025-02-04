@@ -75,6 +75,63 @@ extension JSONEvent {
         )
     }
     
+    /// An event that represents a video post (NIP-71).
+    /// - Parameters:
+    ///   - pubKey: The public key of the event creator.
+    ///   - title: The title of the video.
+    ///   - description: A summary or description of the video content.
+    ///   - isShortForm: If true, creates a short video event (kind 22), otherwise a normal video event (kind 21).
+    ///   - publishedAt: Optional Unix timestamp (in seconds) when the video was first published.
+    ///   - duration: Optional duration of the video in seconds.
+    ///   - videoMetadata: An array of "imeta" tags describing the video sources, dimensions, preview images, etc.
+    ///   - contentWarning: Optional warning regarding the video content.
+    ///   - altText: Optional accessibility description for the video.
+    ///   - tags: Additional tags (e.g. text-track, segment, hashtags, participants, reference links) to include.
+    /// - Returns: A JSONEvent representing the video post.
+    static func videoPost(
+        pubKey: String,
+        title: String,
+        description: String,
+        isShortForm: Bool = false,
+        publishedAt: Int? = nil,
+        duration: Int? = nil,
+        videoMetadata: [[String]],
+        contentWarning: String? = nil,
+        altText: String? = nil,
+        tags: [[String]] = []
+    ) -> JSONEvent {
+        var allTags = [["title", title]]
+        
+        if let publishedAt = publishedAt {
+            allTags.append(["published_at", String(publishedAt)])
+        }
+        
+        if let duration = duration {
+            allTags.append(["duration", String(duration)])
+        }
+        
+        // Append the video-specific metadata (imeta tags) – these carry the URL, dimensions, preview images, etc.
+        allTags.append(contentsOf: videoMetadata)
+        
+        if let contentWarning = contentWarning {
+            allTags.append(["content-warning", contentWarning])
+        }
+        
+        if let altText = altText {
+            allTags.append(["alt", altText])
+        }
+        
+        // Append any additional tags provided.
+        allTags.append(contentsOf: tags)
+        
+        return JSONEvent(
+            pubKey: pubKey,
+            kind: isShortForm ? .shortVideo : .video,
+            tags: allTags,
+            content: description
+        )
+    }
+    
     /// An event that represents a list of authors.
     /// - Parameters:
     ///   - pubKey: The public key of the user making the request.

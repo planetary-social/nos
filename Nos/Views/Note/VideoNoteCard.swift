@@ -1,5 +1,7 @@
 import SwiftUI
-struct PictureFirstNoteCard: View {
+import AVKit
+
+struct VideoNoteCard: View {
     let note: Event
     let showsActions: Bool
     let showsLikeCount: Bool
@@ -7,13 +9,13 @@ struct PictureFirstNoteCard: View {
     let cornerRadius: CGFloat
     let replyAction: ((Event) -> Void)?
 
-    // Provide default values here so they're optional parameters when creating a PictureFirstNoteCard.
+    // Provide default values so they're optional when creating a VideoFirstNoteCard.
     init(note: Event,
-        showsActions: Bool = false,
-        showsLikeCount: Bool = false,
-        showsRepostCount: Bool = false,
-        cornerRadius: CGFloat,
-        replyAction: ((Event) -> Void)? = nil) {
+         showsActions: Bool = false,
+         showsLikeCount: Bool = false,
+         showsRepostCount: Bool = false,
+         cornerRadius: CGFloat,
+         replyAction: ((Event) -> Void)? = nil) {
         self.note = note
         self.showsActions = showsActions
         self.showsLikeCount = showsLikeCount
@@ -24,35 +26,40 @@ struct PictureFirstNoteCard: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            // If a title tag exists, display it at the top.
             if let title = (note.allTags as? [[String]])?.first(where: { $0[0] == "title" })?[1] {
                 Text(title)
                     .font(.headline)
                     .padding(.horizontal)
                     .padding(.top, 8)
             }
-            let imageMetaTags = ((note.allTags as? [[String]]) ?? []).filter { $0[0] == "imeta" }
-            if !imageMetaTags.isEmpty {
+            
+            // Extract video metadata from the imeta tags.
+            let videoMetaTags = ((note.allTags as? [[String]]) ?? []).filter { $0[0] == "imeta" }
+            if !videoMetaTags.isEmpty {
                 TabView {
-                    ForEach(imageMetaTags, id: \.self) { tag in
-                        if let url = tag.first(where: { $0.hasPrefix("url ") })?.dropFirst(4) {
-                            AsyncImage(url: URL(string: String(url))) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                            } placeholder: {
-                                ProgressView()
-                            }
-                            .padding(.vertical)
+                    ForEach(videoMetaTags, id: \.self) { tag in
+                        // Look for the primary video URL by finding a tag string that starts with "url "
+                        if let urlString = tag.first(where: { $0.hasPrefix("url ") })?.dropFirst(4),
+                           let videoURL = URL(string: String(urlString)) {
+                            // Use VideoPlayer to display/play the video.
+                            VideoPlayer(player: AVPlayer(url: videoURL))
+                                .frame(height: 300) // Adjust this height as needed.
+                                .cornerRadius(cornerRadius)
                         }
                     }
                 }
-                .tabViewStyle(.page)
+                .tabViewStyle(PageTabViewStyle())
                 .frame(height: 300)
             }
+            
+            // Display the video's description/content if available.
             if let content = note.content, !content.isEmpty {
                 Text(content)
                     .padding()
             }
+            
+            // If actions are enabled, show the action buttons.
             if showsActions {
                 BeveledSeparator()
                 HStack(spacing: 0) {

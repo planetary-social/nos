@@ -32,7 +32,13 @@ public enum EventKind: Int64, CaseIterable, Hashable {
     
     /// Picture Post (NIP-68)
     case picturePost = 20
-
+    
+    /// Regular Video Post (NIP-71)
+    case video = 21
+    
+    /// Short-form Video Post (NIP-71)
+    case shortVideo = 22
+    
     /// Channel Message
     case channelMessage = 42
 
@@ -73,12 +79,6 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 
     /// Long-form Content
     case longFormContent = 30023
-    
-    /// Regular Video Post (NIP-71)
-    case video = 21
-    
-    /// Short-form Video Post (NIP-71)
-    case shortVideo = 22
     
     // swiftlint:enable number_separator
 }
