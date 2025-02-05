@@ -7,9 +7,8 @@ protocol RelaySubscriptionManager {
 
     func set(socketQueue: DispatchQueue?, delegate: WebSocketDelegate?) async
 
-    @discardableResult
-    func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) async -> Bool
-    func forceCloseSubscriptionCount(for subscriptionID: RelaySubscription.ID) async
+    func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) async 
+    func closeSubscription(with subscriptionID: RelaySubscription.ID) async
     func trackConnected(socket: WebSocket) async
     func processSubscriptionQueue() async
     func queueSubscription(with filter: Filter, to relayAddress: URL) async -> RelaySubscription
@@ -21,7 +20,6 @@ protocol RelaySubscriptionManager {
     func sockets() async -> [WebSocket] 
     func socket(for address: String) async -> WebSocket?
     func socket(for url: URL) async -> WebSocket?
-    func staleSubscriptions() async -> [RelaySubscription]
     func subscription(from subscriptionID: RelaySubscription.ID) async -> RelaySubscription?
     func trackError(socket: WebSocket) async
 }
@@ -70,6 +68,39 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         }
     }
     
+    /// Lets the manager know that there is one less subscriber for the given subscription. If there are no 
+    /// more subscribers this function closes the subscription. 
+    /// 
+    /// Incrementing the subscription count is done by `queueSubscription(with:to:)`.
+    func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) {
+        if let subscription = subscription(from: subscriptionID) {
+            if subscription.referenceCount == 1 {
+                closeSubscription(subscription)
+            } else {
+                subscription.referenceCount -= 1
+            }
+        }
+    }
+            
+    /// Closes the subscription with the given ID. Sends a "CLOSE" message to the relay and removes the subscription
+    /// object from management.
+    func closeSubscription(with subscriptionID: RelaySubscription.ID) {
+        guard let subscription = subscription(from: subscriptionID) else {
+            Log.error("Tried to force close non-existent subscription \(subscriptionID)")
+            return
+        }
+        closeSubscription(subscription)
+    }
+    
+    /// Closes the given subscription. Sends a "CLOSE" message to the relay and removes the subscription
+    /// object from management.
+    private func closeSubscription(_ subscription: RelaySubscription) {
+        sendClose(for: subscription)
+        removeSubscription(with: subscription.id)
+    }
+    
+    /// Remove just removes a subscription from our internal tracking. It doesn't send the relay any notification
+    /// that we are closing the subscription.
     private func removeSubscription(with subscriptionID: RelaySubscription.ID) {
         if let subscriptionIndex = self.all.firstIndex(
             where: { $0.id == subscriptionID }
@@ -77,45 +108,16 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
             all.remove(at: subscriptionIndex)
         }
     }
-    
-    func forceCloseSubscriptionCount(for subscriptionID: RelaySubscription.ID) {
-        removeSubscription(with: subscriptionID)
-    }
-    
-    /// Lets the manager know that there is one less subscriber for the given subscription. If there are no 
-    /// more subscribers this function returns `true`. 
-    /// 
-    /// Note that this does not send a close message on the websocket or close the socket. Right now those actions
-    /// are performed by the RelayService. It's yucky though. Maybe we should make the RelaySubscriptionManager
-    /// do that in the future.
-    @discardableResult
-    func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) async -> Bool {
-        if let subscription = subscription(from: subscriptionID) {
-            if subscription.referenceCount == 1 {
-                removeSubscription(with: subscriptionID)
-                return false
-            } else {
-                subscription.referenceCount -= 1
-                return true
-            }
-        }
-        return false
-    }
-    
-    /// Finds stale subscriptions, removes them from the subscription list, and returns them.
-    func staleSubscriptions() async -> [RelaySubscription] {
-        var staleSubscriptions = [RelaySubscription]()
+
+    /// Closes subscriptions that are supposed to close after a response but haven't returned any response for a while.
+    private func closeStaleSubscriptions() {
         for subscription in active {
             if subscription.closesAfterResponse, 
                 let filterStartedAt = subscription.subscriptionStartDate,
                 filterStartedAt.distance(to: .now) > 10 {
-                staleSubscriptions.append(subscription)
+                closeSubscription(subscription)
             }
         }
-        for subscription in staleSubscriptions {
-            forceCloseSubscriptionCount(for: subscription.id)
-        }
-        return staleSubscriptions
     }
     
     // MARK: - Socket Management
@@ -170,7 +172,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         socket.disconnect()
         if let relayAddress = socket.url {
             for subscription in all where subscription.relayAddress == relayAddress {
-                forceCloseSubscriptionCount(for: subscription.id)
+                closeSubscription(with: subscription.id)
             }
             socketConnections.removeValue(forKey: relayAddress)
         }
@@ -235,6 +237,8 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     ///
     /// It's called at appropriate times internally but can also be called externally in a loop. Idempotent.
     func processSubscriptionQueue() {
+        closeStaleSubscriptions()
+        
         openSockets()
         var waitingSubscriptions = [RelaySubscription]()
 
@@ -300,7 +304,7 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         if let socket = socket(for: subscription.relayAddress) {
             requestEvents(from: socket, subscription: subscription)
         }
-    }
+    }    
     
     /// Takes a RelaySubscription model and makes a websockets request to the given socket
     func requestEvents(from socket: WebSocketClient, subscription: RelaySubscription) {
@@ -312,6 +316,36 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
             socket.write(string: requestString)
         } catch {
             Log.error("Error: Could not send request \(error.localizedDescription)")
+        }
+    }
+    
+    /// Notifies the relay that we are closing the subscription with the given ID.
+    private func sendClose(for subscriptionID: RelaySubscription.ID) {
+        guard let subscription = subscription(from: subscriptionID) else {
+            Log.error("Tried to close a non-existing subscription \(subscriptionID)")
+            return
+        } 
+        sendClose(for: subscription)
+    }
+    
+    /// Notifies the associated relay that we are closing the given subscription.
+    func sendClose(for subscription: RelaySubscription) {
+        guard let socket = socket(for: subscription.relayAddress) else {
+            Log.error("Tried to close a non-existing subscription \(subscription.id)")
+            return
+        } 
+        sendClose(from: socket, subscriptionID: subscription.id)
+    }
+    
+    /// Writes a CLOSE message to the given socket, letting the relay know we are done with given subscription ID.
+    private func sendClose(from socket: WebSocketClient, subscriptionID: RelaySubscription.ID) {
+        do {
+            let request: [Any] = ["CLOSE", subscriptionID]
+            let requestData = try JSONSerialization.data(withJSONObject: request)
+            let requestString = String(decoding: requestData, as: UTF8.self)
+            socket.write(string: requestString)
+        } catch {
+            Log.error("Error: Could not send close \(error.localizedDescription)")
         }
     }
     

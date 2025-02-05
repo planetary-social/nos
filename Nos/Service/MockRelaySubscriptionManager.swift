@@ -37,11 +37,10 @@ class MockRelaySubscriptionManager: RelaySubscriptionManager {
         false
     }
 
-    func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) async -> Bool {
-        false
+    func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) async {
     }
 
-    func forceCloseSubscriptionCount(for subscriptionID: RelaySubscription.ID) async {
+    func closeSubscription(with subscriptionID: RelaySubscription.ID) async {
     }
 
     func trackConnected(socket: WebSocket) async {
