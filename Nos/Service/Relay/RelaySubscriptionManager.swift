@@ -109,7 +109,6 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
         }
     }
 
-    
     /// Closes subscriptions that are supposed to close after a response but haven't returned any response for a while.
     private func closeStaleSubscriptions() {
         for subscription in active {
