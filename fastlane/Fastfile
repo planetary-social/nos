@@ -79,12 +79,11 @@ platform :ios do
     if is_ci
       sh("rm", options[:appsecretspath])
     end
-    changelog = read_changelog
 
     testflight_groups = options[:distribution_groups] || []
     upload_to_testflight(
-      changelog: changelog,
-      app_identifier: options[:app_identifier],
+      changelog: cleaned_changelog,
+      app_identifier: options[:appidentifier],
       skip_waiting_for_build_processing: is_ci,
       distribute_external: !testflight_groups.empty?,
       groups: testflight_groups
@@ -190,6 +189,17 @@ end
 
 lane :bump_version do
   increment_build_number(xcodeproj: "Nos.xcodeproj")
+end
+
+# Helper functions
+def strip_markdown_links(text)
+  # Remove markdown links of the form [text](url)
+  text.gsub(/\[([^\]]*)\]\([^)]*\)/, '')
+end
+
+def cleaned_changelog
+  changelog = read_changelog
+  strip_markdown_links(changelog)
 end
 
 
