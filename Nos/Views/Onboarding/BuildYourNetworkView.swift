@@ -12,33 +12,35 @@ struct BuildYourNetworkView: View {
         ZStack {
             Color.appBg
                 .ignoresSafeArea()
-            ViewThatFits(in: .vertical) {
                 buildYourNetworkStack
-
-                ScrollView {
-                    buildYourNetworkStack
-                }
-            }
         }
         .navigationBarHidden(true)
     }
 
     var buildYourNetworkStack: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text("🔍")
-                .font(.system(size: 60))
-            Text("buildYourNetwork")
-                .font(.clarityBold(.title))
-                .foregroundStyle(Color.primaryTxt)
-                .fixedSize(horizontal: false, vertical: true)
-            Text("buildYourNetworkDescription")
-                .foregroundStyle(Color.secondaryTxt)
-                .fixedSize(horizontal: false, vertical: true)
+        VStack {
+            VStack(alignment: .leading, spacing: 20) {
+                Text("🔍")
+                    .font(.system(size: 60))
+                Text("buildYourNetwork")
+                    .font(.clarityBold(.title))
+                    .foregroundStyle(Color.primaryTxt)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("buildYourNetworkDescription")
+                    .foregroundStyle(Color.secondaryTxt)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer()
+
             Image.network
                 .resizable()
                 .aspectRatio(contentMode: .fit)
+                .frame(maxWidth: .infinity)
                 .padding(.horizontal, -padding)
-            Spacer()
+
+            Spacer(minLength: padding)
+
             BigActionButton("findPeople") { @MainActor in
                 completion()
             }

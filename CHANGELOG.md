@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed: tapping a user on a list causes a crash. [#172](https://github.com/verse-pbc/issues/issues/172)
 - Removed link to Listr.lol when list is empty. [#176](https://github.com/verse-pbc/issues/issues/176)
 - Fixed: text fields sometimes don't work on onboarding screens. [#178](https://github.com/verse-pbc/issues/issues/178)
+- Fixed main action button is not visible on iPad on "Build Your Network" onboarding screen. [#184](https://github.com/verse-pbc/issues/issues/184)
 
 ### Internal Changes
 - Added function for creating a new list and a test verifying list editing. [#112](https://github.com/verse-pbc/issues/issues/112)
