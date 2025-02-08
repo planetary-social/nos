@@ -1,7 +1,7 @@
 import CoreData
 import Logger
 
-public class NosManagedObject: NSManagedObject {
+class NosManagedObject: NSManagedObject {
     
     // Not sure why this is necessary, but SwiftUI previews crash on NSManagedObject.init(context:) otherwise.
     convenience init(context: NSManagedObjectContext) {

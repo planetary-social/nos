@@ -12,8 +12,8 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
     
     private(set) var followedKeys = Set<RawAuthorID>()
     
-    func isInNetwork(_ key: RawAuthorID?) -> Bool {
-        guard let key, let userKey else {
+    func isInNetwork(_ key: RawAuthorID) -> Bool {
+        guard let userKey else {
             return false
         }
         
@@ -108,12 +108,12 @@ actor SocialGraphCache: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: - Processing changes
     
-    func clearCache() {
+    private func clearCache() {
         twoHopKeys.removeAll()
         outOfNetworkKeys.removeAll()
     }
     
-    func initializeFollowList() async {
+    private func initializeFollowList() async {
         guard let userKey else {
             return
         }

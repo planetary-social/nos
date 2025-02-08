@@ -29,17 +29,17 @@ enum FileStorageAPIClientError: Error {
 }
 
 /// A `FileStorageAPIClient` that uses nostr.build for uploading files.
-class NostrBuildAPIClient: FileStorageAPIClient {
+final class NostrBuildAPIClient: FileStorageAPIClient {
     /// The `URLSession` to fetch data from the API.
-    @Dependency(\.urlSession) var urlSession
+    @Dependency(\.urlSession) private var urlSession
 
-    @Dependency(\.currentUser) var currentUser
+    @Dependency(\.currentUser) private var currentUser
 
     /// The URL string used to get server info.
     private static let serverInfoURLString = "https://nostr.build/.well-known/nostr/nip96.json"
 
     /// Cached server info which contains the API URL for uploading files.
-    var serverInfo: FileStorageServerInfoResponseJSON?
+    private(set) var serverInfo: FileStorageServerInfoResponseJSON?
 
     /// The `JSONDecoder` to use for decoding responses from the API.
     private var decoder: JSONDecoder {

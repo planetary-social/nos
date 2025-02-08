@@ -4,7 +4,7 @@ import SwiftUI
 /// The Private Key view in the onboarding.
 struct PrivateKeyView: View {
     @Environment(OnboardingState.self) private var state
-    @Environment(CurrentUser.self) var currentUser
+    @Environment(CurrentUser.self) private var currentUser
 
     @State private var privateKeyString = ""
     @State private var copyButtonState: CopyButtonState = .copy
@@ -27,7 +27,7 @@ struct PrivateKeyView: View {
         .navigationBarHidden(true)
     }
 
-    var privateKeyStack: some View {
+    private var privateKeyStack: some View {
         VStack(alignment: .leading, spacing: 20) {
             LargeNumberView(1)
             HStack(alignment: .firstTextBaseline) {

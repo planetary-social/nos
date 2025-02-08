@@ -4,7 +4,7 @@ import SwiftUI
 
 struct NiceWorkSheet: View {
 
-    var username: String
+    let username: String
     @Binding var isPresented: Bool
 
     @State private var connectState: ConnectState = .idle
@@ -110,7 +110,7 @@ struct NiceWorkSheet: View {
         }
     }
 
-    enum ConnectError: LocalizedError {
+    private enum ConnectError: LocalizedError {
         case notLoggedIn
         case unableToConnect(Error)
 

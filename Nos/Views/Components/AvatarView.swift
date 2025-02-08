@@ -4,7 +4,7 @@ import SDWebImageSwiftUI
 struct AvatarView: View {
     
     var imageUrl: URL?
-    var size: CGFloat
+    let size: CGFloat
     
     var body: some View {
         WebImage(

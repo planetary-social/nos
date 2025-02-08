@@ -30,12 +30,12 @@ actor RelaySubscriptionManagerActor: RelaySubscriptionManager {
     
     static let shared = RelaySubscriptionManagerActor()
     
+    private var all = [RelaySubscription]()
+    
     // MARK: - Public Properties
     
-    var all = [RelaySubscription]()
-    
     /// All websocket connections under management, mapped by their relay URL.
-    var socketConnections = [URL: WebSocketConnection]()
+    private(set) var socketConnections = [URL: WebSocketConnection]()
     
     var active: [RelaySubscription] {
         all.filter { $0.isActive }

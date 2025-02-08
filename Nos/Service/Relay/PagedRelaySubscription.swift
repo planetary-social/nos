@@ -12,12 +12,12 @@ import Combine
 /// these details, so the caller basically only needs to know what kinds of events they want from what relays, and then
 /// call `loadMore()` whenever the user scrolls a page.
 @RelaySubscriptionManagerActor
-class PagedRelaySubscription {
-    let startDate: Date
-    let filter: Filter
+final class PagedRelaySubscription {
+    private let startDate: Date
+    private let filter: Filter
     
-    private var relayService: RelayService
-    private var subscriptionManager: RelaySubscriptionManager
+    private let relayService: RelayService
+    private let subscriptionManager: RelaySubscriptionManager
     
     /// A set of subscriptions fetching older events.
     private var pagedSubscriptionIDs = Set<RelaySubscription.ID>()
@@ -133,13 +133,13 @@ class PagedRelaySubscription {
     
     /// Used to record the oldest event we've seen from a relay. We need this because `track(event:from:)` is 
     /// nonisolated so it can be called from a Combine chain.
-    func updateOldestEvent(for relay: URL, to date: Date) {
+    private func updateOldestEvent(for relay: URL, to date: Date) {
         oldestEventByRelay[relay] = date
     }
     
     /// Records the `created_at` date from given event if it's the oldest one we've seen so far. This information
     /// is needed to load the next page when it's time. 
-    nonisolated func track(event: JSONEvent, from relay: URL) async {
+    nonisolated private func track(event: JSONEvent, from relay: URL) async {
         if let oldestSeen = await oldestEventByRelay[relay] {
             if event.createdDate < oldestSeen {
                 await updateOldestEvent(for: relay, to: event.createdDate)

@@ -11,15 +11,15 @@ struct DiscoverTab: View {
     @Environment(CurrentUser.self) var currentUser
     @Dependency(\.analytics) private var analytics
 
-    @State var showInfoPopover = false
+    @State private var showInfoPopover = false
 
-    @State var columns: Int = 0
+    @State private var columns: Int = 0
     
     @State private var searchController = SearchController()
 
     @FocusState private var isSearching: Bool
 
-    let goToFeedTip = GoToFeedTip()
+    private let goToFeedTip = GoToFeedTip()
 
     // MARK: - View
     

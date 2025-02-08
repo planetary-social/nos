@@ -14,7 +14,7 @@ extension Keypair {
 }
 
 @objc(AuthorList)
-public class AuthorList: Event {
+final class AuthorList: Event {
     static func createOrUpdate(
         from jsonEvent: JSONEvent,
         keyPair: KeyPair? = nil,
@@ -76,7 +76,7 @@ public class AuthorList: Event {
         return authorList
     }
 
-    @nonobjc public class func authorList(
+    @nonobjc static func authorList(
         by replaceableID: RawReplaceableID,
         owner: Author,
         kind: Int64

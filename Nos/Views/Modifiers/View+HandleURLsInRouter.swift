@@ -4,11 +4,11 @@ import CoreData
 extension View {
     /// Forwards any URLs the user taps in this view to `Router.open(url:with:)`.
     func handleURLsInRouter() -> some View {
-        self.modifier(HandleURLsInRouter())
+        modifier(HandleURLsInRouter())
     }
 }
 
-struct HandleURLsInRouter: ViewModifier {
+fileprivate struct HandleURLsInRouter: ViewModifier {
     
     @EnvironmentObject private var router: Router
     

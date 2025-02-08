@@ -10,15 +10,15 @@ extension NoteTextEditor {
     /// This view is designed to be used inside `NoteTextEditor`.  
     struct NoteUITextViewRepresentable: UIViewRepresentable {
         
-        @State var width: CGFloat
+        @State private var width: CGFloat
         
         /// Whether we should present the keyboard when this view is shown. Unfortunately we can't rely on FocusState as
         /// it isn't working on macOS.
-        private var showKeyboard: Bool
+        private let showKeyboard: Bool
         
-        private var font = UIFont.preferredFont(forTextStyle: .body)
+        private let font = UIFont.preferredFont(forTextStyle: .body)
         
-        private var controller: NoteEditorController
+        private let controller: NoteEditorController
         
         init(
             controller: NoteEditorController,

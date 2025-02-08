@@ -5,8 +5,8 @@ import BackgroundTasks
 
 final class PersistenceController {
     
-    @Dependency(\.currentUser) var currentUser
-    @Dependency(\.crashReporting) var crashReporting
+    @Dependency(\.currentUser) private var currentUser
+    @Dependency(\.crashReporting) private var crashReporting
     
     /// Increment this to delete core data on update
     private static let version = 3
@@ -146,13 +146,13 @@ final class PersistenceController {
 extension PersistenceController {
     
     /// The ID of the background task that runs the `DatabaseCleaner`. Needs to match the value in Info.plist.
-    static let cleanupBackgroundTaskID = "com.verse.nos.database-cleaner"
+    private static let cleanupBackgroundTaskID = "com.verse.nos.database-cleaner"
     
     /// Cleans up unneeded entities from the database. Our local database is really just a cache, and we need to
     /// invalidate old items to keep it from growing indefinitely.
     /// 
     /// This should only be called once right at app launch.
-    @MainActor func cleanupEntities() async {
+    @MainActor private func cleanupEntities() async {
         guard let authorKey = currentUser.author?.hexadecimalPublicKey else {
             return
         }

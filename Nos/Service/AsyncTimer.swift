@@ -1,9 +1,9 @@
 import Foundation
 
 /// A timer that executes a task on a schedule. Similar to NSTimer but works with Swift Structured Concurrency.
-class AsyncTimer {
+final class AsyncTimer {
     
-    private var task: Task<Void, Never>
+    private let task: Task<Void, Never>
     
     init(
         timeInterval: TimeInterval, 
@@ -11,7 +11,7 @@ class AsyncTimer {
         firesImmediately: Bool = true, 
         onFire: @escaping () async -> Void
     ) {
-        self.task = Task(priority: priority) {
+        task = Task(priority: priority) {
             if !firesImmediately {
                 try? await Task.sleep(nanoseconds: UInt64(timeInterval * 1_000_000_000))
             }

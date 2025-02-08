@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct ReplyButton: View {
-    var note: Event
-    var replyAction: ((Event) -> Void)?
+    let note: Event
+    let replyAction: ((Event) -> Void)?
 
     @EnvironmentObject private var router: Router
     

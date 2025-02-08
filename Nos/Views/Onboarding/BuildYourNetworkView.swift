@@ -23,7 +23,7 @@ struct BuildYourNetworkView: View {
         .navigationBarHidden(true)
     }
 
-    var buildYourNetworkStack: some View {
+    private var buildYourNetworkStack: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text("🔍")
                 .font(.system(size: 60))

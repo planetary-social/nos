@@ -20,9 +20,9 @@ struct AuthorSearchView<EmptyPlaceholder: View>: View {
     let emptyPlaceholder: () -> EmptyPlaceholder?
     
     /// The authors are referenced in a note / who replied under the note the user is replying if any.
-    var relatedAuthors: [Author]?
+    let relatedAuthors: [Author]?
 
-    var didSelectGesture: ((Author) -> Void)?
+    let didSelectGesture: ((Author) -> Void)?
 
     init(
         searchOrigin: SearchOrigin,

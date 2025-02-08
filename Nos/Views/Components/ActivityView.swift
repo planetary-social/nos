@@ -3,7 +3,7 @@ import SwiftUI
 
 struct ActivityViewController: UIViewControllerRepresentable {
 
-    var activityItems: [Any]
+    let activityItems: [Any]
     var applicationActivities: [UIActivity]?
     /// The completion handler to execute after the activity view controller is dismissed.
     var completion: (() -> Void)?

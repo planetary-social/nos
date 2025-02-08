@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added functionality to get follows notifications in the Notifications tab. [#127](https://github.com/verse-pbc/issues/issues/127)
 - Refactored the way the ProfileView downloads data and logs analytics events. [#1748](https://github.com/planetary-social/nos/pull/1748)
 - Refactored the way we close relay subscriptions. [#1754](https://github.com/planetary-social/nos/pull/1754)
+- Audited codebase for strict access control and mutability annotations. [#185](https://github.com/verse-pbc/issues/issues/185)
 
 ## [1.1] - 2025-01-03Z
 

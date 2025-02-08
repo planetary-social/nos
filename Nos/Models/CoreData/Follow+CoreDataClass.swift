@@ -21,10 +21,10 @@ extension Array where Element == String {
 }
 
 @objc(Follow)
-public class Follow: NosManagedObject {
+final class Follow: NosManagedObject {
     
     // swiftlint:disable:next function_body_length
-    class func upsert(
+    static func upsert(
         by author: Author,
         jsonTag: [String],
         context: NSManagedObjectContext
@@ -43,7 +43,7 @@ public class Follow: NosManagedObject {
                 Follow.self,
                 DecodingError.Context(
                     codingPath: [],
-                    debugDescription: "Tag \(followedKey) is not a valid hexadecimal public key"
+                    debugDescription: "Tag \(followedKey) is not a valid hexadecimal key"
                 )
             )
         }
@@ -52,7 +52,7 @@ public class Follow: NosManagedObject {
                 Author.self,
                 DecodingError.Context(
                     codingPath: [],
-                    debugDescription: "Author did not have a hexadecimal public key"
+                    debugDescription: "Author did not have a hexadecimal key"
                 )
             )
         }
@@ -88,28 +88,28 @@ public class Follow: NosManagedObject {
         return follow
     }
     
-    @nonobjc public class func followsRequest(sources authors: [Author]) -> NSFetchRequest<Follow> {
+    @nonobjc static func followsRequest(sources authors: [Author]) -> NSFetchRequest<Follow> {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "source IN %@", authors)
         return fetchRequest
     }
     
-    @nonobjc public class func followsRequest(source: Author, destination: Author) -> NSFetchRequest<Follow> {
+    @nonobjc static func followsRequest(source: Author, destination: Author) -> NSFetchRequest<Follow> {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "source = %@ AND destination = %@", source, destination)
         return fetchRequest
     }
 
-    @nonobjc public class func followsRequest(destination authors: [Author]) -> NSFetchRequest<Follow> {
+    @nonobjc static func followsRequest(destination authors: [Author]) -> NSFetchRequest<Follow> {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Follow.petName, ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "destination IN %@", authors)
         return fetchRequest
     }
     
-    @nonobjc public class func allFollowsRequest() -> NSFetchRequest<Follow> {
+    @nonobjc static func allFollowsRequest() -> NSFetchRequest<Follow> {
         let fetchRequest = NSFetchRequest<Follow>(entityName: "Follow")
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(keyPath: \Follow.source?.hexadecimalPublicKey, ascending: false),
@@ -126,7 +126,7 @@ public class Follow: NosManagedObject {
         return fetchRequest
     }
     
-    class func follows(source: Author, destination: Author, context: NSManagedObjectContext) -> [Follow] {
+    static func follows(source: Author, destination: Author, context: NSManagedObjectContext) -> [Follow] {
         let fetchRequest = Follow.followsRequest(source: source, destination: destination)
         
         do {
@@ -138,13 +138,13 @@ public class Follow: NosManagedObject {
         return []
     }
     
-    class func deleteFollows(in follows: Set<Follow>, context: NSManagedObjectContext) {
+    static func deleteFollows(in follows: Set<Follow>, context: NSManagedObjectContext) {
         for follow in follows {
             context.delete(follow)
         }
     }
     
-    class func find(source: Author, destination: Author, context: NSManagedObjectContext) throws -> Follow? {
+    static func find(source: Author, destination: Author, context: NSManagedObjectContext) throws -> Follow? {
         let fetchRequest = Follow.followsRequest(source: source, destination: destination)
         fetchRequest.fetchLimit = 1
         if let follow = try context.fetch(fetchRequest).first {
@@ -154,7 +154,7 @@ public class Follow: NosManagedObject {
         return nil
     }
     
-    class func findOrCreate(source: Author, destination: Author, context: NSManagedObjectContext) throws -> Follow {
+    static func findOrCreate(source: Author, destination: Author, context: NSManagedObjectContext) throws -> Follow {
         if let follow = try? Follow.find(source: source, destination: destination, context: context) {
             return follow
         } else {

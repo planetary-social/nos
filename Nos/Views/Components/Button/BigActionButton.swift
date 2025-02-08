@@ -3,19 +3,18 @@ import SwiftUI
 /// A big bright button that is used as the primary call-to-action on a screen.
 struct BigActionButton: View {
     
-    var title: LocalizedStringKey
-    var backgroundGradient: LinearGradient = .bigAction
-    var action: () async -> Void
-    @State var disabled = false
+    private let backgroundGradient: LinearGradient = .bigAction
+    
+    let title: LocalizedStringKey
+    let action: () async -> Void
+    @State private var disabled = false
     
     init(
         _ title: LocalizedStringKey,
-        backgroundGradient: LinearGradient = .bigAction,
         action: @escaping () async -> Void,
         disabled: Bool = false
     ) {
         self.title = title
-        self.backgroundGradient = backgroundGradient
         self.action = action
         self.disabled = disabled
     }
