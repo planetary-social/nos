@@ -42,24 +42,25 @@ struct AuthorListsView: View {
                     ScrollView {
                         VStack(spacing: 0) {
                             ForEach(lists) { list in
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text(list.title ?? "")
-                                            .font(.body)
-                                        
-                                        Text(list.rowDescription)
-                                            .foregroundStyle(Color.secondaryTxt)
-                                            .font(.footnote)
-                                            .lineLimit(1)
-                                    }
-                                    
-                                    Spacer()
-                                }
-                                .padding(.leading, 16)
-                                .padding(.vertical, 12)
-                                .frame(minHeight: 50)
-                                .onTapGesture {
+                                Button {
                                     router.pushList(list)
+                                } label: {
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            Text(list.title ?? "")
+                                                .font(.body)
+                                            
+                                            Text(list.rowDescription)
+                                                .foregroundStyle(Color.secondaryTxt)
+                                                .font(.footnote)
+                                                .lineLimit(1)
+                                        }
+                                        
+                                        Spacer()
+                                    }
+                                    .padding(.leading, 16)
+                                    .padding(.vertical, 12)
+                                    .frame(minHeight: 50)
                                 }
                                 
                                 BeveledSeparator()
