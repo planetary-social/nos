@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed: text fields sometimes don't work on onboarding screens. [#178](https://github.com/verse-pbc/issues/issues/178)
 - Fixed: lists change positions randomly. [#183](https://github.com/verse-pbc/issues/issues/183)
 - Fixed main action button is not visible on iPad on "Build Your Network" onboarding screen. [#184](https://github.com/verse-pbc/issues/issues/184)
+- Fixed: on your lists view, the entire cell is not tappable. [#179](https://github.com/verse-pbc/issues/issues/179) 
 
 ### Internal Changes
 - Added function for creating a new list and a test verifying list editing. [#112](https://github.com/verse-pbc/issues/issues/112)
