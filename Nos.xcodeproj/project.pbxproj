@@ -212,6 +212,8 @@
 		504454712C90728E00251A7E /* Event+Fetching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5044546D2C90726A00251A7E /* Event+Fetching.swift */; };
 		504454722C90729100251A7E /* Event+Hydration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5044546F2C90728500251A7E /* Event+Hydration.swift */; };
 		5045540D2C81E10C0044ECAE /* EditableAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5045540C2C81E10C0044ECAE /* EditableAvatarView.swift */; };
+		505808472D5A441B00D1B4B2 /* NSFetchRequest+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 505808462D5A441400D1B4B2 /* NSFetchRequest+Nos.swift */; };
+		505808482D5A441B00D1B4B2 /* NSFetchRequest+Nos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 505808462D5A441400D1B4B2 /* NSFetchRequest+Nos.swift */; };
 		506102882CC3D29B003DC0E3 /* TextDebouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506102872CC3D29B003DC0E3 /* TextDebouncer.swift */; };
 		508133CB2C79F78500DFBF75 /* AttributedString+Quotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508133CA2C79F78500DFBF75 /* AttributedString+Quotation.swift */; };
 		508133DB2C7A003600DFBF75 /* AttributedString+QuotationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508133DA2C7A003600DFBF75 /* AttributedString+QuotationsTests.swift */; };
@@ -795,6 +797,7 @@
 		5044546D2C90726A00251A7E /* Event+Fetching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Fetching.swift"; sourceTree = "<group>"; };
 		5044546F2C90728500251A7E /* Event+Hydration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Hydration.swift"; sourceTree = "<group>"; };
 		5045540C2C81E10C0044ECAE /* EditableAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableAvatarView.swift; sourceTree = "<group>"; };
+		505808462D5A441400D1B4B2 /* NSFetchRequest+Nos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSFetchRequest+Nos.swift"; sourceTree = "<group>"; };
 		506102872CC3D29B003DC0E3 /* TextDebouncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDebouncer.swift; sourceTree = "<group>"; };
 		508133CA2C79F78500DFBF75 /* AttributedString+Quotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributedString+Quotation.swift"; sourceTree = "<group>"; };
 		508133DA2C7A003600DFBF75 /* AttributedString+QuotationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributedString+QuotationsTests.swift"; sourceTree = "<group>"; };
@@ -1975,6 +1978,7 @@
 				C987F85729BA981800B44E7A /* Font+Clarity.swift */,
 				C9B678DD29EEC35B00303F33 /* Foundation+Sendable.swift */,
 				C9F0BB6829A5039D000547FC /* Int+Bool.swift */,
+				505808462D5A441400D1B4B2 /* NSFetchRequest+Nos.swift */,
 				C9ADB14029951CB10075E7F8 /* NSManagedObject+Nos.swift */,
 				C97A1C8D29E58EC7009D9E8D /* NSManagedObjectContext+Nos.swift */,
 				508B2B602C9EF65300C14034 /* NSPersistentContainer+Nos.swift */,
@@ -2617,6 +2621,7 @@
 				3F43C47629A9625700E896A0 /* AuthorReference+CoreDataClass.swift in Sources */,
 				5B6136382C2F408E00ADD9C3 /* RepliesLabel.swift in Sources */,
 				03C7E7982CB9C16C0054624C /* InlineTipViewStyle.swift in Sources */,
+				505808482D5A441B00D1B4B2 /* NSFetchRequest+Nos.swift in Sources */,
 				C9ADB13D29929B540075E7F8 /* Bech32.swift in Sources */,
 				03C5DBC52CC19044009A9E0E /* LargeNumberView.swift in Sources */,
 				C95D68A1299E6D3E00429F86 /* BioView.swift in Sources */,
@@ -2838,6 +2843,7 @@
 				C9C2B78629E073E300548B4A /* RelaySubscription.swift in Sources */,
 				C973AB662A323167002AED16 /* EventReference+CoreDataProperties.swift in Sources */,
 				5B098DBC2BDAF6CB00500A1B /* NoteParserTests+NIP08.swift in Sources */,
+				505808472D5A441B00D1B4B2 /* NSFetchRequest+Nos.swift in Sources */,
 				0370712B2C90C76900BEAEC4 /* DefaultOpenGraphServiceTests.swift in Sources */,
 				C942566A29B66A2800C4202C /* Date+Elapsed.swift in Sources */,
 				C99721CC2AEBED26004EBEAB /* String+Empty.swift in Sources */,
