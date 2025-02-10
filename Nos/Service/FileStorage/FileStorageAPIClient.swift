@@ -39,7 +39,7 @@ final class NostrBuildAPIClient: FileStorageAPIClient {
     private static let serverInfoURLString = "https://nostr.build/.well-known/nostr/nip96.json"
 
     /// Cached server info which contains the API URL for uploading files.
-    private(set) var serverInfo: FileStorageServerInfoResponseJSON?
+    var serverInfo: FileStorageServerInfoResponseJSON?
 
     /// The `JSONDecoder` to use for decoding responses from the API.
     private var decoder: JSONDecoder {
