@@ -4,11 +4,11 @@ import Dependencies
 import Logger
 
 /// Works with ``PagedNoteListView`` to paginate reverse-chronological events from CoreData and relays simultaneously.
-class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICollectionViewDataSource,
+final class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICollectionViewDataSource,
     NSFetchedResultsControllerDelegate, UICollectionViewDataSourcePrefetching {
     
-    var fetchedResultsController: NSFetchedResultsController<Event>
-    var collectionView: UICollectionView
+    private var fetchedResultsController: NSFetchedResultsController<Event>
+    private var collectionView: UICollectionView
     
     @Dependency(\.relayService) private var relayService: RelayService
     private(set) var databaseFilter: NSFetchRequest<Event>
@@ -18,12 +18,12 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     private var managedObjectContext: NSManagedObjectContext
     private var header: () -> Header
     private var emptyPlaceholder: () -> EmptyPlaceholder
-    let pageSize = 20
+    private let pageSize = 20
     
     // We intentionally generate unique IDs for cell reuse to get around 
     // [this issue](https://github.com/planetary-social/nos/issues/873)
-    lazy var headerReuseID = { "Header-\(self.description)" }()
-    lazy var footerReuseID = { "Footer-\(self.description)" }()
+    private lazy var headerReuseID = { "Header-\(self.description)" }()
+    private lazy var footerReuseID = { "Footer-\(self.description)" }()
     
     init(
         databaseFilter: NSFetchRequest<Event>, 
@@ -198,7 +198,7 @@ class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject, UICol
     
     /// Instructs the pager to load more data if we are getting close to the end of the object in the list.
     /// - Parameter indexPath: the indexPath last loaded by the collection view.
-    func loadMoreIfNeeded(for indexPath: IndexPath) {
+    private func loadMoreIfNeeded(for indexPath: IndexPath) {
         largestLoadedRowIndex = max(largestLoadedRowIndex, indexPath.row)
         let lastPageStartIndex = (fetchedResultsController.fetchedObjects?.count ?? 0) - pageSize
         if indexPath.row > lastPageStartIndex {

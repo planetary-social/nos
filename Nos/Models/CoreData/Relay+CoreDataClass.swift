@@ -8,7 +8,7 @@ enum RelayError: Error {
 }
 
 @objc(Relay)
-public class Relay: NosManagedObject {
+final class Relay: NosManagedObject {
 
     static var recommended: [String] {
         [
@@ -49,7 +49,7 @@ public class Relay: NosManagedObject {
     // swiftlint:disable:next force_unwrapping
     static var nosAddress = URL(string: "wss://relay.nos.social")!
 
-    @nonobjc public class func relay(by address: String) -> NSFetchRequest<Relay> {
+    @nonobjc static func relay(by address: String) -> NSFetchRequest<Relay> {
         let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
         fetchRequest.predicate = NSPredicate(format: "address = %@", address)
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.createdAt, ascending: true)]
@@ -57,7 +57,7 @@ public class Relay: NosManagedObject {
         return fetchRequest
     }
     
-    @nonobjc public class func relays(for user: Author) -> NSFetchRequest<Relay> {
+    @nonobjc static func relays(for user: Author) -> NSFetchRequest<Relay> {
         let fetchRequest = NSFetchRequest<Relay>(entityName: "Relay")
         fetchRequest.predicate = NSPredicate(format: "ANY authors = %@", user)
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Relay.address, ascending: true)]
@@ -80,7 +80,7 @@ public class Relay: NosManagedObject {
     }
     
     @discardableResult
-    class func findOrCreate(by address: String, context: NSManagedObjectContext) throws -> Relay {
+    static func findOrCreate(by address: String, context: NSManagedObjectContext) throws -> Relay {
         if let existingRelay = try context.fetch(Relay.relay(by: address)).first {
             return existingRelay
         } else {
@@ -89,7 +89,7 @@ public class Relay: NosManagedObject {
         }
     }
 
-    class func find(
+    static func find(
         supporting nipNumber: Int,
         for author: Author,
         context: NSManagedObjectContext

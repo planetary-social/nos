@@ -11,13 +11,13 @@ import UIKit
 /// in the form of `Filters` and `RelaySubscription`s.
 @Observable class RelayService {
     
-    private var subscriptionManager: RelaySubscriptionManager
+    private let subscriptionManager: RelaySubscriptionManager
     private var processSubscriptionQueueTimer: AsyncTimer?
     private var backgroundProcessTimer: AsyncTimer?
     private var eventProcessingLoop: Task<Void, Error>?
     private var backgroundContext: NSManagedObjectContext
-    private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
-    private var parseQueue = ParseQueue()
+    private let processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
+    private let parseQueue = ParseQueue()
     
     @ObservationIgnored @Dependency(\.persistenceController) var persistenceController
     @ObservationIgnored @Dependency(\.analytics) private var analytics
@@ -27,11 +27,11 @@ import UIKit
     init(subscriptionManager: RelaySubscriptionManager = RelaySubscriptionManagerActor()) {
         self.subscriptionManager = subscriptionManager
         @Dependency(\.persistenceController) var persistenceController
-        self.backgroundContext = persistenceController.newBackgroundContext()
+        backgroundContext = persistenceController.newBackgroundContext()
         
         Task { await self.subscriptionManager.set(socketQueue: processingQueue, delegate: self) }
         
-        self.eventProcessingLoop = Task(priority: .userInitiated) { [weak self] in
+        eventProcessingLoop = Task(priority: .userInitiated) { [weak self] in
             try Task.checkCancellation()
             while true {
                 do {
@@ -45,7 +45,7 @@ import UIKit
             }
         }
         
-        self.processSubscriptionQueueTimer = AsyncTimer(
+        processSubscriptionQueueTimer = AsyncTimer(
             timeInterval: 1,
             priority: .high,
             firesImmediately: false
@@ -54,7 +54,7 @@ import UIKit
         }
         
         // TODO: fire this after all relays have connected, not right on init
-        self.backgroundProcessTimer = AsyncTimer(timeInterval: 60, firesImmediately: true, onFire: { [weak self] in
+        backgroundProcessTimer = AsyncTimer(timeInterval: 60, firesImmediately: true, onFire: { [weak self] in
             await self?.retryFailedPublishes()
             await self?.deleteExpiredEvents()
         })

@@ -4,7 +4,7 @@ struct RelayDetailView: View {
 
     let relay: Relay
 
-    func row(title: String, value: String) -> some View {
+    private func row(title: String, value: String) -> some View {
         HStack(alignment: .top) {
             Text("\(title): ")
             Text(value)
@@ -12,6 +12,7 @@ struct RelayDetailView: View {
         }
         .font(.clarity(.regular))
     }
+    
     var body: some View {
         List {
             Section {

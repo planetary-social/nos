@@ -6,7 +6,7 @@ struct NosNavigationStack<Content: View>: View {
     
     @Binding var path: NavigationPath
     
-    var content: () -> Content
+    let content: () -> Content
     
     var body: some View {
         NavigationStack(path: $path) {

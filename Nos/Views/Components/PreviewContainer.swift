@@ -4,7 +4,7 @@ import SwiftUI
 /// https://peterfriese.dev/posts/swiftui-previews-interactive/
 struct StatefulPreviewContainer<Value, Content: View>: View {
     @State var value: Value
-    var content: (Binding<Value>) -> Content
+    let content: (Binding<Value>) -> Content
     
     var body: some View {
         content($value)

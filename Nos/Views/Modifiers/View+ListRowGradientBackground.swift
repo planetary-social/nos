@@ -8,7 +8,7 @@ extension View {
 }
 
 /// A gradient background to apply to list rows.
-struct ListRowGradientBackground: ViewModifier {
+fileprivate struct ListRowGradientBackground: ViewModifier {
     func body(content: Content) -> some View {
         content
             .listRowBackground(LinearGradient(

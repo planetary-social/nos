@@ -159,7 +159,7 @@ struct ProfileEditView: View {
 
 fileprivate struct NosNIP05Field: View {
     
-    var username: String
+    let username: String
     @Binding var showConfirmationDialog: Bool
 
     var body: some View {
@@ -212,7 +212,7 @@ fileprivate struct NosNIP05Field: View {
 
 fileprivate struct NIP05Field: View {
 
-    var nip05: String
+    let nip05: String
     @Binding var showConfirmationDialog: Bool
     
     var body: some View {

@@ -4,7 +4,7 @@ import SwiftUI
 
 struct ConfirmUsernameDeletionSheet: View {
 
-    var author: Author
+    let author: Author
     @Binding var isPresented: Bool
 
     @Environment(CurrentUser.self) private var currentUser

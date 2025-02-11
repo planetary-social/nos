@@ -6,7 +6,7 @@ struct NewNotesButton: View {
     @FetchRequest var newNotes: FetchedResults<Event>
 
     /// The action to perform when the user taps this button.
-    var action: (() async -> Void)?
+    let action: (() async -> Void)?
 
     /// Initializes a new notes button with the given fetch request.
     /// When the given fetch request returns non-empty results, the button appears.

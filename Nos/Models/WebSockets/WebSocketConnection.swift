@@ -1,7 +1,7 @@
 import Starscream
 
 /// Represents a connection to a websocket with state tracking. Utilizes a Starscream WebSocket under the hood.
-class WebSocketConnection {
+final class WebSocketConnection {
     let socket: WebSocket
     var state: WebSocketState 
     

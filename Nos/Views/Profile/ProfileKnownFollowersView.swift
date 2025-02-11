@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct ProfileKnownFollowersView: View {
-    var first: Author
-    var knownFollowers: [Follow]
-    var followers: [Follow]
+    let first: Author
+    let knownFollowers: [Follow]
+    let followers: [Follow]
 
     private func attributedText(from content: String) -> AttributedString {
         let attributedString = (try? AttributedString(markdown: content)) ?? AttributedString(content)

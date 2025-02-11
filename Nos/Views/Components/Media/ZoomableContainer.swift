@@ -28,7 +28,7 @@ struct ZoomableContainer<ContainerContent: View>: View {
 }
 
 fileprivate struct ZoomableScrollView<ScrollViewContent: View>: UIViewRepresentable {
-    private var content: ScrollViewContent
+    private let content: ScrollViewContent
     private let maxAllowedScale: CGFloat
 
     @Binding private var currentScale: CGFloat

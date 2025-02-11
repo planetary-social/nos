@@ -6,7 +6,7 @@ import UIKit
 
 /// An object to manage analytics data, currently wired up to send data to PostHog and registered as a global
 /// dependency using the Dependencies library.
-class Analytics {
+final class Analytics {
 
     private let postHog: PostHogSDK?
 

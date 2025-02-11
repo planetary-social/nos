@@ -3,13 +3,13 @@ import Foundation
 /// See https://github.com/nostr-protocol/nips/blob/master/11.md
 struct JSONRelayMetadata: Codable {
 
-    var name: String?
-    var description: String?
-    var supportedNIPs: [Int]?
-    var pubkey: String?
-    var contact: String?
-    var software: String?
-    var version: String?
+    let name: String?
+    let description: String?
+    let supportedNIPs: [Int]?
+    let pubkey: String?
+    let contact: String?
+    let software: String?
+    let version: String?
 
     enum CodingKeys: String, CodingKey {
         case name

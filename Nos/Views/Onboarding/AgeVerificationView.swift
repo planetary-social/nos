@@ -19,7 +19,7 @@ struct AgeVerificationView: View {
         .navigationBarHidden(true)
     }
 
-    var ageVerificationStack: some View {
+    private var ageVerificationStack: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text("🪪")
                 .font(.system(size: 60))

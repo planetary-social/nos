@@ -6,9 +6,9 @@ struct RelayPicker: View {
     @Binding var selectedRelay: Relay?
     @Binding var isPresented: Bool
     
-    var defaultSelection: String
+    let defaultSelection: String
     
-    @FetchRequest var relays: FetchedResults<Relay>
+    @FetchRequest private var relays: FetchedResults<Relay>
     
     init(selectedRelay: Binding<Relay?>, defaultSelection: String, author: Author, isPresented: Binding<Bool>) {
         self._selectedRelay = selectedRelay

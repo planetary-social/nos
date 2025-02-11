@@ -9,13 +9,13 @@ struct ProfileHeader: View {
     @Binding private var selectedTab: ProfileFeedType
     @State private var showingBio = false
 
-    var followsRequest: FetchRequest<Follow>
-    var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
+    private let followsRequest: FetchRequest<Follow>
+    private var followsResult: FetchedResults<Follow> { followsRequest.wrappedValue }
 
-    var followersRequest: FetchRequest<Follow>
-    var followersResult: FetchedResults<Follow> { followersRequest.wrappedValue }
+    private let followersRequest: FetchRequest<Follow>
+    private var followersResult: FetchedResults<Follow> { followersRequest.wrappedValue }
     
-    var followers: Followed {
+    private var followers: Followed {
         followersResult.map { $0 }
     }
     

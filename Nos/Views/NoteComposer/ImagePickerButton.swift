@@ -128,7 +128,7 @@ struct ImagePickerButton<Label>: View where Label: View {
     
     /// Called when a user chooses an image or video.
     /// - Parameter url: The URL of the image or video on disk.
-    func userPicked(url: URL?) {
+    private func userPicked(url: URL?) {
         if let url {
             analytics.selectedImage()
             onCompletion(url)

@@ -16,7 +16,7 @@ enum EventReferenceMarker: String {
 }
 
 @objc(EventReference)
-public class EventReference: NosManagedObject {
+final class EventReference: NosManagedObject {
     
     var type: EventReferenceMarker? {
         marker.unwrap { EventReferenceMarker(rawValue: $0) }

@@ -4,18 +4,12 @@ import SwiftUI
 struct FollowsNotificationCard: View {
     @EnvironmentObject private var router: Router
     @Environment(\.managedObjectContext) private var viewContext
-    var author: Author
+    let author: Author
 
     let viewModel: NotificationViewModel
 
     /// Whether the follow button should be displayed or not.
-    let showsFollowButton: Bool
-
-    init(author: Author, viewModel: NotificationViewModel, showsFollowButton: Bool = true) {
-        self.author = author
-        self.viewModel = viewModel
-        self.showsFollowButton = showsFollowButton
-    }
+    private let showsFollowButton = true
 
     private func showFollowProfile() {
         guard let follower = try? Author.find(by: viewModel.authorID ?? "", context: viewContext) else {

@@ -3,16 +3,16 @@ import Dependencies
 
 struct AppView: View {
 
-    @State var showNewPost = false
-    @State var newPostContents: String?
+    @State private var showNewPost = false
+    @State private var newPostContents: String?
 
-    @Environment(AppController.self) var appController
+    @Environment(AppController.self) private var appController
     @EnvironmentObject private var router: Router
     @Environment(PushNotificationService.self) private var pushNotificationService
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.userDefaults) private var userDefaults
-    @Environment(CurrentUser.self) var currentUser
+    @Environment(CurrentUser.self) private var currentUser
     @Environment(RelayService.self) private var relayService
 
     @State private var lastSelectedTab = AppDestination.home

@@ -4,7 +4,7 @@ import CoreData
 /// Represents a notification we will display to the user. We save records of them to the database in order to
 /// de-duplicate them and keep track of whether they have been seen by the user.
 @objc(NosNotification)
-public class NosNotification: NosManagedObject {
+final class NosNotification: NosManagedObject {
 
     static func createIfNecessary(
         from eventID: RawEventID,
@@ -83,7 +83,7 @@ public class NosNotification: NosManagedObject {
         Calendar.current.date(byAdding: .month, value: -2, to: .now) ?? .now
     }
 
-    @nonobjc public class func emptyRequest() -> NSFetchRequest<NosNotification> {
+    @nonobjc static func emptyRequest() -> NSFetchRequest<NosNotification> {
         let fetchRequest = NSFetchRequest<NosNotification>(entityName: "NosNotification")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \NosNotification.createdAt, ascending: true)]
         fetchRequest.predicate = NSPredicate.false
@@ -96,7 +96,7 @@ public class NosNotification: NosManagedObject {
     ///   - since: a date that will be used as a lower bound for the request.
     ///   - limit: a max number of notifications to fetch.
     /// - Returns: A fetch request for all notifications.
-    @nonobjc public class func allRequest(
+    @nonobjc static func allRequest(
         for currentUser: Author,
         since: Date? = nil,
         limit: Int? = nil
@@ -114,7 +114,7 @@ public class NosNotification: NosManagedObject {
     ///   - currentUser: the author you want to view notifications for.
     ///   - limit: a max number of notifications to fetch.
     /// - Returns: A fetch request for outOfNetwork notifications.
-    @nonobjc public class func outOfNetworkRequest(
+    @nonobjc static func outOfNetworkRequest(
         for currentUser: Author,
         limit: Int? = nil
     ) -> NSFetchRequest<NosNotification> {
@@ -139,7 +139,7 @@ public class NosNotification: NosManagedObject {
     ///   - currentUser: the author you want to view notifications for.
     ///   - limit: a max number of notifications to fetch.
     /// - Returns: A fetch request for inNetwork notifications.
-    @nonobjc public class func inNetworkRequest(
+    @nonobjc static func inNetworkRequest(
         for currentUser: Author,
         limit: Int? = nil
     ) -> NSFetchRequest<NosNotification> {
@@ -165,7 +165,7 @@ public class NosNotification: NosManagedObject {
     ///   - currentUser: the author you want to view notifications for.
     ///   - limit: a max number of notifications to fetch.
     /// - Returns: A fetch request for follow notifications.
-    @nonobjc public class func followsRequest(
+    @nonobjc static func followsRequest(
         for currentUser: Author,
         limit: Int? = nil
     ) -> NSFetchRequest<NosNotification> {

@@ -13,8 +13,8 @@
 		030036AB2C5D872B002C71F5 /* NewNotesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030036AA2C5D872B002C71F5 /* NewNotesButton.swift */; };
 		0303B1532D025C9A00077929 /* AuthorList+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0303B13E2D025BDD00077929 /* AuthorList+CoreDataProperties.swift */; };
 		0303B1542D025C9A00077929 /* AuthorList+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0303B13E2D025BDD00077929 /* AuthorList+CoreDataProperties.swift */; };
-		0304D0A72C9B4BF2001D16C7 /* OpenGraphMetatdata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */; };
-		0304D0A82C9B4BF2001D16C7 /* OpenGraphMetatdata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */; };
+		0304D0A72C9B4BF2001D16C7 /* OpenGraphMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0A62C9B4BF2001D16C7 /* OpenGraphMetadata.swift */; };
+		0304D0A82C9B4BF2001D16C7 /* OpenGraphMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0A62C9B4BF2001D16C7 /* OpenGraphMetadata.swift */; };
 		0304D0B22C9B731F001D16C7 /* MockOpenGraphService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */; };
 		0304D0B32C9B731F001D16C7 /* MockOpenGraphService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */; };
 		030AE4292BE3D63C004DEE02 /* FeaturedAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */; };
@@ -639,7 +639,7 @@
 		030036AA2C5D872B002C71F5 /* NewNotesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNotesButton.swift; sourceTree = "<group>"; };
 		0303B11E2D0257D400077929 /* Nos 21.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 21.xcdatamodel"; sourceTree = "<group>"; };
 		0303B13E2D025BDD00077929 /* AuthorList+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthorList+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGraphMetatdata.swift; sourceTree = "<group>"; };
+		0304D0A62C9B4BF2001D16C7 /* OpenGraphMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGraphMetadata.swift; sourceTree = "<group>"; };
 		0304D0B12C9B731F001D16C7 /* MockOpenGraphService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOpenGraphService.swift; sourceTree = "<group>"; };
 		030AE4282BE3D63C004DEE02 /* FeaturedAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedAuthor.swift; sourceTree = "<group>"; };
 		030E56C92CC1BC6200A4A51E /* PublicKeyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeyView.swift; sourceTree = "<group>"; };
@@ -1559,7 +1559,7 @@
 		03E7118B2C936DE5000B6F96 /* OpenGraph */ = {
 			isa = PBXGroup;
 			children = (
-				0304D0A62C9B4BF2001D16C7 /* OpenGraphMetatdata.swift */,
+				0304D0A62C9B4BF2001D16C7 /* OpenGraphMetadata.swift */,
 				03E711802C936DD1000B6F96 /* OpenGraphParser.swift */,
 				03C49AC12C938DE100502321 /* SoupOpenGraphParser.swift */,
 			);
@@ -2590,7 +2590,7 @@
 				03D1B42C2C3C1B0D001778CD /* TLVElement.swift in Sources */,
 				C987F85B29BA9ED800B44E7A /* Font+Clarity.swift in Sources */,
 				3FB5E651299D28A200386527 /* OnboardingView.swift in Sources */,
-				0304D0A72C9B4BF2001D16C7 /* OpenGraphMetatdata.swift in Sources */,
+				0304D0A72C9B4BF2001D16C7 /* OpenGraphMetadata.swift in Sources */,
 				C973AB5F2A323167002AED16 /* AuthorReference+CoreDataProperties.swift in Sources */,
 				030FECAB2CB5E0B900820014 /* BuildYourNetworkView.swift in Sources */,
 				A3B943CF299AE00100A15A08 /* Keychain.swift in Sources */,
@@ -2796,7 +2796,7 @@
 				035729CA2BE4173E005FEE85 /* PreviewData.swift in Sources */,
 				037975D12C0E341500ADDF37 /* MockFeatureFlags.swift in Sources */,
 				C92E7F682C4EFF3D00B80638 /* WebSocketErrorEvent.swift in Sources */,
-				0304D0A82C9B4BF2001D16C7 /* OpenGraphMetatdata.swift in Sources */,
+				0304D0A82C9B4BF2001D16C7 /* OpenGraphMetadata.swift in Sources */,
 				50089A0D2C97182200834588 /* CurrentUser+PublishEvents.swift in Sources */,
 				504454722C90729100251A7E /* Event+Hydration.swift in Sources */,
 				5BD08BB22A38E96F00BB926C /* JSONRelayMetadata.swift in Sources */,
