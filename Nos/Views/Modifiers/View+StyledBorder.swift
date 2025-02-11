@@ -9,7 +9,7 @@ extension View {
 }
 
 /// A rounded border with a subtle styled gradient.
-struct StyledBorder: ViewModifier {
+fileprivate struct StyledBorder: ViewModifier {
     func body(content: Content) -> some View {
         content
             .overlay(

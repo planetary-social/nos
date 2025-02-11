@@ -14,14 +14,14 @@ struct CompactNoteView: View {
     
     /// If true this view will truncate long notes and show a "Read more" button to view the whole thing. If false 
     /// the full note will always be displayed
-    private var shouldTruncate: Bool
+    private let shouldTruncate: Bool
     
     /// Whether link previews should be displayed for links found in the note text.
-    private var showLinkPreviews: Bool
+    private let showLinkPreviews: Bool
     
     /// If true links will be highlighted and open when tapped. If false the text will change to a secondary color
     /// and links will not be tappable.
-    private var allowUserInteraction: Bool
+    private let allowUserInteraction: Bool
 
     /// The feature flags to use to determine what features are enabled.
     @Dependency(\.featureFlags) private var featureFlags
@@ -50,16 +50,16 @@ struct CompactNoteView: View {
     }
     
     /// Calculates whether the note text is long enough to need truncation given `truncationLineLimit`.
-    var noteNeedsTruncation: Bool {
-        shouldTruncate && intrinsicSize.height > truncatedSize.height + 30 
+    private var noteNeedsTruncation: Bool {
+        shouldTruncate && intrinsicSize.height > truncatedSize.height + 30
     }
     
     /// Calculates whether the Read More button should be shown. 
-    var showReadMoreButton: Bool {
+    private var showReadMoreButton: Bool {
         noteNeedsTruncation && isTextTruncated
     }
     
-    var formattedText: some View {
+    private var formattedText: some View {
         noteText
             .font(.body)
             .foregroundColor(allowUserInteraction ? .primaryTxt : .secondaryTxt)
@@ -75,7 +75,7 @@ struct CompactNoteView: View {
             })
     }
     
-    var noteText: some View {
+    private var noteText: some View {
         Group {
             switch note.attributedContent {
             case .loading:

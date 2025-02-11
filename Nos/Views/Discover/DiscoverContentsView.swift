@@ -3,7 +3,7 @@ import SwiftUI
 import Dependencies
 
 struct DiscoverContentsView: View {
-    private var searchController: SearchController
+    private let searchController: SearchController
 
     @EnvironmentObject private var router: Router
 
@@ -19,7 +19,7 @@ struct DiscoverContentsView: View {
     @State private var selectedCategory: FeaturedAuthorCategory = .all
     
     @State private var featuredAuthorsPerformingInitialLoad = true
-    let featuredAuthorsInitialLoadTime = 1
+    private let featuredAuthorsInitialLoadTime = 1
 
     /// Initializes a DiscoverContentsView with the selected category and a search controller.
     /// - Parameters:
@@ -76,7 +76,7 @@ struct DiscoverContentsView: View {
         }
     }
     
-    var featuredAuthorsView: some View {
+    private var featuredAuthorsView: some View {
         ZStack {
             ScrollView {
                 LazyVStack {
@@ -124,7 +124,7 @@ struct DiscoverContentsView: View {
         }
     }
 
-    var categoryPicker: some View {
+    private var categoryPicker: some View {
         ViewThatFits {
             categoriesStack
 
@@ -136,7 +136,7 @@ struct DiscoverContentsView: View {
         .background(Color.cardBgBottom)
     }
 
-    var categoriesStack: some View {
+    private var categoriesStack: some View {
         HStack(spacing: 2) {
             Spacer()
             ForEach(FeaturedAuthorCategory.allCases, id: \.self) { category in

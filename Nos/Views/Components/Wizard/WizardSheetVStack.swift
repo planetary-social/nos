@@ -5,7 +5,7 @@ import SwiftUI
 /// This View was implemented to be re-used in the wizards that set-up and delete usernames in EditProfile screen.
 struct WizardSheetVStack<Content>: View where Content: View {
 
-    private var content: () -> Content
+    private let content: () -> Content
     private let borderWidth: CGFloat = 6
     private let cornerRadius: CGFloat = 8
     private let inDrawer = true

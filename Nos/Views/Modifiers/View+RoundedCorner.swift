@@ -5,14 +5,14 @@ extension View {
     /// Allows you to round specific corners of views with different radii.
     /// https://stackoverflow.com/a/58606176/982195
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape( RoundedCorner(radius: radius, corners: corners) )
+        clipShape(RoundedCorner(radius: radius, corners: corners))
     }
 }
 
-struct RoundedCorner: Shape {
+fileprivate struct RoundedCorner: Shape {
 
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
+    let radius: CGFloat
+    let corners: UIRectCorner
 
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(

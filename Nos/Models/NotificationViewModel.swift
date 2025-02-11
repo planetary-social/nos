@@ -13,7 +13,7 @@ enum NotificationType {
 /// in the .init method of a View. Because of this you must call the async function
 /// `loadContent()` to populate the `content` variable because it relies on some
 ///  database queries.
-class NotificationViewModel: ObservableObject, Identifiable {
+final class NotificationViewModel: ObservableObject, Identifiable {
     let noteID: RawNostrID?
     let authorID: RawAuthorID?
     let authorProfilePhotoURL: URL?

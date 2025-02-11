@@ -5,11 +5,11 @@ import SwiftUI
 /// styles listed in `RepliesDisplayType`.
 struct RepliesLabel: View {
 
-    var repliesDisplayType: RepliesDisplayType
-    var note: Event
+    let repliesDisplayType: RepliesDisplayType
+    let note: Event
 
     @FetchRequest private var replies: FetchedResults<Event>
-    @Dependency(\.currentUser) var currentUser
+    @Dependency(\.currentUser) private var currentUser
     @State private var avatars = [URL?]()
 
     init(repliesDisplayType: RepliesDisplayType, for note: Event) {

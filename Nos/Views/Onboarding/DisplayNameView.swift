@@ -42,7 +42,7 @@ struct DisplayNameView: View {
         }
     }
 
-    var displayNameStack: some View {
+    private var displayNameStack: some View {
         VStack(alignment: .leading, spacing: 20) {
             LargeNumberView(3)
             Text("displayNameHeadline")
@@ -75,12 +75,12 @@ struct DisplayNameView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    func nextStep() {
+    private func nextStep() {
         state.step = .username
     }
 
     /// Saves the display name locally and publishes the event to relays. Sets `showError` if it fails.
-    func save() async {
+    private func save() async {
         guard let author = await currentUser.author else {
             showError = true
             return

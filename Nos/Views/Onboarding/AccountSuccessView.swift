@@ -23,7 +23,7 @@ struct AccountSuccessView: View {
         .navigationBarHidden(true)
     }
 
-    var accountSuccessStack: some View {
+    private var accountSuccessStack: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text(emoji)
                 .font(.system(size: 60))
@@ -44,15 +44,15 @@ struct AccountSuccessView: View {
         .readabilityPadding()
     }
 
-    var emoji: String {
+    private var emoji: String {
         state.allStepsSucceeded ? "🎉" : "🤔"
     }
 
-    var headline: LocalizedStringKey {
+    private var headline: LocalizedStringKey {
         state.allStepsSucceeded ? "accountSuccessHeadline" : "accountPartialSuccessHeadline"
     }
 
-    var description: LocalizedStringKey {
+    private var description: LocalizedStringKey {
         state.allStepsSucceeded ? "accountSuccessDescription" : "accountPartialSuccessDescription"
     }
 }

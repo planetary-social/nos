@@ -5,7 +5,7 @@ import SwiftUI
 
 struct AlreadyHaveANIP05View: View {
     @Binding var isPresented: Bool
-    @State var usernameObserver = TextDebouncer()
+    @State private var usernameObserver = TextDebouncer()
     @State private var verified: Bool?
     @State private var isVerifying = false
     @State private var verifyTask: Task<Void, Never>?

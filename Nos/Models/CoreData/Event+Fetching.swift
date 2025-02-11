@@ -2,7 +2,7 @@ import CoreData
 
 extension Event {
     
-    @nonobjc public class func allEventsRequest() -> NSFetchRequest<Event> {
+    @nonobjc static func allEventsRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(keyPath: \Event.createdAt, ascending: true),
@@ -11,14 +11,14 @@ extension Event {
         return fetchRequest
     }
     
-    @nonobjc public class func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
+    @nonobjc static func allPostsRequest(_ eventKind: EventKind = .text) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "kind = %i", eventKind.rawValue)
         return fetchRequest
     }
     
-    @nonobjc public class func allMentionsPredicate(for user: Author) -> NSPredicate {
+    @nonobjc static func allMentionsPredicate(for user: Author) -> NSPredicate {
         guard let publicKey = user.hexadecimalPublicKey, !publicKey.isEmpty else {
             return NSPredicate.false
         }
@@ -30,7 +30,7 @@ extension Event {
         )
     }
 
-    @nonobjc public class func unpublishedEventsRequest(for user: Author) -> NSFetchRequest<Event> {
+    @nonobjc static func unpublishedEventsRequest(for user: Author) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         fetchRequest.predicate = NSPredicate(
@@ -43,14 +43,14 @@ extension Event {
         return fetchRequest
     }
     
-    @nonobjc public class func allRepliesPredicate(for user: Author) -> NSPredicate {
+    @nonobjc static func allRepliesPredicate(for user: Author) -> NSPredicate {
         NSPredicate(
             format: "kind = 1 AND ANY eventReferences.referencedEvent.author = %@ AND deletedOn.@count = 0",
             user
         )
     }
     
-    @nonobjc public class func allZapsPredicate(for user: Author) -> NSPredicate {
+    @nonobjc static func allZapsPredicate(for user: Author) -> NSPredicate {
         guard let publicKey = user.hexadecimalPublicKey, !publicKey.isEmpty else {
             return NSPredicate.false
         }
@@ -68,7 +68,7 @@ extension Event {
     ///   - since: a date that will be used as a lower bound for the request.
     ///   - limit: a max number of events to fetch.
     /// - Returns: A fetch request for the events described.
-    @nonobjc public class func all(
+    @nonobjc static func all(
         notifying user: Author,
         since: Date? = nil,
         limit: Int? = nil
@@ -97,7 +97,7 @@ extension Event {
         return fetchRequest
     }
     
-    @nonobjc public class func lastReceived(for user: Author) -> NSFetchRequest<Event> {
+    @nonobjc static func lastReceived(for user: Author) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "author != %@", user)
         fetchRequest.fetchLimit = 1
@@ -105,11 +105,11 @@ extension Event {
         return fetchRequest
     }
     
-    @nonobjc public class func allReplies(to rootEvent: Event) -> NSFetchRequest<Event> {
+    @nonobjc static func allReplies(to rootEvent: Event) -> NSFetchRequest<Event> {
         allReplies(toNoteWith: rootEvent.identifier)
     }
         
-    @nonobjc public class func allReplies(toNoteWith noteID: String?) -> NSFetchRequest<Event> {
+    @nonobjc static func allReplies(toNoteWith noteID: String?) -> NSFetchRequest<Event> {
         guard let noteID else {
             return emptyRequest()
         }
@@ -133,7 +133,7 @@ extension Event {
     ///
     /// Intended to be used primarily to compute the number of replies and for
     /// building a set of author avatars.
-    @nonobjc public class func replies(to noteID: RawEventID) -> NSFetchRequest<Event> {
+    @nonobjc static func replies(to noteID: RawEventID) -> NSFetchRequest<Event> {
         let format = """
             SUBQUERY(
                 eventReferences,
@@ -175,7 +175,7 @@ extension Event {
     /// criteria.
     /// - Parameter before: The date before which events will be considered for cleanup.
     /// - Parameter user: The Author record for the currently logged in user. Special treatment is given to their data.
-    @nonobjc public class func cleanupRequest(before date: Date, for user: Author) -> NSFetchRequest<Event> {
+    @nonobjc static func cleanupRequest(before date: Date, for user: Author) -> NSFetchRequest<Event> {
         let oldStoryCutoff = Calendar.current.date(byAdding: .day, value: -2, to: .now) ?? .now
         
         let request = NSFetchRequest<Event>(entityName: "Event")
@@ -205,7 +205,7 @@ extension Event {
     /// - Parameter user: The Author record for the currently logged in user. Special treatment is given to their data.
     /// - Parameter asSubquery: If true then each attribute in the predicate will prefixed with "$event." so the
     ///   predicate can be used in a SUBQUERY.
-    @nonobjc public class func protectedFromCleanupPredicate(
+    @nonobjc static func protectedFromCleanupPredicate(
         for user: Author,
         asSubquery: Bool = false
     ) -> NSPredicate {
@@ -245,7 +245,7 @@ extension Event {
         )
     }
     
-    @nonobjc public class func expiredRequest() -> NSFetchRequest<Event> {
+    @nonobjc static func expiredRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "expirationDate <= %@", Date.now as CVarArg)
         return fetchRequest
@@ -253,7 +253,7 @@ extension Event {
 
     /// Builds a query that returns an Event with "preview" as its `identifier` if it exists.
     /// - Returns: A Fetch Request with the necessary query inside.
-    @nonobjc public class func previewRequest() -> NSFetchRequest<Event> {
+    @nonobjc static func previewRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(
             format: "identifier = %@",
@@ -262,7 +262,7 @@ extension Event {
         return fetchRequest
     }
 
-    @nonobjc public class func event(by identifier: RawEventID) -> NSFetchRequest<Event> {
+    @nonobjc static func event(by identifier: RawEventID) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.identifier, ascending: true)]
@@ -270,7 +270,7 @@ extension Event {
         return fetchRequest
     }
     
-    @nonobjc public class func event(
+    @nonobjc static func event(
         by replaceableID: RawReplaceableID,
         author: Author,
         kind: Int64,
@@ -300,7 +300,7 @@ extension Event {
         return fetchRequest
     }
     
-    @nonobjc public class func hydratedEvent(by identifier: String) -> NSFetchRequest<Event> {
+    @nonobjc static func hydratedEvent(by identifier: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.predicate = NSPredicate(
             format: "identifier = %@ AND createdAt != nil AND author != nil", identifier
@@ -309,7 +309,7 @@ extension Event {
         return fetchRequest
     }
     
-    @nonobjc public class func event(by identifier: String, seenOn relay: Relay) -> NSFetchRequest<Event> {
+    @nonobjc static func event(by identifier: String, seenOn relay: Relay) -> NSFetchRequest<Event> {
         guard let relayAddress = relay.address else {
             return Event.emptyRequest()
         }
@@ -332,7 +332,7 @@ extension Event {
     ///   - after: Only fetch events that were created after this date. Defaults to `nil`.
     ///   - relay: Only fetch events on this relay. Defaults to `nil`, which uses all the user's relays.
     /// - Returns: A predicate matching the given parameters that can be used to fetch the user's home feed.
-    @nonobjc private class func homeFeedPredicate(
+    @nonobjc static func homeFeedPredicate(
         for user: Author,
         before: Date? = nil,
         after: Date? = nil,
@@ -392,7 +392,7 @@ extension Event {
         return NSCompoundPredicate(andPredicateWithSubpredicates: andPredicates)
     }
 
-    @nonobjc public class func homeFeed(
+    @nonobjc static func homeFeed(
         for user: Author,
         before: Date,
         seenOn relay: Relay? = nil,
@@ -404,7 +404,7 @@ extension Event {
         return fetchRequest
     }
 
-    @nonobjc public class func homeFeed(
+    @nonobjc static func homeFeed(
         for user: Author,
         after: Date,
         seenOn relay: Relay? = nil,
@@ -416,7 +416,7 @@ extension Event {
         return fetchRequest
     }
 
-    @nonobjc public class func likes(noteID: String) -> NSFetchRequest<Event> {
+    @nonobjc static func likes(noteID: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let noteIsLikedByUserPredicate = NSPredicate(
@@ -429,7 +429,7 @@ extension Event {
         return fetchRequest
     }
     
-    @nonobjc public class func reposts(noteID: String) -> NSFetchRequest<Event> {
+    @nonobjc static func reposts(noteID: String) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
         let noteIsLikedByUserPredicate = NSPredicate(
@@ -442,20 +442,20 @@ extension Event {
         return fetchRequest
     }
     
-    @nonobjc public class func emptyRequest() -> NSFetchRequest<Event> {
+    @nonobjc static func emptyRequest() -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: true)]
         fetchRequest.predicate = NSPredicate.false
         return fetchRequest
     }
     
-    @nonobjc public class func deleteAllEvents() -> NSBatchDeleteRequest {
+    @nonobjc static func deleteAllEvents() -> NSBatchDeleteRequest {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Event")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         return deleteRequest
     }
     
-    @nonobjc public class func deleteAllPosts(by author: Author) -> NSBatchDeleteRequest {
+    @nonobjc static func deleteAllPosts(by author: Author) -> NSBatchDeleteRequest {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Event")
         let kind = EventKind.text.rawValue
         let key = author.hexadecimalPublicKey ?? "notakey"

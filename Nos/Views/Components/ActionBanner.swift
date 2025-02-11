@@ -3,11 +3,11 @@ import SwiftUI
 /// A large colorful banner with a message and action button.
 struct ActionBanner: View {
     
-    var messageText: LocalizedStringKey
+    let messageText: LocalizedStringKey
     var messageImage: Image?
-    var buttonText: LocalizedStringKey
+    let buttonText: LocalizedStringKey
     var buttonImage: Image?
-    var shouldButtonFillHorizontalSpace: Bool
+    let shouldButtonFillHorizontalSpace: Bool
     var action: (() -> Void)?
 
     private var backgroundGradient: LinearGradient {

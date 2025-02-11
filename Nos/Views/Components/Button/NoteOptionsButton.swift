@@ -91,11 +91,11 @@ struct NoteOptionsButton: View {
         }
     }
     
-    func copyMessageIdentifier() {
+    private func copyMessageIdentifier() {
         UIPasteboard.general.string = note.bech32NoteID
     }
     
-    func copyMessage() {
+    private func copyMessage() {
         Task {
             // TODO: put links back in
             let attrString = await Event.attributedContent(
@@ -106,7 +106,7 @@ struct NoteOptionsButton: View {
         }
     }
     
-    func deletePost() async {
+    private func deletePost() async {
         if let identifier = note.identifier {
             await currentUser.publishDelete(for: [identifier])
         }

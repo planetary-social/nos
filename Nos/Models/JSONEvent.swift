@@ -5,13 +5,13 @@ import Logger
 struct JSONEvent: Codable, Hashable, VerifiableEvent {
     
     var id: String
-    var pubKey: String
-    var createdAt: Int64
-    var kind: Int64
+    let pubKey: RawAuthorID
+    let createdAt: Int64
+    let kind: Int64
     var tags: [[String]]
-    var content: String
+    let content: String
     var signature: String?
-    var identifier: String? { self.id }
+    var identifier: RawEventID? { id }
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -25,7 +25,7 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
     
     internal init(
         id: String,
-        pubKey: String,
+        pubKey: RawAuthorID,
         createdAt: Int64,
         kind: Int64,
         tags: [[String]],
@@ -169,13 +169,13 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
 }
 
 struct MetadataEventJSON: Codable {
-    var displayName: String?
-    var name: String?
-    var nip05: String?
-    var about: String?
-    var website: String?
-    var picture: String?
-    var pronouns: String?
+    let displayName: String?
+    let name: String?
+    let nip05: String?
+    let about: String?
+    let website: String?
+    let picture: String?
+    let pronouns: String?
     
     var profilePhotoURL: URL? {
         URL(string: picture ?? "")

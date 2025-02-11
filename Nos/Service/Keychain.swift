@@ -11,7 +11,7 @@ import UIKit
 }
 
 /// Don't use this outside CurrentUser
-class SystemKeychain: Keychain {
+final class SystemKeychain: Keychain {
     
     let keychainPrivateKey = "privateKey"
         
@@ -61,7 +61,7 @@ class SystemKeychain: Keychain {
     }
 }
 
-class InMemoryKeychain: Keychain {
+final class InMemoryKeychain: Keychain {
     
     let keychainPrivateKey = "privateKey"
     

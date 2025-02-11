@@ -1,7 +1,7 @@
 import Foundation
 
 /// Defines a common interface for refreshing.
-@Observable @MainActor class RefreshController {
+@Observable @MainActor final class RefreshController {
     /// Whether a refresh should start or not. When this is `true`, the view and data source will begin refreshing.
     var startRefresh: Bool
 

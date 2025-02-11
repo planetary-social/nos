@@ -6,8 +6,8 @@ struct FeedSelectorTip {
     
     static let hasShownFeedTipKey = "com.verse.nos.Home.hasShownFeedTip"
     
-    static var minimumScrollOffset: CGFloat = 1500
-    static var maximumDelay: TimeInterval = 30
+    static let minimumScrollOffset: CGFloat = 1500
+    static let maximumDelay: TimeInterval = 30
     
     var hasShown: Bool {
         get {

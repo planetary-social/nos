@@ -2,10 +2,10 @@ import Combine
 import SwiftUI
 
 /// Detects double taps on a tab item and pops the opened screens to return the user to the root view
-struct DoubleTapToPopModifier: ViewModifier {
+fileprivate struct DoubleTapToPopModifier: ViewModifier {
 
-    var tab: AppDestination
-    var onRoot: (@MainActor (ScrollViewProxy) -> Void)?
+    let tab: AppDestination
+    let onRoot: (@MainActor (ScrollViewProxy) -> Void)?
 
     @EnvironmentObject private var router: Router
     @State private var cancellable: AnyCancellable?

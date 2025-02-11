@@ -3,179 +3,179 @@ import CoreData
 
 extension Event {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Event> {
+    @nonobjc class func fetchRequest() -> NSFetchRequest<Event> {
         NSFetchRequest<Event>(entityName: "Event")
     }
 
-    @NSManaged public var allTags: NSObject?
-    @NSManaged public var content: String?
-    @NSManaged public var createdAt: Date?
-    @NSManaged public var expirationDate: Date?
-    @NSManaged public var identifier: RawEventID?
-    @NSManaged public var isVerified: Bool
-    @NSManaged public var kind: Int64
-    @NSManaged public var receivedAt: Date?
-    @NSManaged public var replaceableIdentifier: String?
-    @NSManaged public var sendAttempts: Int16
-    @NSManaged public var signature: String?
-    @NSManaged public var author: Author?
-    @NSManaged public var authorReferences: NSOrderedSet
-    @NSManaged public var deletedOn: Set<Relay>
-    @NSManaged public var eventReferences: NSOrderedSet
-    @NSManaged public var publishedTo: Set<Relay>
-    @NSManaged public var referencingEvents: Set<EventReference>
-    @NSManaged public var seenOnRelays: Set<Relay>
-    @NSManaged public var shouldBePublishedTo: Set<Relay>
-    @NSManaged public var isRead: Bool
-    @NSManaged public var notifications: NosNotification?
+    @NSManaged var allTags: NSObject?
+    @NSManaged var content: String?
+    @NSManaged var createdAt: Date?
+    @NSManaged var expirationDate: Date?
+    @NSManaged var identifier: RawEventID?
+    @NSManaged var isVerified: Bool
+    @NSManaged var kind: Int64
+    @NSManaged var receivedAt: Date?
+    @NSManaged var replaceableIdentifier: String?
+    @NSManaged var sendAttempts: Int16
+    @NSManaged var signature: String?
+    @NSManaged var author: Author?
+    @NSManaged var authorReferences: NSOrderedSet
+    @NSManaged var deletedOn: Set<Relay>
+    @NSManaged var eventReferences: NSOrderedSet
+    @NSManaged var publishedTo: Set<Relay>
+    @NSManaged var referencingEvents: Set<EventReference>
+    @NSManaged var seenOnRelays: Set<Relay>
+    @NSManaged var shouldBePublishedTo: Set<Relay>
+    @NSManaged var isRead: Bool
+    @NSManaged var notifications: NosNotification?
 }
 
 // MARK: Generated accessors for authorReferences
 extension Event {
 
     @objc(insertObject:inAuthorReferencesAtIndex:)
-    @NSManaged public func insertIntoAuthorReferences(_ value: AuthorReference, at idx: Int)
+    @NSManaged func insertIntoAuthorReferences(_ value: AuthorReference, at idx: Int)
 
     @objc(removeObjectFromAuthorReferencesAtIndex:)
-    @NSManaged public func removeFromAuthorReferences(at idx: Int)
+    @NSManaged func removeFromAuthorReferences(at idx: Int)
 
     @objc(insertAuthorReferences:atIndexes:)
-    @NSManaged public func insertIntoAuthorReferences(_ values: [AuthorReference], at indexes: NSIndexSet)
+    @NSManaged func insertIntoAuthorReferences(_ values: [AuthorReference], at indexes: NSIndexSet)
 
     @objc(removeAuthorReferencesAtIndexes:)
-    @NSManaged public func removeFromAuthorReferences(at indexes: NSIndexSet)
+    @NSManaged func removeFromAuthorReferences(at indexes: NSIndexSet)
 
     @objc(replaceObjectInAuthorReferencesAtIndex:withObject:)
-    @NSManaged public func replaceAuthorReferences(at idx: Int, with value: AuthorReference)
+    @NSManaged func replaceAuthorReferences(at idx: Int, with value: AuthorReference)
 
     @objc(replaceAuthorReferencesAtIndexes:withAuthorReferences:)
-    @NSManaged public func replaceAuthorReferences(at indexes: NSIndexSet, with values: [AuthorReference])
+    @NSManaged func replaceAuthorReferences(at indexes: NSIndexSet, with values: [AuthorReference])
 
     @objc(addAuthorReferencesObject:)
-    @NSManaged public func addToAuthorReferences(_ value: AuthorReference)
+    @NSManaged func addToAuthorReferences(_ value: AuthorReference)
 
     @objc(removeAuthorReferencesObject:)
-    @NSManaged public func removeFromAuthorReferences(_ value: AuthorReference)
+    @NSManaged func removeFromAuthorReferences(_ value: AuthorReference)
 
     @objc(addAuthorReferences:)
-    @NSManaged public func addToAuthorReferences(_ values: NSOrderedSet)
+    @NSManaged func addToAuthorReferences(_ values: NSOrderedSet)
 
     @objc(removeAuthorReferences:)
-    @NSManaged public func removeFromAuthorReferences(_ values: NSOrderedSet)
+    @NSManaged func removeFromAuthorReferences(_ values: NSOrderedSet)
 }
 
 // MARK: Generated accessors for deletedOn
 extension Event {
 
     @objc(addDeletedOnObject:)
-    @NSManaged public func addToDeletedOn(_ value: Relay)
+    @NSManaged func addToDeletedOn(_ value: Relay)
 
     @objc(removeDeletedOnObject:)
-    @NSManaged public func removeFromDeletedOn(_ value: Relay)
+    @NSManaged func removeFromDeletedOn(_ value: Relay)
 
     @objc(addDeletedOn:)
-    @NSManaged public func addToDeletedOn(_ values: NSSet)
+    @NSManaged func addToDeletedOn(_ values: NSSet)
 
     @objc(removeDeletedOn:)
-    @NSManaged public func removeFromDeletedOn(_ values: NSSet)
+    @NSManaged func removeFromDeletedOn(_ values: NSSet)
 }
 
 // MARK: Generated accessors for eventReferences
 extension Event {
 
     @objc(insertObject:inEventReferencesAtIndex:)
-    @NSManaged public func insertIntoEventReferences(_ value: EventReference, at idx: Int)
+    @NSManaged func insertIntoEventReferences(_ value: EventReference, at idx: Int)
 
     @objc(removeObjectFromEventReferencesAtIndex:)
-    @NSManaged public func removeFromEventReferences(at idx: Int)
+    @NSManaged func removeFromEventReferences(at idx: Int)
 
     @objc(insertEventReferences:atIndexes:)
-    @NSManaged public func insertIntoEventReferences(_ values: [EventReference], at indexes: NSIndexSet)
+    @NSManaged func insertIntoEventReferences(_ values: [EventReference], at indexes: NSIndexSet)
 
     @objc(removeEventReferencesAtIndexes:)
-    @NSManaged public func removeFromEventReferences(at indexes: NSIndexSet)
+    @NSManaged func removeFromEventReferences(at indexes: NSIndexSet)
 
     @objc(replaceObjectInEventReferencesAtIndex:withObject:)
-    @NSManaged public func replaceEventReferences(at idx: Int, with value: EventReference)
+    @NSManaged func replaceEventReferences(at idx: Int, with value: EventReference)
 
     @objc(replaceEventReferencesAtIndexes:withEventReferences:)
-    @NSManaged public func replaceEventReferences(at indexes: NSIndexSet, with values: [EventReference])
+    @NSManaged func replaceEventReferences(at indexes: NSIndexSet, with values: [EventReference])
 
     @objc(addEventReferencesObject:)
-    @NSManaged public func addToEventReferences(_ value: EventReference)
+    @NSManaged func addToEventReferences(_ value: EventReference)
 
     @objc(removeEventReferencesObject:)
-    @NSManaged public func removeFromEventReferences(_ value: EventReference)
+    @NSManaged func removeFromEventReferences(_ value: EventReference)
 
     @objc(addEventReferences:)
-    @NSManaged public func addToEventReferences(_ values: NSOrderedSet)
+    @NSManaged func addToEventReferences(_ values: NSOrderedSet)
 
     @objc(removeEventReferences:)
-    @NSManaged public func removeFromEventReferences(_ values: NSOrderedSet)
+    @NSManaged func removeFromEventReferences(_ values: NSOrderedSet)
 }
 
 // MARK: Generated accessors for publishedTo
 extension Event {
 
     @objc(addPublishedToObject:)
-    @NSManaged public func addToPublishedTo(_ value: Relay)
+    @NSManaged func addToPublishedTo(_ value: Relay)
 
     @objc(removePublishedToObject:)
-    @NSManaged public func removeFromPublishedTo(_ value: Relay)
+    @NSManaged func removeFromPublishedTo(_ value: Relay)
 
     @objc(addPublishedTo:)
-    @NSManaged public func addToPublishedTo(_ values: NSSet)
+    @NSManaged func addToPublishedTo(_ values: NSSet)
 
     @objc(removePublishedTo:)
-    @NSManaged public func removeFromPublishedTo(_ values: NSSet)
+    @NSManaged func removeFromPublishedTo(_ values: NSSet)
 }
 
 // MARK: Generated accessors for referencingEvents
 extension Event {
 
     @objc(addReferencingEventsObject:)
-    @NSManaged public func addToReferencingEvents(_ value: EventReference)
+    @NSManaged func addToReferencingEvents(_ value: EventReference)
 
     @objc(removeReferencingEventsObject:)
-    @NSManaged public func removeFromReferencingEvents(_ value: EventReference)
+    @NSManaged func removeFromReferencingEvents(_ value: EventReference)
 
     @objc(addReferencingEvents:)
-    @NSManaged public func addToReferencingEvents(_ values: NSSet)
+    @NSManaged func addToReferencingEvents(_ values: NSSet)
 
     @objc(removeReferencingEvents:)
-    @NSManaged public func removeFromReferencingEvents(_ values: NSSet)
+    @NSManaged func removeFromReferencingEvents(_ values: NSSet)
 }
 
 // MARK: Generated accessors for seenOnRelays
 extension Event {
 
     @objc(addSeenOnRelaysObject:)
-    @NSManaged public func addToSeenOnRelays(_ value: Relay)
+    @NSManaged func addToSeenOnRelays(_ value: Relay)
 
     @objc(removeSeenOnRelaysObject:)
-    @NSManaged public func removeFromSeenOnRelays(_ value: Relay)
+    @NSManaged func removeFromSeenOnRelays(_ value: Relay)
 
     @objc(addSeenOnRelays:)
-    @NSManaged public func addToSeenOnRelays(_ values: NSSet)
+    @NSManaged func addToSeenOnRelays(_ values: NSSet)
 
     @objc(removeSeenOnRelays:)
-    @NSManaged public func removeFromSeenOnRelays(_ values: NSSet)
+    @NSManaged func removeFromSeenOnRelays(_ values: NSSet)
 }
 
 // MARK: Generated accessors for shouldBePublishedTo
 extension Event {
 
     @objc(addShouldBePublishedToObject:)
-    @NSManaged public func addToShouldBePublishedTo(_ value: Relay)
+    @NSManaged func addToShouldBePublishedTo(_ value: Relay)
 
     @objc(removeShouldBePublishedToObject:)
-    @NSManaged public func removeFromShouldBePublishedTo(_ value: Relay)
+    @NSManaged func removeFromShouldBePublishedTo(_ value: Relay)
 
     @objc(addShouldBePublishedTo:)
-    @NSManaged public func addToShouldBePublishedTo(_ values: NSSet)
+    @NSManaged func addToShouldBePublishedTo(_ values: NSSet)
 
     @objc(removeShouldBePublishedTo:)
-    @NSManaged public func removeFromShouldBePublishedTo(_ values: NSSet)
+    @NSManaged func removeFromShouldBePublishedTo(_ values: NSSet)
 }
 
 extension Event: Identifiable {}

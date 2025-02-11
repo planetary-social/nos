@@ -10,7 +10,7 @@ struct Filter: Hashable, Identifiable {
     /// List of event identifiers the Filter should be constrained to.
     let eventIDs: [RawEventID]
 
-    /// List of Note kinds to filter
+    /// List of Note kinds to filter.
     let kinds: [EventKind]
 
     /// An array of replaceable identifiers, or `"d"` tags, to match.

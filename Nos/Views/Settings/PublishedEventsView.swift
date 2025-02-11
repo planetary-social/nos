@@ -4,7 +4,7 @@ import SwiftUI
 /// Only used for debugging. Settings > All published events.
 struct PublishedEventsView: View {
 
-    var author: Author
+    let author: Author
 
     @FetchRequest
     private var events: FetchedResults<Event>
@@ -13,6 +13,7 @@ struct PublishedEventsView: View {
         self.author = author
         _events = FetchRequest(fetchRequest: author.allEventsRequest())
     }
+    
     var body: some View {
         List {
             ForEach(events) { event in

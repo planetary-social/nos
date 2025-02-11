@@ -4,7 +4,7 @@ import Logger
 import Dependencies
 
 // swiftlint:disable type_body_length
-@Observable class CurrentUser: NSObject, NSFetchedResultsControllerDelegate {
+@Observable final class CurrentUser: NSObject, NSFetchedResultsControllerDelegate {
     
     @ObservationIgnored @Dependency(\.analytics) var analytics
     @ObservationIgnored @Dependency(\.crashReporting) private var crashReporting

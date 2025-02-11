@@ -2,9 +2,7 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct SquareImage: View {
-    var url: URL
-    
-    var onTap: (() -> Void)?
+    let url: URL
     
     var body: some View {
         Color.clear
@@ -15,9 +13,6 @@ struct SquareImage: View {
                     .resizable()
                     .indicator(.activity)
                     .aspectRatio(contentMode: .fill)
-                    .onTapGesture {
-                        onTap?()
-                    }
             }
             .clipShape(Rectangle())
     }

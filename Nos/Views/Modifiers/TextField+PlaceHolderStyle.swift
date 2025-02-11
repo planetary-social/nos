@@ -7,10 +7,10 @@ import SwiftUI
 ///   - placeholderColor: The color of the placeholder.
 ///   - font: The font type of the placeholder.
 struct PlaceholderStyle: ViewModifier {
-    var show: Bool
-    var placeholder: String
-    var placeholderColor: Color = .actionSheetTextfieldPlaceholder
-    var font: Font = .headline
+    let show: Bool
+    let placeholder: String
+    private let placeholderColor: Color = .actionSheetTextfieldPlaceholder
+    private let font: Font = .headline
 
     /// Displays the placeholder text if `show` is true, overlaying it
     /// on the content view.

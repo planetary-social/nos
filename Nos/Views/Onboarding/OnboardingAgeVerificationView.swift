@@ -4,7 +4,7 @@ import SwiftUI
 /// The Age Verification view in the onboarding.
 struct OnboardingAgeVerificationView: View {
     @Environment(OnboardingState.self) private var state
-    @Environment(CurrentUser.self) var currentUser
+    @Environment(CurrentUser.self) private var currentUser
 
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.featureFlags) private var featureFlags
@@ -50,7 +50,7 @@ struct OnboardingAgeVerificationView: View {
 
     /// Create an account, logging any error to the crash reporting service.
     /// - Note: This is a temporary solution for this screen and will eventually move to the Create Account screen.
-    func createAccount() async {
+    private func createAccount() async {
         do {
             try await currentUser.createAccount()
         } catch {

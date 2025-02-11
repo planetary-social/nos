@@ -13,11 +13,7 @@ struct NotificationCard: View {
     @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var content: AttributedString?
 
-    init(viewModel: NotificationViewModel) {
-        self.viewModel = viewModel
-    }
-
-    func showNote() {
+    private func showNote() {
         guard let noteID = viewModel.noteID,
             let note = Event.find(by: noteID, context: viewContext) else {
             return

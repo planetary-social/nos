@@ -8,10 +8,10 @@ struct NoteTextEditor: View {
     @Binding private var controller: NoteEditorController
 
     /// The smallest size of EditableNoteText
-    var minHeight: CGFloat
+    let minHeight: CGFloat
 
     /// The authors who are referenced in a note in addition to those who replied to the note, if any.
-    var relatedAuthors: [Author]
+    let relatedAuthors: [Author]
 
     init(
         controller: Binding<NoteEditorController>,

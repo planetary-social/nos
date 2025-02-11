@@ -27,7 +27,7 @@ struct PublicKeyView: View {
         .navigationBarHidden(true)
     }
 
-    var publicKeyStack: some View {
+    private var publicKeyStack: some View {
         VStack(alignment: .leading, spacing: 20) {
             LargeNumberView(2)
             HStack(alignment: .firstTextBaseline) {

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DeleteUsernameWizard: View {
 
-    var author: Author
+    let author: Author
     @Binding var isPresented: Bool
 
     var body: some View {
