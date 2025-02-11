@@ -14,9 +14,9 @@ enum ProfileFeedType {
         var kinds: [EventKind]
         switch self {
         case .activity:
-            kinds = [.text, .delete, .repost, .longFormContent] 
+            kinds = [.text, .delete, .repost, .longFormContent, .picturePost, .video, .shortVideo]
         case .notes:
-            kinds = [.text, .delete]
+            kinds = [.text, .delete, .longFormContent, .picturePost, .video, .shortVideo]
         }
         
         return Filter(authorKeys: [author.hexadecimalPublicKey ?? "error"], kinds: kinds)

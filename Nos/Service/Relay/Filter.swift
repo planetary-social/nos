@@ -101,11 +101,7 @@ struct Filter: Hashable, Identifiable {
         if !eventIDs.isEmpty {
             filterDict["ids"] = eventIDs
         }
-
-        if !kinds.isEmpty {
-            filterDict["kinds"] = kinds.map({ $0.rawValue })
-        }
-
+        
         if !dTags.isEmpty {
             filterDict["#d"] = dTags
         }

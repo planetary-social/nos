@@ -48,6 +48,90 @@ extension JSONEvent {
         )
     }
     
+    /// An event that represents a picture-first post (NIP-68).
+    /// - Parameters:
+    ///   - pubKey: The public key of the event creator.
+    ///   - title: The title of the post.
+    ///   - description: The description/content of the post.
+    ///   - imageMetadata: Array of image metadata including URLs and attributes.
+    ///   - tags: Additional tags like content warnings, location, etc.
+    /// - Returns: The ``JSONEvent`` representing the picture post.
+    static func picturePost(
+        pubKey: String,
+        title: String,
+        description: String,
+        imageMetadata: [[String]],
+        tags: [[String]] = []
+    ) -> JSONEvent {
+        var allTags = [["title", title]]
+        allTags.append(contentsOf: imageMetadata)
+        allTags.append(contentsOf: tags)
+        
+        return JSONEvent(
+            pubKey: pubKey,
+            kind: .picturePost,
+            tags: allTags,
+            content: description
+        )
+    }
+    
+    /// An event that represents a video post (NIP-71).
+    /// - Parameters:
+    ///   - pubKey: The public key of the event creator.
+    ///   - title: The title of the video.
+    ///   - description: A summary or description of the video content.
+    ///   - isShortForm: If true, creates a short video event (kind 22), otherwise a normal video event (kind 21).
+    ///   - publishedAt: Optional Unix timestamp (in seconds) when the video was first published.
+    ///   - duration: Optional duration of the video in seconds.
+    ///   - videoMetadata: An array of "imeta" tags describing the video sources, dimensions, preview images, etc.
+    ///   - contentWarning: Optional warning regarding the video content.
+    ///   - altText: Optional accessibility description for the video.
+    ///   - tags: Additional tags (e.g. text-track, segment, hashtags, participants, reference links) to include.
+    /// - Returns: A JSONEvent representing the video post.
+    static func videoPost(
+        pubKey: String,
+        title: String,
+        description: String,
+        isShortForm: Bool = false,
+        publishedAt: Int? = nil,
+        duration: Int? = nil,
+        videoMetadata: [[String]],
+        contentWarning: String? = nil,
+        altText: String? = nil,
+        tags: [[String]] = []
+    ) -> JSONEvent {
+        var allTags = [["title", title]]
+        
+        if let publishedAt = publishedAt {
+            allTags.append(["published_at", String(publishedAt)])
+        }
+        
+        if let duration = duration {
+            allTags.append(["duration", String(duration)])
+        }
+        
+        // Append the video-specific metadata (imeta tags) – these carry the URL, dimensions, preview images, etc.
+        allTags.append(contentsOf: videoMetadata)
+        
+        if let contentWarning = contentWarning {
+            allTags.append(["content-warning", contentWarning])
+        }
+        
+        if let altText = altText {
+            allTags.append(["alt", altText])
+        }
+        
+        // Append any additional tags provided.
+        allTags.append(contentsOf: tags)
+        
+        return JSONEvent(
+            pubKey: pubKey,
+            kind: isShortForm ? .shortVideo : .video,
+            tags: allTags,
+            content: description
+        )
+    }
+    
     /// An event that represents a list of authors.
     /// - Parameters:
     ///   - pubKey: The public key of the user making the request.
@@ -80,6 +164,60 @@ extension JSONEvent {
             kind: .followSet,
             tags: tags,
             content: ""
+        )
+    }
+    
+    /// Creates a video event (NIP-71)
+    /// - Parameters:
+    ///   - pubKey: The public key of the event creator
+    ///   - title: Title of the video
+    ///   - description: Summary or description of the video content
+    ///   - isShortForm: If true, creates a kind 22 (short-form) video event, otherwise kind 21
+    ///   - publishedAt: Optional timestamp when video was first published
+    ///   - duration: Optional duration in seconds
+    ///   - imageMetadata: Array of video metadata including URLs and attributes
+    ///   - contentWarning: Optional content warning
+    ///   - altText: Optional accessibility description
+    ///   - tags: Additional tags like hashtags, participants etc
+    static func videoPost(
+        pubKey: String,
+        title: String,
+        description: String,
+        isShortForm: Bool = false,
+        publishedAt: Int? = nil,
+        duration: Int? = nil,
+        imageMetadata: [[String]],
+        contentWarning: String? = nil,
+        altText: String? = nil,
+        tags: [[String]] = []
+    ) -> JSONEvent {
+        var allTags = [["title", title]]
+        
+        if let publishedAt {
+            allTags.append(["published_at", String(publishedAt)])
+        }
+        
+        if let duration {
+            allTags.append(["duration", String(duration)])
+        }
+        
+        allTags.append(contentsOf: imageMetadata)
+        
+        if let contentWarning {
+            allTags.append(["content-warning", contentWarning])
+        }
+        
+        if let altText {
+            allTags.append(["alt", altText])
+        }
+        
+        allTags.append(contentsOf: tags)
+        
+        return JSONEvent(
+            pubKey: pubKey,
+            kind: isShortForm ? .shortVideo : .video,
+            tags: allTags,
+            content: description
         )
     }
 }

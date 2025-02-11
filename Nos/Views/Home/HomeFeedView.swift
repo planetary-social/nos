@@ -63,7 +63,8 @@ struct HomeFeedView: View {
     }
 
     private var homeFeedFilter: Filter {
-        var filter = Filter(kinds: [.text, .delete, .repost, .longFormContent, .report])
+        var filter = Filter(kinds:
+            [.text, .delete, .repost, .longFormContent, .report, .picturePost, .video, .shortVideo])
         if feedController.selectedRelay == nil {
             if let list = feedController.selectedList {
                 filter.authorKeys = list.allAuthors.compactMap { $0.hexadecimalPublicKey }.filter { $0.isValid }
