@@ -2,28 +2,21 @@ import Foundation
 import CoreData
 import UIKit
 
-enum NotificationType {
-    case event
-    case follow
-}
-
 /// A model that turns an Event into something that can be displayed in a NotificationCard or via NotificationCenter
 ///
 /// The view model is designed to be initialized synchronously so that it can be used
 /// in the .init method of a View. Because of this you must call the async function
 /// `loadContent()` to populate the `content` variable because it relies on some
 ///  database queries.
-final class NotificationViewModel: ObservableObject, Identifiable {
-    let noteID: RawNostrID?
-    let authorID: RawAuthorID?
+@Observable final class NotificationViewModel: Identifiable {
+    let noteID: RawEventID
     let authorProfilePhotoURL: URL?
     let actionText: AttributedString
-    let notificationType: NotificationType
     private(set) var content: AttributedString?
-    let date: Date?
-
-    var id: String {
-        noteID ?? authorID ?? UUID().uuidString
+    let date: Date
+    
+    var id: RawEventID {
+        noteID
     }
 
     /// Generates a notification request that can be sent to the UNNotificationCenter to display a banner notification.
@@ -37,53 +30,26 @@ final class NotificationViewModel: ObservableObject, Identifiable {
         content.userInfo = ["eventID": id]
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         return UNNotificationRequest(
-            identifier: id,
+            identifier: noteID,
             content: content,
             trigger: trigger
         )
     }
-
-    convenience init?(coreDataModel: NosNotification, context: NSManagedObjectContext, createdAt: Date) {
-        guard let user = coreDataModel.user else {
+    
+    convenience init?(coreDataModel: NosNotification, context: NSManagedObjectContext) {
+        guard let eventID = coreDataModel.eventID,
+            let note = Event.find(by: eventID, context: context),
+            let user = coreDataModel.user else {
             return nil
         }
 
-        if let eventID = coreDataModel.event?.identifier, let note = Event.find(by: eventID, context: context) {
-            self.init(note: note, user: user, date: createdAt)
-        } else if let follower = coreDataModel.follower {
-            self.init(follower: follower, date: createdAt)
-        } else {
-            return nil
-        }
+        self.init(note: note, user: user)
     }
-
-    init(follower: Author, date: Date) {
-        self.authorID = follower.hexadecimalPublicKey
-        self.noteID = nil
-        self.authorProfilePhotoURL = follower.profilePhotoURL
-        self.date = date
-        self.notificationType = .follow
-
-        // Compute action text
-        var actionText: AttributedString
-        var authorName = AttributedString("\(follower.safeName) ")
-        var range = Range(uncheckedBounds: (authorName.startIndex, authorName.endIndex))
-        authorName[range].font = .boldSystemFont(ofSize: 17)
-
-        actionText = authorName + AttributedString(String(localized: "startedFollowingYou"))
-        range = Range(uncheckedBounds: (actionText.startIndex, actionText.endIndex))
-        actionText[range].foregroundColor = .primaryTxt
-        self.actionText = actionText
-
-        self.content = nil
-    }
-
-    init(note: Event, user: Author, date: Date) {
-        self.noteID = note.identifier
-        self.authorID = note.author?.hexadecimalPublicKey
-        self.date = date
+    
+    init(note: Event, user: Author) {
+        self.noteID = note.identifier ?? ""
+        self.date = note.createdAt ?? .distantPast
         self.authorProfilePhotoURL = note.author?.profilePhotoURL
-        self.notificationType = .event
 
         // Compute action text
         var actionText: AttributedString
@@ -119,9 +85,6 @@ final class NotificationViewModel: ObservableObject, Identifiable {
     /// Populates the `content` variable. This is not done at init in order to keep
     /// it synchronous for use in a View.
     @MainActor @discardableResult func loadContent(in context: NSManagedObjectContext) async -> AttributedString? {
-        if notificationType == .follow {
-            return nil
-        }
         content = await Event.attributedContent(noteID: noteID, context: context)
         return content
     }

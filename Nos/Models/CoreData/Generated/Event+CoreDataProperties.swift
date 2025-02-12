@@ -27,7 +27,6 @@ extension Event {
     @NSManaged var seenOnRelays: Set<Relay>
     @NSManaged var shouldBePublishedTo: Set<Relay>
     @NSManaged var isRead: Bool
-    @NSManaged var notifications: NosNotification?
 }
 
 // MARK: Generated accessors for authorReferences

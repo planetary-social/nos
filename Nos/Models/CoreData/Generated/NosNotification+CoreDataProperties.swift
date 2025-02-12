@@ -8,10 +8,10 @@ extension NosNotification {
     }
 
     @NSManaged var isRead: Bool
+    @NSManaged var eventID: String?
     @NSManaged var user: Author?
     @NSManaged var follower: Author?
     @NSManaged var createdAt: Date?
-    @NSManaged var event: Event?
 }
 
 extension NosNotification: Identifiable {}

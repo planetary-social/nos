@@ -171,41 +171,7 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         let events = try testContext.fetch(Event.allEventsRequest())
         XCTAssertEqual(events, [newEvent])
     }
-
-    @MainActor func test_cleanup_deletesOldNotifications() async throws {
-        // Arrange
-        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
-
-        // Creates old notification (3 months)
-        let oldDate = Calendar.current.date(byAdding: .month, value: -3, to: .now) ?? .now
-        let oldNotification = NosNotification(context: testContext)
-        oldNotification.createdAt = oldDate
-        oldNotification.user = alice
-
-        // Creates recent notification (1 day old)
-        let recentDate = Calendar.current.date(byAdding: .day, value: -1, to: .now)!
-        let recentNotification = NosNotification(context: testContext)
-        recentNotification.createdAt = recentDate
-        recentNotification.user = alice
-
-        try testContext.save()
-
-        // Verify initial notifications before cleanup.
-        let initialCount = try testContext.fetch(NosNotification.fetchRequest()).count
-        XCTAssertEqual(initialCount, 2)
-
-        // Act
-        try await DatabaseCleaner.cleanupEntities(
-            for: KeyFixture.alice.publicKeyHex,
-            in: testContext
-        )
-
-        // Assert
-        let remainingNotifications = try testContext.fetch(NosNotification.fetchRequest())
-        XCTAssertEqual(remainingNotifications.count, 1)
-        XCTAssertEqual(remainingNotifications.first?.createdAt, recentDate)
-    }
-
+    
     // MARK: - Authors
     
     @MainActor func test_cleanup_keepsInNetworkAuthors() async throws {
@@ -405,41 +371,5 @@ final class DatabaseCleanerTests: CoreDataTestCase {
         
         relays = try testContext.fetch(allRelaysRequest)
         XCTAssertTrue(relays.isEmpty)
-    }
-
-    @MainActor func test_deleteNotificationsAndEvents() async throws {
-        // Arrange
-        let alice = try Author.findOrCreate(by: KeyFixture.alice.publicKeyHex, context: testContext)
-        let bob = try Author.findOrCreate(by: KeyFixture.bob.publicKeyHex, context: testContext)
-
-        // Create events
-        let event1 = try EventFixture.build(in: testContext, publicKey: KeyFixture.alice.publicKeyHex)
-        let event2 = try EventFixture.build(in: testContext, publicKey: KeyFixture.bob.publicKeyHex)
-
-        // Create notifications
-        let notification1 = NosNotification(context: testContext)
-        notification1.createdAt = Date()
-        notification1.user = alice
-        notification1.event = event1
-
-        let notification2 = NosNotification(context: testContext)
-        notification2.createdAt = Date()
-        notification2.user = bob
-        notification2.event = event2
-
-        try testContext.save()
-
-        // Verify initial state
-        XCTAssertEqual(try testContext.count(for: Event.allEventsRequest()), 2)
-        XCTAssertEqual(try testContext.count(for: NosNotification.fetchRequest()), 2)
-        XCTAssertEqual(try testContext.count(for: Author.allAuthorsRequest()), 2)
-
-        // Act
-        try await DatabaseCleaner.deleteNotificationsAndEvents(in: testContext)
-
-        // Assert
-        XCTAssertEqual(try testContext.count(for: Event.allEventsRequest()), 0)
-        XCTAssertEqual(try testContext.count(for: NosNotification.fetchRequest()), 0)
-        XCTAssertEqual(try testContext.count(for: Author.allAuthorsRequest()), 2)
     }
 }

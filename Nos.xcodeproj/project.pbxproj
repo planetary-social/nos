@@ -152,8 +152,6 @@
 		04368D2B2C99A2C400DEAA2E /* FlagOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04368D2A2C99A2C400DEAA2E /* FlagOption.swift */; };
 		04368D312C99A78800DEAA2E /* NosRadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04368D302C99A78800DEAA2E /* NosRadioButton.swift */; };
 		04368D4B2C99CFC700DEAA2E /* ContentFlagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04368D4A2C99CFC700DEAA2E /* ContentFlagView.swift */; };
-		045027492D318E1300DA9835 /* NosNotificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045027482D318E1300DA9835 /* NosNotificationTests.swift */; };
-		045028002D35484400DA9835 /* FollowsNotificationCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045027FF2D35484400DA9835 /* FollowsNotificationCard.swift */; };
 		045EDCF32CAAF47600B67964 /* FlagSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045EDCF22CAAF47600B67964 /* FlagSuccessView.swift */; };
 		045EDD052CAC025700B67964 /* ScrollViewProxy+Animate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045EDD042CAC025700B67964 /* ScrollViewProxy+Animate.swift */; };
 		0496D6312C975E6900D29375 /* FlagOptionPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0496D6302C975E6900D29375 /* FlagOptionPicker.swift */; };
@@ -745,9 +743,6 @@
 		04368D2A2C99A2C400DEAA2E /* FlagOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagOption.swift; sourceTree = "<group>"; };
 		04368D302C99A78800DEAA2E /* NosRadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosRadioButton.swift; sourceTree = "<group>"; };
 		04368D4A2C99CFC700DEAA2E /* ContentFlagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentFlagView.swift; sourceTree = "<group>"; };
-		045027482D318E1300DA9835 /* NosNotificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NosNotificationTests.swift; sourceTree = "<group>"; };
-		045027622D31A08D00DA9835 /* Nos 24.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 24.xcdatamodel"; sourceTree = "<group>"; };
-		045027FF2D35484400DA9835 /* FollowsNotificationCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsNotificationCard.swift; sourceTree = "<group>"; };
 		045EDCF22CAAF47600B67964 /* FlagSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagSuccessView.swift; sourceTree = "<group>"; };
 		045EDD042CAC025700B67964 /* ScrollViewProxy+Animate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScrollViewProxy+Animate.swift"; sourceTree = "<group>"; };
 		0496D6302C975E6900D29375 /* FlagOptionPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagOptionPicker.swift; sourceTree = "<group>"; };
@@ -1395,7 +1390,6 @@
 			children = (
 				C94437E529B0DB83004D8C86 /* NotificationsView.swift */,
 				C98B8B3F29FBF83B009789C8 /* NotificationCard.swift */,
-				045027FF2D35484400DA9835 /* FollowsNotificationCard.swift */,
 			);
 			path = Notifications;
 			sourceTree = "<group>";
@@ -1461,7 +1455,6 @@
 				035729A12BE4167E005FEE85 /* AuthorTests.swift */,
 				035729A32BE4167E005FEE85 /* EventTests.swift */,
 				035729A42BE4167E005FEE85 /* FollowTests.swift */,
-				045027482D318E1300DA9835 /* NosNotificationTests.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -2657,7 +2650,6 @@
 				C9CDBBA429A8FA2900C555C7 /* GoldenPostView.swift in Sources */,
 				C92F01582AC4D6F700972489 /* NosTextField.swift in Sources */,
 				C9C2B77C29E072E400548B4A /* WebSocket+Nos.swift in Sources */,
-				045028002D35484400DA9835 /* FollowsNotificationCard.swift in Sources */,
 				503CA9532D19ACCC00805EF8 /* HorizontalLine.swift in Sources */,
 				C9DEC003298945150078B43A /* String+Lorem.swift in Sources */,
 				04C9D7912CC29D5000EAAD4D /* FeaturedAuthor+Cohort1.swift in Sources */,
@@ -2824,7 +2816,6 @@
 				035729AC2BE4167E005FEE85 /* Bech32Tests.swift in Sources */,
 				C936B4632A4CB01C00DF1EB9 /* PushNotificationService.swift in Sources */,
 				C9C5475A2A4F1D8C006B0741 /* NosNotification+CoreDataClass.swift in Sources */,
-				045027492D318E1300DA9835 /* NosNotificationTests.swift in Sources */,
 				508133DC2C7A007700DFBF75 /* AttributedString+Quotation.swift in Sources */,
 				CD09A74929A521210063464F /* Router.swift in Sources */,
 				C90B16B82AFED96300CB4B85 /* URLExtensionTests.swift in Sources */,
@@ -4021,7 +4012,6 @@
 		C936B4572A4C7B7C00DF1EB9 /* Nos.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				045027622D31A08D00DA9835 /* Nos 24.xcdatamodel */,
 				5022F9472D2188650012FF4B /* Nos 23.xcdatamodel */,
 				503CAB7B2D1DA6DB00805EF8 /* Nos 22.xcdatamodel */,
 				0303B11E2D0257D400077929 /* Nos 21.xcdatamodel */,
@@ -4038,7 +4028,7 @@
 				C9C547562A4F1D1A006B0741 /* Nos 9.xcdatamodel */,
 				5BFF66AF2A4B55FC00AA79DD /* Nos 10.xcdatamodel */,
 			);
-			currentVersion = 045027622D31A08D00DA9835 /* Nos 24.xcdatamodel */;
+			currentVersion = 5022F9472D2188650012FF4B /* Nos 23.xcdatamodel */;
 			path = Nos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
