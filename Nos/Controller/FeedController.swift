@@ -15,6 +15,7 @@ import SwiftUI
     private(set) var selectedRelay: Relay?
     
     @ObservationIgnored @AppStorage("selectedFeedSource") private var persistedSelectedSource = FeedSource.following
+    private var hasSetInitialSelectedSource: Bool = false
     
     var selectedSource = FeedSource.following {
         didSet {
@@ -67,14 +68,6 @@ import SwiftUI
         self.author = author
         observeLists()
         observeRelays()
-        
-        // TODO: I commented this code out because it wasn't fixing the bug it was intended to yet. Let's come back to 
-        // it. https://github.com/planetary-social/nos/pull/1720#issuecomment-2569529771
-        // The delay here is an unfortunate workaround. Without it, the feed always resumes to
-        // the default value of FeedSource.following.
-        // DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1500)) {
-        //    self.selectedSource = self.persistedSelectedSource
-        // }
     }
     
     private func observeLists() {
@@ -82,7 +75,16 @@ import SwiftUI
             .publisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] lists in
-                self?.lists = lists
+                guard let self else {
+                    return
+                }
+                
+                self.lists = lists
+                
+                if case .list = self.persistedSelectedSource, !self.hasSetInitialSelectedSource {
+                    selectedSource = persistedSelectedSource
+                    self.hasSetInitialSelectedSource = true
+                }
             })
             .store(in: &cancellables)
     }
@@ -92,7 +94,16 @@ import SwiftUI
             .publisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] relays in
-                self?.relays = relays
+                guard let self else {
+                    return
+                }
+                
+                self.relays = relays
+                
+                if case .relay = self.persistedSelectedSource, !self.hasSetInitialSelectedSource {
+                    selectedSource = persistedSelectedSource
+                    self.hasSetInitialSelectedSource = true
+                }
             })
             .store(in: &cancellables)
     }

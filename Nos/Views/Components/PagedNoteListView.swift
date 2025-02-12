@@ -93,9 +93,11 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             if relayFilter != dataSource.relayFilter || relay != dataSource.relay {
                 dataSource.subscribeToEvents(matching: relayFilter, from: relay)
             }
-            if databaseFilter != dataSource.databaseFilter {
+            
+            if !areFetchRequestsEquivalent(databaseFilter, dataSource.databaseFilter) {
                 dataSource.updateFetchRequest(databaseFilter)
             }
+            
             if refreshController.startRefresh {
                 refreshController.startRefresh = false
 
