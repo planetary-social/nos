@@ -7,7 +7,7 @@ enum ContentWarningType {
 
 /// A class that takes a collection of content reports and generates a content warning string that can be 
 /// displayed to the user.
-@Observable class ContentWarningController {
+@Observable final class ContentWarningController {
     
     var reports: [Event]
     var type: ContentWarningType

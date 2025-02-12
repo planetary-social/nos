@@ -6,7 +6,7 @@ import Dependencies
 
 @objc(Event)
 @Observable
-public class Event: NosManagedObject, VerifiableEvent {
+class Event: NosManagedObject, VerifiableEvent {
     @Dependency(\.currentUser) @ObservationIgnored var currentUser
 
     var pubKey: String { author?.hexadecimalPublicKey ?? "" }

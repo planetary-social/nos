@@ -7,7 +7,7 @@ import Logger
 struct ProfileView: View {
     
     @ObservedObject var author: Author
-    var addDoubleTapToPop = false
+    let addDoubleTapToPop: Bool
 
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(CurrentUser.self) private var currentUser
@@ -28,7 +28,7 @@ struct ProfileView: View {
     @State private var alert: AlertState<Never>?
     @State private var scrollOffsetY: CGFloat = 0
 
-    var isShowingLoggedInUser: Bool {
+    private var isShowingLoggedInUser: Bool {
         author.hexadecimalPublicKey == currentUser.publicKeyHex
     }
 
@@ -37,11 +37,11 @@ struct ProfileView: View {
         self.addDoubleTapToPop = addDoubleTapToPop
     }
 
-    var databaseFilter: NSFetchRequest<Event> {
+    private var databaseFilter: NSFetchRequest<Event> {
         selectedTab.databaseFilter(author: author, before: refreshController.lastRefreshDate)
     }
 
-    func downloadAuthorData() async {
+    private func downloadAuthorData() async {
         relaySubscriptions.removeAll()
         
         guard let authorKey = author.hexadecimalPublicKey else {
@@ -206,7 +206,7 @@ struct ProfileView: View {
         })
     }
     
-    var noteListView: some View {
+    private var noteListView: some View {
         PagedNoteListView(
             refreshController: $refreshController,
             scrollOffsetY: .constant(0),
@@ -237,7 +237,7 @@ struct ProfileView: View {
         .id(selectedTab) 
     }
     
-    var blockedUserListView: some View {
+    private var blockedUserListView: some View {
         VStack {
             ProfileHeader(author: author, selectedTab: $selectedTab)
                 .compositingGroup()

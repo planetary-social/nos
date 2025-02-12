@@ -6,7 +6,7 @@ import SwiftUI
 /// This Text was implemented to be re-used in the wizards that set-up and delete usernames in EditProfile screen.
 struct WizardSheetDescriptionText: View {
 
-    private var description: Description
+    private let description: Description
 
     private enum Description {
         case plainText(LocalizedStringResource)

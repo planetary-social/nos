@@ -20,7 +20,7 @@ struct ComposerActionBar: View {
 
     @Dependency(\.fileStorageAPIClient) private var fileStorageAPIClient
 
-    enum SubMenu {
+    private enum SubMenu {
         case expirationDate
     }
 
@@ -32,7 +32,7 @@ struct ComposerActionBar: View {
         case getAccount
     }
 
-    var backArrow: some View {
+    private var backArrow: some View {
         Button {
             subMenu = .none
         } label: {
@@ -95,7 +95,7 @@ struct ComposerActionBar: View {
         )
     }
 
-    var defaultMenu: some View {
+    private var defaultMenu: some View {
         HStack(spacing: 0) {
             if !showPreview {
                 attachMediaView

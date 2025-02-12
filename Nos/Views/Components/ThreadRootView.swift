@@ -4,16 +4,16 @@ import SwiftUI
 struct ThreadRootView<Reply: View>: View {
 
     /// The root note.
-    var root: Event
+    let root: Event
 
     /// Whether the root note is interactive.
-    var isRootNoteInteractive: Bool
+    let isRootNoteInteractive: Bool
 
     /// Handler to be executed when the user taps on the root note.
-    var tapAction: ((Event) -> Void)?
+    let tapAction: ((Event) -> Void)?
 
     /// Handler to be executed when building a View for displaying the reply note.
-    var reply: Reply
+    let reply: Reply
 
     /// Initializes a Thread Root View.
     /// - Parameters:

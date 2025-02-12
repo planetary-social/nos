@@ -9,20 +9,20 @@ struct ActionButton: View {
     }
 
     let titleText: Text
-    var font: Font = .clarity(.bold)
-    var image: Image?
-    var imageAlignment: ImageAlignment = .left
-    var padding = EdgeInsets(top: 8, leading: 13, bottom: 8, trailing: 13)
-    var textColor = Color.white
-    var depthEffectColor = Color.actionPrimaryDepthEffect
-    var backgroundGradient = LinearGradient.diagonalAccent2
-    var textShadow = true
+    let font: Font
+    let image: Image?
+    let imageAlignment: ImageAlignment
+    let padding: EdgeInsets
+    let textColor: Color
+    let depthEffectColor: Color
+    let backgroundGradient: LinearGradient
+    let textShadow: Bool
     /// A flag used to fill the available horizontal space (centering the
     /// contents) or to fit the horizontal space to the contents of the action
     /// button.
-    var shouldFillHorizontalSpace = false
-    var action: (() async -> Void)?
-    @State var disabled = false
+    let shouldFillHorizontalSpace: Bool
+    let action: (() async -> Void)?
+    @State private var disabled = false
     
     init(
         title: String,
@@ -30,9 +30,9 @@ struct ActionButton: View {
         image: Image? = nil,
         imageAlignment: ImageAlignment = .left,
         padding: EdgeInsets = EdgeInsets(top: 8, leading: 13, bottom: 8, trailing: 13),
-        textColor: SwiftUI.Color = Color.white,
-        depthEffectColor: Color = Color.actionPrimaryDepthEffect,
-        backgroundGradient: LinearGradient = LinearGradient.diagonalAccent2,
+        textColor: Color = .white,
+        depthEffectColor: Color = .actionPrimaryDepthEffect,
+        backgroundGradient: LinearGradient = .diagonalAccent2,
         textShadow: Bool = true,
         shouldFillHorizontalSpace: Bool = false,
         action: (() async -> Void)? = nil,

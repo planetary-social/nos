@@ -4,8 +4,8 @@ import Dependencies
 import SwiftUINavigation
 
 struct RelaysDestination: Hashable {
-    var author: Author
-    var relays: [Relay]
+    let author: Author
+    let relays: [Relay]
 }
 
 struct RelayView: View {
@@ -14,14 +14,14 @@ struct RelayView: View {
     @Environment(CurrentUser.self) private var currentUser
     @ObservedObject var author: Author
     
-    @State var newRelayAddress: String = ""
+    @State private var newRelayAddress: String = ""
     
     @State private var alert: AlertState<Never>?
     
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     
-    @FetchRequest var relays: FetchedResults<Relay>
+    @FetchRequest private var relays: FetchedResults<Relay>
 
     private var sortedRelays: [Relay] {
         relays.sorted { (lhs, _) in
@@ -29,7 +29,7 @@ struct RelayView: View {
         }
     }
 
-    var editable: Bool
+    private let editable: Bool
     
     init(author: Author, editable: Bool = true) {
         self.author = author
@@ -83,7 +83,7 @@ struct RelayView: View {
                     }
                 }
                 
-                if author.relays.count == 0, editable {
+                if author.relays.count == 0 && editable {
                     Text("noRelaysMessage")
                 }
             } header: {
@@ -105,7 +105,7 @@ struct RelayView: View {
                 .map { $0.replacingOccurrences(of: "wss://", with: "") }
                 .sorted { (lhs, _) in lhs == Relay.nosAddress.absoluteString }
 
-            if editable, !recommendedRelays.isEmpty {
+            if editable && !recommendedRelays.isEmpty {
                 Section {
                     ForEach(recommendedRelays, id: \.self) { address in
                         Button {
@@ -177,7 +177,7 @@ struct RelayView: View {
         }
     }
     
-    func publishChanges() async {
+    private func publishChanges() async {
         let followKeys = await Array(currentUser.socialGraph.followedKeys)
         await currentUser.publishContactList(tags: followKeys.pTags)
     }

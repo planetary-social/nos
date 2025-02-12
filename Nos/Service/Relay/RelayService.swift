@@ -11,13 +11,13 @@ import UIKit
 /// in the form of `Filters` and `RelaySubscription`s.
 @Observable class RelayService {
     
-    private var subscriptionManager: RelaySubscriptionManager
+    private let subscriptionManager: RelaySubscriptionManager
     private var processSubscriptionQueueTimer: AsyncTimer?
     private var backgroundProcessTimer: AsyncTimer?
     private var eventProcessingLoop: Task<Void, Error>?
     private var backgroundContext: NSManagedObjectContext
-    private var processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
-    private var parseQueue = ParseQueue()
+    private let processingQueue = DispatchQueue(label: "RelayService-processing", qos: .userInitiated)
+    private let parseQueue = ParseQueue()
     
     @ObservationIgnored @Dependency(\.persistenceController) var persistenceController
     @ObservationIgnored @Dependency(\.analytics) private var analytics
@@ -27,11 +27,11 @@ import UIKit
     init(subscriptionManager: RelaySubscriptionManager = RelaySubscriptionManagerActor()) {
         self.subscriptionManager = subscriptionManager
         @Dependency(\.persistenceController) var persistenceController
-        self.backgroundContext = persistenceController.newBackgroundContext()
+        backgroundContext = persistenceController.newBackgroundContext()
         
         Task { await self.subscriptionManager.set(socketQueue: processingQueue, delegate: self) }
         
-        self.eventProcessingLoop = Task(priority: .userInitiated) { [weak self] in
+        eventProcessingLoop = Task(priority: .userInitiated) { [weak self] in
             try Task.checkCancellation()
             while true {
                 do {
@@ -45,7 +45,7 @@ import UIKit
             }
         }
         
-        self.processSubscriptionQueueTimer = AsyncTimer(
+        processSubscriptionQueueTimer = AsyncTimer(
             timeInterval: 1,
             priority: .high,
             firesImmediately: false
@@ -54,7 +54,7 @@ import UIKit
         }
         
         // TODO: fire this after all relays have connected, not right on init
-        self.backgroundProcessTimer = AsyncTimer(timeInterval: 60, firesImmediately: true, onFire: { [weak self] in
+        backgroundProcessTimer = AsyncTimer(timeInterval: 60, firesImmediately: true, onFire: { [weak self] in
             await self?.retryFailedPublishes()
             await self?.deleteExpiredEvents()
         })
@@ -93,48 +93,21 @@ import UIKit
 // MARK: Closing subscriptions
 extension RelayService {
     
-    func decrementSubscriptionCount(for subscriptionIDs: [String]) {
+    func decrementSubscriptionCount(for subscriptionIDs: [RelaySubscription.ID]) {
         for subscriptionID in subscriptionIDs {
             self.decrementSubscriptionCount(for: subscriptionID)
         }
     }
     
-    func decrementSubscriptionCount(for subscriptionID: String) {
+    func decrementSubscriptionCount(for subscriptionID: RelaySubscription.ID) {
         Task {
-            let subscriptionStillActive = await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)
-            if !subscriptionStillActive {
-                await self.sendCloseToAll(for: subscriptionID)
-            }
+            await subscriptionManager.decrementSubscriptionCount(for: subscriptionID)
         }
-    }
-    
-    private func sendClose(from client: WebSocketClient, subscriptionID: RelaySubscription.ID) async {
-        do {
-            await subscriptionManager.forceCloseSubscriptionCount(for: subscriptionID)
-            let request: [Any] = ["CLOSE", subscriptionID]
-            let requestData = try JSONSerialization.data(withJSONObject: request)
-            let requestString = String(decoding: requestData, as: UTF8.self)
-            client.write(string: requestString)
-        } catch {
-            Log.error("Error: Could not send close \(error.localizedDescription)")
-        }
-    }
-    
-    private func sendCloseToAll(for subscription: RelaySubscription.ID) async {
-        let sockets = await subscriptionManager.sockets()
-        for socket in sockets {
-            await self.sendClose(from: socket, subscriptionID: subscription) 
-        }
-        Task { await processSubscriptionQueue() }
     }
     
     func closeConnection(to relayAddress: String?) async {
         guard let address = relayAddress else { return }
         if let socket = await subscriptionManager.socket(for: address) {
-            for subscription in await subscriptionManager.active() {
-                await self.sendClose(from: socket, subscriptionID: subscription.id)
-            }
-            
             await subscriptionManager.close(socket: socket)
         }
     }
@@ -326,16 +299,7 @@ extension RelayService {
     }
     
     private func processSubscriptionQueue() async {
-        await clearStaleSubscriptions()
-        
         await subscriptionManager.processSubscriptionQueue()
-    }
-    
-    private func clearStaleSubscriptions() async {
-        let staleSubscriptions = await subscriptionManager.staleSubscriptions()
-        for staleSubscription in staleSubscriptions {
-            await sendCloseToAll(for: staleSubscription.id)
-        }
     }
 }
 
@@ -351,7 +315,7 @@ extension RelayService {
             let subscription = await subscriptionManager.subscription(from: subID),
             subscription.closesAfterResponse {
             // This is a one-off request. Close it.
-            await sendClose(from: socket, subscriptionID: subID)
+            await subscriptionManager.closeSubscription(with: subID)
         }
     }
     

@@ -3,7 +3,7 @@ import SwiftUI
 /// A toggle with the tint color set to green.
 struct NosToggle: View {
     /// A string that shows up beside the toggle. Optional.
-    var labelText: LocalizedStringKey?
+    let labelText: LocalizedStringKey?
     
     @Binding var isOn: Bool
 

@@ -30,7 +30,7 @@ struct RepostButton: View {
         _reposts = FetchRequest(fetchRequest: Event.reposts(noteID: note.identifier ?? ""))
     }
     
-    var currentUserRepostedNote: Bool {
+    private var currentUserRepostedNote: Bool {
         reposts.contains {
             $0.author?.hexadecimalPublicKey == currentUser.author?.hexadecimalPublicKey
         }
@@ -85,7 +85,7 @@ struct RepostButton: View {
         }
     }
     
-    func buttonPressed() async {
+    private func buttonPressed() async {
         if !tapped && !currentUserRepostedNote {
             tapped = true
             shouldConfirmRepost = true
@@ -96,7 +96,7 @@ struct RepostButton: View {
         }
     }
     
-    func repostNote() async {
+    private func repostNote() async {
         defer { tapped = false }
         guard let keyPair = currentUser.keyPair else {
             return
@@ -124,7 +124,7 @@ struct RepostButton: View {
         }
     }
     
-    func deleteReposts() async {
+    private func deleteReposts() async {
         reposts
             .filter {
                 $0.author?.hexadecimalPublicKey == currentUser.author?.hexadecimalPublicKey

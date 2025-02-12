@@ -4,7 +4,7 @@ import SwiftUI
 struct BuildYourNetworkView: View {
     /// The action to perform when the user taps the Find people button.
     let completion: @MainActor () -> Void
-    
+
     /// The padding around most of the views here -- the text and button -- but not the image.
     private let padding: CGFloat = 40
 
@@ -17,19 +17,17 @@ struct BuildYourNetworkView: View {
         .navigationBarHidden(true)
     }
 
-    var buildYourNetworkStack: some View {
-        VStack {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("🔍")
-                    .font(.system(size: 60))
-                Text("buildYourNetwork")
-                    .font(.clarityBold(.title))
-                    .foregroundStyle(Color.primaryTxt)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text("buildYourNetworkDescription")
-                    .foregroundStyle(Color.secondaryTxt)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
+    private var buildYourNetworkStack: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text("🔍")
+                .font(.system(size: 60))
+            Text("buildYourNetwork")
+                .font(.clarityBold(.title))
+                .foregroundStyle(Color.primaryTxt)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("buildYourNetworkDescription")
+                .foregroundStyle(Color.secondaryTxt)
+                .fixedSize(horizontal: false, vertical: true)
 
             Spacer()
 

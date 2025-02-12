@@ -18,7 +18,7 @@ extension Publisher {
     }
 }
 
-@Observable @MainActor class NoteWarningController {
+@Observable @MainActor final class NoteWarningController {
     
     var showWarning: Bool {
         if userHidWarning {
@@ -32,7 +32,7 @@ extension Publisher {
         }
     }
     var userHidWarning = false 
-    var outOfNetwork = false
+    private(set) var outOfNetwork = false
     
     var note: Event? {
         didSet { 
@@ -47,8 +47,8 @@ extension Publisher {
     @ObservationIgnored @Dependency(\.persistenceController) var persistenceController
     @ObservationIgnored @Dependency(\.userDefaults) var userDefaults
     
-    var noteReports = [Event]() 
-    var authorReports = [Event]() 
+    private(set) var noteReports = [Event]()
+    private(set) var authorReports = [Event]()
     private var cancellables = [AnyCancellable]()
     private var noteReportsWatcher: NSFetchedResultsController<Event>?
     private var authorReportsWatcher: NSFetchedResultsController<Event>?

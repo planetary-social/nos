@@ -3,13 +3,13 @@ import Foundation
 import SwiftUI
 
 struct FollowsDestination: Hashable {
-    var author: Author
-    var follows: [Author]
+    let author: Author
+    let follows: [Author]
 }
 
 struct FollowersDestination: Hashable {
-    var author: Author
-    var followers: [Author]
+    let author: Author
+    let followers: [Author]
 }
 
 /// Displays a list of authors.

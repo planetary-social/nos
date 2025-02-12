@@ -13,11 +13,11 @@ struct SideMenuContent: View {
     @State private var isShowingReportABugMailView = false
     @State private var shareNosPressed = false
     
-    @State var result: Result<MFMailComposeResult, Error>?
+    @State private var result: Result<MFMailComposeResult, Error>?
     
     let closeMenu: @MainActor () -> Void
     
-    @MainActor var profileHeader: some View {
+    @MainActor private var profileHeader: some View {
         Group {
             if let author = currentUser.author, author.needsMetadata == true {
                 ActionBanner(

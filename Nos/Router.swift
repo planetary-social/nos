@@ -5,7 +5,7 @@ import Logger
 import Dependencies
 
 // Manages the app's navigation state.
-@MainActor class Router: ObservableObject {
+@MainActor final class Router: ObservableObject {
 
     @Published var homeFeedPath = NavigationPath()
     @Published var discoverPath = NavigationPath()
@@ -13,7 +13,7 @@ import Dependencies
     @Published var profilePath = NavigationPath()
     @Published var sideMenuPath = NavigationPath()
     @Published var selectedTab = AppDestination.home
-    @Published var isLoading = false
+    @Published private(set) var isLoading = false
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.relayService) private var relayService
     @Dependency(\.crashReporting) private var crashReporting

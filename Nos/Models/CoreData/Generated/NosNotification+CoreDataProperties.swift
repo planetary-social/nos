@@ -3,15 +3,15 @@ import CoreData
 
 extension NosNotification {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<NosNotification> {
+    @nonobjc static func fetchRequest() -> NSFetchRequest<NosNotification> {
         NSFetchRequest<NosNotification>(entityName: "NosNotification")
     }
 
-    @NSManaged public var isRead: Bool
-    @NSManaged public var user: Author?
-    @NSManaged public var follower: Author?
-    @NSManaged public var createdAt: Date?
-    @NSManaged public var event: Event?
+    @NSManaged var isRead: Bool
+    @NSManaged var eventID: String?
+    @NSManaged var user: Author?
+    @NSManaged var follower: Author?
+    @NSManaged var createdAt: Date?
 }
 
 extension NosNotification: Identifiable {}

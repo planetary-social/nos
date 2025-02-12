@@ -44,7 +44,7 @@ enum OnboardingStep {
 
 /// The view that initializes the onboarding navigation stack and shows the first view.
 struct OnboardingView: View {
-    @State var state = OnboardingState()
+    @State private var state = OnboardingState()
 
     @Dependency(\.featureFlags) private var featureFlags
 

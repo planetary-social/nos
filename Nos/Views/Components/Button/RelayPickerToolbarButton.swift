@@ -4,11 +4,11 @@ struct RelayPickerToolbarButton: ToolbarContent {
     
     @Binding var selectedRelay: Relay?
     @Binding var isPresenting: Bool
-    var action: () -> Void
+    let action: () -> Void
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
-    var title: String {
+    private var title: String {
         if let selectedRelay {
             return selectedRelay.host ?? String(localized: "error")
         } else {
@@ -16,7 +16,7 @@ struct RelayPickerToolbarButton: ToolbarContent {
         }
     }
     
-    var imageName: String {
+    private var imageName: String {
         if isPresenting {
             return "chevron.up"
         } else {
@@ -24,7 +24,7 @@ struct RelayPickerToolbarButton: ToolbarContent {
         }
     }
     
-    var disclosureIndicator: some View {
+    private var disclosureIndicator: some View {
         Image(systemName: imageName)
             .font(.system(size: 10))
             .fontWeight(.black)
@@ -36,7 +36,7 @@ struct RelayPickerToolbarButton: ToolbarContent {
             )
     }
     
-    var maxWidth: CGFloat {
+    private var maxWidth: CGFloat {
         horizontalSizeClass == .regular ? 400 : 190
     }
     

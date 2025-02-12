@@ -8,14 +8,14 @@ import UIKit
 /// 
 /// To use: instantiate and pass into a `NoteTextEditor` view. You can retrieve the typed text via the `text` property
 /// when the user indicates they are ready to post it.  
-@Observable class NoteEditorController: NSObject, UITextViewDelegate {
+@Observable final class NoteEditorController: NSObject, UITextViewDelegate {
 
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
     /// The height that fits all entered text. This value will be updated by `NoteUITextViewRepresentable` 
     /// automatically, and should be used to set the frame of `NoteUITextViewRepresentable` from SwiftUI. This is done 
     /// to work around some incompatibilities between UIKit and SwiftUI where the UITextView won't expand properly.
-    var intrinsicHeight: CGFloat = 0
+    private(set) var intrinsicHeight: CGFloat = 0
     
     /// A variable that controls whether the mention autocomplete window should be shown. This window is triggered
     /// by typing an '@' symbol and allows the user to search for another user to mention in their note.
@@ -35,7 +35,7 @@ import UIKit
     }
     
     /// Whether the user has entered any text.
-    var isEmpty = true
+    private(set) var isEmpty = true
 
     /// The attributed text the user has entered.
     var text: AttributedString? {

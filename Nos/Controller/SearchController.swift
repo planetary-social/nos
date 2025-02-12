@@ -51,12 +51,12 @@ enum SearchOrigin {
     /// so this contains all search results, period.
     private(set) var authorResults = [Author]()
 
-    var state: SearchState = .noQuery
+    private(set) var state: SearchState = .noQuery
 
     @ObservationIgnored @Dependency(\.router) private var router
     @ObservationIgnored @Dependency(\.relayService) private var relayService
     @ObservationIgnored @Dependency(\.persistenceController) private var persistenceController
-    @ObservationIgnored @Dependency(\.currentUser) var currentUser
+    @ObservationIgnored @Dependency(\.currentUser) private var currentUser
     @ObservationIgnored @Dependency(\.analytics) private var analytics
 
     private var cancellables = [AnyCancellable]()
@@ -71,10 +71,10 @@ enum SearchOrigin {
     private let stillLoadingTime: TimeInterval = 10
 
     /// The origin of the current search.
-    let searchOrigin: SearchOrigin
+    private let searchOrigin: SearchOrigin
     
     /// If true, will automatically trigger routing to detail views for exact matches of NIP-05s, npubs, and note ids.
-    let routesMatchesAutomatically: Bool
+    private let routesMatchesAutomatically: Bool
 
     // MARK: - Init
     
@@ -126,7 +126,7 @@ enum SearchOrigin {
     }
 
     /// Observes changes in the `NSManagedObjectContext` and updates the query and author results.
-    func observeContextChanges() {
+    private func observeContextChanges() {
         NotificationCenter.default.publisher(
             for: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
             object: context
@@ -147,7 +147,7 @@ enum SearchOrigin {
 
     // MARK: - Internal
     
-    func author(fromPublicKey publicKeyString: String) -> Author? {
+    private func author(fromPublicKey publicKeyString: String) -> Author? {
         let strippedString = publicKeyString.trimmingCharacters(
             in: NSCharacterSet.whitespacesAndNewlines
         )
@@ -161,14 +161,14 @@ enum SearchOrigin {
         return author
     }
     
-    func authors(named name: String) -> [Author] {
+    private func authors(named name: String) -> [Author] {
         guard let authors = try? Author.find(named: name, context: context) else {
             return []
         }
         return authors.sorted(by: { $0.followers.count > $1.followers.count })
     }
     
-    func clear() {
+    private func clear() {
         state = .noQuery
         searchSubscriptions.removeAll()
         timer?.invalidate()
@@ -200,7 +200,7 @@ enum SearchOrigin {
     /// - Warning: SIDE EFFECT WARNING:
     /// These functions search other systems for the given query and add relevant authors to the database.
     /// The database then generates a notification which is listened to above and results are reloaded.
-    func search(for query: String) {
+    private func search(for query: String) {
         // if there are no results, go into the `loading` state (which will show the spinner)
         // otherwise, keep showing the results
         if state != .results {
@@ -213,7 +213,7 @@ enum SearchOrigin {
         }
     }
 
-    func searchRelays(for query: String) {
+    private func searchRelays(for query: String) {
         Task {
             let searchFilter = Filter(
                 kinds: [.metaData],
@@ -230,7 +230,7 @@ enum SearchOrigin {
         }
     }
     
-    func startSearchTimer() {
+    private func startSearchTimer() {
         timer?.invalidate()
 
         timer = Timer.scheduledTimer(withTimeInterval: stillLoadingTime, repeats: false) { _ in

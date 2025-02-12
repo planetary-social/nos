@@ -8,24 +8,25 @@ import Dependencies
 ///
 /// The button opens the ThreadView for the note when tapped.
 struct NoteButton: View {
+    
+    private let style = CardStyle.compact
 
-    var note: Event
-    var style = CardStyle.compact
-    var shouldTruncate: Bool
-    var hideOutOfNetwork: Bool
-    var repliesDisplayType: RepliesDisplayType
+    let note: Event
+    let shouldTruncate: Bool
+    let hideOutOfNetwork: Bool
+    let repliesDisplayType: RepliesDisplayType
 
     /// Indicates whether the number of likes is displayed.
-    var showsLikeCount: Bool
+    let showsLikeCount: Bool
 
     /// Indicates whether the number of reposts is displayed.
-    var showsRepostCount: Bool
+    let showsRepostCount: Bool
 
     /// Whether replies should be fetched from relays.
-    var fetchReplies: Bool
+    let fetchReplies: Bool
 
-    var displayRootMessage: Bool
-    var isTapEnabled: Bool
+    let displayRootMessage: Bool
+    let isTapEnabled: Bool
     
     private let replyAction: ((Event) -> Void)?
     private let tapAction: ((Event) -> Void)?
@@ -37,7 +38,6 @@ struct NoteButton: View {
     /// Initializes a NoteButton object.
     ///
     /// - Parameter note: Note event to display.
-    /// - Parameter style: Card style. Defaults to `.compact`.
     /// - Parameter shouldTruncate: Whether the card should display just some lines or the
     /// full content of the note. Defaults to true.
     /// - Parameter hideOutOfNetwork: Blur the card if the author is not inside the user's
@@ -56,8 +56,7 @@ struct NoteButton: View {
     /// `nil`, it navigates to RepliesView. Defaults to `nil`.
     init(
         note: Event, 
-        style: CardStyle = CardStyle.compact, 
-        shouldTruncate: Bool = true, 
+        shouldTruncate: Bool = true,
         hideOutOfNetwork: Bool = true, 
         repliesDisplayType: RepliesDisplayType = .displayNothing,
         showsLikeCount: Bool = true,
@@ -69,7 +68,6 @@ struct NoteButton: View {
         tapAction: ((Event) -> Void)? = nil
     ) {
         self.note = note
-        self.style = style
         self.shouldTruncate = shouldTruncate
         self.hideOutOfNetwork = hideOutOfNetwork
         self.repliesDisplayType = repliesDisplayType

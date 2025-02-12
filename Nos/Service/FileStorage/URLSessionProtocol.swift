@@ -12,7 +12,7 @@ final class MockURLSession: URLSessionProtocol {
     private let responseData: Data
     private let urlResponse: URLResponse
 
-    var receivedRequest: URLRequest?
+    private(set) var receivedRequest: URLRequest?
 
     init(responseData: Data = Data(), urlResponse: URLResponse = URLResponse()) {
         self.responseData = responseData

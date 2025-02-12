@@ -3,15 +3,15 @@ import CoreData
 
 extension EventReference {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<EventReference> {
+    @nonobjc static func fetchRequest() -> NSFetchRequest<EventReference> {
         NSFetchRequest<EventReference>(entityName: "EventReference")
     }
 
-    @NSManaged public var eventId: String?
-    @NSManaged public var marker: String?
-    @NSManaged public var recommendedRelayUrl: String?
-    @NSManaged public var referencedEvent: Event?
-    @NSManaged public var referencingEvent: Event?
+    @NSManaged var eventId: String?
+    @NSManaged var marker: String?
+    @NSManaged var recommendedRelayUrl: String?
+    @NSManaged var referencedEvent: Event?
+    @NSManaged var referencingEvent: Event?
 }
 
 extension EventReference: Identifiable {}

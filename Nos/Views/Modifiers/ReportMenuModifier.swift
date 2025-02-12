@@ -9,7 +9,7 @@ import SwiftUINavigation
 struct ReportMenuModifier: ViewModifier {
     @Binding var isPresented: Bool
 
-    var reportedObject: ReportTarget
+    let reportedObject: ReportTarget
 
     @State private var selectedFlagOption: FlagOption?
     @State private var selectedFlagSendOption: FlagOption?
@@ -63,7 +63,7 @@ struct ReportMenuModifier: ViewModifier {
         }
     }
 
-    func mute(author: Author) async {
+    private func mute(author: Author) async {
         do {
             try await author.mute(viewContext: viewContext)
         } catch {

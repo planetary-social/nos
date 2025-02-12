@@ -6,7 +6,7 @@ import SwiftUI
 /// This Text was implemented to be re-used in the wizards that set-up and delete usernames in EditProfile screen.
 struct WizardSheetBadgeText: View {
 
-    private var localizedStringKey: LocalizedStringKey
+    let localizedStringKey: LocalizedStringKey
 
     init(_ localizedStringKey: LocalizedStringKey) {
         self.localizedStringKey = localizedStringKey

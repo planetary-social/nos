@@ -4,9 +4,9 @@ struct ProfileSocialStatsView: View {
 
     @EnvironmentObject private var router: Router
 
-    var author: Author
+    let author: Author
 
-    var followsResult: FetchedResults<Follow>
+    let followsResult: FetchedResults<Follow>
 
     private var spacer: some View {
         Spacer(minLength: 25)

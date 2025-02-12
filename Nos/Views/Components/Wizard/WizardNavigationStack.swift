@@ -7,7 +7,7 @@ import SwiftUI
 /// EditProfile screen.
 struct WizardNavigationStack<Root>: View where Root: View {
 
-    private var root: () -> Root
+    private let root: () -> Root
 
     init(@ViewBuilder root: @escaping () -> Root) {
         self.root = root

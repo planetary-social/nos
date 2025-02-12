@@ -3,12 +3,12 @@ import SwiftUI
 
 extension View {
     func readabilityPadding(isEnabled: Bool = true) -> some View {
-        self.modifier(ReadabilityPadding(isEnabled: isEnabled))
+        modifier(ReadabilityPadding(isEnabled: isEnabled))
     }
 }
 
 // Based on https://stackoverflow.com/a/68478487/982195
-struct ReadabilityPadding: ViewModifier {
+fileprivate struct ReadabilityPadding: ViewModifier {
     let isEnabled: Bool
     @ScaledMetric private var unit: CGFloat = 20
     
