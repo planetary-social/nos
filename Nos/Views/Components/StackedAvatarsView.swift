@@ -4,7 +4,7 @@ import SwiftUI
 /// followers/follows/blocks in a profile.
 struct StackedAvatarsView: View {
     /// The list of avatars to display
-    var avatarUrls: [URL?]
+    let avatarUrls: [URL?]
 
     /// The size of the circle avatar (it doesn't counts the border)
     var size: CGFloat = 26

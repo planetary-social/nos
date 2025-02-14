@@ -2,7 +2,7 @@ import Foundation
 import CoreData
 
 @objc(AuthorReference)
-public class AuthorReference: NosManagedObject {
+final class AuthorReference: NosManagedObject {
     
     /// Retreives all the AuthorReferences whose referencing Event has been deleted.
     static func orphanedRequest() -> NSFetchRequest<AuthorReference> {

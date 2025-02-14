@@ -3,9 +3,9 @@ import Logger
 import Combine
 
 /// Models a request to a relay for Nostr Events. 
-class RelaySubscription: Identifiable, Hashable {
+final class RelaySubscription: Identifiable, Hashable {
     
-    var id: String 
+    let id: String
     
     let filter: Filter
     

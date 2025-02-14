@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Release Notes
+
+### Internal Changes
+- Removed markdown links from TestFlight release notes.
+
+## [1.2] - 2025-02-13Z
+
+### Release Notes
 - Fixed: adding/removing relays not reflected on feed filter. [#119](https://github.com/verse-pbc/issues/issues/119)
 - Added Lists view and two ways to navigate to it. [#133](https://github.com/verse-pbc/issues/issues/133)
 - Added view for editing a list's title and description. [#134](https://github.com/verse-pbc/issues/issues/134)
@@ -23,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed: tapping a user on a list causes a crash. [#172](https://github.com/verse-pbc/issues/issues/172)
 - Removed link to Listr.lol when list is empty. [#176](https://github.com/verse-pbc/issues/issues/176)
 - Fixed: text fields sometimes don't work on onboarding screens. [#178](https://github.com/verse-pbc/issues/issues/178)
+- Fixed: lists change positions randomly. [#183](https://github.com/verse-pbc/issues/issues/183)
+- Fixed main action button is not visible on iPad on "Build Your Network" onboarding screen. [#184](https://github.com/verse-pbc/issues/issues/184)
+- Fixed: on your lists view, the entire cell is not tappable. [#179](https://github.com/verse-pbc/issues/issues/179)
+- Fixed: restarting app reverts to Following rather than selected list or relay. [#114](https://github.com/verse-pbc/issues/issues/114)
 
 ### Internal Changes
 - Added function for creating a new list and a test verifying list editing. [#112](https://github.com/verse-pbc/issues/issues/112)
@@ -31,10 +42,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved naming of a couple list-related classes.
 - Track TestFlight vs AppStore installations in Posthog. [#130](https://github.com/verse-pbc/issues/issues/130)
 - Track breadcrumbs in Sentry for all analytics events. [#125](https://github.com/verse-pbc/issues/issues/125)
-- Added functionality to get follows notifications in the Notifications tab. [#127](https://github.com/verse-pbc/issues/issues/127)
 - Refactored the way the ProfileView downloads data and logs analytics events. [#1748](https://github.com/planetary-social/nos/pull/1748)
 - Refactored the way we close relay subscriptions. [#1754](https://github.com/planetary-social/nos/pull/1754)
-- Removed markdown links from TestFlight release notes.
+- Audited codebase for strict access control and mutability annotations. [#185](https://github.com/verse-pbc/issues/issues/185)
 
 ## [1.1] - 2025-01-03Z
 

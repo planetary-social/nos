@@ -3,13 +3,13 @@ import CoreData
 
 extension AuthorReference {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<AuthorReference> {
+    @nonobjc static func fetchRequest() -> NSFetchRequest<AuthorReference> {
         NSFetchRequest<AuthorReference>(entityName: "AuthorReference")
     }
 
-    @NSManaged public var pubkey: String?
-    @NSManaged public var recommendedRelayUrl: String?
-    @NSManaged public var event: Event?
+    @NSManaged var pubkey: String?
+    @NSManaged var recommendedRelayUrl: String?
+    @NSManaged var event: Event?
 }
 
 extension AuthorReference: Identifiable {}

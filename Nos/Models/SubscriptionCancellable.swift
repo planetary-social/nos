@@ -2,7 +2,7 @@ import Foundation
 
 /// A handle that holds references to one or more `RelaySubscription`s and provides the ability to cancel these 
 /// subscriptions. Will auto-cancel them when it is deallocated. Modeled after Combine's `Cancellable`.
-class SubscriptionCancellable {
+final class SubscriptionCancellable {
     private var subscriptionIDs: [RelaySubscription.ID]
     private var subscriptionCancellables = [SubscriptionCancellable]()
     private weak var relayService: RelayService?

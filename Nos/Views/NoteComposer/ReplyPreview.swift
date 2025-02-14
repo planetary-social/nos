@@ -3,7 +3,7 @@ import SwiftUI
 /// This is a component of `NoteComposer` that displays a preview of the note being replied to. 
 struct ReplyPreview: View {
     
-    var note: Event
+    let note: Event
     @Environment(CurrentUser.self) var currentUser
     
     var body: some View {

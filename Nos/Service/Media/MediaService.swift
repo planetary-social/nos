@@ -18,7 +18,7 @@ protocol MediaService {
 /// Loads media to determine its preferred ``MediaOrientation``.
 struct DefaultMediaService: MediaService {
 
-    @Dependency(\.openGraphService) var openGraphService
+    @Dependency(\.openGraphService) private var openGraphService
 
     // MARK: - MediaService protocol
 

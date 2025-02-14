@@ -14,3 +14,5 @@ Post screenshots or video showing your changes, ideally showing how the app work
 | Before | After |
 |--------|--------|
 | replaceme | replaceme |
+
+@Chardot Please review these UI changes to be sure they match the design.

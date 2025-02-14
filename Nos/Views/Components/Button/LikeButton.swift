@@ -4,10 +4,10 @@ import SwiftUI
 
 struct LikeButton: View {
     
-    var note: Event
+    let note: Event
 
     /// Indicates whether the number of likes is displayed.
-    var showsCount: Bool
+    let showsCount: Bool
 
     @FetchRequest private var likes: FetchedResults<Event>
 

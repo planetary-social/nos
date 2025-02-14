@@ -3,28 +3,23 @@ import Dependencies
 
 /// A view that details some interaction (reply, like, follow, etc.) with one of your notes.
 struct NotificationCard: View {
-
+    
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var router: Router
     @Environment(RelayService.self) private var relayService
     @Dependency(\.persistenceController) private var persistenceController
-
+    
     let viewModel: NotificationViewModel
     @State private var relaySubscriptions = SubscriptionCancellables()
     @State private var content: AttributedString?
-
-    init(viewModel: NotificationViewModel) {
-        self.viewModel = viewModel
-    }
-
-    func showNote() {
-        guard let noteID = viewModel.noteID,
-            let note = Event.find(by: noteID, context: viewContext) else {
-            return
+    
+    private func showNote() {
+        guard let note = Event.find(by: viewModel.noteID, context: viewContext) else {
+            return 
         }
         router.push(note.referencedNote() ?? note)
     }
-
+    
     var body: some View {
         Button {
             showNote()
@@ -32,7 +27,7 @@ struct NotificationCard: View {
             HStack {
                 AvatarView(imageUrl: viewModel.authorProfilePhotoURL, size: 40)
                     .shadow(radius: 10, y: 4)
-
+                
                 VStack {
                     HStack {
                         Text(viewModel.actionText)
@@ -47,7 +42,7 @@ struct NotificationCard: View {
                                 .foregroundColor(.primaryTxt)
                                 .tint(.accent)
                                 .handleURLsInRouter()
-
+                            
                             if viewModel.content == nil {
                                 contentText.redacted(reason: .placeholder)
                             } else {
@@ -58,15 +53,13 @@ struct NotificationCard: View {
                     }
                 }
                 .frame(maxWidth: .infinity)
-
+                
                 VStack {
                     Spacer()
-                    if let date = viewModel.date {
-                        Text(date.distanceString())
-                            .lineLimit(1)
-                            .font(.callout)
-                            .foregroundColor(.secondaryTxt)
-                    }
+                    Text(viewModel.date.distanceString())
+                        .lineLimit(1)
+                        .font(.clarity(.regular))
+                        .foregroundColor(.secondaryTxt)
                 }
                 .fixedSize()
             }
@@ -100,17 +93,17 @@ struct NotificationCard: View {
 
 #Preview {
     var previewData = PreviewData()
-
+    
     let previewContext = previewData.previewContext
-
+    
     var alice: Author {
         previewData.alice
     }
-
+    
     var bob: Author {
         previewData.bob
     }
-
+    
     let note: Event = {
         let mentionNote = Event(context: previewContext)
         mentionNote.content = "Hello, bob!"
@@ -124,10 +117,10 @@ struct NotificationCard: View {
         try? previewContext.save()
         return mentionNote
     }()
-
+        
     return VStack {
         Spacer()
-        NotificationCard(viewModel: NotificationViewModel(note: note, user: bob, date: Date()))
+        NotificationCard(viewModel: NotificationViewModel(note: note, user: bob))
         Spacer()
     }
     .inject(previewData: previewData)

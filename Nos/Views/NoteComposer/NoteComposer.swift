@@ -23,7 +23,7 @@ struct NoteComposer: View {
     /// properly.
     @State private var scrollViewHeight: CGFloat = 0
 
-    @State var expirationTime: TimeInterval?
+    @State private var expirationTime: TimeInterval?
 
     @State private var alert: AlertState<Never>?
 
@@ -39,11 +39,11 @@ struct NoteComposer: View {
     /// Whether we're currently uploading an image or not.
     @State private var isUploadingImage = false
 
-    var initialContents: String?
+    private let initialContents: String?
     @Binding var isPresented: Bool
 
     /// The note that the user is replying to, if any.
-    private var replyToNote: Event?
+    private let replyToNote: Event?
 
     /// The id of a note the user is quoting, if any.
     private let quotedNoteID: RawEventID?
@@ -52,7 +52,7 @@ struct NoteComposer: View {
     @State private var quotedNote: Event?
 
     /// The authors who are referenced in a note in addition to those who replied to the note, if any.
-    var relatedAuthors: [Author]
+    private let relatedAuthors: [Author]
 
     init(
         initialContents: String? = nil,

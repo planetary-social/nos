@@ -6,7 +6,7 @@ import SwiftUI
 struct PickYourUsernameSheet: View {
 
     @Binding var isPresented: Bool
-    @State var usernameObserver = TextDebouncer()
+    @State private var usernameObserver = TextDebouncer()
     @State private var verified: Bool?
     @State private var isVerifying = false
     @Dependency(\.namesAPI) private var namesAPI

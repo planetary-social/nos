@@ -93,9 +93,11 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
             if relayFilter != dataSource.relayFilter || relay != dataSource.relay {
                 dataSource.subscribeToEvents(matching: relayFilter, from: relay)
             }
-            if databaseFilter != dataSource.databaseFilter {
+            
+            if !areFetchRequestsEquivalent(databaseFilter, dataSource.databaseFilter) {
                 dataSource.updateFetchRequest(databaseFilter)
             }
+            
             if refreshController.startRefresh {
                 refreshController.startRefresh = false
 
@@ -142,7 +144,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
     }
 
     /// Builds a one section, one column layout with dynamic cell sizes and a header and footer view.
-    static func buildLayout() -> UICollectionViewLayout {
+    private static func buildLayout() -> UICollectionViewLayout {
         let size = NSCollectionLayoutSize(
             widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
             heightDimension: NSCollectionLayoutDimension.estimated(140)
@@ -244,7 +246,7 @@ struct PagedNoteListView<Header: View, EmptyPlaceholder: View>: UIViewRepresenta
 
 extension Notification.Name {
     /// Instructs the receiver to scroll its list to the top
-    public static let scrollToTop = Notification.Name("scrollToTop")
+    static let scrollToTop = Notification.Name("scrollToTop")
 }
 
 #Preview {

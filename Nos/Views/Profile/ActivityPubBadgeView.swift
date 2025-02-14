@@ -5,7 +5,7 @@ struct ActivityPubBadgeView: View {
 
     @ObservedObject var author: Author
 
-    var fediverseServer: String {
+    private var fediverseServer: String {
         let regex = /[0-9A-Za-z._-]+@(?<fediverse>[0-9A-Za-z._-]+)\.mostr\.pub/
         guard let match = author.nip05?.firstMatch(of: regex) else {
             return "mostr.pub"

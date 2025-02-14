@@ -5,13 +5,12 @@ import BackgroundTasks
 
 final class PersistenceController {
     
-    @Dependency(\.currentUser) var currentUser
-    @Dependency(\.crashReporting) var crashReporting
+    @Dependency(\.currentUser) private var currentUser
+    @Dependency(\.crashReporting) private var crashReporting
     
     /// Increment this to delete core data on update
     private static let version = 3
     private static let versionKey = "NosPersistenceControllerVersion"
-    private static let createdNosNotifications = "CreatedNosNotifications"
 
     static var preview: PersistenceController = {
         let controller = PersistenceController(inMemory: true)
@@ -42,14 +41,6 @@ final class PersistenceController {
     private(set) var container: NSPersistentContainer
     private let model: NSManagedObjectModel
     private let inMemory: Bool
-    private var recreateNosNotifications: Bool {
-        get {
-            UserDefaults.standard.bool(forKey: Self.createdNosNotifications)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Self.createdNosNotifications)
-        }
-    }
 
     init(containerName: String = "Nos", inMemory: Bool = false, erase: Bool = false) {
         self.inMemory = inMemory
@@ -57,14 +48,6 @@ final class PersistenceController {
         model = NSManagedObjectModel(contentsOf: modelURL)!
         container = NSPersistentContainer(name: containerName, managedObjectModel: model)
         setUp(erasingPrevious: erase)
-
-        if !recreateNosNotifications {
-            Task {
-                let context = newBackgroundContext()
-                try await DatabaseCleaner.deleteNotificationsAndEvents(in: context)
-                recreateNosNotifications = true
-            }
-        }
     }
     
     private func setUp(erasingPrevious: Bool) {
@@ -146,13 +129,13 @@ final class PersistenceController {
 extension PersistenceController {
     
     /// The ID of the background task that runs the `DatabaseCleaner`. Needs to match the value in Info.plist.
-    static let cleanupBackgroundTaskID = "com.verse.nos.database-cleaner"
+    private static let cleanupBackgroundTaskID = "com.verse.nos.database-cleaner"
     
     /// Cleans up unneeded entities from the database. Our local database is really just a cache, and we need to
     /// invalidate old items to keep it from growing indefinitely.
     /// 
     /// This should only be called once right at app launch.
-    @MainActor func cleanupEntities() async {
+    @MainActor private func cleanupEntities() async {
         guard let authorKey = currentUser.author?.hexadecimalPublicKey else {
             return
         }

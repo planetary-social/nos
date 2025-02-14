@@ -13,7 +13,7 @@ enum ReportError: Error {
     case missingPublicKey(String)
 }
 
-class ReportPublisher {
+final class ReportPublisher {
     @Dependency(\.relayService) private var relayService
     @Dependency(\.currentUser) private var currentUser
     @Dependency(\.analytics) private var analytics

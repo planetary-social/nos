@@ -4,7 +4,7 @@ import SwiftUI
 
 struct ExcellentChoiceSheet: View {
 
-    var username: String
+    let username: String
     @Binding var isPresented: Bool
 
     @State private var claimState: ClaimState = .idle

@@ -17,15 +17,17 @@ struct NoteView: View {
     @FocusState private var focusTextView: Bool
     @State private var showKeyboardOnAppear: Bool
     
-    var repliesRequest: FetchRequest<Event>
+    private var repliesRequest: FetchRequest<Event>
     /// All replies
-    var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
+    private var replies: FetchedResults<Event> { repliesRequest.wrappedValue }
 
     /// The authors who are referenced in a note in addition to those who replied to the note, if any.
     @State private var relatedAuthors: [Author] = []
     @State private var directReplies: [Event] = []
     
-    func computeDirectReplies() async {
+    let note: Event
+    
+    private func computeDirectReplies() async {
         directReplies = replies.filter { (reply: Event) in
             guard let eventReferences = reply.eventReferences.array as? [EventReference] else {
                 return false
@@ -62,8 +64,6 @@ struct NoteView: View {
         self.repliesRequest = FetchRequest(fetchRequest: Event.allReplies(to: note))
         _showKeyboardOnAppear = .init(initialValue: showKeyboard)
     }
-    
-    var note: Event
 
     /// Retrieves a list of authors associated with the current note, including the
     /// rootNote if any and any author referenced in a note.
@@ -100,7 +100,7 @@ struct NoteView: View {
         return Array(authors)
     }
 
-    func subscribeToReplies() {
+    private func subscribeToReplies() {
         Task(priority: .userInitiated) {
             // Close out stale requests
             relaySubscriptions.removeAll()

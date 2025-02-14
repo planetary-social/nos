@@ -5,7 +5,6 @@ import Dependencies
 import SDWebImage
 import SDWebImageWebPCoder
 
-@MainActor
 class AppDelegate: NSObject, UIApplicationDelegate {
 
     @Dependency(\.currentUser) private var currentUser
@@ -46,8 +45,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         do {
             Log.info("PushNotifications: Received background notification. Subscribing to relays.")
             analytics.receivedNotification()
-            // Call PushNotificationService to handle follow notifications
-            await pushNotificationService.application(application, didReceiveRemoteNotification: userInfo)
             await currentUser.subscribe()
             try await Task.sleep(for: .seconds(10))
             Log.info("PushNotifications: Sync complete")

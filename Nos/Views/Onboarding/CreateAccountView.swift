@@ -4,7 +4,7 @@ import SwiftUI
 /// The Create Account view in the onboarding.
 struct CreateAccountView: View {
     @Environment(OnboardingState.self) private var state
-    @Environment(CurrentUser.self) var currentUser
+    @Environment(CurrentUser.self) private var currentUser
     
     @Dependency(\.crashReporting) private var crashReporting
 
@@ -23,7 +23,7 @@ struct CreateAccountView: View {
         .navigationBarHidden(true)
     }
 
-    var createAccountStack: some View {
+    private var createAccountStack: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text("👋")
                 .font(.system(size: 60))

@@ -3,7 +3,7 @@ import SwiftUINavigation
 
 struct NosFormSection<Content: View>: View {
     
-    var label: LocalizedStringKey?
+    let label: LocalizedStringKey?
     let content: Content
     
     init(_ label: LocalizedStringKey? = nil, @ViewBuilder builder: () -> Content) {

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ThreadView: View {
     
-    var root: Event
+    let root: Event
 
     var thread: [Event] = []
     

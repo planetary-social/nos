@@ -2,7 +2,7 @@ import SwiftUI
 
 struct CardButtonStyle: ButtonStyle {
     
-    var style: CardStyle
+    let style: CardStyle
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label.mimicCardButtonStyle(style: style, isPressed: configuration.isPressed)

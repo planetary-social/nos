@@ -73,7 +73,7 @@ struct UsernameView: View {
         }
     }
 
-    var usernameStack: some View {
+    private var usernameStack: some View {
         VStack(alignment: .leading, spacing: 20) {
             LargeNumberView(4)
             HStack(alignment: .firstTextBaseline) {
@@ -120,19 +120,19 @@ struct UsernameView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    var usernameAlreadyClaimedText: some View {
+    private var usernameAlreadyClaimedText: some View {
         Text("usernameNotAvailable")
             .font(.subheadline)
             .fontWeight(.medium)
             .foregroundStyle(Color.error)
     }
 
-    func nextStep() {
+    private func nextStep() {
         state.step = .accountSuccess
     }
 
     /// Checks whether the username is available and saves it. Updates `usernameState` based on the result.
-    func verifyAndSave() async {
+    private func verifyAndSave() async {
         usernameState = .loading
 
         guard !username.isEmpty, let keyPair = currentUser.keyPair else {
@@ -157,7 +157,7 @@ struct UsernameView: View {
     }
     
     /// Saves the username locally, publishes the metadata, and registers it.
-    func save() async {
+    private func save() async {
         usernameState = .loading
 
         guard let author = await currentUser.author,

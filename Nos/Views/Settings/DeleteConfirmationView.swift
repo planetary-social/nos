@@ -11,11 +11,11 @@ import SwiftUI
 struct DeleteConfirmationView: View {
     @State private var confirmationText: String = ""
 
-    var requiredText: String
-    var onDelete: (() -> Void)
-    var onCancel: (() -> Void)
+    let requiredText: String
+    let onDelete: (() -> Void)
+    let onCancel: (() -> Void)
 
-    var isDeleteDisabled: Bool {
+    private var isDeleteDisabled: Bool {
         confirmationText != requiredText
     }
 

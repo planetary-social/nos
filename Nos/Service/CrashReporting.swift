@@ -3,7 +3,7 @@ import Logger
 import Sentry
 
 /// An abstraction of an external crash reporting service, like Sentry.io
-class CrashReporting {
+final class CrashReporting {
     
     private let sentry: SentrySDK.Type
     

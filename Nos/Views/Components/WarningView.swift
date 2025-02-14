@@ -78,7 +78,7 @@ struct OverlayContentReportView: View {
     @Bindable var controller: NoteWarningController
     
     @State private var isTextBoxShown = false
-    @State var isOverlayHelpTextBoxShown = false
+    @State private var isOverlayHelpTextBoxShown = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -141,8 +141,8 @@ struct OverlayContentReportView: View {
 
 struct ContentWarningMessage: View {
     
-    var reports: [Event]
-    var type: ContentWarningType
+    let reports: [Event]
+    let type: ContentWarningType
     
     @State private var controller = ContentWarningController()
     

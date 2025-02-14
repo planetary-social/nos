@@ -1,7 +1,7 @@
 import Foundation
 import Starscream
 
-class MockRelaySubscriptionManager: RelaySubscriptionManager {
+final class MockRelaySubscriptionManager: RelaySubscriptionManager {
     
     var all = [RelaySubscription]()
 

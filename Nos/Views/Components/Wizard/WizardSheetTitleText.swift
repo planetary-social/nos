@@ -6,7 +6,7 @@ import SwiftUI
 /// This View was implemented to be re-used in the wizards that set-up and delete usernames in EditProfile screen.
 struct WizardSheetTitleText: View {
     
-    private var localizedStringKey: LocalizedStringKey
+    private let localizedStringKey: LocalizedStringKey
 
     init(_ localizedStringKey: LocalizedStringKey) {
         self.localizedStringKey = localizedStringKey

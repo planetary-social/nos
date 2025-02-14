@@ -4,13 +4,13 @@ import Foundation
 /// Vocabulary from [NIP-56] and [NIP-69](https://github.com/nostr-protocol/nips/pull/457).
 struct ReportCategory: Identifiable, Equatable {
     /// A localized human readable description of the reason/category. Should be short enough to fit in an action menu.
-    var displayName: String
+    let displayName: String
     
     /// The machine-readable code corresponding to this category.
-    var code: String
+    let code: String
     
     /// A code matching a NIP-56 category, for backwards compatibility
-    var nip56Code: NIP56Code
+    let nip56Code: NIP56Code
     
     /// A list of all sub-categories that narrow this one down.
     var subCategories: [ReportCategory]?

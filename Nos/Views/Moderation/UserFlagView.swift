@@ -17,7 +17,7 @@ struct UserFlagView: View {
 
     /// Defines the action to be performed when the user sends a flag report.
     /// It is called when the user taps the "Send" button after selecting all required options.
-    var sendAction: () -> Void
+    let sendAction: () -> Void
 
     /// Indicates whether the target of the report is muted.
     var isUserMuted: Bool {

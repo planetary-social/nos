@@ -14,7 +14,7 @@ struct CircularFollowButton: View {
 
     private let diameter: CGFloat = 30
 
-    @State var disabled = false
+    @State private var disabled = false
 
     var body: some View {
         let following = currentUser.isFollowing(author: author)

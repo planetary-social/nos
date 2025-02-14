@@ -29,7 +29,7 @@ struct HighlightedText: View {
     }
     
     /// An array of segments of text, along with a bool specifying if they should be highlighted.
-    private var segments: [Segment]
+    private let segments: [Segment]
     
     /// Creates a `HighlightedText`.
     /// - Parameters:
@@ -77,35 +77,36 @@ struct HighlightedText: View {
         self.link = link
         
         // If we have a highlighted word we break it up into segments.
+        var pendingSegments = [Segment]()
         if let highlightedWord = highlightedWord,
             let rangeOfHighlightedWord = text.ranges(of: highlightedWord).first {
-            segments = []
             let beforeHighlightedWord = String(text[..<rangeOfHighlightedWord.lowerBound])
             if !beforeHighlightedWord.isEmpty {
-                segments.append(.body(beforeHighlightedWord))
+                pendingSegments.append(.body(beforeHighlightedWord))
                 
                 // Add spaces back because markdown parsing strips them
                 if beforeHighlightedWord.suffix(1) == " " {
-                    segments.append(.space)
+                    pendingSegments.append(.space)
                 }
             }
             
-            segments.append(.highlighted(highlightedWord))
+            pendingSegments.append(.highlighted(highlightedWord))
             
             let afterHighlightedWord = String(text[rangeOfHighlightedWord.upperBound...])
             if !afterHighlightedWord.isEmpty {
                 
                 // Add spaces back because markdown parsing strips them
                 if afterHighlightedWord.prefix(1) == " " {
-                    segments.append(.space)
+                    pendingSegments.append(.space)
                 }
                 
-                segments.append(.body(String(afterHighlightedWord)))
+                pendingSegments.append(.body(String(afterHighlightedWord)))
             }
         } else {
             // no highlighted word, so we just have one segment.
-            segments = [.body(text)]
+            pendingSegments = [.body(text)]
         }
+        segments = pendingSegments
     }
     
     /// A layer that has the body text colored in, but the highlighted word is clear.

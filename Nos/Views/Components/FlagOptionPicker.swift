@@ -1,4 +1,5 @@
 import SwiftUI
+
 /// Displays a list of selectable flag options
 struct FlagOptionPicker: View {
     /// The previous selection made by the user, used for displaying information related to changes in selection.
@@ -9,13 +10,13 @@ struct FlagOptionPicker: View {
     @Binding private var currentSelection: FlagOption?
 
     /// The list of available flag options to choose from.
-    var options: [FlagOption]
+    let options: [FlagOption]
 
     /// The title displayed at the top of the picker.
-    var title: String
+    let title: String
 
     /// An optional subtitle that provides additional context for the picker.
-    var subtitle: String?
+    let subtitle: String?
 
     init(
         previousSelection: Binding<FlagOption?>,
@@ -65,7 +66,7 @@ struct FlagOptionPicker: View {
 ///  It highlights the selected option and allows the user to tap and select a new option.
 private struct FlagPickerRow: View {
     /// The flag option associated with this row.
-    var flag: FlagOption
+    let flag: FlagOption
 
     /// The current flag selection.
     @Binding var selection: FlagOption?

@@ -4,7 +4,7 @@ import Dependencies
 import Logger
 
 @objc(Author)
-@Observable public class Author: NosManagedObject {
+@Observable final class Author: NosManagedObject {
     
     @Dependency(\.currentUser) @ObservationIgnored var currentUser
     
@@ -130,7 +130,7 @@ import Logger
         name?.isEmpty == false || displayName?.isEmpty == false
     }
     
-    class func request(by pubKey: RawAuthorID) -> NSFetchRequest<Author> {
+    static func request(by pubKey: RawAuthorID) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(format: "hexadecimalPublicKey = %@", pubKey)
         fetchRequest.fetchLimit = 1
@@ -138,7 +138,7 @@ import Logger
         return fetchRequest
     }
 
-    class func find(by pubKey: RawAuthorID, context: NSManagedObjectContext) throws -> Author? {
+    static func find(by pubKey: RawAuthorID, context: NSManagedObjectContext) throws -> Author? {
         let fetchRequest = request(by: pubKey)
         if let author = try context.fetch(fetchRequest).first {
             return author
@@ -147,7 +147,7 @@ import Logger
         return nil
     }
     
-    class func find(named name: String, context: NSManagedObjectContext) throws -> [Author] {
+    static func find(named name: String, context: NSManagedObjectContext) throws -> [Author] {
         let fetchRequest = NSFetchRequest<Author>(entityName: String(describing: Author.self))
         fetchRequest.predicate = NSPredicate(
             format: "name CONTAINS[cd] %@ OR displayName CONTAINS[cd] %@", name, name
@@ -157,7 +157,7 @@ import Logger
     }
     
     @discardableResult
-    class func findOrCreate(by pubKey: RawAuthorID, context: NSManagedObjectContext) throws -> Author {
+    static func findOrCreate(by pubKey: RawAuthorID, context: NSManagedObjectContext) throws -> Author {
         if let author = try? Author.find(by: pubKey, context: context) {
             return author
         } else {
@@ -168,26 +168,26 @@ import Logger
         }
     }
     
-    @nonobjc public class func allAuthorsRequest() -> NSFetchRequest<Author> {
+    @nonobjc static func allAuthorsRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
         return fetchRequest
     }
     
-    @nonobjc public class func allAuthorsRequest(muted: Bool) -> NSFetchRequest<Author> {
+    @nonobjc static func allAuthorsRequest(muted: Bool) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.predicate = NSPredicate(format: "muted == %i", muted)
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
         return fetchRequest
     }
 
-    @nonobjc public class func allAuthorsWithNameOrDisplayNameRequest(muted: Bool) -> NSFetchRequest<Author> {
+    @nonobjc static func allAuthorsWithNameOrDisplayNameRequest(muted: Bool) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.predicate = NSPredicate(format: "muted == %i AND (displayName != nil OR name != nil)", muted)
         return fetchRequest
     }
     
-    @nonobjc public class func emptyRequest() -> NSFetchRequest<Author> {
+    @nonobjc static func emptyRequest() -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.predicate = NSPredicate.false
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.hexadecimalPublicKey, ascending: false)]
@@ -195,7 +195,7 @@ import Logger
     }
     
     /// Returns the authors that this author (self) follows who also follow the given `author`.
-    @nonobjc public func knownFollowers(of author: Author) -> NSFetchRequest<Author> {
+    @nonobjc func knownFollowers(of author: Author) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
         fetchRequest.predicate = NSPredicate(
@@ -272,7 +272,7 @@ import Logger
         return fetchRequest
     }
     
-    @nonobjc class func oneHopRequest(for author: Author) -> NSFetchRequest<Author> {
+    @nonobjc static func oneHopRequest(for author: Author) -> NSFetchRequest<Author> {
         let fetchRequest = NSFetchRequest<Author>(entityName: "Author")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Author.lastUpdatedContactList, ascending: false)]
         fetchRequest.predicate = NSPredicate(
@@ -317,7 +317,7 @@ import Logger
         return fetchRequest
     }
 
-    class func all(context: NSManagedObjectContext) -> [Author] {
+    static func all(context: NSManagedObjectContext) -> [Author] {
         let allRequest = Author.allAuthorsRequest()
         
         do {
@@ -405,14 +405,5 @@ import Logger
 
         // Publish the modified list
         await currentUser.publishMuteList(keys: Array(Set(mutedList)))
-    }
-
-    // Checks if this author has received a follow notification from the specified author.
-    /// - Parameter author: The author to check for a follow relationship
-    /// - Returns: `true` if the specified author follows this author, `false` otherwise
-    func hasReceivedFollowNotification( from author: Author) -> Bool {
-        followNotifications.contains(where: { element in
-            (element as? NosNotification)?.follower == author
-        })
     }
 }
