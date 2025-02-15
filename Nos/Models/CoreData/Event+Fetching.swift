@@ -352,11 +352,17 @@ extension Event {
             )
         ])
         let kind6Predicate = NSPredicate(format: "kind = 6")
+        let kind20Predicate = NSPredicate(format: "kind = 20")
+        let kind21Predicate = NSPredicate(format: "kind = 21")
+        let kind22Predicate = NSPredicate(format: "kind = 22")
         let kind30023Predicate = NSPredicate(format: "kind = 30023")
 
         let kindsPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
             kind1Predicate,
             kind6Predicate,
+            kind20Predicate,
+            kind21Predicate,
+            kind22Predicate,
             kind30023Predicate
         ])
 

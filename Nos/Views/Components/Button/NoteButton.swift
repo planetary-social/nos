@@ -138,12 +138,11 @@ struct NoteButton: View {
             }
             .buttonStyle(CardButtonStyle(style: style))
 
-            let buttonOrLabel = Group {
+            let buttonOrLabel: some View = SwiftUI.Group {
                 if isTapEnabled {
                     button
                 } else {
-                    buttonLabel
-                        .mimicCardButtonStyle()
+                    buttonLabel.mimicCardButtonStyle()
                 }
             }
 
