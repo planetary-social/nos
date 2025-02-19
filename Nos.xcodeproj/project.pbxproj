@@ -2268,7 +2268,7 @@
 				C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */,
 				C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */,
 				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */,
-				C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */,
+				C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
 				C9FD35112BCED5A6008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
 				03C49ABE2C938A9C00502321 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				039389212CA4985C00698978 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
@@ -2937,11 +2937,11 @@
 /* Begin PBXTargetDependency section */
 		3AD3185D2B294E9000026B07 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */;
+			productRef = 3AD3185C2B294E9000026B07 /* plugin:XCStringsToolPlugin */;
 		};
 		3AEABEF32B2BF806001BC933 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */;
+			productRef = 3AEABEF22B2BF806001BC933 /* plugin:XCStringsToolPlugin */;
 		};
 		C90862C229E9804B00C35A71 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2950,11 +2950,11 @@
 		};
 		C9A6C7442AD83F7A001F9500 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = C9A6C7432AD83F7A001F9500 /* SwiftGenPlugin */;
+			productRef = C9A6C7432AD83F7A001F9500 /* plugin:SwiftGenPlugin */;
 		};
 		C9D573402AB24A3700E06BB4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = C9D5733F2AB24A3700E06BB4 /* SwiftGenPlugin */;
+			productRef = C9D5733F2AB24A3700E06BB4 /* plugin:SwiftGenPlugin */;
 		};
 		C9DEBFE6298941020078B43A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3064,7 +3064,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.verse.Nos-staging";
 				PRODUCT_MODULE_NAME = Nos;
 				PRODUCT_NAME = "$(TARGET_NAME) Staging";
@@ -3239,7 +3239,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[sdk=iphonesimulator*]" = (
 					"-Xlinker",
@@ -3518,7 +3518,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_MODULE_NAME = Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3575,7 +3575,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = NO;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.verse.Nos;
 				PRODUCT_MODULE_NAME = Nos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3828,7 +3828,7 @@
 				minimumVersion = 4.0.0;
 			};
 		};
-		C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */ = {
+		C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift";
 			requirement = {
@@ -3867,12 +3867,12 @@
 			package = 03C49ABE2C938A9C00502321 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
 		};
-		3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */ = {
+		3AD3185C2B294E9000026B07 /* plugin:XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
 			productName = "plugin:XCStringsToolPlugin";
 		};
-		3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */ = {
+		3AEABEF22B2BF806001BC933 /* plugin:XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
 			productName = "plugin:XCStringsToolPlugin";
@@ -3951,7 +3951,7 @@
 			package = C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
 		};
-		C9A6C7432AD83F7A001F9500 /* SwiftGenPlugin */ = {
+		C9A6C7432AD83F7A001F9500 /* plugin:SwiftGenPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */;
 			productName = "plugin:SwiftGenPlugin";
@@ -3971,7 +3971,7 @@
 			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
 		};
-		C9D5733F2AB24A3700E06BB4 /* SwiftGenPlugin */ = {
+		C9D5733F2AB24A3700E06BB4 /* plugin:SwiftGenPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9C8450C2AB249DB00654BC1 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */;
 			productName = "plugin:SwiftGenPlugin";
@@ -3983,12 +3983,12 @@
 		};
 		C9FD34F52BCEC89C008F8D95 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */;
+			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
 			productName = secp256k1;
 		};
 		C9FD34F72BCEC8B5008F8D95 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */;
+			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
 			productName = secp256k1;
 		};
 		C9FD35122BCED5A6008F8D95 /* NostrSDK */ = {
