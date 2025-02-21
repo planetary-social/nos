@@ -5,18 +5,17 @@ import SwiftUI
 /// styles listed in `RepliesDisplayType`.
 struct RepliesLabel: View {
 
-    let repliesDisplayType: RepliesDisplayType
-    let note: Event
-
     @FetchRequest private var replies: FetchedResults<Event>
     @Dependency(\.currentUser) private var currentUser
     @State private var avatars = [URL?]()
+    @State private var cachedAttributedReplies: AttributedString?
+    
+    let repliesDisplayType: RepliesDisplayType
+    let noteIdentifier: RawEventID
 
-    init(repliesDisplayType: RepliesDisplayType, for note: Event) {
-        self.note = note
+    init(repliesDisplayType: RepliesDisplayType, for noteIdentifier: RawEventID) {
         self.repliesDisplayType = repliesDisplayType
-
-        let noteIdentifier = note.identifier ?? ""
+        self.noteIdentifier = noteIdentifier
         _replies = FetchRequest(fetchRequest: Event.replies(to: noteIdentifier))
     }
 
@@ -75,15 +74,11 @@ struct RepliesLabel: View {
         case .count:
             let count = replies.count
             let string = String.localizedStringWithFormat(String(localized: "replies", table: "Reply"), count)
-            do {
-                var attributed = try AttributedString(markdown: string)
-                if let range = attributed.range(of: "\(count)") {
-                    attributed[range].foregroundColor = .primaryTxt
-                }
-                return attributed
-            } catch {
-                return nil
+            var attributed = AttributedString(string)
+            if let range = attributed.range(of: "\(count)") {
+                attributed[range].foregroundColor = .primaryTxt
             }
+            return attributed
         }
     }
 
@@ -96,20 +91,28 @@ struct RepliesLabel: View {
             )
             .padding(.trailing, 8)
 
-            if let replies = attributedReplies {
-                Text(replies)
+            if let cachedAttributedReplies {
+                Text(cachedAttributedReplies)
                     .font(.clarity(.medium, textStyle: .subheadline))
                     .foregroundColor(Color.secondaryTxt)
                     .lineLimit(1)
             }
         }
         .task {
-            await computeAvatars()
+            updateData()
         }
         .onChange(of: replies.count) {
-            Task {
-                await computeAvatars()
-            }
+            updateData()
+        }
+        .onChange(of: avatars.count) {
+            updateData()
+        }
+    }
+    
+    private func updateData() {
+        Task {
+            await computeAvatars()
+            cachedAttributedReplies = attributedReplies
         }
     }
 }

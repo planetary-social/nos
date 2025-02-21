@@ -2,19 +2,21 @@ import SwiftUI
 
 struct AuthorLabel: View {
     
-    @ObservedObject var author: Author
-    var note: Event?
+    let profilePhotoURL: URL?
+    private let attributedAuthor: AttributedString
     
-    private var attributedAuthor: AttributedString {
-        var authorName = AttributedString(author.safeName)
+    init(safeName: String, profilePhotoURL: URL?) {
+        self.profilePhotoURL = profilePhotoURL
+        
+        var authorName = AttributedString(safeName)
         authorName.foregroundColor = .primaryTxt
         authorName.font = .clarity(.semibold)
-        return authorName
+        attributedAuthor = authorName
     }
 
     var body: some View {
         HStack {
-            AvatarView(imageUrl: author.profilePhotoURL, size: 24)
+            AvatarView(imageUrl: profilePhotoURL, size: 24)
             Text(attributedAuthor)
                 .lineLimit(1)
                 .font(.clarity(.medium))
@@ -27,6 +29,9 @@ struct AuthorLabel: View {
 struct AuthorLabel_Previews: PreviewProvider {
     static var previewData = PreviewData()
     static var previews: some View {
-        AuthorLabel(author: previewData.previewAuthor)
+        AuthorLabel(
+            safeName: previewData.previewAuthor.safeName,
+            profilePhotoURL: previewData.previewAuthor.profilePhotoURL
+        )
     }
 }
