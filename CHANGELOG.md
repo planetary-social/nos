@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Release Notes
+- Performance improvements for RepliesLabel, AuthorLabel, NoteCardHeader, Date+Elapsed
+
+### Internal Changes
+
 ## [1.2.1] - 2025-02-19Z
 
 ### Release Notes
