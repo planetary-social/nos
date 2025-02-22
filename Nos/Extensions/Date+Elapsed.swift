@@ -15,6 +15,9 @@ fileprivate final class DateFormatters {
         return dateComponentsFormatter
     }()
     
+    /// A formatter to use for month-day-year format.
+    /// - Parameter calendar: A calendar used to inform the formatter's style.
+    /// - Returns: A date formatter that produces outputs like "Aug 9, 2024".
     func longDateFormatter(forCalendar calendar: Calendar) -> DateFormatter {
         let cacheKey = "long-\(calendar.locale?.identifier ?? "")-\(calendar.timeZone.identifier)"
         if let formatter = formatterCache[cacheKey] {
@@ -31,6 +34,9 @@ fileprivate final class DateFormatters {
         }
     }
     
+    /// A formatter to use for month-day format.
+    /// - Parameter calendar: A calendar used to inform the formatter's style.
+    /// - Returns: A date formatter that produces outputs like "Aug 9".
     func monthDayFormatter(forCalendar calendar: Calendar) -> DateFormatter {
         let cacheKey = "monthDay-\(calendar.locale?.identifier ?? "")-\(calendar.timeZone.identifier)"
         if let formatter = formatterCache[cacheKey] {
@@ -84,7 +90,12 @@ extension Date {
     ///   - calendar: The calendar to use when formatting the human-readable string
     /// - Returns:.The localized human-readable string of this date relative to the end date.
     func distanceString(_ endDate: Date = Date.now, calendar: Calendar = Calendar.current) -> String {
-        let components = (calendar as NSCalendar).components(DateFormatters.unitFlags, from: self, to: endDate, options: [])
+        let components = (calendar as NSCalendar).components(
+            DateFormatters.unitFlags,
+            from: self,
+            to: endDate,
+            options: []
+        )
 
         if let year = components.year, year >= 1 {
             return formatLongDate(calendar)

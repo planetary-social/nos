@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 
 struct NoteCardHeader: View {
@@ -7,12 +8,17 @@ struct NoteCardHeader: View {
     let noteExpirationDate: Date?
     let noteCreatedDate: Date?
     
+    @State private var currentTime = Date.now
     @State private var expirationDateDistanceString: String?
     @State private var createdDateDistanceString: String?
     
+    /// A timer used to cause a periodic refresh of the date strings.
+    @State private var timer: Timer.TimerPublisher?
+    @State private var timerCancellable: AnyCancellable?
+    
     var body: some View {
         HStack(alignment: .center, spacing: 8) {
-            AuthorLabel(safeName: authorSafeName, profilePhotoURL: authorProfilePhotoURL)
+            AuthorLabel(name: authorSafeName, profilePhotoURL: authorProfilePhotoURL)
             if let expirationDateDistanceString {
                 Image.disappearingMessages
                     .resizable()
@@ -33,9 +39,35 @@ struct NoteCardHeader: View {
         }
         .padding(.leading, 10)
         .onAppear {
-            expirationDateDistanceString = noteExpirationDate?.distanceString()
-            createdDateDistanceString = noteCreatedDate?.distanceString()
+            update()
+            startTimer()
         }
+        .onDisappear {
+            stopTimer()
+        }
+    }
+    
+    private func update() {
+        createdDateDistanceString = noteCreatedDate?.distanceString()
+        if let noteExpirationDate {
+            expirationDateDistanceString = currentTime.distanceString(noteExpirationDate)
+        }
+    }
+    
+    private func startTimer() {
+        timer = Timer.publish(every: 60, on: .main, in: .common)
+        timerCancellable = timer?
+            .autoconnect()
+            .sink { newTime in
+                currentTime = newTime
+                update()
+            }
+    }
+    
+    private func stopTimer() {
+        timerCancellable?.cancel()
+        timerCancellable = nil
+        timer = nil
     }
 }
 

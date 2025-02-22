@@ -97,7 +97,7 @@ struct NoteButton: View {
                     router.push(author)
                 }, label: { 
                     HStack(alignment: .center) {
-                        AuthorLabel(safeName: author.safeName, profilePhotoURL: author.profilePhotoURL)
+                        AuthorLabel(name: author.safeName, profilePhotoURL: author.profilePhotoURL)
                         Image.repostSymbol
                         if let elapsedTime = note.createdAt?.distanceString() {
                             Text(elapsedTime)
