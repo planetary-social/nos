@@ -514,17 +514,22 @@ class Event: NosManagedObject, VerifiableEvent {
             
             for aTag in aTags.map({ $0[1] }) {
                 let components = aTag.split(separator: ":").map { String($0) }
+                guard components.count >= 3 else {
+                    continue
+                }
+                
                 guard let pubkey = components[safe: 1],
                     pubkey == author.hexadecimalPublicKey else {
                     // ensure that this delete event only affects events with the author's pubkey
                     continue
                 }
                 
-                guard let kind = Int64(components[0]) else {
+                guard let kindString = components[safe: 0],
+                    let kind = Int64(kindString),
+                    let replaceableID = components[safe: 2] else {
                     continue
                 }
                 
-                let replaceableID = components[2]
                 let request = Event.event(by: replaceableID, author: author, kind: kind, before: createdAt)
                 
                 let results = try context.fetch(request)
