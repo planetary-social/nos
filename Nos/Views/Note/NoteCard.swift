@@ -79,7 +79,12 @@ struct NoteCard: View {
                                 Button {
                                     router.push(author)
                                 } label: {
-                                    NoteCardHeader(note: note, author: author)
+                                    NoteCardHeader(
+                                        authorSafeName: author.safeName,
+                                        authorProfilePhotoURL: author.profilePhotoURL,
+                                        noteExpirationDate: note.expirationDate,
+                                        noteCreatedDate: note.createdAt
+                                    )
                                 }
                             }
                             Spacer()
@@ -127,13 +132,13 @@ struct NoteCard: View {
                         }
                         BeveledSeparator()
                         HStack(spacing: 0) {
-                            if repliesDisplayType != .displayNothing {
+                            if repliesDisplayType != .displayNothing, let noteIdentifier = note.identifier {
                                 Button {
                                     router.push(note)
                                 } label: {
                                     RepliesLabel(
                                         repliesDisplayType: repliesDisplayType,
-                                        for: note
+                                        for: noteIdentifier
                                     )
                                 }
                             }

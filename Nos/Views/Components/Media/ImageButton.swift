@@ -28,7 +28,7 @@ struct ImageButton: View {
                 isViewerPresented = true
             } label: {
                 ZStack {
-                    WebImage(url: url, isAnimating: $isAnimating)
+                    WebImage(url: url, options: [.scaleDownLargeImages], isAnimating: $isAnimating)
                         .onSuccess { image, _, _ in
                             Task {
                                 isAnimated = image.sd_isAnimated

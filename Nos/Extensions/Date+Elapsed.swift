@@ -1,5 +1,63 @@
 import Foundation
 
+fileprivate final class DateFormatters {
+    static let shared = DateFormatters()
+    
+    static let unitFlags: NSCalendar.Unit = [.minute, .hour, .day, .weekOfMonth, .year]
+    
+    private var formatterCache = [String: DateFormatter]()
+    
+    lazy var dateComponentsFormatter: DateComponentsFormatter = {
+        let dateComponentsFormatter = DateComponentsFormatter()
+        dateComponentsFormatter.unitsStyle = .abbreviated
+        dateComponentsFormatter.maximumUnitCount = 1
+        dateComponentsFormatter.allowedUnits = DateFormatters.unitFlags
+        return dateComponentsFormatter
+    }()
+    
+    /// A formatter to use for month-day-year format.
+    /// - Parameter calendar: A calendar used to inform the formatter's style.
+    /// - Returns: A date formatter that produces outputs like "Aug 9, 2024".
+    func longDateFormatter(forCalendar calendar: Calendar) -> DateFormatter {
+        let cacheKey = "long-\(calendar.locale?.identifier ?? "")-\(calendar.timeZone.identifier)"
+        if let formatter = formatterCache[cacheKey] {
+            return formatter
+        } else {
+            let formatter = DateFormatter()
+            formatter.timeStyle = .none
+            formatter.dateStyle = .medium
+            formatter.calendar = calendar
+            formatter.locale = calendar.locale
+            formatter.timeZone = calendar.timeZone
+            formatterCache[cacheKey] = formatter
+            return formatter
+        }
+    }
+    
+    /// A formatter to use for month-day format.
+    /// - Parameter calendar: A calendar used to inform the formatter's style.
+    /// - Returns: A date formatter that produces outputs like "Aug 9".
+    func monthDayFormatter(forCalendar calendar: Calendar) -> DateFormatter {
+        let cacheKey = "monthDay-\(calendar.locale?.identifier ?? "")-\(calendar.timeZone.identifier)"
+        if let formatter = formatterCache[cacheKey] {
+            return formatter
+        } else {
+            let formatter = DateFormatter()
+            formatter.timeStyle = .none
+            formatter.dateFormat = DateFormatter.dateFormat(
+                fromTemplate: "MMM d",
+                options: 0,
+                locale: calendar.locale
+            )
+            formatter.calendar = calendar
+            formatter.locale = calendar.locale
+            formatter.timeZone = calendar.timeZone
+            formatterCache[cacheKey] = formatter
+            return formatter
+        }
+    }
+}
+
 extension Date {
 
     /// Formats the date into a localized human-readable string, relative to a given end date and calendar.
@@ -32,47 +90,36 @@ extension Date {
     ///   - calendar: The calendar to use when formatting the human-readable string
     /// - Returns:.The localized human-readable string of this date relative to the end date.
     func distanceString(_ endDate: Date = Date.now, calendar: Calendar = Calendar.current) -> String {
-        let unitFlags: NSCalendar.Unit = [.minute, .hour, .day, .weekOfMonth, .year]
-
-        let components = (calendar as NSCalendar).components(unitFlags, from: self, to: endDate, options: [])
+        let components = (calendar as NSCalendar).components(
+            DateFormatters.unitFlags,
+            from: self,
+            to: endDate,
+            options: []
+        )
 
         if let year = components.year, year >= 1 {
             return formatLongDate(calendar)
         }
 
         if let week = components.weekOfMonth, week >= 1 {
-            let dateFormatter = DateFormatter()
-            dateFormatter.timeStyle = .none
-            dateFormatter.dateFormat = DateFormatter.dateFormat(
-                fromTemplate: "MMM d",
-                options: 0,
-                locale: calendar.locale
-            )
-            dateFormatter.calendar = calendar
-            dateFormatter.locale = calendar.locale
-            dateFormatter.timeZone = calendar.timeZone
-            return dateFormatter.string(from: self)
+            let formatter = DateFormatters.shared.monthDayFormatter(forCalendar: calendar)
+            return formatter.string(from: self)
         }
 
-        let dateComponentsFormatter = DateComponentsFormatter()
-        dateComponentsFormatter.unitsStyle = .abbreviated
-        dateComponentsFormatter.maximumUnitCount = 1
-        dateComponentsFormatter.allowedUnits = unitFlags
-
         if let day = components.day, day >= 1, let formattedDate =
-            dateComponentsFormatter.string(from: DateComponents(calendar: calendar, day: day)) {
+            DateFormatters.shared.dateComponentsFormatter.string(from: DateComponents(calendar: calendar, day: day)) {
             return formattedDate
         }
 
         if let hour = components.hour, hour >= 1, let formattedDate =
-            dateComponentsFormatter.string(from: DateComponents(calendar: calendar, hour: hour)) {
+            DateFormatters.shared.dateComponentsFormatter.string(from: DateComponents(calendar: calendar, hour: hour)) {
             return formattedDate
         }
 
         if let minute = components.minute {
             if minute >= 1 {
                 let dateComponents = DateComponents(calendar: calendar, minute: max(1, minute))
-                if let formattedDate = dateComponentsFormatter.string(from: dateComponents) {
+                if let formattedDate = DateFormatters.shared.dateComponentsFormatter.string(from: dateComponents) {
                     return formattedDate
                 }
             } else {
@@ -87,12 +134,7 @@ extension Date {
     /// - Parameters:
     ///   - calendar: The calendar to use when formatting the date.
     private func formatLongDate(_ calendar: Calendar) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeStyle = .none
-        dateFormatter.dateStyle = .medium
-        dateFormatter.calendar = calendar
-        dateFormatter.locale = calendar.locale
-        dateFormatter.timeZone = calendar.timeZone
-        return dateFormatter.string(from: self)
+        let formatter = DateFormatters.shared.longDateFormatter(forCalendar: calendar)
+        return formatter.string(from: self)
     }
 }
