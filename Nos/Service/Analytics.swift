@@ -76,7 +76,7 @@ final class Analytics {
     }
     
     func showedSideMenu() {
-        track("Contact Support Tapped")
+        track("Side Menu Opened")
     }
     
     func showedRelays() {

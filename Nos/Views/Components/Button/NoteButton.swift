@@ -81,7 +81,7 @@ struct NoteButton: View {
     }
 
     /// The note displayed in the note card. Could be different from `note` i.e. in the case of a repost.
-    var displayedNote: Event {
+    private var displayedNote: Event {
         if note.kind == EventKind.repost.rawValue,
             let repostedNote = note.repostedNote() {
             return repostedNote
@@ -97,7 +97,7 @@ struct NoteButton: View {
                     router.push(author)
                 }, label: { 
                     HStack(alignment: .center) {
-                        AuthorLabel(author: author)
+                        AuthorLabel(name: author.safeName, profilePhotoURL: author.profilePhotoURL)
                         Image.repostSymbol
                         if let elapsedTime = note.createdAt?.distanceString() {
                             Text(elapsedTime)
