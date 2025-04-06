@@ -5,6 +5,28 @@ import UIKit
 import CoreData
 import Combine
 
+// Key for notification preference storage
+private let notificationPreferenceKey = "com.verse.nos.settings.notificationPreference"
+
+/// Enum representing notification filtering preferences
+public enum NotificationPreference: String, CaseIterable, Identifiable {
+    case allMentions
+    case explicitMentionsOnly
+    
+    public var id: String {
+        rawValue
+    }
+    
+    public var description: String {
+        switch self {
+        case .allMentions:
+            return String(localized: "Notify me for all replies and tags")
+        case .explicitMentionsOnly:
+            return String(localized: "Only notify me if I'm mentioned in the post")
+        }
+    }
+}
+
 /// A class that abstracts our interactions with push notification infrastructure and iOS permissions. It can handle
 /// UNUserNotificationCenterDelegate callbacks for receiving and displaying notifications, and it watches the db for
 /// all new events and creates `NosNotification`s and displays them when appropriate.
@@ -15,6 +37,20 @@ import Combine
     
     /// The number of unread notifications that should be displayed as a badge
     private(set) var badgeCount = 0
+    
+    /// User preference for notification filtering
+    var notificationPreference: NotificationPreference {
+        get {
+            guard let savedValue = userDefaults.string(forKey: notificationPreferenceKey),
+                  let preference = NotificationPreference(rawValue: savedValue) else {
+                return .allMentions
+            }
+            return preference
+        }
+        set {
+            userDefaults.set(newValue.rawValue, forKey: notificationPreferenceKey)
+        }
+    }
 
     private let showPushNotificationsAfterKey = "PushNotificationService.notificationCutoff"
 
@@ -141,6 +177,28 @@ import Combine
     
     // MARK: - Internal
     
+    /// Determines if the user is explicitly mentioned in the content of an event
+    func isUserExplicitlyMentioned(event: Event, userPubKey: String) -> Bool {
+        guard let content = event.content else { return false }
+        
+        // Check for nostr: protocol mentions (e.g., nostr:npub...)
+        if content.contains("nostr:npub\(userPubKey)") {
+            return true
+        }
+        
+        // Check for @npub mentions
+        if content.contains("@npub\(userPubKey)") {
+            return true
+        }
+        
+        // Check for hex key mentions
+        if content.contains(userPubKey) {
+            return true
+        }
+        
+        return false
+    }
+    
     /// Tells the system to display a notification for the given event if it's appropriate. This will create a 
     /// NosNotification record in the database.
     @MainActor private func showNotificationIfNecessary(for eventID: RawEventID) async {
@@ -169,6 +227,16 @@ import Combine
                 event.author?.muted == false else { 
                 coreDataNotification.isRead = true
                 return nil
+            }
+            
+            // Apply notification filtering based on user preference
+            if self.notificationPreference == .explicitMentionsOnly {
+                // Only show notifications for explicit mentions
+                let isExplicitlyMentioned = self.isUserExplicitlyMentioned(event: event, userPubKey: authorKey)
+                if !isExplicitlyMentioned {
+                    coreDataNotification.isRead = true
+                    return nil
+                }
             }
             
             return NotificationViewModel(coreDataModel: coreDataNotification, context: self.modelContext) 

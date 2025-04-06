@@ -151,6 +151,38 @@ struct SettingsView: View {
                 showReportWarnings = userDefaults.object(forKey: showReportWarningsKey) as? Bool ?? true
                 showOutOfNetworkWarning = userDefaults.object(forKey: showOutOfNetworkWarningKey) as? Bool ?? true
             }
+            
+            Section {
+                @Dependency(\.pushNotificationService) var pushNotificationService
+                
+                VStack {
+                    NosSegmentedPicker(
+                        title: "notificationSettings",
+                        options: NotificationPreference.allCases,
+                        selection: Binding(
+                            get: { pushNotificationService.notificationPreference },
+                            set: { pushNotificationService.notificationPreference = $0 }
+                        ),
+                        getTitle: { $0.description }
+                    )
+                    
+                    HStack {
+                        Text("notificationSettingsDescription")
+                            .foregroundColor(.secondaryTxt)
+                            .font(.footnote)
+                        Spacer()
+                    }
+                }
+                .padding(.bottom, 8)
+            } header: {
+                Text("notificationSettings")
+                    .foregroundColor(.primaryTxt)
+                    .font(.clarity(.semibold, textStyle: .headline))
+                    .textCase(nil)
+                    .listRowInsets(EdgeInsets())
+                    .padding(.vertical, 15)
+            }
+            .listRowGradientBackground()
 
             Section {
                 Text("\(String(localized: "appVersion")) \(Bundle.current.versionAndBuild)")
