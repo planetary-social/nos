@@ -83,7 +83,9 @@ struct NoteCard: View {
                                         authorSafeName: author.safeName,
                                         authorProfilePhotoURL: author.profilePhotoURL,
                                         noteExpirationDate: note.expirationDate,
-                                        noteCreatedDate: note.createdAt
+                                        noteCreatedDate: note.createdAt,
+                                        clientName: note.clientName,
+                                        note: note
                                     )
                                 }
                             }

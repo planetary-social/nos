@@ -70,6 +70,9 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 
     /// Long-form Content
     case longFormContent = 30023
+    
+    /// Application Metadata (NIP-89)
+    case appMetadata = 31990
 
     // swiftlint:enable number_separator
 }
