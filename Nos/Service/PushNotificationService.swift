@@ -283,7 +283,7 @@ extension NotificationPreference: NosSegmentedPickerItem {
         }
         
         // First, get event and create notification if needed
-        let (event, notification) = await modelContext.perform { () -> (Event?, NosNotification?) in
+        let eventAndNotification = await modelContext.perform { () -> (Event?, NosNotification?) in
             guard let event = Event.find(by: eventID, context: self.modelContext),
                 let eventCreated = event.createdAt,
                 let coreDataNotification = try? NosNotification.createIfNecessary(
@@ -315,9 +315,10 @@ extension NotificationPreference: NosSegmentedPickerItem {
             return (event, coreDataNotification)
         }
         
-        // Exit early if we don't have an event or notification
-        guard let event = event, let coreDataNotification = notification else {
-            return nil
+        // Destructure the tuple
+        guard let event = eventAndNotification.0, 
+              let coreDataNotification = eventAndNotification.1 else {
+            return
         }
         
         var shouldShowNotification = true
@@ -355,12 +356,12 @@ extension NotificationPreference: NosSegmentedPickerItem {
                 coreDataNotification.isRead = true
                 try? self.modelContext.save()
             }
-            return nil
+            return
         }
         
         // Otherwise, create a view model for the notification
-        let viewModel = await modelContext.perform {
-            NotificationViewModel(coreDataModel: coreDataNotification, context: self.modelContext)
+        let viewModel: NotificationViewModel? = await modelContext.perform {
+            return NotificationViewModel(coreDataModel: coreDataNotification, context: self.modelContext)
         }
         
         if let viewModel {
