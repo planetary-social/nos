@@ -2,6 +2,7 @@ import SwiftUI
 import Dependencies
 import Logger
 import SwiftUINavigation
+import Combine
 
 let showReportWarningsKey = "com.verse.nos.settings.showReportWarnings"
 let showOutOfNetworkWarningKey = "com.verse.nos.settings.showOutOfNetworkWarning"
