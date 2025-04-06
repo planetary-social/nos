@@ -332,7 +332,7 @@ extension NotificationPreference: NosSegmentedPickerItem {
         var shouldShowNotification = true
         
         // First, check if it's a thread reply without an explicit mention
-        let isThreadReply = event.isReply(to: currentAuthor)
+        let isThreadReply = currentAuthor != nil ? event.isReply(to: currentAuthor!) : false
         let isExplicitlyMentioned = self.isUserExplicitlyMentioned(event: event, userPubKey: authorKey)
         
         // If it's just a thread reply with no explicit mention, apply the thread replies preference
