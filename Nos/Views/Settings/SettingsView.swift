@@ -153,27 +153,8 @@ struct SettingsView: View {
             }
             
             Section {
-                @Dependency(\.pushNotificationService) var pushNotificationService
-                
-                VStack {
-                    NosSegmentedPicker(
-                        title: "notificationSettings",
-                        options: NotificationPreference.allCases,
-                        selection: Binding(
-                            get: { pushNotificationService.notificationPreference },
-                            set: { pushNotificationService.notificationPreference = $0 }
-                        ),
-                        getTitle: { $0.description }
-                    )
-                    
-                    HStack {
-                        Text("notificationSettingsDescription")
-                            .foregroundColor(.secondaryTxt)
-                            .font(.footnote)
-                        Spacer()
-                    }
-                }
-                .padding(.bottom, 8)
+                NotificationPreferenceView()
+                    .padding(.bottom, 8)
             } header: {
                 Text("notificationSettings")
                     .foregroundColor(.primaryTxt)
