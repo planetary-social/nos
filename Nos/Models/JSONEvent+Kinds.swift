@@ -10,9 +10,7 @@ extension JSONEvent {
     /// - Returns: The ``JSONEvent`` of the contact list.
     static func contactList(pubKey: String, tags: [[String]], relayAddresses: [String]) -> JSONEvent {
         var tags = tags
-        // Append client tag so we can detect if Nos overwrites a user's contact list.
-        // https://github.com/planetary-social/cleanstr/issues/51
-        tags.append(["client", "nos", "https://nos.social"])
+        // Note: We don't need to add client tag here as it will be added in the JSONEvent initializer
         
         let relayStrings = relayAddresses.map { "\"\($0)\":{\"write\":true,\"read\":true}" }
         let content = "{" + relayStrings.joined(separator: ",") + "}"
