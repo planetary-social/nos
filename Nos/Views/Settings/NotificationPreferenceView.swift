@@ -4,6 +4,7 @@ import Dependencies
 /// A view that allows the user to configure notification preferences
 struct NotificationPreferenceView: View {
     @Dependency(\.pushNotificationService) private var pushNotificationService
+    @EnvironmentObject private var router: Router
     
     @State private var selectedPreference: NotificationPreference = .allMentions
     @State private var notifyOnThreadReplies: Bool = true
@@ -77,6 +78,74 @@ struct NotificationPreferenceView: View {
                     }
                 }
             }
+            
+            // Muted users and threads section
+            VStack(alignment: .leading, spacing: 16) {
+                Text("manageMutesTitle")
+                    .font(.headline)
+                    .foregroundColor(.primaryTxt)
+                
+                VStack(spacing: 8) {
+                    Button {
+                        router.push(MutesDestination())
+                    } label: {
+                        HStack {
+                            Image(systemName: "speaker.slash.fill")
+                                .foregroundColor(.secondaryTxt)
+                            
+                            Text("mutedUsers")
+                                .font(.subheadline)
+                                .foregroundColor(.primaryTxt)
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.secondaryTxt)
+                        }
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color.secondaryTxt.opacity(0.05))
+                        )
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    
+                    // TODO: Add MutedThreadsView when implemented
+                    Button {
+                        // Will link to muted threads view when implemented
+                    } label: {
+                        HStack {
+                            Image(systemName: "bubble.left.and.bubble.right.fill")
+                                .foregroundColor(.secondaryTxt)
+                            
+                            Text("mutedThreads")
+                                .font(.subheadline)
+                                .foregroundColor(.primaryTxt)
+                            
+                            Spacer()
+                            
+                            Text("comingSoon")
+                                .font(.caption)
+                                .foregroundColor(.secondaryTxt)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(
+                                    Capsule()
+                                        .fill(Color.secondaryTxt.opacity(0.1))
+                                )
+                        }
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color.secondaryTxt.opacity(0.05))
+                        )
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .disabled(true) // Disabled until muted threads feature is implemented
+                }
+            }
         }
         .onAppear {
             // Set the initial state
@@ -99,5 +168,6 @@ struct NotificationPreferenceView: View {
     
     return NotificationPreferenceView()
         .inject(previewData: previewData)
+        .environmentObject(previewData.router)
         .padding()
 }
