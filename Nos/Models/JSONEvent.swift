@@ -52,7 +52,27 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
         self.pubKey = pubKey
         self.createdAt = Int64(createdAt.timeIntervalSince1970)
         self.kind = kind.rawValue
-        self.tags = tags
+        
+        // Add NIP-89 client tag for relevant event kinds
+        var updatedTags = tags
+        // App metadata tag for NIP-89 client identification
+        let clientId = "31990:0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6:nos-ios"
+        let clientTag = ["client", "nos.social", clientId]
+        
+        // Add client tag for kinds: text, metaData, contactList, mute, followSet
+        let taggableKinds: [EventKind] = [.text, .metaData, .contactList, .mute, .followSet]
+        if taggableKinds.contains(kind) {
+            // Only add the tag if it doesn't already exist
+            let hasClientTag = updatedTags.contains { tag in
+                tag.count >= 1 && tag[0] == "client"
+            }
+            
+            if !hasClientTag {
+                updatedTags.append(clientTag)
+            }
+        }
+        
+        self.tags = updatedTags
         self.content = content
         self.signature = ""
     }
@@ -92,7 +112,7 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
                 tags.append(["e", replyToNoteID, "", EventReferenceMarker.root.rawValue])
             }
         }
-
+        
         self.init(pubKey: keyPair.publicKeyHex, kind: .text, tags: tags, content: content)
     }
 
