@@ -4,6 +4,7 @@ import Dependencies
 import UIKit
 import CoreData
 import Combine
+import SwiftUI
 
 // Key for notification preference storage
 private let notificationPreferenceKey = "com.verse.nos.settings.notificationPreference"
@@ -23,6 +24,26 @@ public enum NotificationPreference: String, CaseIterable, Identifiable {
             return String(localized: "Notify me for all replies and tags")
         case .explicitMentionsOnly:
             return String(localized: "Only notify me if I'm mentioned in the post")
+        }
+    }
+}
+
+extension NotificationPreference: NosSegmentedPickerItem {
+    public var titleKey: LocalizedStringKey {
+        switch self {
+        case .allMentions:
+            "allMentions"
+        case .explicitMentionsOnly:
+            "explicitMentionsOnly"
+        }
+    }
+    
+    public var image: Image {
+        switch self {
+        case .allMentions:
+            Image(systemName: "bell")
+        case .explicitMentionsOnly:
+            Image(systemName: "bell.badge")
         }
     }
 }

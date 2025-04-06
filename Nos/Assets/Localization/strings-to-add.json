@@ -1,0 +1,42 @@
+{
+  "allMentions": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "All Replies & Tags"
+        }
+      }
+    }
+  },
+  "explicitMentionsOnly": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Explicit Mentions Only"
+        }
+      }
+    }
+  },
+  "notificationSettingsDescription": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Choose which notifications you want to receive from replies and mentions"
+        }
+      }
+    }
+  },
+  "notificationSettings": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Notification Settings"
+        }
+      }
+    }
+  }
+}

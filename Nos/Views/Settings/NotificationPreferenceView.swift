@@ -10,10 +10,8 @@ struct NotificationPreferenceView: View {
     var body: some View {
         VStack {
             NosSegmentedPicker(
-                title: "notificationSettings",
-                options: NotificationPreference.allCases,
-                selection: $selectedPreference,
-                getTitle: { $0.description }
+                items: NotificationPreference.allCases,
+                selectedItem: $selectedPreference
             )
             
             HStack {
