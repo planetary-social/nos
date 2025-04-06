@@ -15,6 +15,9 @@ Pods/CocoaPodsKeys
 ## Configuration files with secrets
 Source/Controller/Configs/*
 
+## Localization backup files
+*.bak
+
 ## Build generated
 build/
 DerivedData/
@@ -84,3 +87,4 @@ fastlane/test_output
 
 .idea
 .vscode
+.aider*

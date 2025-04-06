@@ -1,1804 +1,3220 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "bisexualPorn" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bisexuelle Pornografie"
+  "sourceLanguage": "en",
+  "strings": {
+    "bisexualPorn": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0645\u062d\u062a\u0648\u0649 \u0625\u0628\u0627\u062d\u064a \u0645\u0632\u062f\u0648\u062c \u0627\u0644\u0645\u064a\u0648\u0644"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bisexual porn"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bisexuelle Pornografie"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Porno bisexual"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bisexual porn"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "پورن دو جنس"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Porno bisexual"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "양성애 음란물"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u067e\u0648\u0631\u0646 \u062f\u0648 \u062c\u0646\u0633"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pornografia bissexual"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornographie bisexuelle"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bisexuella porr"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30d0\u30a4\u30bb\u30af\u30b7\u30e3\u30eb\u30dd\u30eb\u30ce"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "双性色情"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc591\uc131\uc560 \uc74c\ub780\ubb3c"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "雙性色情"
-          }
-        }
-      }
-    },
-    "bodilyHarm" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Körperlicher Schaden"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biseksuele porno"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bodily Harm"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornografia bissexual"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lesiones Corporales"
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bisexuella porr"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "صدمه جسمی"
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e2a\u0e37\u0e48\u0e2d\u0e25\u0e32\u0e21\u0e01\u0e2d\u0e19\u0e32\u0e08\u0e32\u0e23\u0e44\u0e1a\u0e40\u0e0b\u0e47\u0e01\u0e0a\u0e27\u0e25"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "신체적 피해"
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biseks\u00fcel porno"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lesão Corporal"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u53cc\u6027\u8272\u60c5"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kroppslig skada"
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u96d9\u6027\u8272\u60c5"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "身体伤害"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "身體傷害"
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ponografia ya baiwani"
           }
         }
       }
     },
-    "casualNudity" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leichte Nacktheit"
+    "bodilyHarm": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0625\u064a\u0630\u0627\u0621 \u062c\u0633\u062f\u064a"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Casual nudity"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "K\u00f6rperlicher Schaden"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desnudez casual"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodily Harm"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "عریانی معمولی"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lesiones Corporales"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nudez casual"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0635\u062f\u0645\u0647 \u062c\u0633\u0645\u06cc"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Casual nakenhet"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pr\u00e9judice corporel"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "裸体"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8eab\u4f53\u7684\u5371\u5bb3"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "裸體"
-          }
-        }
-      }
-    },
-    "childSexualAbuse" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sexueller Missbrauch von Kindern"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc2e0\uccb4\uc801 \ud53c\ud574"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Child Sexual Abuse"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lichamelijk letsel"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abuso Sexual de Menores"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les\u00e3o Corporal"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "سوء استفاده جنسی از کودکان"
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kroppslig skada"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "아동 성 학대"
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e2d\u0e31\u0e19\u0e15\u0e23\u0e32\u0e22\u0e15\u0e48\u0e2d\u0e23\u0e48\u0e32\u0e07\u0e01\u0e32\u0e22"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abuso Sexual Infantil"
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fiziksel Zarar"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sexuella övergrepp mot barn"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8eab\u4f53\u4f24\u5bb3"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "儿童性虐待"
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8eab\u9ad4\u50b7\u5bb3"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "兒童性虐待"
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Madhara ya Kimwili"
           }
         }
       }
     },
-    "coarseLanguage" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Grobe Sprache"
+    "casualNudity": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0639\u0631\u064a \u063a\u064a\u0631 \u0645\u0642\u0635\u0648\u062f"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Coarse Language or Intolerance"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leichte Nacktheit"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lenguaje vulgar o intolerancia"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casual nudity"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "بدزبانی"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desnudez casual"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "거친 표현 또는 편협함"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0639\u0631\u06cc\u0627\u0646\u06cc \u0645\u0639\u0645\u0648\u0644\u06cc"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Linguagem Grosseira ou Intolerância"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nudit\u00e9 occasionnelle"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Grovt språk"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30ab\u30b8\u30e5\u30a2\u30eb\u306a\u30cc\u30fc\u30c9"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "粗鲁语言"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terloopse naaktheid"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "粗魯語言"
-          }
-        }
-      }
-    },
-    "copyrightViolation" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Urheberrechtsverletzung"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nudez casual"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copyright Violation"
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casual nakenhet"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Violación de Copyright"
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e01\u0e32\u0e23\u0e40\u0e1b\u0e25\u0e37\u0e2d\u0e22\u0e01\u0e32\u0e22\u0e17\u0e31\u0e48\u0e27\u0e44\u0e1b"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "نقض حق تکثیر"
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "G\u00fcndelik \u00e7\u0131plakl\u0131k"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "저작권 위반"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u88f8\u4f53"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Violação de Direitos Autorais"
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u88f8\u9ad4"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Upphovsrättsbrott"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "版权侵犯"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "版權侵犯"
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uchi wa kawaida"
           }
         }
       }
     },
-    "drugRelatedCrime" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Drogenbezogene Kriminalität"
+    "childSexualAbuse": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0627\u0644\u0627\u0639\u062a\u062f\u0627\u0621 \u0627\u0644\u062c\u0646\u0633\u064a \u0639\u0644\u0649 \u0627\u0644\u0623\u0637\u0641\u0627\u0644"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Drug-related crime"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sexueller Missbrauch von Kindern"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crimen relacionado con drogas"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Child Sexual Abuse"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "جرائم مواد مخدر"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abuso Sexual de Menores"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "마약 관련 범죄"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0633\u0648\u0621 \u0627\u0633\u062a\u0641\u0627\u062f\u0647 \u062c\u0646\u0633\u06cc \u0627\u0632 \u06a9\u0648\u062f\u06a9\u0627\u0646"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crime associado à droga"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abus sexuel sur enfant"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Narkotikarelaterade brott"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5150\u7ae5\u6027\u7684\u8650\u5f85"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "毒品犯罪"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc544\ub3d9 \uc131 \ud559\ub300"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "毒品犯罪"
-          }
-        }
-      }
-    },
-    "erotica" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erotik"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seksueel kindermisbruik"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erotica"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abuso Sexual Infantil"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erótica"
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sexuella \u00f6vergrepp mot barn"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تحریک آمیز"
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e01\u0e32\u0e23\u0e25\u0e48\u0e27\u0e07\u0e25\u0e30\u0e40\u0e21\u0e34\u0e14\u0e17\u0e32\u0e07\u0e40\u0e1e\u0e28\u0e15\u0e48\u0e2d\u0e40\u0e14\u0e47\u0e01"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erótica"
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u00c7ocuk Cinsel \u0130stismar\u0131"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erotik"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u513f\u7ae5\u6027\u8650\u5f85"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "黄色"
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5152\u7ae5\u6027\u8650\u5f85"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "黃色"
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dhuluma za Kingono kwa Watoto"
           }
         }
       }
     },
-    "financialHarm" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Finanzieller Schaden"
+    "coarseLanguage": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0644\u063a\u0629 \u0641\u0638\u0629 \u0623\u0648 \u0639\u062f\u0645 \u062a\u0633\u0627\u0645\u062d"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Financial Harm"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grobe Sprache"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Daño Financiero"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coarse Language or Intolerance"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ضرر مالی"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lenguaje vulgar o intolerancia"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "재정적 피해"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0628\u062f\u0632\u0628\u0627\u0646\u06cc"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Danos Financeiros"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langage grossier ou intol\u00e9rance"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Finansiell skada"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u7c97\u91ce\u306a\u8a00\u8449\u9063\u3044\u3084\u4e0d\u5bdb\u5bb9"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "财政伤害"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uac70\uce5c \ud45c\ud604 \ub610\ub294 \ud3b8\ud611\ud568"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "財政傷害"
-          }
-        }
-      }
-    },
-    "fraudAndScams" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betrug und Täuschung"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grove taal of intolerantie"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fraud & Scams"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linguagem Grosseira ou Intoler\u00e2ncia"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fraude y Estafas"
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grovt spr\u00e5k"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "شیادی و کلاهبرداری"
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e20\u0e32\u0e29\u0e32\u0e2b\u0e22\u0e32\u0e1a\u0e04\u0e32\u0e22\u0e2b\u0e23\u0e37\u0e2d\u0e04\u0e27\u0e32\u0e21\u0e44\u0e21\u0e48\u0e2d\u0e14\u0e17\u0e19"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "사기 및 스캠"
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaba Dil veya Ho\u015fg\u00f6r\u00fcs\u00fczl\u00fck"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Golpes e Fraudes"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u7c97\u9c81\u8bed\u8a00"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bedrägeri & Scams"
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u7c97\u9b6f\u8a9e\u8a00"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "诈骗和欺诈行为"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "詐騙和欺詐行為"
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lugha ya Kejeli au Kutovumiliana"
           }
         }
       }
     },
-    "gayMalePorn" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Homosexuelle männliche Pornografie"
+    "copyrightViolation": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0627\u0646\u062a\u0647\u0627\u0643 \u062d\u0642\u0648\u0642 \u0627\u0644\u0646\u0634\u0631"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gay male porn"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Urheberrechtsverletzung"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Porno homosexual entre hombres"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copyright Violation"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "پورن مردان"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Violaci\u00f3n de Copyright"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "남자 동성애 음란물"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0646\u0642\u0636 \u062d\u0642 \u062a\u06a9\u062b\u06cc\u0631"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pornografia masculina homossexual"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Violation du droit d'auteur"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gay manligt pron"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8457\u4f5c\u6a29\u4fb5\u5bb3"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "男性同性色情"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc800\uc791\uad8c \uc704\ubc18"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "男性同性色情"
-          }
-        }
-      }
-    },
-    "genderFluidNonBinaryPorn" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gender-Fluide / nicht-binäre Pornografie"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auteursrechtschending"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gender-fluid / non-binary porn"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Viola\u00e7\u00e3o de Direitos Autorais"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Porno entre gente no binarios"
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upphovsr\u00e4ttsbrott"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "پورن بی جنسیت"
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e01\u0e32\u0e23\u0e25\u0e30\u0e40\u0e21\u0e34\u0e14\u0e25\u0e34\u0e02\u0e2a\u0e34\u0e17\u0e18\u0e34\u0e4c"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "젠더플루이드 / 논바이너리 음란물"
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telif Hakk\u0131 \u0130hlali"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gênero-fluido / pornografia não binária"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u7248\u6743\u4fb5\u72af"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Könsflytande / icke-binära porr"
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u7248\u6b0a\u4fb5\u72af"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "性别流体/非二元性色情"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "性別流體/非二元性色情"
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukiukaji wa Hakimiliki"
           }
         }
       }
     },
-    "harassment" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Harassment"
+    "drugRelatedCrime": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u062c\u0631\u0627\u0626\u0645 \u0645\u062a\u0639\u0644\u0642\u0629 \u0628\u0627\u0644\u0645\u062e\u062f\u0631\u0627\u062a"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Acoso"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drogenbezogene Kriminalit\u00e4t"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "مزاحمت"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drug-related crime"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "괴롭힘"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crimen relacionado con drogas"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Assédio"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u062c\u0631\u0627\u0626\u0645 \u0645\u0648\u0627\u062f \u0645\u062e\u062f\u0631"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "骚扰"
-          }
-        }
-      }
-    },
-    "harassmentStalkingOrDoxxing" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Belästigung, Stalking oder Doxxing"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crime li\u00e9 \u00e0 la drogue"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Harassment, Stalking, or Doxxing"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u85ac\u7269\u95a2\u9023\u72af\u7f6a"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Acoso, Acecho, o Doxxing"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\ub9c8\uc57d \uad00\ub828 \ubc94\uc8c4"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "مزاحمت یا افشای اطلاعات خصوصی"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Druggerelateerde misdaad"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "괴롭힘, 스토킹 혹은 신상털기"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crime associado \u00e0 droga"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Assédio, Perseguição, ou Doxxing"
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Narkotikarelaterade brott"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Trakasseri, Stalking eller Doxxing"
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e2d\u0e32\u0e0a\u0e0d\u0e32\u0e01\u0e23\u0e23\u0e21\u0e17\u0e35\u0e48\u0e40\u0e01\u0e35\u0e48\u0e22\u0e27\u0e02\u0e49\u0e2d\u0e07\u0e01\u0e31\u0e1a\u0e22\u0e32\u0e40\u0e2a\u0e1e\u0e15\u0e34\u0e14"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "骚扰、跟踪或揭露他人隐私"
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uyu\u015fturucu ile ilgili su\u00e7"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "騷擾、跟蹤或揭露他人隱私"
-          }
-        }
-      }
-    },
-    "heterosexualPorn" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Heterosexuelle Pornografie"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u6bd2\u54c1\u72af\u7f6a"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Heterosexual Porn"
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u6bd2\u54c1\u72af\u7f6a"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Porno heterosexual"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "پورن جنس مخالف"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이성애(헤테로) 음란물"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pornografia Heterosexual"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Heterosexuell Porr"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "异性色情"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "異性色情"
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uhalifu unaohusiana na dawa za kulevya"
           }
         }
       }
     },
-    "illegal" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Illegal"
+    "erotica": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0645\u062d\u062a\u0648\u0649 \u0625\u064a\u0631\u0648\u062a\u064a\u0643\u064a"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ilegal"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erotik"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "غیر قانونی"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erotica"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "불법"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Er\u00f3tica"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ilegal"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u062a\u062d\u0631\u06cc\u06a9 \u0622\u0645\u06cc\u0632"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Olaglig"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u00c9rotisme"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "违法"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30a8\u30ed\u30c6\u30a3\u30ab"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "違法"
-          }
-        }
-      }
-    },
-    "impersonation" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Identitätsdiebstahl"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erotiek"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Impersonation"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Er\u00f3tica"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suplantación"
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erotik"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "جعل هویت"
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e40\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e40\u0e23\u0e49\u0e32\u0e2d\u0e32\u0e23\u0e21\u0e13\u0e4c"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "도용 또는 사칭"
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erotika"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Falsidade Ideológica"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u9ec4\u8272"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Imitering"
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u9ec3\u8272"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "冒充他人"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "冒充他人"
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngono"
           }
         }
       }
     },
-    "intoleranceAndHate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Intoleranz & Hass"
+    "financialHarm": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0636\u0631\u0631 \u0645\u0627\u0644\u064a"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Intolerance & Hate"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finanzieller Schaden"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Intolerancia y Odio"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Financial Harm"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "عدم مدارا و نفرت"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da\u00f1o Financiero"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "해로움 및 증오"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0636\u0631\u0631 \u0645\u0627\u0644\u06cc"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Intolerância e Ódio"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pr\u00e9judice financier"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Intolerans & hat"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u91d1\u92ad\u7684\u88ab\u5bb3"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "不容忍和仇恨行为"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc7ac\uc815\uc801 \ud53c\ud574"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "不容忍和仇恨行為"
-          }
-        }
-      }
-    },
-    "lesbianPorn" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lesbische Pornografie"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Financi\u00eble schade"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lesbian porn"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danos Financeiros"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Porno homosexual entre mujeres"
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finansiell skada"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "پورن زنان"
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e04\u0e27\u0e32\u0e21\u0e40\u0e2a\u0e35\u0e22\u0e2b\u0e32\u0e22\u0e17\u0e32\u0e07\u0e01\u0e32\u0e23\u0e40\u0e07\u0e34\u0e19"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "여자 동성애 음란물"
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finansal Zarar"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pornografia Lésbica"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8d22\u653f\u4f24\u5bb3"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "女性同性色情"
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8ca1\u653f\u50b7\u5bb3"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "女性同性色情"
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Madhara ya Kifedha"
           }
         }
       }
     },
-    "likelyToCauseHarm" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verursacht wahrscheinlich Schaden"
+    "fraudAndScams": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0627\u062d\u062a\u064a\u0627\u0644 \u0648\u0639\u0645\u0644\u064a\u0627\u062a \u0646\u0635\u0628"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Likely to cause harm"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Betrug und T\u00e4uschung"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Probable que cause daño"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fraud & Scams"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "احتمال آسیب"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fraude y Estafas"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "해를 끼칠 가능성"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0634\u06cc\u0627\u062f\u06cc \u0648 \u06a9\u0644\u0627\u0647\u0628\u0631\u062f\u0627\u0631\u06cc"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Passível de causar dano"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fraude et arnaques"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sannolikt att orsaka skada"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8a50\u6b3a"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "可能造成伤害"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc0ac\uae30 \ubc0f \uc2a4\ucea0"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "可能造成傷害"
-          }
-        }
-      }
-    },
-    "malware" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schadsoftware / Malware"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fraude & oplichting"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Malware"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Golpes e Fraudes"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Malware"
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bedr\u00e4geri & Scams"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "بدافزار"
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e01\u0e32\u0e23\u0e09\u0e49\u0e2d\u0e42\u0e01\u0e07\u0e41\u0e25\u0e30\u0e01\u0e32\u0e23\u0e2b\u0e25\u0e2d\u0e01\u0e25\u0e27\u0e07"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "멀웨어"
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doland\u0131r\u0131c\u0131l\u0131k ve Sahtekarl\u0131k"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Malware”"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8bc8\u9a97\u548c\u6b3a\u8bc8\u884c\u4e3a"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skadlig kod/programvara (malware)"
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8a50\u9a19\u548c\u6b3a\u8a50\u884c\u70ba"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "恶意软件"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "惡意軟體"
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ulaghai na Udanganyifu"
           }
         }
       }
     },
-    "nsfw" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "NSFW"
+    "gayMalePorn": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0645\u062d\u062a\u0648\u0649 \u0625\u0628\u0627\u062d\u064a \u0645\u062b\u0644\u064a"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "NSFW"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Homosexuelle m\u00e4nnliche Pornografie"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "نامناسب برای خانواده و محیط کار"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gay male porn"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "NSFW"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Porno homosexual entre hombres"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "NSFW"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u067e\u0648\u0631\u0646 \u0645\u0631\u062f\u0627\u0646"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "NSFW"
-          }
-        }
-      }
-    },
-    "nudityAndSex" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nacktheit & Sex"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornographie gay masculine"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nudity or Sexual Content"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30b2\u30a4\u30dd\u30eb\u30ce"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desnudez o contenido sexual"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\ub0a8\uc790 \ub3d9\uc131\uc560 \uc74c\ub780\ubb3c"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "عریانی و جنسی"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Homoseksuele mannelijke porno"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "누드 또는 성적 콘텐츠"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornografia masculina homossexual"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nudez ou Conteúdo Sexual"
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Homosexuell manlig porr"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nakenhet och sex"
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e2a\u0e37\u0e48\u0e2d\u0e25\u0e32\u0e21\u0e01\u0e2d\u0e19\u0e32\u0e08\u0e32\u0e23\u0e0a\u0e32\u0e22\u0e23\u0e31\u0e01\u0e0a\u0e32\u0e22"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "裸体和性行为"
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E\u015fcinsel erkek pornosu"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "裸體和性行為"
-          }
-        }
-      }
-    },
-    "other" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Andere"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u7537\u6027\u540c\u6027\u8272\u60c5"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Other"
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u7537\u6027\u540c\u6027\u8272\u60c5"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Otro"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "سایر"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "기타"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Outros"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Övrigt"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "其他"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "其他"
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ponografia ya wanaume wasagaji"
           }
         }
       }
     },
-    "pornography" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pornografie"
+    "genderFluidNonBinaryPorn": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0645\u062d\u062a\u0648\u0649 \u0625\u0628\u0627\u062d\u064a \u0644\u0644\u0623\u0634\u062e\u0627\u0635 \u0645\u062a\u063a\u064a\u0631\u064a \u0627\u0644\u062c\u0646\u0633 \u0623\u0648 \u063a\u064a\u0631 \u062b\u0646\u0627\u0626\u064a\u064a \u0627\u0644\u062c\u0646\u0633"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pornography"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gender-Fluide / nicht-bin\u00e4re Pornografie"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pornografía"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gender-fluid / non-binary porn"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "پورن"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Porno entre gente no binarios"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "음란물"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u067e\u0648\u0631\u0646 \u0628\u06cc \u062c\u0646\u0633\u06cc\u062a"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pornografia"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornographie de genre fluide / non binaire"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pornografi"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30b8\u30a7\u30f3\u30c0\u30fc\u30d5\u30eb\u30a4\u30c9/\u30ce\u30f3\u30d0\u30a4\u30ca\u30ea\u30fc\u30dd\u30eb\u30ce"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "色情"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc820\ub354\ud50c\ub8e8\uc774\ub4dc / \ub17c\ubc14\uc774\ub108\ub9ac \uc74c\ub780\ubb3c"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "色情"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Genderflu\u00efde / non-binaire porno"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "G\u00eanero-fluido / pornografia n\u00e3o bin\u00e1ria"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "K\u00f6nsflytande / icke-bin\u00e4ra porr"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e2a\u0e37\u0e48\u0e2d\u0e25\u0e32\u0e21\u0e01\u0e2d\u0e19\u0e32\u0e08\u0e32\u0e23\u0e40\u0e1e\u0e28\u0e25\u0e37\u0e48\u0e19\u0e44\u0e2b\u0e25/\u0e19\u0e2d\u0e19\u0e44\u0e1a\u0e19\u0e32\u0e23\u0e35"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ak\u0131\u015fkan cinsiyet / non-binary porno"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u6027\u522b\u6d41\u4f53/\u975e\u4e8c\u5143\u6027\u8272\u60c5"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u6027\u5225\u6d41\u9ad4/\u975e\u4e8c\u5143\u6027\u8272\u60c5"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ponografia ya jinsia-mpito / isiyo-binari"
           }
         }
       }
     },
-    "prostitution" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prostitution"
+    "harassment": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u062a\u062d\u0631\u0634"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prostitución"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bel\u00e4stigung"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تن فروشی"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harassment"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "성매매"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acoso"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prostituição"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0645\u0632\u0627\u062d\u0645\u062a"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "卖淫"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harc\u00e8lement"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "賣淫"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30cf\u30e9\u30b9\u30e1\u30f3\u30c8"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uad34\ub86d\ud798"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intimidatie"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ass\u00e9dio"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trakasserier"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e01\u0e32\u0e23\u0e04\u0e38\u0e01\u0e04\u0e32\u0e21"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taciz"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u9a9a\u6270"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unyanyasaji"
           }
         }
       }
     },
-    "sex" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sex"
+    "harassmentStalkingOrDoxxing": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u062a\u062d\u0631\u0634 \u0623\u0648 \u0645\u0644\u0627\u062d\u0642\u0629 \u0623\u0648 \u0643\u0634\u0641 \u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0634\u062e\u0635\u064a\u0629"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sexo"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bel\u00e4stigung, Stalking oder Doxxing"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "سکس"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harassment, Stalking, or Doxxing"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "성적인"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acoso, Acecho, o Doxxing"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sexo"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0645\u0632\u0627\u062d\u0645\u062a \u06cc\u0627 \u0627\u0641\u0634\u0627\u06cc \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u062e\u0635\u0648\u0635\u06cc"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "性行为"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harc\u00e8lement, traque ou divulgation d'informations personnelles"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "性行為"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30cf\u30e9\u30b9\u30e1\u30f3\u30c8\u3001\u30b9\u30c8\u30fc\u30ad\u30f3\u30b0\u3001\u307e\u305f\u306f\u30c9\u30af\u30b7\u30f3\u30b0"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uad34\ub86d\ud798, \uc2a4\ud1a0\ud0b9 \ud639\uc740 \uc2e0\uc0c1\ud138\uae30"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intimidatie, stalking of doxxing"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ass\u00e9dio, Persegui\u00e7\u00e3o, ou Doxxing"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trakasseri, Stalking eller Doxxing"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e01\u0e32\u0e23\u0e04\u0e38\u0e01\u0e04\u0e32\u0e21 \u0e01\u0e32\u0e23\u0e15\u0e34\u0e14\u0e15\u0e32\u0e21 \u0e2b\u0e23\u0e37\u0e2d\u0e01\u0e32\u0e23\u0e40\u0e1b\u0e34\u0e14\u0e40\u0e1c\u0e22\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taciz, Stalking veya Ki\u015fisel Bilgi \u0130f\u015fas\u0131"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u9a9a\u6270\u3001\u8ddf\u8e2a\u6216\u63ed\u9732\u4ed6\u4eba\u9690\u79c1"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u9a37\u64fe\u3001\u8ddf\u8e64\u6216\u63ed\u9732\u4ed6\u4eba\u96b1\u79c1"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unyanyasaji, Ufuatiliaji, au Ufichuaji wa Taarifa Binafsi"
           }
         }
       }
     },
-    "spam" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spam"
+    "heterosexualPorn": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0645\u062d\u062a\u0648\u0649 \u0625\u0628\u0627\u062d\u064a \u0645\u063a\u0627\u064a\u0631"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spam"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heterosexuelle Pornografie"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "اسپم"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heterosexual Porn"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "스팸"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Porno heterosexual"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "'Spam'"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u067e\u0648\u0631\u0646 \u062c\u0646\u0633 \u0645\u062e\u0627\u0644\u0641"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skräp"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornographie h\u00e9t\u00e9rosexuelle"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "垃圾"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30d8\u30c6\u30ed\u30bb\u30af\u30b7\u30e3\u30eb\u30dd\u30eb\u30ce"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "垃圾"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc774\uc131\uc560(\ud5e4\ud14c\ub85c) \uc74c\ub780\ubb3c"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heteroseksuele porno"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornografia Heterosexual"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heterosexuell Porr"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e2a\u0e37\u0e48\u0e2d\u0e25\u0e32\u0e21\u0e01\u0e2d\u0e19\u0e32\u0e08\u0e32\u0e23\u0e15\u0e48\u0e32\u0e07\u0e40\u0e1e\u0e28"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heteroseks\u00fcel Porno"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5f02\u6027\u8272\u60c5"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u7570\u6027\u8272\u60c5"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ponografia ya Wasiofanana Kijinsia"
           }
         }
       }
     },
-    "transsexualPorn" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transsexuelle Pornografie"
+    "illegal": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u063a\u064a\u0631 \u0642\u0627\u0646\u0648\u0646\u064a"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transsexual porn"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Illegal"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Porno transexual"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Illegal"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "پورن بین جنسی"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ilegal"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "트랜섹슈얼 음란물"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u063a\u06cc\u0631 \u0642\u0627\u0646\u0648\u0646\u06cc"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pornografia transsexual"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ill\u00e9gal"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transsexuell porr"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u9055\u6cd5"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "变性色情"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\ubd88\ubc95"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "變性色情"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Illegaal"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ilegal"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Olaglig"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e1c\u0e34\u0e14\u0e01\u0e0e\u0e2b\u0e21\u0e32\u0e22"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yasa D\u0131\u015f\u0131"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8fdd\u6cd5"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u9055\u6cd5"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kinyume cha Sheria"
           }
         }
       }
     },
-    "violence" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gewalt"
+    "impersonation": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0627\u0646\u062a\u062d\u0627\u0644 \u0634\u062e\u0635\u064a\u0629"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Violence"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Identit\u00e4tsdiebstahl"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Violencia"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impersonation"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "خشونت"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suplantaci\u00f3n"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "폭력"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u062c\u0639\u0644 \u0647\u0648\u06cc\u062a"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Violência"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usurpation d'identit\u00e9"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Våld"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u306a\u308a\u3059\u307e\u3057"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "暴力"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\ub3c4\uc6a9 \ub610\ub294 \uc0ac\uce6d"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "暴力"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Identiteitsdiefstal"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Falsidade Ideol\u00f3gica"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imitering"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e01\u0e32\u0e23\u0e41\u0e2d\u0e1a\u0e2d\u0e49\u0e32\u0e07"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kimlik Taklidi"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5192\u5145\u4ed6\u4eba"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5192\u5145\u4ed6\u4eba"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kujifanya Mtu Mwingine"
           }
         }
       }
     },
-    "violenceTowardsAHumanBeing" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gewalt gegenüber einem Menschen"
+    "intoleranceAndHate": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0627\u0644\u062a\u0639\u0635\u0628 \u0648\u0627\u0644\u0643\u0631\u0627\u0647\u064a\u0629"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Violence towards a human being"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intoleranz & Hass"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Violencia hacia un ser humano"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intolerance & Hate"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "خشونت بر علیه حیوان بااحساس"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intolerancia y Odio"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "인간에 대한 폭력"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0639\u062f\u0645 \u0645\u062f\u0627\u0631\u0627 \u0648 \u0646\u0641\u0631\u062a"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Violência contra um ser humano"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intol\u00e9rance et haine"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Våld mot en människa"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u4e0d\u5bdb\u5bb9\u3068\u618e\u60aa"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "对人类的暴力行为"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\ud574\ub85c\uc6c0 \ubc0f \uc99d\uc624"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "對人類的暴力行為"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intolerantie & haat"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intoler\u00e2ncia e \u00d3dio"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intolerans & hat"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e04\u0e27\u0e32\u0e21\u0e44\u0e21\u0e48\u0e2d\u0e14\u0e17\u0e19\u0e41\u0e25\u0e30\u0e04\u0e27\u0e32\u0e21\u0e40\u0e01\u0e25\u0e35\u0e22\u0e14\u0e0a\u0e31\u0e07"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ho\u015fg\u00f6r\u00fcs\u00fczl\u00fck ve Nefret"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u4e0d\u5bb9\u5fcd\u548c\u4ec7\u6068\u884c\u4e3a"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u4e0d\u5bb9\u5fcd\u548c\u4ec7\u6068\u884c\u70ba"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kutovumiliana na Chuki"
           }
         }
       }
     },
-    "violenceTowardsASentientAnimal" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gewalt gegenüber einem fühlendem Tier"
+    "lesbianPorn": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0645\u062d\u062a\u0648\u0649 \u0625\u0628\u0627\u062d\u064a \u0633\u062d\u0627\u0642\u064a"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Violence towards a sentient animal"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lesbische Pornografie"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Violencia hacia un animal consciente"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lesbian porn"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "خشونت بر علیه انسان"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Porno homosexual entre mujeres"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "지각 있는 동물에 대한 폭력"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u067e\u0648\u0631\u0646 \u0632\u0646\u0627\u0646"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Violência contra um animal senciente"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornographie lesbienne"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Våld mot ett levande djur"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30ec\u30ba\u30d3\u30a2\u30f3\u30dd\u30eb\u30ce"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "对情感动物的暴力行为"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc5ec\uc790 \ub3d9\uc131\uc560 \uc74c\ub780\ubb3c"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "對情感動物的暴力行為"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lesbische porno"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornografia L\u00e9sbica"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lesbisk porr"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e2a\u0e37\u0e48\u0e2d\u0e25\u0e32\u0e21\u0e01\u0e2d\u0e19\u0e32\u0e08\u0e32\u0e23\u0e40\u0e25\u0e2a\u0e40\u0e1a\u0e35\u0e49\u0e22\u0e19"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lezbiyen porno"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5973\u6027\u540c\u6027\u8272\u60c5"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5973\u6027\u540c\u6027\u8272\u60c5"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ponografia ya wasagaji"
+          }
+        }
+      }
+    },
+    "likelyToCauseHarm": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0645\u0646 \u0627\u0644\u0645\u062d\u062a\u0645\u0644 \u0623\u0646 \u064a\u0633\u0628\u0628 \u0627\u0644\u0636\u0631\u0631"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verursacht wahrscheinlich Schaden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Likely to cause harm"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Probable que cause da\u00f1o"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0627\u062d\u062a\u0645\u0627\u0644 \u0622\u0633\u06cc\u0628"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Susceptible de causer du tort"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5371\u5bb3\u3092\u4e0e\u3048\u308b\u53ef\u80fd\u6027"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\ud574\ub97c \ub07c\uce60 \uac00\ub2a5\uc131"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waarschijnlijk schadelijk"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pass\u00edvel de causar dano"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sannolikt att orsaka skada"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e21\u0e35\u0e41\u0e19\u0e27\u0e42\u0e19\u0e49\u0e21\u0e17\u0e35\u0e48\u0e08\u0e30\u0e01\u0e48\u0e2d\u0e43\u0e2b\u0e49\u0e40\u0e01\u0e34\u0e14\u0e2d\u0e31\u0e19\u0e15\u0e23\u0e32\u0e22"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zarar verme olas\u0131l\u0131\u011f\u0131"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u53ef\u80fd\u9020\u6210\u4f24\u5bb3"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u53ef\u80fd\u9020\u6210\u50b7\u5bb3"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inaweza kusababisha madhara"
+          }
+        }
+      }
+    },
+    "malware": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0628\u0631\u0645\u062c\u064a\u0627\u062a \u062e\u0628\u064a\u062b\u0629"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schadsoftware / Malware"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Malware"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Malware"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0628\u062f\u0627\u0641\u0632\u0627\u0631"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Logiciel malveillant"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30de\u30eb\u30a6\u30a7\u30a2"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uba40\uc6e8\uc5b4"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Malware"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u201cMalware\u201d"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skadlig kod/programvara (malware)"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e21\u0e31\u0e25\u0e41\u0e27\u0e23\u0e4c"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "K\u00f6t\u00fc Ama\u00e7l\u0131 Yaz\u0131l\u0131m"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u6076\u610f\u8f6f\u4ef6"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u60e1\u610f\u8edf\u9ad4"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Programu hatari"
+          }
+        }
+      }
+    },
+    "nsfw": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u063a\u064a\u0631 \u0645\u0646\u0627\u0633\u0628 \u0644\u0628\u064a\u0626\u0629 \u0627\u0644\u0639\u0645\u0644"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NSFW"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NSFW"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NSFW"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0646\u0627\u0645\u0646\u0627\u0633\u0628 \u0628\u0631\u0627\u06cc \u062e\u0627\u0646\u0648\u0627\u062f\u0647 \u0648 \u0645\u062d\u06cc\u0637 \u06a9\u0627\u0631"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NSFW"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NSFW"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NSFW"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NSFW"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NSFW"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NSFW"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e44\u0e21\u0e48\u0e40\u0e2b\u0e21\u0e32\u0e30\u0e2a\u0e21\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e17\u0e35\u0e48\u0e17\u0e33\u0e07\u0e32\u0e19"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0130\u015f \u0130\u00e7in Uygun De\u011fil"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NSFW"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u4e0d\u9069\u5408\u5de5\u4f5c\u5834\u6240"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NSFW"
+          }
+        }
+      }
+    },
+    "nudityAndSex": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0627\u0644\u0639\u0631\u064a \u0648\u0627\u0644\u062c\u0646\u0633"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nacktheit & Sex"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nudity or Sexual Content"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desnudez o contenido sexual"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0639\u0631\u06cc\u0627\u0646\u06cc \u0648 \u062c\u0646\u0633\u06cc"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nudit\u00e9 ou contenu sexuel"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30cc\u30fc\u30c9\u3084\u6027\u7684\u30b3\u30f3\u30c6\u30f3\u30c4"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\ub204\ub4dc \ub610\ub294 \uc131\uc801 \ucf58\ud150\uce20"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naaktheid en seks"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nudez ou Conte\u00fado Sexual"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nakenhet och sex"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e01\u0e32\u0e23\u0e40\u0e1b\u0e25\u0e37\u0e2d\u0e22\u0e01\u0e32\u0e22\u0e2b\u0e23\u0e37\u0e2d\u0e40\u0e19\u0e37\u0e49\u0e2d\u0e2b\u0e32\u0e17\u0e32\u0e07\u0e40\u0e1e\u0e28"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u00c7\u0131plakl\u0131k veya Cinsel \u0130\u00e7erik"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u88f8\u4f53\u548c\u6027\u884c\u4e3a"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u88f8\u9ad4\u548c\u6027\u884c\u70ba"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uchi au Maudhui ya Kingono"
+          }
+        }
+      }
+    },
+    "other": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0623\u062e\u0631\u0649 (\u064a\u0631\u062c\u0649 \u0627\u0644\u062a\u0648\u0636\u064a\u062d)"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Andere"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Other"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otro"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0633\u0627\u06cc\u0631"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autre"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u305d\u306e\u4ed6"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uae30\ud0c0"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Overig"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Outros"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u00d6vrigt"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e2d\u0e37\u0e48\u0e19\u0e46"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Di\u011fer"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5176\u4ed6"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5176\u4ed6"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nyingine"
+          }
+        }
+      }
+    },
+    "pornography": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0645\u062d\u062a\u0648\u0649 \u0625\u0628\u0627\u062d\u064a"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornografie"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornography"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornograf\u00eda"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u067e\u0648\u0631\u0646"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornographie"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30dd\u30eb\u30ce\u30b0\u30e9\u30d5\u30a3\u30fc"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc74c\ub780\ubb3c"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornografie"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornografia"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornografi"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e2a\u0e37\u0e48\u0e2d\u0e25\u0e32\u0e21\u0e01\u0e2d\u0e19\u0e32\u0e08\u0e32\u0e23"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornografi"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8272\u60c5"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8272\u60c5"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ponografia"
+          }
+        }
+      }
+    },
+    "prostitution": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0627\u0644\u062f\u0639\u0627\u0631\u0629"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prostitution"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prostitution"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prostituci\u00f3n"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u062a\u0646 \u0641\u0631\u0648\u0634\u06cc"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prostitution"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u58f2\u6625"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc131\ub9e4\ub9e4"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prostitutie"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prostitui\u00e7\u00e3o"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prostitution"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e01\u0e32\u0e23\u0e04\u0e49\u0e32\u0e1b\u0e23\u0e30\u0e40\u0e27\u0e13\u0e35"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fuhu\u015f"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5356\u6deb"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8ce3\u6deb"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukahaba"
+          }
+        }
+      }
+    },
+    "sex": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u062c\u0646\u0633"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sex"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sex"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sexo"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0633\u06a9\u0633"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sexe"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u6027"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc131\uc801\uc778"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seks"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sexo"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sex"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e40\u0e1e\u0e28"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cinsellik"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u6027\u884c\u4e3a"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u6027\u884c\u70ba"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngono"
+          }
+        }
+      }
+    },
+    "spam": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0631\u0633\u0627\u0626\u0644 \u0645\u0632\u0639\u062c\u0629"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spam"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spam"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spam"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0627\u0633\u067e\u0645"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spam"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30b9\u30d1\u30e0"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc2a4\ud338"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spam"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "'Spam'"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skr\u00e4ppost"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e2a\u0e41\u0e1b\u0e21"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spam"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5783\u573e"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5783\u573e"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taka"
+          }
+        }
+      }
+    },
+    "transsexualPorn": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0645\u062d\u062a\u0648\u0649 \u0625\u0628\u0627\u062d\u064a \u0644\u0644\u0645\u062a\u062d\u0648\u0644\u064a\u0646 \u062c\u0646\u0633\u064a\u0627\u064b"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transsexuelle Pornografie"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transsexual porn"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Porno transexual"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u067e\u0648\u0631\u0646 \u0628\u06cc\u0646 \u062c\u0646\u0633\u06cc"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornographie transsexuelle"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u30c8\u30e9\u30f3\u30b9\u30bb\u30af\u30b7\u30e3\u30eb\u30dd\u30eb\u30ce"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\ud2b8\ub79c\uc139\uc288\uc5bc \uc74c\ub780\ubb3c"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transseksuele porno"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornografia transsexual"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transsexuell porr"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e2a\u0e37\u0e48\u0e2d\u0e25\u0e32\u0e21\u0e01\u0e2d\u0e19\u0e32\u0e08\u0e32\u0e23\u0e04\u0e19\u0e02\u0e49\u0e32\u0e21\u0e40\u0e1e\u0e28"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transseks\u00fcel porno"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u53d8\u6027\u8272\u60c5"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u8b8a\u6027\u8272\u60c5"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ponografia ya waliobadili jinsia"
+          }
+        }
+      }
+    },
+    "violence": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0639\u0646\u0641"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gewalt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Violence"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Violencia"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u062e\u0634\u0648\u0646\u062a"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Violence"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u66b4\u529b"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\ud3ed\ub825"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geweld"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Viol\u00eancia"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V\u00e5ld"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e04\u0e27\u0e32\u0e21\u0e23\u0e38\u0e19\u0e41\u0e23\u0e07"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u015eiddet"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u66b4\u529b"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u66b4\u529b"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukatili"
+          }
+        }
+      }
+    },
+    "violenceTowardsAHumanBeing": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0639\u0646\u0641 \u062a\u062c\u0627\u0647 \u0625\u0646\u0633\u0627\u0646"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gewalt gegen\u00fcber einem Menschen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Violence towards a human being"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Violencia hacia un ser humano"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u062e\u0634\u0648\u0646\u062a \u0628\u0631 \u0639\u0644\u06cc\u0647 \u062d\u06cc\u0648\u0627\u0646 \u0628\u0627\u0627\u062d\u0633\u0627\u0633"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Violence envers un \u00eatre humain"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u4eba\u9593\u306b\u5bfe\u3059\u308b\u66b4\u529b"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc778\uac04\uc5d0 \ub300\ud55c \ud3ed\ub825"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geweld tegen een mens"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Viol\u00eancia contra um ser humano"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V\u00e5ld mot en m\u00e4nniska"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e04\u0e27\u0e32\u0e21\u0e23\u0e38\u0e19\u0e41\u0e23\u0e07\u0e15\u0e48\u0e2d\u0e21\u0e19\u0e38\u0e29\u0e22\u0e4c"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0130nsanlara y\u00f6nelik \u015fiddet"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5bf9\u4eba\u7c7b\u7684\u66b4\u529b\u884c\u4e3a"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5c0d\u4eba\u985e\u7684\u66b4\u529b\u884c\u70ba"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukatili dhidi ya binadamu"
+          }
+        }
+      }
+    },
+    "violenceTowardsASentientAnimal": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0639\u0646\u0641 \u062a\u062c\u0627\u0647 \u062d\u064a\u0648\u0627\u0646"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gewalt gegen\u00fcber einem f\u00fchlendem Tier"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Violence towards a sentient animal"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Violencia hacia un animal consciente"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u062e\u0634\u0648\u0646\u062a \u0628\u0631 \u0639\u0644\u06cc\u0647 \u0627\u0646\u0633\u0627\u0646"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Violence envers un animal sensible"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u77e5\u899a\u306e\u3042\u308b\u52d5\u7269\u306b\u5bfe\u3059\u308b\u66b4\u529b"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\uc9c0\uac01 \uc788\ub294 \ub3d9\ubb3c\uc5d0 \ub300\ud55c \ud3ed\ub825"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geweld tegen een levend dier"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Viol\u00eancia contra um animal senciente"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V\u00e5ld mot ett levande djur"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u0e04\u0e27\u0e32\u0e21\u0e23\u0e38\u0e19\u0e41\u0e23\u0e07\u0e15\u0e48\u0e2d\u0e2a\u0e31\u0e15\u0e27\u0e4c\u0e17\u0e35\u0e48\u0e21\u0e35\u0e04\u0e27\u0e32\u0e21\u0e23\u0e39\u0e49\u0e2a\u0e36\u0e01"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hissedebilen bir hayvana y\u00f6nelik \u015fiddet"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5bf9\u60c5\u611f\u52a8\u7269\u7684\u66b4\u529b\u884c\u4e3a"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\u5c0d\u60c5\u611f\u52d5\u7269\u7684\u66b4\u529b\u884c\u70ba"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukatili dhidi ya mnyama mwenye fahamu"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

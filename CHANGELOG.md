@@ -12,10 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Release Notes
 - Fixed: crash in Event.trackDelete(on:context:).
+- Added 100% translation coverage for Spanish, Swahili, and Portuguese (Brazilian).
+- Enhanced localization infrastructure to improve translation workflow.
 
 ### Internal Changes
 - Fixed: Contact Support event fires too often.
 - Performance improvements for RepliesLabel, AuthorLabel, NoteCardHeader, Date+Elapsed
+- Added translation automation scripts for easier localization management.
+- Added .bak files to .gitignore to prevent localization backups from being tracked.
 
 ## [1.2.1] - 2025-02-19Z
 

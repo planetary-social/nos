@@ -1,509 +1,773 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "inDiscussion" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "in discussion"
+  "sourceLanguage": "en",
+  "strings": {
+    "inDiscussion": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "في النقاش"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "en discusión"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "in discussion"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "در مباحثه"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "en discusión"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "토론 중"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "در مباحثه"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "em discussão"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "토론 중"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在讨论"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "em discussão"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "katika mjadala"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在讨论中"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "tartışmada"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ในการสนทนา"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "i diskussion"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ディスカッション中"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在討論中"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "in discussie"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "en discussion"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "in Diskussion"
           }
         }
       }
     },
-    "joinTheDiscussion" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Join the discussion"
+    "joinTheDiscussion": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "انضم إلى النقاش"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unirse a la discusión"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Join the discussion"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "به این بحث بپیوندید"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unirse a la discusión"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "토론 참여하기"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "به این بحث بپیوندید"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Participe da discussão"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "토론 참여하기"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "加入讨论"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Participe da discussão"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jiunge na mjadala"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加入讨论"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tartışmaya katıl"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เข้าร่วมการสนทนา"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delta i diskussionen"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ディスカッションに参加する"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加入討論"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deelnemen aan de discussie"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rejoindre la discussion"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An der Diskussion teilnehmen"
           }
         }
       }
     },
-    "mentionedYou" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "hat dich erwähnt:"
+    "mentionedYou": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أشار إليك:"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "mentioned you:"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hat dich erwähnt:"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "te ha mencionado:"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mentioned you:"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "به شما اشاره کرده:"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "te ha mencionado:"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "vous a mentionné(e):"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "به شما اشاره کرده:"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "メンションされました"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "vous a mentionné(e):"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "님이 당신을 언급했어요"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "メンションされました"
           }
         },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "noemde u:"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "님이 당신을 언급했어요"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "mencionou você:"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "noemde u:"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "nämnde dig:"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mencionou você:"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "提到了你："
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "amekutaja:"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "提到了你："
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nämnde dig:"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "提到了你："
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "提到了你："
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "senden bahsetti:"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "กล่าวถึงคุณ:"
           }
         }
       }
     },
-    "postAReply" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Antwort posten"
+    "postAReply": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نشر رد"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Post a reply"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Antwort posten"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Publicar una respuesta"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Post a reply"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "پاسخی ارسال کنید"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Publicar una respuesta"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Publier une réponse"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پاسخی ارسال کنید"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "返信を投稿する"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Publier une réponse"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "답글 남기기"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "返信を投稿する"
           }
         },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Plaats een reactie"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "답글 남기기"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Respondeu"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plaats een reactie"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skriv ett svar"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Respondeu"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "发布回复"
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chapisha jibu"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "發佈回覆"
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skriv ett svar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发布回复"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "發佈回覆"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yanıt gönder"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "โพสต์การตอบกลับ"
           }
         }
       }
     },
-    "repliedToYourNote" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "hat auf deine Note geantwortet:"
+    "repliedToYourNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "رد على ملاحظتك:"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "replied to your note:"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hat auf deine Note geantwortet:"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ha respondido a tu nota:"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "replied to your note:"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "به یادداشت شما پاسخ داد:"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ha respondido a tu nota:"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "a répondu à votre note:"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "به یادداشت شما پاسخ داد:"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "あなたのノートに返信されました:"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "a répondu à votre note:"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "답글을 남김:"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "あなたのノートに返信されました:"
           }
         },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "heeft op je note gereageerd:"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "답글을 남김:"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "respondeu a sua nota:"
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "heeft op je note gereageerd:"
           }
         },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "svarade på din anteckning:"
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "respondeu a sua nota:"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "回复了你的笔记："
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "amejibu dokezo lako:"
           }
         },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "回覆了你的筆記："
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "svarade på din anteckning:"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "回复了你的笔记："
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "回覆了你的筆記："
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "notuna yanıt verdi:"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ตอบกลับโน้ตของคุณ:"
           }
         }
       }
     },
-    "replies" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld Antwort"
+    "replies": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld رد"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld Antworten"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld ردود"
                 }
               }
             }
           }
         },
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld reply"
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Antwort"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld replies"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Antworten"
                 }
               }
             }
           }
         },
-        "es" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld respuesta"
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld reply"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld respuestas"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld replies"
                 }
               }
             }
           }
         },
-        "fa" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld پاسخ"
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld respuesta"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld پاسخ"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld respuestas"
                 }
               }
             }
           }
         },
-        "fr" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld réponse"
+        "fa": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld پاسخ"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld réponses"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld پاسخ"
                 }
               }
             }
           }
         },
-        "ja" : {
-          "variations" : {
-            "plural" : {
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld の返信"
-                }
-              }
-            }
-          }
-        },
-        "ko" : {
-          "variations" : {
-            "plural" : {
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld 답글"
-                }
-              }
-            }
-          }
-        },
-        "nl" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld reactie"
+        "fr": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld réponse"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld reacties"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld réponses"
                 }
               }
             }
           }
         },
-        "pt-BR" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld responder"
+        "ja": {
+          "variations": {
+            "plural": {
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld の返信"
+                }
+              }
+            }
+          }
+        },
+        "ko": {
+          "variations": {
+            "plural": {
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld 답글"
+                }
+              }
+            }
+          }
+        },
+        "nl": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld reactie"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld respostas"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld reacties"
                 }
               }
             }
           }
         },
-        "sv" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld svar"
+        "pt-BR": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld responder"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld svar"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld respostas"
                 }
               }
             }
           }
         },
-        "zh-Hans" : {
-          "variations" : {
-            "plural" : {
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld 条回复"
+        "sv": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld svar"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld svar"
                 }
               }
             }
           }
         },
-        "zh-Hant" : {
-          "variations" : {
-            "plural" : {
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld 條回覆"
+        "zh-Hans": {
+          "variations": {
+            "plural": {
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld 条回复"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hant": {
+          "variations": {
+            "plural": {
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld 條回覆"
+                }
+              }
+            }
+          }
+        },
+        "tr": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld yanıt"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld yanıt"
+                }
+              }
+            }
+          }
+        },
+        "th": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld ตอบกลับ"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld ตอบกลับ"
+                }
+              }
+            }
+          }
+        },
+        "sw": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld jibu"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld majibu"
                 }
               }
             }
@@ -511,123 +775,315 @@
         }
       }
     },
-    "zappedYou" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "⚡️ zapped you!"
+    "zappedYou": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ أرسل لك زاب!"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "⚡ ¡te mando un zap!"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ zapped you!"
           }
         },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "⚡️ به شما زپ زد!"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡ ¡te mando un zap!"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "⚡️ 당신에게 잽을 보냄"
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ به شما زپ زد!"
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Te mandou um \"Zap\"!"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ 당신에게 잽을 보냈습니다!"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Te mandou um \"Zap\"!"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ seni zapledi!"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ แซปคุณ!"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ zappade dig!"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ あなたにザップしました！"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ 向您發送了zap！"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ 向您发送了zap！"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ heeft je gezapped!"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ vous a zappé !"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ amekuzapia!"
           }
         }
       }
     },
-    "zappedYouSats" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "⚡️ zapped you %ld sat!"
+    "zappedYouSats": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ أرسل لك %ld ساتوشي!"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "⚡️ zapped you %ld sats!"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ أرسل لك %ld ساتوشي!"
                 }
               }
             }
           }
         },
-        "es" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "⚡ ¡te mando un zap de %ld sat!"
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ zapped you %ld sat!"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "⚡ ¡te mando un zap de %ld sats!"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ zapped you %ld sats!"
                 }
               }
             }
           }
         },
-        "fa" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "⚡️ %ld ساتوشی به شما زپ زد!"
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡ ¡te mando un zap de %ld sat!"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "new",
-                  "value" : ""
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡ ¡te mando un zap de %ld sats!"
                 }
               }
             }
           }
         },
-        "ko" : {
-          "variations" : {
-            "plural" : {
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "⚡️ 당신에게 %ld sat 잽을 보냄!"
+        "fa": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ %ld ساتوشی به شما زپ زد!"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ %ld ساتوشی به شما زپ زد!"
                 }
               }
             }
           }
         },
-        "pt-BR" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Te mandou %ld sat!"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": {
+              "one": "⚡️ 당신에게 %ld sat 잽을 보냈습니다!",
+              "other": "⚡️ 당신에게 %ld sats 잽을 보냈습니다!"
+            }
+          }
+        },
+        "pt-BR": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Te mandou %ld sat!"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Te mandou %ld sats!"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Te mandou %ld sats!"
+                }
+              }
+            }
+          }
+        },
+        "tr": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ sana %ld sat zapledi!"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ sana %ld sat zapledi!"
+                }
+              }
+            }
+          }
+        },
+        "th": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ แซปคุณ %ld แซท!"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ แซปคุณ %ld แซท!"
+                }
+              }
+            }
+          }
+        },
+        "sv": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ zappade dig %ld sat!"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ zappade dig %ld sats!"
+                }
+              }
+            }
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": {
+              "one": "⚡️ あなたに %ld サット ザップしました！",
+              "other": "⚡️ あなたに %ld サット ザップしました！"
+            }
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": {
+              "one": "⚡️ 向您發送了 %ld sat！",
+              "other": "⚡️ 向您發送了 %ld sats！"
+            }
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": {
+              "one": "⚡️ 向您发送了 %ld sat！",
+              "other": "⚡️ 向您发送了 %ld sats！"
+            }
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": {
+              "one": "⚡️ heeft je %ld sat gezapped!",
+              "other": "⚡️ heeft je %ld sats gezapped!"
+            }
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": {
+              "one": "⚡️ vous a zappé %ld sat !",
+              "other": "⚡️ vous a zappé %ld sats !"
+            }
+          }
+        },
+        "sw": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ amekuzapia %ld sat!"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "⚡️ amekuzapia %ld sats!"
                 }
               }
             }
@@ -636,5 +1092,5 @@
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }
