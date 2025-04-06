@@ -21,54 +21,45 @@ if [ ! -f "$DEST_FILE" ]; then
     exit 1
 fi
 
-# Create a temp file for the merged content
+# Manual approach - directly add the strings
+STRINGS_TO_ADD=$(cat "$SOURCE_FILE")
 TEMP_FILE=$(mktemp)
-
-# Read the source JSON
-SOURCE_CONTENT=$(cat "$SOURCE_FILE")
-
-# Extract the strings section (everything between the first { and the last })
-SOURCE_STRINGS=$(echo "$SOURCE_CONTENT" | sed -e 's/^{//' -e 's/}$//' -e 's/,$//')
-
-# Create a simpler approach using Python to merge the JSON files
-python3 -c "
-import json
-import sys
-
-# Read the source strings
-with open('$SOURCE_FILE', 'r') as f:
-    source = json.load(f)
-
-# Read the destination file
-with open('$DEST_FILE', 'r') as f:
-    dest = json.load(f)
-
-# Merge the strings
-for key, value in source.items():
-    dest['strings'][key] = value
-
-# Write back to a temp file
-with open('$TEMP_FILE', 'w') as f:
-    json.dump(dest, f, indent=2)
-"
-
-# Check if the Python command succeeded
-if [ $? -ne 0 ]; then
-    echo "Error merging JSON files using Python!"
-    exit 1
-fi
 
 # Back up the original file
 cp "$DEST_FILE" "${DEST_FILE}.bak"
 
-# Copy the temp file to the destination
-cp "$TEMP_FILE" "$DEST_FILE"
+# Simple text-based approach
+# Extract the strings to add (remove the outer braces)
+CONTENT_TO_ADD=$(cat "$SOURCE_FILE" | sed '1s/^{//' | sed '$s/}$//')
+
+# Find the position to add the new strings (after "strings" : {)
+# and add them there
+awk '
+BEGIN { found = 0; }
+/"strings" : {/ { 
+    print $0;
+    print "    " substr("'"$CONTENT_TO_ADD"'", 1);
+    found = 1;
+    next;
+}
+{ print $0; }
+' "${DEST_FILE}.bak" > "$TEMP_FILE"
+
+# Check if awk found the insertion point
+if grep -q "$CONTENT_TO_ADD" "$TEMP_FILE"; then
+    # Copy the temp file to the destination
+    cp "$TEMP_FILE" "$DEST_FILE"
+    echo "Strings have been merged into $DEST_FILE"
+    echo "A backup of the original file was created at ${DEST_FILE}.bak"
+else
+    echo "Failed to insert strings into the file. Check the format of Localizable.xcstrings."
+    # Don't overwrite the original
+    rm "${DEST_FILE}.bak"
+    exit 1
+fi
 
 # Clean up
 rm "$TEMP_FILE"
-
-echo "Strings have been merged into $DEST_FILE"
-echo "A backup of the original file was created at ${DEST_FILE}.bak"
 
 # Remind to rebuild the project
 echo "Remember to rebuild the project to apply changes"
