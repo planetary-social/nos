@@ -17,7 +17,7 @@ struct NotificationPreferenceView: View {
                     .font(.headline)
                     .foregroundColor(.primaryTxt)
                 
-                NosToggle(isOn: $notifyOnThreadReplies) {
+                Toggle(isOn: $notifyOnThreadReplies) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("threadRepliesDescription")
                             .font(.subheadline)
@@ -26,6 +26,7 @@ struct NotificationPreferenceView: View {
                             .lineLimit(2)
                     }
                 }
+                .tint(.green)
             }
             
             // Source filter section
