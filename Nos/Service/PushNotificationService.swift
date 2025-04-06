@@ -14,7 +14,6 @@ public enum NotificationPreference: String, CaseIterable, Identifiable {
     case allMentions
     case fromFollowsOnly
     case friendsOfFriends
-    case explicitMentionsOnly
     
     public var id: String {
         rawValue
@@ -23,13 +22,26 @@ public enum NotificationPreference: String, CaseIterable, Identifiable {
     public var description: String {
         switch self {
         case .allMentions:
-            return String(localized: "Notify me for all replies and tags")
+            return String(localized: "All replies and mentions")
         case .fromFollowsOnly:
             return String(localized: "Only from people I follow")
         case .friendsOfFriends:
-            return String(localized: "Only from friends of friends")
-        case .explicitMentionsOnly:
-            return String(localized: "Only when explicitly mentioned")
+            return String(localized: "Only from my network")
+        }
+    }
+}
+
+// Key for muted notifications storage
+private let notifyOnThreadRepliesKey = "com.verse.nos.settings.notifyOnThreadReplies"
+
+/// A toggle setting to control whether to show notifications for thread replies that don't mention the user
+extension PushNotificationService {
+    var notifyOnThreadReplies: Bool {
+        get {
+            userDefaults.bool(forKey: notifyOnThreadRepliesKey)
+        }
+        set {
+            userDefaults.set(newValue, forKey: notifyOnThreadRepliesKey)
         }
     }
 }
@@ -43,8 +55,6 @@ extension NotificationPreference: NosSegmentedPickerItem {
             "fromFollowsOnly"
         case .friendsOfFriends:
             "friendsOfFriends"
-        case .explicitMentionsOnly:
-            "explicitMentionsOnly"
         }
     }
     
@@ -55,9 +65,7 @@ extension NotificationPreference: NosSegmentedPickerItem {
         case .fromFollowsOnly:
             Image(systemName: "person.fill")
         case .friendsOfFriends:
-            Image(systemName: "person.2.fill")
-        case .explicitMentionsOnly:
-            Image(systemName: "at")
+            Image(systemName: "person.2.fill") 
         }
     }
 }
@@ -323,16 +331,25 @@ extension NotificationPreference: NosSegmentedPickerItem {
         
         var shouldShowNotification = true
         
-        // Apply notification filtering based on user preference
+        // First, check if it's a thread reply without an explicit mention
+        let isThreadReply = event.isReply(to: currentAuthor)
+        let isExplicitlyMentioned = self.isUserExplicitlyMentioned(event: event, userPubKey: authorKey)
+        
+        // If it's just a thread reply with no explicit mention, apply the thread replies preference
+        if isThreadReply && !isExplicitlyMentioned {
+            shouldShowNotification = self.notifyOnThreadReplies
+        }
+        
+        // Then apply source filtering based on user preference
         switch self.notificationPreference {
         case .allMentions:
-            // Show all notifications (default behavior)
+            // Keep shouldShowNotification as is - we already determined if it's a thread reply we should show
             break
             
         case .fromFollowsOnly:
             // Only show notifications from people the user follows
             let isFollowed = await checkIfFollowing(author: event.author)
-            shouldShowNotification = isFollowed
+            shouldShowNotification = shouldShowNotification && isFollowed
             
         case .friendsOfFriends:
             // Only show notifications from people who are followed by people the user follows
@@ -341,13 +358,8 @@ extension NotificationPreference: NosSegmentedPickerItem {
             // If not directly followed, we need to check if they're followed by someone the user follows
             if !isDirectlyFollowed {
                 let isFriendOfFriend = await checkIfFriendOfFriend(author: event.author)
-                shouldShowNotification = isFriendOfFriend
+                shouldShowNotification = shouldShowNotification && (isDirectlyFollowed || isFriendOfFriend)
             }
-            
-        case .explicitMentionsOnly:
-            // Only show notifications for explicit mentions
-            let isExplicitlyMentioned = self.isUserExplicitlyMentioned(event: event, userPubKey: authorKey)
-            shouldShowNotification = isExplicitlyMentioned
         }
         
         // Mark as read if filtering rules say not to show it

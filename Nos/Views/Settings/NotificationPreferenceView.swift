@@ -6,63 +6,90 @@ struct NotificationPreferenceView: View {
     @Dependency(\.pushNotificationService) private var pushNotificationService
     
     @State private var selectedPreference: NotificationPreference = .allMentions
+    @State private var notifyOnThreadReplies: Bool = true
     
     var body: some View {
-        VStack {
-            // Using a VStack for vertical arrangement for better readability
-            VStack(spacing: 12) {
-                ForEach(NotificationPreference.allCases) { preference in
-                    Button {
-                        selectedPreference = preference
-                    } label: {
-                        HStack {
-                            preference.image
-                                .foregroundColor(selectedPreference == preference ? .accentColor : .secondaryTxt)
-                            
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(preference.titleKey)
-                                    .font(.subheadline.weight(.medium))
-                                    .foregroundColor(selectedPreference == preference ? .primaryTxt : .secondaryTxt)
-                                
-                                Text(preference.description)
-                                    .font(.caption)
-                                    .foregroundColor(.secondaryTxt)
-                                    .lineLimit(1)
-                            }
-                            
-                            Spacer()
-                            
-                            if selectedPreference == preference {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.accentColor)
-                            }
-                        }
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 12)
-                        .background(
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(selectedPreference == preference ? Color.accentColor.opacity(0.1) : Color.clear)
-                        )
+        VStack(spacing: 24) {
+            // Thread replies toggle
+            VStack(alignment: .leading, spacing: 12) {
+                Text("threadRepliesTitle")
+                    .font(.headline)
+                    .foregroundColor(.primaryTxt)
+                
+                Toggle(isOn: $notifyOnThreadReplies) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("threadRepliesDescription")
+                            .font(.subheadline)
+                            .foregroundColor(.primaryTxt)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .lineLimit(2)
                     }
-                    .buttonStyle(PlainButtonStyle())
                 }
+                .toggleStyle(NosToggleStyle())
             }
             
-            HStack {
-                Text("notificationSettingsDescription")
+            // Source filter section
+            VStack(alignment: .leading, spacing: 12) {
+                Text("sourceFilterTitle")
+                    .font(.headline)
+                    .foregroundColor(.primaryTxt)
+                
+                Text("sourceFilterDescription")
+                    .font(.subheadline)
                     .foregroundColor(.secondaryTxt)
-                    .font(.footnote)
-                Spacer()
+                
+                // Source filter options
+                VStack(spacing: 12) {
+                    ForEach(NotificationPreference.allCases) { preference in
+                        Button {
+                            selectedPreference = preference
+                        } label: {
+                            HStack {
+                                preference.image
+                                    .foregroundColor(selectedPreference == preference ? .accentColor : .secondaryTxt)
+                                
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(preference.titleKey)
+                                        .font(.subheadline.weight(.medium))
+                                        .foregroundColor(selectedPreference == preference ? .primaryTxt : .secondaryTxt)
+                                    
+                                    Text(preference.description)
+                                        .font(.caption)
+                                        .foregroundColor(.secondaryTxt)
+                                        .lineLimit(1)
+                                }
+                                
+                                Spacer()
+                                
+                                if selectedPreference == preference {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(.accentColor)
+                                }
+                            }
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 12)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(selectedPreference == preference ? Color.accentColor.opacity(0.1) : Color.clear)
+                            )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                }
             }
-            .padding(.top, 8)
         }
         .onAppear {
             // Set the initial state
             selectedPreference = pushNotificationService.notificationPreference
+            notifyOnThreadReplies = pushNotificationService.notifyOnThreadReplies
         }
         .onChange(of: selectedPreference) { _, newValue in
             // Update the service when selection changes
             pushNotificationService.notificationPreference = newValue
+        }
+        .onChange(of: notifyOnThreadReplies) { _, newValue in
+            // Update the thread replies preference
+            pushNotificationService.notifyOnThreadReplies = newValue
         }
     }
 }
