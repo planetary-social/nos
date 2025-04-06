@@ -7,6 +7,7 @@ enum NosNavigationDestination: Hashable {
     case list(AuthorList)
     case url(URL)
     case replyTo(RawEventID?)
+    case mutes
 }
 
 enum NoteIdentifiable: Hashable {

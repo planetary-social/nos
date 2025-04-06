@@ -87,7 +87,7 @@ struct NotificationPreferenceView: View {
                 
                 VStack(spacing: 8) {
                     Button {
-                        router.push(MutesDestination())
+                        router.push(.mutes)
                     } label: {
                         HStack {
                             Image(systemName: "speaker.slash.fill")
