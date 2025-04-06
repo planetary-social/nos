@@ -12,10 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Release Notes
 - Fixed: crash in Event.trackDelete(on:context:).
+- Added: client identification tags to published events to improve analytics and ecosystem insights.
 
 ### Internal Changes
 - Fixed: Contact Support event fires too often.
 - Performance improvements for RepliesLabel, AuthorLabel, NoteCardHeader, Date+Elapsed
+- Added: NIP-89 client identifier tags to events, helping relays and other clients identify Nos as the source.
 
 ## [1.2.1] - 2025-02-19Z
 
