@@ -2,6 +2,7 @@ import SwiftUI
 import Dependencies
 import Logger
 import SwiftUINavigation
+import Combine
 
 let showReportWarningsKey = "com.verse.nos.settings.showReportWarnings"
 let showOutOfNetworkWarningKey = "com.verse.nos.settings.showOutOfNetworkWarning"
@@ -151,6 +152,19 @@ struct SettingsView: View {
                 showReportWarnings = userDefaults.object(forKey: showReportWarningsKey) as? Bool ?? true
                 showOutOfNetworkWarning = userDefaults.object(forKey: showOutOfNetworkWarningKey) as? Bool ?? true
             }
+            
+            Section {
+                NotificationPreferenceView()
+                    .padding(.bottom, 8)
+            } header: {
+                Text("notificationSettings")
+                    .foregroundColor(.primaryTxt)
+                    .font(.clarity(.semibold, textStyle: .headline))
+                    .textCase(nil)
+                    .listRowInsets(EdgeInsets())
+                    .padding(.vertical, 15)
+            }
+            .listRowGradientBackground()
 
             Section {
                 Text("\(String(localized: "appVersion")) \(Bundle.current.versionAndBuild)")

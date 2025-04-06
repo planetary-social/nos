@@ -1349,6 +1349,16 @@
         }
       }
     },
+    "allMentions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anyone"
+          }
+        }
+      }
+    },
     "allMyRelays" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2961,6 +2971,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "清除"
+          }
+        }
+      }
+    },
+    "comingSoon" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coming Soon"
           }
         }
       }
@@ -9005,7 +9025,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "被**%1$@**、**%2$@**和**%3lld個其他用戶**關注"
+                  "value" : "被**%1$@**、**%2$@**和**%3$@個其他用戶**關注"
                 }
               }
             }
@@ -9388,6 +9408,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "關注"
+          }
+        }
+      }
+    },
+    "friendsOfFriends" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Network"
+          }
+        }
+      }
+    },
+    "fromFollowsOnly" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "People I Follow"
           }
         }
       }
@@ -9890,6 +9930,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "身份驗證"
+          }
+        }
+      }
+    },
+    "includingOutsideNetwork" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Including people outside your network"
           }
         }
       }
@@ -10997,6 +11047,16 @@
         }
       }
     },
+    "manageMutesTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muted Content"
+          }
+        }
+      }
+    },
     "manageUsers" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -11266,13 +11326,22 @@
         }
       }
     },
-    "mutedUsers" : {
-      "extractionState" : "manual",
+    "mutedThreads" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Blocked Users"
+            "value" : "Muted Threads"
+          }
+        }
+      }
+    },
+    "mutedUsers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muted Users"
           }
         }
       }
@@ -13281,7 +13350,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "此笔记因 %3$@ 被 **%1$@** 和 **%2$lld 个其他用户** 举报。"
+                  "value" : "此笔记因 %3$@ 被 **%1$@** 和 **%2$@ 个其他用户** 举报。"
                 }
               }
             }
@@ -13293,7 +13362,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "此筆記因 %3$@ 被 **%1$@** 和 **%2$lld 個其他用戶** 舉報。"
+                  "value" : "此筆記因 %3$@ 被 **%1$@** 和 **%2$@ 個其他用戶** 舉報。"
                 }
               }
             }
@@ -13474,6 +13543,27 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "通知"
+          }
+        }
+      }
+    },
+    "notificationSettings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notification Settings"
+          }
+        }
+      }
+    },
+    "notificationSettingsDescription" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control which notifications you receive"
           }
         }
       }
@@ -14205,7 +14295,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your **@username** is your identity in the Nos community.\u2028\nChoose a name that reflects you or your organization. Make it memorable and distinct!"
+            "value" : "Your **@username** is your identity in the Nos community. \nChoose a name that reflects you or your organization. Make it memorable and distinct!"
           }
         },
         "es" : {
@@ -18183,6 +18273,27 @@
         }
       }
     },
+    "sourceFilterDescription" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit who can send you notifications"
+          }
+        }
+      }
+    },
+    "sourceFilterTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Who Can Notify Me"
+          }
+        }
+      }
+    },
     "spam" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -18927,6 +19038,26 @@
         }
       }
     },
+    "threadRepliesDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get notified about replies in my threads even when I'm not mentioned"
+          }
+        }
+      }
+    },
+    "threadRepliesTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thread Notifications"
+          }
+        }
+      }
+    },
     "tryAgainOrContactSupport" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -19463,7 +19594,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Well done, you've successfully claimed your **@username**!\u2028\nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
+            "value" : "Well done, you've successfully claimed your **@username**! \nYou can share this name with other people in the Nostr and Fediverse communities to make it easy to find you."
           }
         },
         "es" : {
@@ -19787,7 +19918,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "此用户因 %3$@ 被 **%1$@** 和 **%2$lld 个其他用户** 举报。"
+                  "value" : "此用户因 %3$@ 被 **%1$@** 和 **%2$@ 个其他用户** 举报。"
                 }
               }
             }
@@ -19799,7 +19930,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "此用戶因 %3$@ 被 **%1$@** 和 **%2$lld 個其他用戶** 舉報。"
+                  "value" : "此用戶因 %3$@ 被 **%1$@** 和 **%2$@ 個其他用戶** 舉報。"
                 }
               }
             }

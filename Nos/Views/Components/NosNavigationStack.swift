@@ -39,6 +39,8 @@ struct NosNavigationStack<Content: View>: View {
                         EventObservationView(eventID: eventID) { event in
                             NoteView(note: event, showKeyboard: true)
                         }
+                    case .mutes:
+                        MutesView()
                     }
                 })
         }

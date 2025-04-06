@@ -1,0 +1,142 @@
+{
+  "allMentions": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Anyone"
+        }
+      }
+    }
+  },
+  "includingOutsideNetwork": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Including people outside your network"
+        }
+      }
+    }
+  },
+  "fromFollowsOnly": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "People I Follow"
+        }
+      }
+    }
+  },
+  "friendsOfFriends": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "My Network"
+        }
+      }
+    }
+  },
+  "notificationSettings": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Notification Settings"
+        }
+      }
+    }
+  },
+  "notificationSettingsDescription": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Control which notifications you receive"
+        }
+      }
+    }
+  },
+  "threadRepliesTitle": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Thread Notifications"
+        }
+      }
+    }
+  },
+  "threadRepliesDescription": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Get notified about replies in my threads even when I'm not mentioned"
+        }
+      }
+    }
+  },
+  "sourceFilterTitle": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Who Can Notify Me"
+        }
+      }
+    }
+  },
+  "sourceFilterDescription": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Limit who can send you notifications"
+        }
+      }
+    }
+  },
+  "manageMutesTitle": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Muted Content"
+        }
+      }
+    }
+  },
+  "mutedUsers": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Muted Users"
+        }
+      }
+    }
+  },
+  "mutedThreads": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Muted Threads"
+        }
+      }
+    }
+  },
+  "comingSoon": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Coming Soon"
+        }
+      }
+    }
+  }
+}
