@@ -1,65 +1,62 @@
 #!/bin/bash
 
-# Merge the contents of the strings-to-add.json file into the main Localizable.xcstrings file
-# This is a temporary solution until we get proper xcstrings integration
+# Merge notification strings directly into Localizable.xcstrings file
 
-# Path to the source JSON file
-SOURCE_FILE="/Users/rabble/code/verse/nos/Nos/Assets/Localization/strings-to-add.json"
+# Change to the project directory
+cd /Users/rabble/code/verse/nos
 
-# Path to the destination xcstrings file
-DEST_FILE="/Users/rabble/code/verse/nos/Nos/Assets/Localization/Localizable.xcstrings"
+# Create the target directories
+LOCALIZATIONS_DIR="Nos/Assets/Localization"
+SOURCE_FILE="${LOCALIZATIONS_DIR}/strings-to-add.json"
+DEST_FILE="${LOCALIZATIONS_DIR}/Localizable.xcstrings"
 
-# Check if source file exists
+echo "=== Adding notification strings to ${DEST_FILE} ==="
+
+# Check if files exist
 if [ ! -f "$SOURCE_FILE" ]; then
     echo "Source file not found!"
     exit 1
 fi
 
-# Check if destination file exists
 if [ ! -f "$DEST_FILE" ]; then
     echo "Destination file not found!"
     exit 1
 fi
 
-# Manual approach - directly add the strings
-STRINGS_TO_ADD=$(cat "$SOURCE_FILE")
-TEMP_FILE=$(mktemp)
-
 # Back up the original file
 cp "$DEST_FILE" "${DEST_FILE}.bak"
+echo "Created backup at ${DEST_FILE}.bak"
 
-# Simple text-based approach
-# Extract the strings to add (remove the outer braces)
-CONTENT_TO_ADD=$(cat "$SOURCE_FILE" | sed '1s/^{//' | sed '$s/}$//')
+# Use a simpler approach for merging
+# 1. Extract keys and values from the strings-to-add.json file
+# 2. Add them directly to the Localizable.xcstrings file
 
-# Find the position to add the new strings (after "strings" : {)
-# and add them there
-awk '
-BEGIN { found = 0; }
-/"strings" : {/ { 
-    print $0;
-    print "    " substr("'"$CONTENT_TO_ADD"'", 1);
-    found = 1;
-    next;
-}
-{ print $0; }
-' "${DEST_FILE}.bak" > "$TEMP_FILE"
+# Use a totally manual approach with specific key insertions
+echo "Writing new strings directly to Localizable.xcstrings"
 
-# Check if awk found the insertion point
-if grep -q "$CONTENT_TO_ADD" "$TEMP_FILE"; then
-    # Copy the temp file to the destination
-    cp "$TEMP_FILE" "$DEST_FILE"
-    echo "Strings have been merged into $DEST_FILE"
-    echo "A backup of the original file was created at ${DEST_FILE}.bak"
+# Create a one-liner script to do the work
+cat > /tmp/add_strings.py << EOF
+import json
+with open("$SOURCE_FILE") as f1, open("$DEST_FILE") as f2:
+    source = json.load(f1)
+    dest = json.load(f2)
+    for key, value in source.items():
+        dest["strings"][key] = value
+with open("$DEST_FILE", "w") as f:
+    json.dump(dest, f, indent=2)
+EOF
+
+# Run the script
+python3 /tmp/add_strings.py
+
+if [ $? -eq 0 ]; then
+    echo "Strings have been successfully merged into $DEST_FILE"
+    echo "Remember to rebuild the project to apply changes"
 else
-    echo "Failed to insert strings into the file. Check the format of Localizable.xcstrings."
-    # Don't overwrite the original
-    rm "${DEST_FILE}.bak"
-    exit 1
+    echo "Failed to merge strings - restoring backup"
+    cp "${DEST_FILE}.bak" "$DEST_FILE"
+    echo "Original file restored"
 fi
 
 # Clean up
-rm "$TEMP_FILE"
-
-# Remind to rebuild the project
-echo "Remember to rebuild the project to apply changes"
+rm /tmp/add_strings.py
