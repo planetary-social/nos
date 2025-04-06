@@ -234,6 +234,47 @@ extension NotificationPreference: NosSegmentedPickerItem {
         return false
     }
     
+    /// Checks if the current user follows the given author
+    @MainActor private func checkIfFollowing(author: Author?) -> Bool {
+        guard let currentAuthor = currentAuthor,
+              let authorToCheck = author,
+              let authorKey = authorToCheck.hexadecimalPublicKey else {
+            return false
+        }
+        
+        // Check if the author is in the current user's follows
+        for follow in currentAuthor.follows {
+            if follow.destination?.hexadecimalPublicKey == authorKey {
+                return true
+            }
+        }
+        
+        return false
+    }
+    
+    /// Checks if the author is followed by someone the current user follows (friend of friend)
+    @MainActor private func checkIfFriendOfFriend(author: Author?) -> Bool {
+        guard let currentAuthor = currentAuthor,
+              let authorToCheck = author,
+              let authorKey = authorToCheck.hexadecimalPublicKey else {
+            return false
+        }
+        
+        // Get list of people the current user follows
+        let followedByUser = currentAuthor.follows.compactMap { $0.destination }
+        
+        // For each person the user follows, check if they follow the target author
+        for followedAuthor in followedByUser {
+            for follow in followedAuthor.follows {
+                if follow.destination?.hexadecimalPublicKey == authorKey {
+                    return true
+                }
+            }
+        }
+        
+        return false
+    }
+    
     /// Tells the system to display a notification for the given event if it's appropriate. This will create a 
     /// NosNotification record in the database.
     @MainActor private func showNotificationIfNecessary(for eventID: RawEventID) async {
@@ -278,7 +319,8 @@ extension NotificationPreference: NosSegmentedPickerItem {
                 
             case .fromFollowsOnly:
                 // Only show notifications from people the user follows
-                if event.author?.followed == false {
+                let isFollowed = await checkIfFollowing(author: event.author)
+                if !isFollowed {
                     coreDataNotification.isRead = true
                     return nil
                 }
@@ -286,12 +328,11 @@ extension NotificationPreference: NosSegmentedPickerItem {
             case .friendsOfFriends:
                 // Only show notifications from people who are followed by people the user follows
                 // This is a more complex query that would require checking "friends of friends"
-                let isFollowed = event.author?.followed == true
+                let isDirectlyFollowed = await checkIfFollowing(author: event.author)
                 
                 // If not directly followed, we need to check if they're followed by someone the user follows
-                if !isFollowed {
-                    // This is a simplified version - a more complete solution would use SocialGraphCache
-                    let isFriendOfFriend = false  // Placeholder - implement actual logic
+                if !isDirectlyFollowed {
+                    let isFriendOfFriend = await checkIfFriendOfFriend(author: event.author)
                     if !isFriendOfFriend {
                         coreDataNotification.isRead = true
                         return nil
