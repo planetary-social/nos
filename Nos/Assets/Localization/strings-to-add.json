@@ -4,7 +4,7 @@
       "en": {
         "stringUnit": {
           "state": "translated",
-          "value": "All Mentions"
+          "value": "Anyone"
         }
       }
     }
@@ -14,7 +14,7 @@
       "en": {
         "stringUnit": {
           "state": "translated",
-          "value": "Only People You Follow"
+          "value": "People I Follow"
         }
       }
     }
@@ -24,7 +24,7 @@
       "en": {
         "stringUnit": {
           "state": "translated",
-          "value": "Your Extended Network"
+          "value": "My Network"
         }
       }
     }
@@ -64,7 +64,7 @@
       "en": {
         "stringUnit": {
           "state": "translated",
-          "value": "Notify me about new replies in threads I've participated in, even when I'm not directly mentioned"
+          "value": "Get notified about replies in my threads even when I'm not mentioned"
         }
       }
     }
@@ -74,7 +74,7 @@
       "en": {
         "stringUnit": {
           "state": "translated",
-          "value": "Show Mentions From"
+          "value": "Who Can Notify Me"
         }
       }
     }
@@ -84,7 +84,7 @@
       "en": {
         "stringUnit": {
           "state": "translated",
-          "value": "Choose who can send you notifications"
+          "value": "Limit who can send you notifications"
         }
       }
     }
@@ -94,7 +94,7 @@
       "en": {
         "stringUnit": {
           "state": "translated",
-          "value": "Manage Muted Content"
+          "value": "Muted Content"
         }
       }
     }

@@ -55,7 +55,7 @@ struct NotificationPreferenceView: View {
                                         .foregroundColor(selectedPreference == preference ? .primaryTxt : .secondaryTxt)
                                     
                                     Text(preference.description)
-                                        .font(.caption)
+                                        .font(.subheadline)
                                         .foregroundColor(.secondaryTxt)
                                         .lineLimit(1)
                                 }
