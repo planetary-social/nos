@@ -35,10 +35,6 @@ struct NotificationPreferenceView: View {
                     .font(.headline)
                     .foregroundColor(.primaryTxt)
                 
-                Text("sourceFilterDescription")
-                    .font(.subheadline)
-                    .foregroundColor(.secondaryTxt)
-                
                 // Source filter options
                 VStack(spacing: 12) {
                     ForEach(NotificationPreference.allCases) { preference in
@@ -50,14 +46,9 @@ struct NotificationPreferenceView: View {
                                     .foregroundColor(selectedPreference == preference ? .accentColor : .secondaryTxt)
                                 
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text(preference.titleKey)
+                                    Text(preference.description)
                                         .font(.subheadline.weight(.medium))
                                         .foregroundColor(selectedPreference == preference ? .primaryTxt : .secondaryTxt)
-                                    
-                                    Text(preference.description)
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondaryTxt)
-                                        .lineLimit(1)
                                 }
                                 
                                 Spacer()
