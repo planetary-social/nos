@@ -640,4 +640,86 @@ class Event: NosManagedObject, VerifiableEvent {
         shouldBePublishedTo = Set()
     }
 }
+extension Event {
+    var clientName: String? {
+        guard let tags = allTags as? [[String]] else {
+            return nil
+        }
+
+        for tag in tags where tag.count >= 2 && tag[0] == "client" {
+            return tag[1] // Return the client identifier (e.g., "nos.social")
+        }
+        return nil
+    }
+    
+    struct ClientInfo {
+        let name: String // e.g. "nos.social"
+        let identifier: String? // e.g. "31990:0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6:nos-ios"
+        let relayHint: String?
+        var metadataLoaded = false
+        var metadataEvent: Event?
+
+        var displayName: String {
+            name
+        }
+        
+        // Parse the identifier to extract key components
+        var parsedIdentifier: (kind: Int?, pubkey: String?)? {
+            guard let identifier = identifier else { return nil }
+            
+            let components = identifier.split(separator: ":").map(String.init)
+            guard components.count >= 3 else { return nil }
+            
+            return (
+                kind: Int(components[0]),
+                pubkey: components[1]
+            )
+        }
+    }
+
+    var clientInfo: ClientInfo? {
+        guard let tags = allTags as? [[String]] else {
+            return nil
+        }
+
+        for tag in tags where tag.count >= 2 && tag[0] == "client" {
+            return ClientInfo(
+                name: tag[1],
+                identifier: tag.count >= 3 ? tag[2] : nil,
+                relayHint: tag.count >= 4 ? tag[3] : nil,
+                metadataLoaded: false,
+                metadataEvent: nil
+            )
+        }
+        return nil
+    }
+    
+    // Load client metadata if available
+    @MainActor func loadClientMetadata() async {
+        guard let clientInfo = clientInfo, 
+            let parsed = clientInfo.parsedIdentifier,
+            let pubkey = parsed.pubkey,
+            let identifier = clientInfo.identifier,
+            let components = identifier.split(separator: ":").map(String.init).last else {
+            return
+        }
+        
+        @Dependency(\.relayService) var relayService
+        @Dependency(\.persistenceController) var persistenceController
+        
+        let filter = Filter(
+            authorKeys: [pubkey],
+            kinds: [.appMetadata],
+            dTags: [components],
+            limit: 1
+        )
+        
+        let cancellable = await relayService.fetchEvents(matching: filter)
+        
+        // Give it a moment to fetch
+        try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
+        cancellable.cancel()
+    }
+}
+
 // swiftlint:enable file_length

@@ -12,9 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Release Notes
 - Fixed: crash in Event.trackDelete(on:context:).
+- Added: Display which client app was used to post notes with "via [client name]" in the UI
+- Added: Interactive client name that navigates to client publisher's profile when clicked
 
 ### Internal Changes
 - Fixed: Contact Support event fires too often.
+- Added: Implement NIP-89 application metadata support for fetching client details
+- Added: Support extracting client info from event tags with client metadata
 - Performance improvements for RepliesLabel, AuthorLabel, NoteCardHeader, Date+Elapsed
 
 ## [1.2.1] - 2025-02-19Z
