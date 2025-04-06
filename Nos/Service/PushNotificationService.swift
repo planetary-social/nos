@@ -282,7 +282,8 @@ extension NotificationPreference: NosSegmentedPickerItem {
             return
         }
         
-        let viewModel: NotificationViewModel? = await modelContext.perform { () -> NotificationViewModel? in
+        // First, get event and create notification if needed
+        let (event, notification) = await modelContext.perform { () -> (Event?, NosNotification?) in
             guard let event = Event.find(by: eventID, context: self.modelContext),
                 let eventCreated = event.createdAt,
                 let coreDataNotification = try? NosNotification.createIfNecessary(
@@ -292,63 +293,74 @@ extension NotificationPreference: NosSegmentedPickerItem {
                     in: self.modelContext
                 ) else {
                 // We already have a notification for this event.
-                return nil
+                return (nil, nil)
             }
-            
-            defer { try? self.modelContext.save() }
             
             // Don't alert for old notifications or muted authors
             guard let eventCreated = event.createdAt, 
                 eventCreated > self.showPushNotificationsAfter,
                 event.author?.muted == false else { 
                 coreDataNotification.isRead = true
-                return nil
+                try? self.modelContext.save()
+                return (nil, nil)
             }
             
             // Don't show notifications from muted authors
             if event.author?.muted == true {
                 coreDataNotification.isRead = true
-                return nil
+                try? self.modelContext.save()
+                return (nil, nil)
             }
             
-            // Apply notification filtering based on user preference
-            switch self.notificationPreference {
-            case .allMentions:
-                // Show all notifications (default behavior)
-                break
-                
-            case .fromFollowsOnly:
-                // Only show notifications from people the user follows
-                let isFollowed = await checkIfFollowing(author: event.author)
-                if !isFollowed {
-                    coreDataNotification.isRead = true
-                    return nil
-                }
-                
-            case .friendsOfFriends:
-                // Only show notifications from people who are followed by people the user follows
-                // This is a more complex query that would require checking "friends of friends"
-                let isDirectlyFollowed = await checkIfFollowing(author: event.author)
-                
-                // If not directly followed, we need to check if they're followed by someone the user follows
-                if !isDirectlyFollowed {
-                    let isFriendOfFriend = await checkIfFriendOfFriend(author: event.author)
-                    if !isFriendOfFriend {
-                        coreDataNotification.isRead = true
-                        return nil
-                    }
-                }
-                
-            case .explicitMentionsOnly:
-                // Only show notifications for explicit mentions
-                let isExplicitlyMentioned = self.isUserExplicitlyMentioned(event: event, userPubKey: authorKey)
-                if !isExplicitlyMentioned {
-                    coreDataNotification.isRead = true
-                    return nil
-                }
+            return (event, coreDataNotification)
+        }
+        
+        // Exit early if we don't have an event or notification
+        guard let event = event, let coreDataNotification = notification else {
+            return nil
+        }
+        
+        var shouldShowNotification = true
+        
+        // Apply notification filtering based on user preference
+        switch self.notificationPreference {
+        case .allMentions:
+            // Show all notifications (default behavior)
+            break
+            
+        case .fromFollowsOnly:
+            // Only show notifications from people the user follows
+            let isFollowed = await checkIfFollowing(author: event.author)
+            shouldShowNotification = isFollowed
+            
+        case .friendsOfFriends:
+            // Only show notifications from people who are followed by people the user follows
+            let isDirectlyFollowed = await checkIfFollowing(author: event.author)
+            
+            // If not directly followed, we need to check if they're followed by someone the user follows
+            if !isDirectlyFollowed {
+                let isFriendOfFriend = await checkIfFriendOfFriend(author: event.author)
+                shouldShowNotification = isFriendOfFriend
             }
             
-            return NotificationViewModel(coreDataModel: coreDataNotification, context: self.modelContext) 
+        case .explicitMentionsOnly:
+            // Only show notifications for explicit mentions
+            let isExplicitlyMentioned = self.isUserExplicitlyMentioned(event: event, userPubKey: authorKey)
+            shouldShowNotification = isExplicitlyMentioned
+        }
+        
+        // Mark as read if filtering rules say not to show it
+        if !shouldShowNotification {
+            await modelContext.perform {
+                coreDataNotification.isRead = true
+                try? self.modelContext.save()
+            }
+            return nil
+        }
+        
+        // Otherwise, create a view model for the notification
+        let viewModel = await modelContext.perform {
+            NotificationViewModel(coreDataModel: coreDataNotification, context: self.modelContext)
         }
         
         if let viewModel {
