@@ -55,7 +55,9 @@ struct JSONEvent: Codable, Hashable, VerifiableEvent {
         
         // Add NIP-89 client tag for relevant event kinds
         var updatedTags = tags
-        let clientTag = ["client", "nos.social", "31990:0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6:nos-ios"]
+        // App metadata tag for NIP-89 client identification
+        let clientId = "31990:0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6:nos-ios"
+        let clientTag = ["client", "nos.social", clientId]
         
         // Add client tag for kinds: text, metaData, contactList, mute, followSet
         let taggableKinds: [EventKind] = [.text, .metaData, .contactList, .mute, .followSet]

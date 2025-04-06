@@ -2,7 +2,8 @@ import XCTest
 
 class JSONEventTests: XCTestCase {
     // NIP-89 client tag that should be included in supported event kinds
-    let expectedClientTag = ["client", "nos.social", "31990:0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6:nos-ios"]
+    let clientId = "31990:0f22c06eac1002684efcc68f568540e8342d1609d508bcd4312c038e6194f8b6:nos-ios"
+    let expectedClientTag = ["client", "nos.social", clientId]
     
     // Taggable event kinds that should include client tag
     let taggableKinds: [EventKind] = [.text, .metaData, .contactList, .mute, .followSet]
