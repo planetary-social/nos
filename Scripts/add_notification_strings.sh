@@ -24,22 +24,39 @@ fi
 # Create a temp file for the merged content
 TEMP_FILE=$(mktemp)
 
-# Read the source JSON into a variable
+# Read the source JSON
 SOURCE_CONTENT=$(cat "$SOURCE_FILE")
 
-# Extract the strings from the source JSON
+# Extract the strings section (everything between the first { and the last })
 SOURCE_STRINGS=$(echo "$SOURCE_CONTENT" | sed -e 's/^{//' -e 's/}$//' -e 's/,$//')
 
-# Read the destination xcstrings file
-DEST_CONTENT=$(cat "$DEST_FILE")
+# Create a simpler approach using Python to merge the JSON files
+python3 -c "
+import json
+import sys
 
-# Find the position after the first "strings" : { in the destination file
-# and add the source strings there
-MERGED_CONTENT=$(echo "$DEST_CONTENT" | sed -e 's/"strings" : {/"strings" : {\
-'"$SOURCE_STRINGS"',/')
+# Read the source strings
+with open('$SOURCE_FILE', 'r') as f:
+    source = json.load(f)
 
-# Write the merged content to the temp file
-echo "$MERGED_CONTENT" > "$TEMP_FILE"
+# Read the destination file
+with open('$DEST_FILE', 'r') as f:
+    dest = json.load(f)
+
+# Merge the strings
+for key, value in source.items():
+    dest['strings'][key] = value
+
+# Write back to a temp file
+with open('$TEMP_FILE', 'w') as f:
+    json.dump(dest, f, indent=2)
+"
+
+# Check if the Python command succeeded
+if [ $? -ne 0 ]; then
+    echo "Error merging JSON files using Python!"
+    exit 1
+fi
 
 # Back up the original file
 cp "$DEST_FILE" "${DEST_FILE}.bak"
