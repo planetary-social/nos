@@ -611,6 +611,43 @@ public class Event: NosManagedObject, VerifiableEvent {
         }
     }
     
+    // MARK: - Tag Parsing Helpers
+    
+    /// Returns the tag array from allTags, casting it to the expected type
+    var tagArray: [[String]] {
+        return self.allTags as? [[String]] ?? []
+    }
+    
+    /// Gets the value from a tag with the specified key
+    /// - Parameter key: The key (first element) of the tag to search for
+    /// - Returns: The second element of the tag if found, nil otherwise
+    func getTagValue(key: String) -> String? {
+        return tagArray.first(where: { $0.count > 1 && $0[0] == key })?[1]
+    }
+    
+    /// Gets all tags that have a specific key
+    /// - Parameter key: The key (first element) to search for in tags
+    /// - Returns: Array of tags that match the key
+    func getTags(withKey key: String) -> [[String]] {
+        return tagArray.filter { $0.count > 0 && $0[0] == key }
+    }
+    
+    /// Gets all image or video metadata tags (imeta)
+    /// - Returns: Array of imeta tags
+    func getMediaMetaTags() -> [[String]] {
+        return getTags(withKey: "imeta")
+    }
+    
+    /// Extracts a URL from a tag element that starts with "url "
+    /// - Parameter tag: The tag array to search for a URL
+    /// - Returns: URL if found and valid, nil otherwise
+    func getURLFromTag(_ tag: [String]) -> URL? {
+        if let urlString = tag.first(where: { $0.hasPrefix("url ") })?.dropFirst(4) {
+            return URL(string: String(urlString))
+        }
+        return nil
+    }
+    
     /// Returns true if this event doesn't have content. Usually this means we saw it referenced by another event
     /// but we haven't actually downloaded it yet.
     var isStub: Bool {

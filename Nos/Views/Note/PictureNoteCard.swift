@@ -22,28 +22,28 @@ struct PictureNoteCard: View {
         showsRepostCount: Bool = false,
         cornerRadius: CGFloat,
         replyAction: ((Event) -> Void)? = nil) {
-        self.note = note
-        self.showsActions = showsActions
-        self.showsLikeCount = showsLikeCount
-        self.showsRepostCount = showsRepostCount
-        self.cornerRadius = cornerRadius
-        self.replyAction = replyAction
+        
+        // Assign all properties at once using a tuple for better readability
+        (self.note, self.showsActions, self.showsLikeCount, 
+         self.showsRepostCount, self.cornerRadius, self.replyAction) = 
+        (note, showsActions, showsLikeCount, 
+         showsRepostCount, cornerRadius, replyAction)
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            if let title = (note.allTags as? [[String]])?.first(where: { $0[0] == "title" })?[1] {
+            if let title = note.getTagValue(key: "title") {
                 Text(title)
                     .font(.headline)
                     .padding(.horizontal)
                     .padding(.top, 8)
             }
-            let imageMetaTags = ((note.allTags as? [[String]]) ?? []).filter { $0[0] == "imeta" }
+            let imageMetaTags = note.getMediaMetaTags()
             if !imageMetaTags.isEmpty {
                 TabView {
                     ForEach(imageMetaTags, id: \.self) { tag in
-                        if let url = tag.first(where: { $0.hasPrefix("url ") })?.dropFirst(4) {
-                            AsyncImage(url: URL(string: String(url))) { image in
+                        if let imageURL = note.getURLFromTag(tag) {
+                            AsyncImage(url: imageURL) { image in
                                 image
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)

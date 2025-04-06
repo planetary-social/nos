@@ -11,6 +11,8 @@ struct RepliesLabel: View {
     @FetchRequest private var replies: FetchedResults<Event>
     @Dependency(\.currentUser) var currentUser
     @State private var avatars = [URL?]()
+    // Track the last time we computed avatars to avoid excessive computations
+    @State private var lastComputationTime = Date.distantPast
 
     init(repliesDisplayType: RepliesDisplayType, for note: Event) {
         self.note = note
@@ -26,6 +28,18 @@ struct RepliesLabel: View {
 
     @MainActor
     private func computeAvatars() async {
+        // Throttle computations to once per second
+        let now = Date()
+        let minInterval: TimeInterval = 1.0 // 1 second throttle
+        
+        guard now.timeIntervalSince(lastComputationTime) >= minInterval else {
+            // Skip this computation if it's too soon
+            return
+        }
+        
+        // Update last computation time
+        lastComputationTime = now
+        
         let limit = 4
         var authors = Set<Author>()
         switch repliesDisplayType {
@@ -82,7 +96,15 @@ struct RepliesLabel: View {
                 }
                 return attributed
             } catch {
-                return nil
+                // Log the error for debugging
+                Log.error("Error creating AttributedString for replies: \(error)")
+                
+                // Fallback to a simple AttributedString without markdown
+                var attributed = AttributedString(string)
+                if let range = attributed.range(of: "\(count)") {
+                    attributed[range].foregroundColor = .primaryTxt
+                }
+                return attributed
             }
         }
     }

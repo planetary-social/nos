@@ -112,7 +112,7 @@ struct NoteCard: View {
                                 cornerRadius: cornerRadius,
                                 replyAction: replyAction
                             )
-                        } else if note.kind == EventKind.picturePost.rawValue ||
+                        } else if note.kind == EventKind.video.rawValue ||
                                   note.kind == EventKind.shortVideo.rawValue
                         {
                             VideoNoteCard(

@@ -9,25 +9,25 @@ struct VideoNoteCard: View {
     let cornerRadius: CGFloat
     let replyAction: ((Event) -> Void)?
 
-    // Provide default values so they're optional when creating a VideoFirstNoteCard.
+    // Provide default values so they're optional when creating a VideoNoteCard.
     init(note: Event,
          showsActions: Bool = false,
          showsLikeCount: Bool = false,
          showsRepostCount: Bool = false,
          cornerRadius: CGFloat,
          replyAction: ((Event) -> Void)? = nil) {
-        self.note = note
-        self.showsActions = showsActions
-        self.showsLikeCount = showsLikeCount
-        self.showsRepostCount = showsRepostCount
-        self.cornerRadius = cornerRadius
-        self.replyAction = replyAction
+        
+        // Simplified initialization using tuple assignment
+        (self.note, self.showsActions, self.showsLikeCount,
+         self.showsRepostCount, self.cornerRadius, self.replyAction) =
+        (note, showsActions, showsLikeCount,
+         showsRepostCount, cornerRadius, replyAction)
     }
 
     var body: some View {
         VStack(spacing: 0) {
             // If a title tag exists, display it at the top.
-            if let title = (note.allTags as? [[String]])?.first(where: { $0[0] == "title" })?[1] {
+            if let title = note.getTagValue(key: "title") {
                 Text(title)
                     .font(.headline)
                     .padding(.horizontal)
@@ -35,17 +35,46 @@ struct VideoNoteCard: View {
             }
             
             // Extract video metadata from the imeta tags.
-            let videoMetaTags = ((note.allTags as? [[String]]) ?? []).filter { $0[0] == "imeta" }
+            let videoMetaTags = note.getMediaMetaTags()
             if !videoMetaTags.isEmpty {
                 TabView {
                     ForEach(videoMetaTags, id: \.self) { tag in
-                        // Look for the primary video URL by finding a tag string that starts with "url "
-                        if let urlString = tag.first(where: { $0.hasPrefix("url ") })?.dropFirst(4),
-                           let videoURL = URL(string: String(urlString)) {
-                            // Use VideoPlayer to display/play the video.
-                            VideoPlayer(player: AVPlayer(url: videoURL))
-                                .frame(height: 300) // Adjust this height as needed.
+                        // Use helper method to get the URL
+                        if let videoURL = note.getURLFromTag(tag) {
+                            // Use VideoPlayer to display/play the video with a better loading experience
+                            ZStack {
+                                VideoPlayer(player: AVPlayer(url: videoURL))
+                                    .frame(height: 300)
+                                    .cornerRadius(cornerRadius)
+                                    .overlay(
+                                        // Show loading indicator until video loads
+                                        Rectangle()
+                                            .fill(Color.clear)
+                                            .background(
+                                                ProgressView()
+                                                    .scaleEffect(1.5)
+                                                    .progressViewStyle(CircularProgressViewStyle())
+                                            )
+                                            .opacity(0.5)
+                                            .allowsHitTesting(false)
+                                    )
+                            }
+                        } else {
+                            // Fallback if video URL is invalid or missing
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.2))
+                                .frame(height: 300)
                                 .cornerRadius(cornerRadius)
+                                .overlay(
+                                    VStack(spacing: 12) {
+                                        Image(systemName: "video.slash")
+                                            .font(.largeTitle)
+                                            .foregroundColor(.secondary)
+                                        Text("Video unavailable")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                )
                         }
                     }
                 }
