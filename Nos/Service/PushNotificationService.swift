@@ -22,11 +22,11 @@ public enum NotificationPreference: String, CaseIterable, Identifiable {
     public var description: String {
         switch self {
         case .allMentions:
-            return String(localized: "All replies and mentions")
+            return String(localized: "All Mentions")
         case .fromFollowsOnly:
-            return String(localized: "Only from people I follow")
+            return String(localized: "Only People You Follow")
         case .friendsOfFriends:
-            return String(localized: "Only from my network")
+            return String(localized: "Your Extended Network")
         }
     }
 }
