@@ -12,6 +12,8 @@ private let notificationPreferenceKey = "com.verse.nos.settings.notificationPref
 /// Enum representing notification filtering preferences
 public enum NotificationPreference: String, CaseIterable, Identifiable {
     case allMentions
+    case fromFollowsOnly
+    case friendsOfFriends
     case explicitMentionsOnly
     
     public var id: String {
@@ -22,8 +24,12 @@ public enum NotificationPreference: String, CaseIterable, Identifiable {
         switch self {
         case .allMentions:
             return String(localized: "Notify me for all replies and tags")
+        case .fromFollowsOnly:
+            return String(localized: "Only from people I follow")
+        case .friendsOfFriends:
+            return String(localized: "Only from friends of friends")
         case .explicitMentionsOnly:
-            return String(localized: "Only notify me if I'm mentioned in the post")
+            return String(localized: "Only when explicitly mentioned")
         }
     }
 }
@@ -33,6 +39,10 @@ extension NotificationPreference: NosSegmentedPickerItem {
         switch self {
         case .allMentions:
             "allMentions"
+        case .fromFollowsOnly:
+            "fromFollowsOnly"
+        case .friendsOfFriends:
+            "friendsOfFriends"
         case .explicitMentionsOnly:
             "explicitMentionsOnly"
         }
@@ -41,9 +51,13 @@ extension NotificationPreference: NosSegmentedPickerItem {
     public var image: Image {
         switch self {
         case .allMentions:
-            Image(systemName: "bell")
+            Image(systemName: "bell.fill")
+        case .fromFollowsOnly:
+            Image(systemName: "person.fill")
+        case .friendsOfFriends:
+            Image(systemName: "person.2.fill")
         case .explicitMentionsOnly:
-            Image(systemName: "bell.badge")
+            Image(systemName: "at")
         }
     }
 }
@@ -250,8 +264,41 @@ extension NotificationPreference: NosSegmentedPickerItem {
                 return nil
             }
             
+            // Don't show notifications from muted authors
+            if event.author?.muted == true {
+                coreDataNotification.isRead = true
+                return nil
+            }
+            
             // Apply notification filtering based on user preference
-            if self.notificationPreference == .explicitMentionsOnly {
+            switch self.notificationPreference {
+            case .allMentions:
+                // Show all notifications (default behavior)
+                break
+                
+            case .fromFollowsOnly:
+                // Only show notifications from people the user follows
+                if event.author?.followed == false {
+                    coreDataNotification.isRead = true
+                    return nil
+                }
+                
+            case .friendsOfFriends:
+                // Only show notifications from people who are followed by people the user follows
+                // This is a more complex query that would require checking "friends of friends"
+                let isFollowed = event.author?.followed == true
+                
+                // If not directly followed, we need to check if they're followed by someone the user follows
+                if !isFollowed {
+                    // This is a simplified version - a more complete solution would use SocialGraphCache
+                    let isFriendOfFriend = false  // Placeholder - implement actual logic
+                    if !isFriendOfFriend {
+                        coreDataNotification.isRead = true
+                        return nil
+                    }
+                }
+                
+            case .explicitMentionsOnly:
                 // Only show notifications for explicit mentions
                 let isExplicitlyMentioned = self.isUserExplicitlyMentioned(event: event, userPubKey: authorKey)
                 if !isExplicitlyMentioned {

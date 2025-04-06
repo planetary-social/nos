@@ -9,10 +9,44 @@ struct NotificationPreferenceView: View {
     
     var body: some View {
         VStack {
-            NosSegmentedPicker(
-                items: NotificationPreference.allCases,
-                selectedItem: $selectedPreference
-            )
+            // Using a VStack for vertical arrangement for better readability
+            VStack(spacing: 12) {
+                ForEach(NotificationPreference.allCases) { preference in
+                    Button {
+                        selectedPreference = preference
+                    } label: {
+                        HStack {
+                            preference.image
+                                .foregroundColor(selectedPreference == preference ? .accentColor : .secondaryTxt)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(preference.titleKey)
+                                    .font(.subheadline.weight(.medium))
+                                    .foregroundColor(selectedPreference == preference ? .primaryTxt : .secondaryTxt)
+                                
+                                Text(preference.description)
+                                    .font(.caption)
+                                    .foregroundColor(.secondaryTxt)
+                                    .lineLimit(1)
+                            }
+                            
+                            Spacer()
+                            
+                            if selectedPreference == preference {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.accentColor)
+                            }
+                        }
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(selectedPreference == preference ? Color.accentColor.opacity(0.1) : Color.clear)
+                        )
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+            }
             
             HStack {
                 Text("notificationSettingsDescription")
@@ -20,6 +54,7 @@ struct NotificationPreferenceView: View {
                     .font(.footnote)
                 Spacer()
             }
+            .padding(.top, 8)
         }
         .onAppear {
             // Set the initial state

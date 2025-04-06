@@ -9,6 +9,26 @@
       }
     }
   },
+  "fromFollowsOnly": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "From Follows Only"
+        }
+      }
+    }
+  },
+  "friendsOfFriends": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Friends of Friends"
+        }
+      }
+    }
+  },
   "explicitMentionsOnly": {
     "localizations": {
       "en": {
