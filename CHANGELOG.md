@@ -12,9 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Release Notes
 - Fixed: crash in Event.trackDelete(on:context:).
+- Added: Notification preference settings to control who can notify you
+- Added: Option to get notifications from "Anyone" (including people outside your network)
+- Added: Thread reply notification toggle
 
 ### Internal Changes
 - Fixed: Contact Support event fires too often.
+- Fixed: Notification filtering to properly respect user preferences
 - Performance improvements for RepliesLabel, AuthorLabel, NoteCardHeader, Date+Elapsed
 
 ## [1.2.1] - 2025-02-19Z

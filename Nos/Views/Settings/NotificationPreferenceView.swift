@@ -49,6 +49,12 @@ struct NotificationPreferenceView: View {
                                     Text(preference.description)
                                         .font(.subheadline.weight(.medium))
                                         .foregroundColor(selectedPreference == preference ? .primaryTxt : .secondaryTxt)
+                                    
+                                    if preference == .allMentions {
+                                        Text("includingOutsideNetwork")
+                                            .font(.caption)
+                                            .foregroundColor(.secondaryTxt)
+                                    }
                                 }
                                 
                                 Spacer()

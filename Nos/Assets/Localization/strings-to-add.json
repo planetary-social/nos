@@ -9,6 +9,16 @@
       }
     }
   },
+  "includingOutsideNetwork": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Including people outside your network"
+        }
+      }
+    }
+  },
   "fromFollowsOnly": {
     "localizations": {
       "en": {

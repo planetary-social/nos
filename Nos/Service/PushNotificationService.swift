@@ -86,6 +86,7 @@ extension NotificationPreference: NosSegmentedPickerItem {
         get {
             guard let savedValue = userDefaults.string(forKey: notificationPreferenceKey),
                   let preference = NotificationPreference(rawValue: savedValue) else {
+                // Ensure "Anyone" (.allMentions) is the default preference
                 return .allMentions
             }
             return preference
@@ -242,21 +243,84 @@ extension NotificationPreference: NosSegmentedPickerItem {
         return false
     }
     
+    /// Debug method to help diagnose notification filtering issues
+    func debugFilteringIssues(event: Event, userPubKey: String) -> String {
+        var reasons = [String]()
+        var diagnostics = [String]()
+        
+        // Add basic diagnostics
+        if let authorKey = event.author?.hexadecimalPublicKey {
+            diagnostics.append("Author: \(authorKey.prefix(8))")
+        }
+        diagnostics.append("Notification preference: \(notificationPreference.description)")
+        diagnostics.append("Thread replies enabled: \(notifyOnThreadReplies)")
+        
+        // Check author muted status
+        if event.author?.muted == true {
+            reasons.append("Author is muted")
+        }
+        
+        // Check following status directly using our function
+        if notificationPreference == .fromFollowsOnly {
+            // We can't easily do async calls in a sync function, so use a simplified check
+            let directlyFollowed = event.author?.follows.contains { 
+                $0.destination?.hexadecimalPublicKey == userPubKey 
+            } ?? false
+            
+            diagnostics.append("Author is followed: \(directlyFollowed)")
+            
+            if !directlyFollowed {
+                reasons.append("Author is not followed by user (fromFollowsOnly setting)")
+            }
+        }
+        
+        // Check network status
+        if notificationPreference == .friendsOfFriends {
+            // We can't easily do async calls in a sync function, so just show as a placeholder
+            let placeholderMessage = "Requires async check (not available in debug view)"
+            diagnostics.append("Author is in network: \(placeholderMessage)")
+            
+            // We don't know for sure, so just add as a potential reason
+            reasons.append("Author may not be in user's network (friendsOfFriends setting)")
+        }
+        
+        // Check thread replies setting
+        let isThreadReply = currentAuthor != nil ? event.isReply(to: currentAuthor!) : false
+        let isExplicitlyMentioned = self.isUserExplicitlyMentioned(event: event, userPubKey: userPubKey)
+        
+        diagnostics.append("Is thread reply: \(isThreadReply)")
+        diagnostics.append("Is explicitly mentioned: \(isExplicitlyMentioned)")
+        
+        if isThreadReply && !isExplicitlyMentioned && !notifyOnThreadReplies {
+            reasons.append("Thread reply with no explicit mention (thread replies disabled)")
+        }
+        
+        let diagnosticInfo = diagnostics.joined(separator: ", ")
+        return reasons.isEmpty 
+            ? "No filtering issues detected. Diagnostics: \(diagnosticInfo)" 
+            : "Filtering issues: \(reasons.joined(separator: ", ")). Diagnostics: \(diagnosticInfo)"
+    }
+    
     /// Checks if the current user follows the given author
     @MainActor private func checkIfFollowing(author: Author?) -> Bool {
         guard let currentAuthor = currentAuthor,
               let authorToCheck = author,
               let authorKey = authorToCheck.hexadecimalPublicKey else {
+            Log.debug("checkIfFollowing: Missing current author or author to check")
             return false
         }
         
         // Check if the author is in the current user's follows
         for follow in currentAuthor.follows {
-            if follow.destination?.hexadecimalPublicKey == authorKey {
+            if let destination = follow.destination, 
+               let destinationKey = destination.hexadecimalPublicKey,
+               destinationKey == authorKey {
+                Log.debug("Author \(authorKey.prefix(8)) is followed by current user")
                 return true
             }
         }
         
+        Log.debug("Author \(authorKey.prefix(8)) is NOT followed by current user")
         return false
     }
     
@@ -265,21 +329,33 @@ extension NotificationPreference: NosSegmentedPickerItem {
         guard let currentAuthor = currentAuthor,
               let authorToCheck = author,
               let authorKey = authorToCheck.hexadecimalPublicKey else {
+            Log.debug("checkIfFriendOfFriend: Missing current author or author to check")
             return false
+        }
+        
+        // First check if directly followed (optimization)
+        if checkIfFollowing(author: authorToCheck) {
+            return true
         }
         
         // Get list of people the current user follows
         let followedByUser = currentAuthor.follows.compactMap { $0.destination }
         
+        Log.debug("Checking \(followedByUser.count) followed authors for friend-of-friend status")
+        
         // For each person the user follows, check if they follow the target author
         for followedAuthor in followedByUser {
             for follow in followedAuthor.follows {
-                if follow.destination?.hexadecimalPublicKey == authorKey {
+                if let destination = follow.destination,
+                   let destinationKey = destination.hexadecimalPublicKey,
+                   destinationKey == authorKey {
+                    Log.debug("Author \(authorKey.prefix(8)) is followed by someone the user follows")
                     return true
                 }
             }
         }
         
+        Log.debug("Author \(authorKey.prefix(8)) is NOT in user's network")
         return false
     }
     
@@ -287,6 +363,7 @@ extension NotificationPreference: NosSegmentedPickerItem {
     /// NosNotification record in the database.
     @MainActor private func showNotificationIfNecessary(for eventID: RawEventID) async {
         guard let authorKey = currentAuthor?.hexadecimalPublicKey else {
+            Log.debug("Cannot show notification: no current author")
             return
         }
         
@@ -300,14 +377,14 @@ extension NotificationPreference: NosSegmentedPickerItem {
                     authorKey: authorKey,
                     in: self.modelContext
                 ) else {
-                // We already have a notification for this event.
+                // We already have a notification for this event or couldn't create one
                 return (nil, nil)
             }
             
-            // Don't alert for old notifications or muted authors
+            // Don't alert for old notifications
             guard let eventCreated = event.createdAt, 
-                eventCreated > self.showPushNotificationsAfter,
-                event.author?.muted == false else { 
+                  eventCreated > self.showPushNotificationsAfter else { 
+                Log.debug("Notification for event is too old")
                 coreDataNotification.isRead = true
                 try? self.modelContext.save()
                 return (nil, nil)
@@ -315,6 +392,7 @@ extension NotificationPreference: NosSegmentedPickerItem {
             
             // Don't show notifications from muted authors
             if event.author?.muted == true {
+                Log.debug("Notification author is muted")
                 coreDataNotification.isRead = true
                 try? self.modelContext.save()
                 return (nil, nil)
@@ -329,27 +407,33 @@ extension NotificationPreference: NosSegmentedPickerItem {
             return
         }
         
+        Log.debug("Processing notification with preference: \(notificationPreference.description)")
+        
         var shouldShowNotification = true
         
         // First, check if it's a thread reply without an explicit mention
         let isThreadReply = currentAuthor != nil ? event.isReply(to: currentAuthor!) : false
         let isExplicitlyMentioned = self.isUserExplicitlyMentioned(event: event, userPubKey: authorKey)
         
+        Log.debug("Notification: thread reply: \(isThreadReply), explicit mention: \(isExplicitlyMentioned)")
+        
         // If it's just a thread reply with no explicit mention, apply the thread replies preference
         if isThreadReply && !isExplicitlyMentioned {
             shouldShowNotification = self.notifyOnThreadReplies
+            Log.debug("Thread reply notification - show: \(shouldShowNotification)")
         }
         
         // Then apply source filtering based on user preference
         switch self.notificationPreference {
         case .allMentions:
             // Keep shouldShowNotification as is - we already determined if it's a thread reply we should show
-            break
+            Log.debug("Using 'Anyone' filter - keeping current decision: \(shouldShowNotification)")
             
         case .fromFollowsOnly:
             // Only show notifications from people the user follows
             let isFollowed = await checkIfFollowing(author: event.author)
             shouldShowNotification = shouldShowNotification && isFollowed
+            Log.debug("Using 'People I Follow' filter - author followed: \(isFollowed), show: \(shouldShowNotification)")
             
         case .friendsOfFriends:
             // Only show notifications from people who are followed by people the user follows
@@ -359,11 +443,15 @@ extension NotificationPreference: NosSegmentedPickerItem {
             if !isDirectlyFollowed {
                 let isFriendOfFriend = await checkIfFriendOfFriend(author: event.author)
                 shouldShowNotification = shouldShowNotification && (isDirectlyFollowed || isFriendOfFriend)
+                Log.debug("Using 'My Network' filter - in network: \(isDirectlyFollowed || isFriendOfFriend), show: \(shouldShowNotification)")
+            } else {
+                Log.debug("Using 'My Network' filter - directly followed, show: \(shouldShowNotification)")
             }
         }
         
         // Mark as read if filtering rules say not to show it
         if !shouldShowNotification {
+            Log.debug("Notification filtered out by preferences - marking as read")
             await modelContext.perform {
                 coreDataNotification.isRead = true
                 try? self.modelContext.save()
