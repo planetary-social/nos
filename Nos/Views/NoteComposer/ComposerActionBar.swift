@@ -17,11 +17,15 @@ struct ComposerActionBar: View {
 
     /// Turns on and off a Preview switch.
     @Binding var showPreview: Bool
+    
+    /// The kind of post to create (text, picture, video, etc.)
+    @Binding var postKind: PostKind
 
     @Dependency(\.fileStorageAPIClient) private var fileStorageAPIClient
 
     private enum SubMenu {
         case expirationDate
+        case postKind
     }
 
     @State private var subMenu: SubMenu?
@@ -58,6 +62,20 @@ struct ComposerActionBar: View {
                             .padding(10)
 
                         ExpirationTimePicker(expirationTime: $expirationTime)
+                            .padding(.vertical, 12)
+                    }
+                }
+            case .postKind:
+                backArrow
+                ScrollView(.horizontal) {
+                    HStack {
+                        Text("postKind")
+                            .font(.clarityRegular(.caption))
+                            .foregroundColor(.secondaryTxt)
+                            .transition(.move(edge: .trailing))
+                            .padding(10)
+                        
+                        PostKindSelector(selectedKind: $postKind)
                             .padding(.vertical, 12)
                     }
                 }
@@ -101,10 +119,23 @@ struct ComposerActionBar: View {
                 attachMediaView
                 expirationTimeView
                 mentionButton
+                postKindView
             }
             Spacer()
             previewToggle
         }
+    }
+    
+    /// Post Kind Selector View
+    private var postKindView: some View {
+        Button {
+            subMenu = .postKind
+        } label: {
+            Image(systemName: postKind.icon)
+                .foregroundColor(.secondaryTxt)
+                .frame(minWidth: 44, minHeight: 44)
+        }
+        .accessibilityLabel("postKind")
     }
 
     /// Attach Media View
@@ -249,6 +280,7 @@ struct ComposerActionBar_Previews: PreviewProvider {
     @State static var emptyExpirationTime: TimeInterval?
     @State static var setExpirationTime: TimeInterval? = 60 * 60
     @State static var showPreview = false
+    @State static var postKind = PostKind.textNote
     
     static var previews: some View {
         VStack {
@@ -257,14 +289,16 @@ struct ComposerActionBar_Previews: PreviewProvider {
                 editingController: $controller, 
                 expirationTime: $emptyExpirationTime, 
                 isUploadingImage: .constant(false),
-                showPreview: $showPreview
+                showPreview: $showPreview,
+                postKind: $postKind
             )
             Spacer()
             ComposerActionBar(
                 editingController: $controller, 
                 expirationTime: $setExpirationTime, 
                 isUploadingImage: .constant(false),
-                showPreview: $showPreview
+                showPreview: $showPreview,
+                postKind: $postKind
             )
             Spacer()
         }

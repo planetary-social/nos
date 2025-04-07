@@ -38,6 +38,12 @@ struct NoteComposer: View {
 
     /// Whether we're currently uploading an image or not.
     @State private var isUploadingImage = false
+    
+    /// The kind of post being created
+    @State private var postKind: PostKind = .textNote
+    
+    /// Title for media posts (Kind 20, 21, 22)
+    @State private var mediaTitle: String = ""
 
     private let initialContents: String?
     @Binding var isPresented: Bool
@@ -88,6 +94,19 @@ struct NoteComposer: View {
                                     if let replyToNote {
                                         ReplyPreview(note: replyToNote)
                                     }
+                                    
+                                    // Show title field for media posts
+                                    if postKind != .textNote {
+                                        TextField("Title", text: $mediaTitle)
+                                            .font(.clarity(.medium, textStyle: .title3))
+                                            .padding()
+                                            .background(Color.secondaryBg.opacity(0.3))
+                                            .cornerRadius(8)
+                                            .padding(.horizontal, 10)
+                                            .padding(.top, 10)
+                                            .disabled(showNotePreview)
+                                    }
+                                    
                                     NoteTextEditor(
                                         controller: $editingController,
                                         minHeight: minimumEditorHeight,
@@ -191,7 +210,7 @@ struct NoteComposer: View {
                 }
             }
             .background(Color.appBg)
-            .navigationBarTitle("newNote", displayMode: .inline)
+            .navigationBarTitle(navigationTitle, displayMode: .inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
             .toolbar {
@@ -236,7 +255,8 @@ struct NoteComposer: View {
             editingController: $editingController,
             expirationTime: $expirationTime,
             isUploadingImage: $isUploadingImage,
-            showPreview: $showNotePreview
+            showPreview: $showNotePreview,
+            postKind: $postKind
         )
     }
 
@@ -322,7 +342,25 @@ struct NoteComposer: View {
     }
 
     private var isPostEnabled: Bool {
-        !isUploadingImage && (!editingController.isEmpty || quotedNote?.bech32NoteID.isEmptyOrNil == false)
+        // For media posts, require a title
+        if postKind != .textNote && mediaTitle.isEmpty {
+            return false
+        }
+        return !isUploadingImage && (!editingController.isEmpty || quotedNote?.bech32NoteID.isEmptyOrNil == false)
+    }
+    
+    /// Dynamic navigation title based on post kind
+    private var navigationTitle: String {
+        switch postKind {
+        case .textNote:
+            return String(localized: "newNote")
+        case .picturePost:
+            return String(localized: "newPicturePost")
+        case .videoPost:
+            return String(localized: "newVideoPost")
+        case .shortVideo:
+            return String(localized: "newShortVideo")
+        }
     }
 
     private var postText: AttributedString {
@@ -340,13 +378,117 @@ struct NoteComposer: View {
         guard let keyPair = currentUser.keyPair else {
             throw CurrentUserError.keyPairNotFound
         }
-        return JSONEvent(
-            attributedText: attributedString,
-            noteParser: noteParser,
-            expirationTime: expirationTime,
-            replyToNote: replyToNote,
-            keyPair: keyPair
-        )
+        
+        // Extract media URLs from content
+        let (content, tags) = noteParser.parse(attributedText: attributedString)
+        let mediaURLs = extractMediaURLs(from: content)
+        
+        switch postKind {
+        case .textNote:
+            // Standard text note
+            return JSONEvent(
+                attributedText: attributedString,
+                noteParser: noteParser,
+                expirationTime: expirationTime,
+                replyToNote: replyToNote,
+                keyPair: keyPair
+            )
+        case .picturePost:
+            // Picture post (Kind 20)
+            let imageMetadata = createImageMetadata(from: mediaURLs)
+            return JSONEvent.picturePost(
+                pubKey: keyPair.publicKeyHex,
+                title: mediaTitle.isEmpty ? "Untitled" : mediaTitle,
+                description: content,
+                imageMetadata: imageMetadata,
+                tags: tags
+            )
+        case .videoPost, .shortVideo:
+            // Video post (Kind 21/22)
+            let videoMetadata = createVideoMetadata(from: mediaURLs)
+            return JSONEvent.videoPost(
+                pubKey: keyPair.publicKeyHex,
+                title: mediaTitle.isEmpty ? "Untitled" : mediaTitle,
+                description: content,
+                isShortForm: postKind == .shortVideo,
+                publishedAt: Int(Date.now.timeIntervalSince1970),
+                duration: nil, // We don't have access to video duration
+                videoMetadata: videoMetadata,
+                contentWarning: nil,
+                altText: nil,
+                tags: tags
+            )
+        }
+    }
+    
+    /// Extracts media URLs from content text
+    private func extractMediaURLs(from content: String) -> [URL] {
+        let urlDetector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        guard let urlDetector = urlDetector else { return [] }
+        
+        let matches = urlDetector.matches(in: content, options: [], range: NSRange(location: 0, length: content.utf16.count))
+        
+        return matches.compactMap { match -> URL? in
+            if let url = URL(string: (content as NSString).substring(with: match.range)) {
+                // Check if it's likely a media URL (image or video)
+                let pathExt = url.pathExtension.lowercased()
+                let imageExts = ["jpg", "jpeg", "png", "gif", "webp"]
+                let videoExts = ["mp4", "mov", "m4v", "webm", "mkv"]
+                
+                if imageExts.contains(pathExt) || videoExts.contains(pathExt) {
+                    return url
+                }
+            }
+            return nil
+        }
+    }
+    
+    /// Creates image metadata tags for NIP-68 picture posts
+    private func createImageMetadata(from urls: [URL]) -> [[String]] {
+        return urls.map { url -> [String] in
+            let pathExt = url.pathExtension.lowercased()
+            let mimeType: String
+            
+            switch pathExt {
+            case "jpg", "jpeg":
+                mimeType = "image/jpeg"
+            case "png":
+                mimeType = "image/png"
+            case "gif":
+                mimeType = "image/gif"
+            case "webp":
+                mimeType = "image/webp"
+            default:
+                mimeType = "image/\(pathExt)"
+            }
+            
+            return ["imeta", "url \(url.absoluteString)", "m \(mimeType)"]
+        }
+    }
+    
+    /// Creates video metadata tags for NIP-71 video posts
+    private func createVideoMetadata(from urls: [URL]) -> [[String]] {
+        return urls.map { url -> [String] in
+            let pathExt = url.pathExtension.lowercased()
+            let mimeType: String
+            
+            switch pathExt {
+            case "mp4":
+                mimeType = "video/mp4"
+            case "mov":
+                mimeType = "video/quicktime"
+            case "m4v":
+                mimeType = "video/x-m4v"
+            case "webm":
+                mimeType = "video/webm"
+            case "mkv":
+                mimeType = "video/x-matroska"
+            default:
+                mimeType = "video/\(pathExt)"
+            }
+            
+            return ["imeta", "url \(url.absoluteString)", "m \(mimeType)"]
+        }
     }
 
     @MainActor private func publishPost() async {
