@@ -615,27 +615,27 @@ public class Event: NosManagedObject, VerifiableEvent {
     
     /// Returns the tag array from allTags, casting it to the expected type
     var tagArray: [[String]] {
-        return self.allTags as? [[String]] ?? []
+        self.allTags as? [[String]] ?? []
     }
     
     /// Gets the value from a tag with the specified key
     /// - Parameter key: The key (first element) of the tag to search for
     /// - Returns: The second element of the tag if found, nil otherwise
     func getTagValue(key: String) -> String? {
-        return tagArray.first(where: { $0.count > 1 && $0[0] == key })?[1]
+        tagArray.first(where: { $0.count > 1 && $0[0] == key })?[1]
     }
     
     /// Gets all tags that have a specific key
     /// - Parameter key: The key (first element) to search for in tags
     /// - Returns: Array of tags that match the key
     func getTags(withKey key: String) -> [[String]] {
-        return tagArray.filter { $0.count > 0 && $0[0] == key }
+        tagArray.filter { $0.count > 0 && $0[0] == key }
     }
     
     /// Gets all image or video metadata tags (imeta)
     /// - Returns: Array of imeta tags
     func getMediaMetaTags() -> [[String]] {
-        return getTags(withKey: "imeta")
+        getTags(withKey: "imeta")
     }
     
     /// Gets the MIME type from an imeta tag if available
