@@ -320,7 +320,7 @@ struct VideoPlayerView: View {
                                 .font(.largeTitle)
                                 .foregroundColor(.orange)
                             
-                            if let nsError = error as NSError {
+                            if let nsError = error as? NSError {
                                 Text(nsError.localizedDescription)
                                     .font(.caption)
                                     .foregroundColor(.secondary)
