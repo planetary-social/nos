@@ -1,5 +1,6 @@
 import Dependencies
 import SwiftUI
+import Logger
 
 /// Presents an overview of the reply activity for the specified note, utilizing various
 /// styles listed in `RepliesDisplayType`.
