@@ -638,13 +638,102 @@ public class Event: NosManagedObject, VerifiableEvent {
         return getTags(withKey: "imeta")
     }
     
-    /// Extracts a URL from a tag element that starts with "url "
+    /// Gets the MIME type from an imeta tag if available
+    /// - Parameter tag: The imeta tag to search for MIME type
+    /// - Returns: MIME type string if found, nil otherwise
+    func getMimeType(from tag: [String]) -> String? {
+        // Look for "m " prefix which indicates MIME type
+        if let mimeElement = tag.first(where: { $0.hasPrefix("m ") }) {
+            return String(mimeElement.dropFirst(2))
+        }
+        
+        // Look for common MIME type strings in the tag
+        for element in tag {
+            if element.contains("video/") || element.contains("audio/") || element.contains("image/") {
+                return element
+            }
+        }
+        
+        // Try to infer from URL extension
+        if let url = getURLFromTag(tag) {
+            let pathExtension = url.pathExtension.lowercased()
+            
+            // Check for common video formats
+            let videoExtensions = ["mp4", "mov", "m4v", "avi", "webm", "mkv", "flv", "wmv"]
+            if videoExtensions.contains(pathExtension) {
+                return "video/\(pathExtension)"
+            }
+            
+            // Check for common image formats
+            let imageExtensions = ["jpg", "jpeg", "png", "gif", "webp", "heic", "heif", "avif"]
+            if imageExtensions.contains(pathExtension) {
+                return pathExtension == "jpg" ? "image/jpeg" : "image/\(pathExtension)"
+            }
+            
+            // Check for common audio formats
+            let audioExtensions = ["mp3", "wav", "aac", "m4a", "ogg", "flac"]
+            if audioExtensions.contains(pathExtension) {
+                return "audio/\(pathExtension)"
+            }
+        }
+        
+        return nil
+    }
+    
+    /// Checks if an imeta tag refers to a video
+    /// - Parameter tag: The imeta tag to check
+    /// - Returns: True if the tag appears to be a video
+    func isVideoTag(_ tag: [String]) -> Bool {
+        // Check for video MIME type
+        if let mimeType = getMimeType(from: tag), mimeType.contains("video/") {
+            return true
+        }
+        
+        // Check URL extension
+        if let url = getURLFromTag(tag) {
+            let videoExtensions = ["mp4", "mov", "m4v", "avi", "webm", "mkv", "flv", "wmv"]
+            return videoExtensions.contains(url.pathExtension.lowercased())
+        }
+        
+        return false
+    }
+    
+    /// Extracts a URL from a tag element that starts with "url " or contains a URL
     /// - Parameter tag: The tag array to search for a URL
     /// - Returns: URL if found and valid, nil otherwise
     func getURLFromTag(_ tag: [String]) -> URL? {
+        // First try to find elements specifically prefixed with "url "
         if let urlString = tag.first(where: { $0.hasPrefix("url ") })?.dropFirst(4) {
-            return URL(string: String(urlString))
+            if let url = URL(string: String(urlString)) {
+                return url
+            }
         }
+        
+        // If that fails, see if any element is a valid URL
+        for element in tag where element != "imeta" {
+            // Try the element as is
+            if let url = URL(string: element) {
+                return url
+            }
+            
+            // Try adding https:// prefix if it's missing
+            if !element.hasPrefix("http://") && !element.hasPrefix("https://") {
+                if let url = URL(string: "https://" + element) {
+                    return url
+                }
+            }
+        }
+        
+        // Check if there's a URL in the content attribute
+        let urlDetector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        for element in tag where element != "imeta" {
+            if let urlDetector = urlDetector,
+               let match = urlDetector.firstMatch(in: element, options: [], range: NSRange(location: 0, length: element.utf16.count)),
+               let url = URL(string: (element as NSString).substring(with: match.range)) {
+                return url
+            }
+        }
+        
         return nil
     }
     
