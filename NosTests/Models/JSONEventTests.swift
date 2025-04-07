@@ -1,6 +1,111 @@
 import XCTest
 
 class JSONEventTests: XCTestCase {
+    
+    // MARK: - NIP-68 and NIP-71 Tests
+    
+    func test_picturePost() {
+        // Arrange
+        let pubKey = "a1b2c3d4e5f6"
+        let title = "Mountain Landscape"
+        let description = "A beautiful mountain landscape I captured last weekend."
+        let imageMetadata = [
+            ["imeta", "url https://example.com/image1.jpg", "m image/jpeg", "x 1200", "y 800"],
+            ["imeta", "url https://example.com/image2.jpg", "m image/jpeg", "x 800", "y 600"]
+        ]
+        let additionalTags = [
+            ["location", "Mountain Range"],
+            ["alt", "Mountains with snow at sunset"]
+        ]
+        
+        // Act
+        let event = JSONEvent.picturePost(
+            pubKey: pubKey,
+            title: title,
+            description: description,
+            imageMetadata: imageMetadata,
+            tags: additionalTags
+        )
+        
+        // Assert
+        XCTAssertEqual(event.kind, .picturePost)
+        XCTAssertEqual(event.pubKey, pubKey)
+        XCTAssertEqual(event.content, description)
+        
+        // Test the title tag is first
+        XCTAssertEqual(event.tags.first, ["title", title])
+        
+        // Test image metadata is included
+        XCTAssert(event.tags.contains(imageMetadata[0]))
+        XCTAssert(event.tags.contains(imageMetadata[1]))
+        
+        // Test additional tags are included
+        XCTAssert(event.tags.contains(additionalTags[0]))
+        XCTAssert(event.tags.contains(additionalTags[1]))
+    }
+    
+    func test_videoPost() {
+        // Arrange
+        let pubKey = "a1b2c3d4e5f6"
+        let title = "Mountain Timelapse"
+        let description = "A timelapse of clouds moving over mountains."
+        let duration = 120 // 2 minutes
+        let publishedAt = Int(Date().timeIntervalSince1970) - 3600 // 1 hour ago
+        let videoMetadata = [
+            ["imeta", "url https://example.com/video.mp4", "m video/mp4", "x 1920", "y 1080"],
+            ["imeta", "url https://example.com/thumbnail.jpg", "m image/jpeg", "thumb"]
+        ]
+        let contentWarning = "Fast moving clouds"
+        let altText = "Timelapse video of clouds moving over mountain peaks"
+        let additionalTags = [["hashtag", "nature"], ["hashtag", "mountains"]]
+        
+        // Test normal video (kind 21)
+        let normalVideo = JSONEvent.videoPost(
+            pubKey: pubKey,
+            title: title,
+            description: description,
+            isShortForm: false,
+            publishedAt: publishedAt,
+            duration: duration,
+            videoMetadata: videoMetadata,
+            contentWarning: contentWarning,
+            altText: altText,
+            tags: additionalTags
+        )
+        
+        // Assert normal video
+        XCTAssertEqual(normalVideo.kind, .video)
+        XCTAssertEqual(normalVideo.pubKey, pubKey)
+        XCTAssertEqual(normalVideo.content, description)
+        
+        // Verify tags
+        XCTAssert(normalVideo.tags.contains(["title", title]))
+        XCTAssert(normalVideo.tags.contains(["published_at", String(publishedAt)]))
+        XCTAssert(normalVideo.tags.contains(["duration", String(duration)]))
+        XCTAssert(normalVideo.tags.contains(videoMetadata[0]))
+        XCTAssert(normalVideo.tags.contains(videoMetadata[1]))
+        XCTAssert(normalVideo.tags.contains(["content-warning", contentWarning]))
+        XCTAssert(normalVideo.tags.contains(["alt", altText]))
+        XCTAssert(normalVideo.tags.contains(additionalTags[0]))
+        XCTAssert(normalVideo.tags.contains(additionalTags[1]))
+        
+        // Test short-form video (kind 22)
+        let shortVideo = JSONEvent.videoPost(
+            pubKey: pubKey,
+            title: title,
+            description: description,
+            isShortForm: true,
+            publishedAt: publishedAt,
+            duration: duration,
+            videoMetadata: videoMetadata,
+            contentWarning: contentWarning,
+            altText: altText,
+            tags: additionalTags
+        )
+        
+        // Assert short video
+        XCTAssertEqual(shortVideo.kind, .shortVideo)
+    }
     func test_replaceableID() throws {
         // Arrange
         let replaceableID = "TGnBRh9-b1jrqSJ-ByWQx"
