@@ -409,7 +409,7 @@ struct MacadamiaWalletView: View {
             .padding(.vertical, 8)
             .background(
                 selectedTab == index ? 
-                    Color.gray.opacity(0.1).cornerRadius(8) : 
+                    RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.1)) : 
                     Color.clear
             )
         }
