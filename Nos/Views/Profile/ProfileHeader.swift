@@ -315,7 +315,7 @@ struct WalletButtonPlaceholder: View {
                 
                 Image(systemName: "creditcard.fill")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.accentColor)
+                    .foregroundColor(Color.purple) // Use a color from app's gradient
             }
         }
         .sheet(isPresented: $showingWallet) {
@@ -365,7 +365,7 @@ struct WalletSheetWrapper: View {
                     } label: {
                         Image(systemName: "xmark")
                             .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.primaryTxt)
+                            .foregroundColor(.black)
                     }
                 }
             }
@@ -379,16 +379,16 @@ struct WalletSheetWrapper: View {
             VStack {
                 Text("Balance")
                     .font(.clarity(.regular, textStyle: .subheadline))
-                    .foregroundColor(.secondaryTxt)
+                    .foregroundColor(.gray)
                 
                 Text("0 sats")
                     .font(.clarity(.bold, textStyle: .title))
-                    .foregroundColor(.primaryTxt)
+                    .foregroundColor(.black)
                 
                 HStack {
                     Text("≈ $0.00")
                         .font(.clarity(.regular, textStyle: .caption))
-                        .foregroundColor(.secondaryTxt)
+                        .foregroundColor(.gray)
                 }
             }
             .padding()
@@ -447,7 +447,13 @@ struct WalletSheetWrapper: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.accentColor)
+                    .background(
+                        LinearGradient(
+                            colors: [Color.blue, Color.purple],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
                     .cornerRadius(12)
             }
             .padding(.horizontal)
@@ -469,7 +475,7 @@ struct WalletSheetWrapper: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
-            .foregroundColor(selected ? .accentColor : .secondaryTxt)
+            .foregroundColor(selected ? Color.purple : .gray)
             .background(
                 selected ? Color.gray.opacity(0.1).cornerRadius(10) : nil
             )
@@ -487,12 +493,18 @@ struct WalletSheetWrapper: View {
                     .font(.system(size: 18))
                     .foregroundColor(.white)
                     .frame(width: 36, height: 36)
-                    .background(Color.accentColor)
+                    .background(
+                        LinearGradient(
+                            colors: [Color.blue, Color.purple],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
                     .clipShape(Circle())
                 
                 Text(title)
                     .font(.clarity(.medium, textStyle: .caption))
-                    .foregroundColor(.primaryTxt)
+                    .foregroundColor(.black)
             }
             .frame(maxWidth: .infinity)
         }
