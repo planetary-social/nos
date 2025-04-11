@@ -335,142 +335,181 @@ struct MacadamiaWalletView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 12) {
-                // Balance card at the top
-                VStack {
-                    Text("Cashu Wallet")
-                        .font(.title2.bold())
-                        .padding(.top)
-                    
-                    Text("Balance: 0 sats")
-                        .font(.title3)
-                        .padding(.vertical, 4)
-                    
-                    Text("≈ $0.00")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(16)
-                .padding(.horizontal)
-                
-                // Tabs
-                HStack {
-                    ForEach(["Wallet", "Activity", "Settings"].indices, id: \.self) { index in
+            walletMainContent
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
                         Button {
-                            selectedTab = index
+                            dismiss()
                         } label: {
-                            VStack {
-                                Image(systemName: tabIcon(for: index))
-                                    .font(.system(size: 22))
-                                Text(["Wallet", "Activity", "Settings"][index])
-                                    .font(.caption)
-                            }
-                            .foregroundColor(selectedTab == index ? Color.purple : .gray)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
-                            .background(
-                                selectedTab == index ? 
-                                    Color.gray.opacity(0.1).cornerRadius(8) : 
-                                    Color.clear
-                            )
+                            Image(systemName: "xmark")
+                                .font(.system(size: 16, weight: .semibold))
                         }
                     }
                 }
-                .padding(.horizontal)
-                
-                // Tab content
-                if selectedTab == 0 {
-                    // Wallet tab - main actions
-                    ScrollView {
-                        VStack(spacing: 16) {
-                            // Create wallet button
-                            Button {
-                                // This would normally trigger wallet creation
-                                // We'll just print to the console for now
-                                print("Create wallet tapped")
-                            } label: {
-                                Text("Create Wallet")
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(
-                                        LinearGradient(
-                                            colors: [Color.blue, Color.purple],
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
-                                    )
-                                    .foregroundColor(.white)
-                                    .cornerRadius(12)
-                            }
-                            .padding(.horizontal)
-                            
-                            // Action buttons
-                            HStack(spacing: 16) {
-                                actionButton(title: "Send", icon: "arrow.up")
-                                actionButton(title: "Receive", icon: "arrow.down")
-                                actionButton(title: "Mint", icon: "plus")
-                                actionButton(title: "Pay", icon: "bolt")
-                            }
-                            .padding(.horizontal)
-                        }
-                        .padding(.vertical)
-                    }
-                } else if selectedTab == 1 {
-                    // Activity tab
-                    VStack {
-                        Image(systemName: "clock")
-                            .font(.system(size: 40))
-                            .foregroundColor(.gray)
-                            .padding()
-                        
-                        Text("No activity yet")
-                            .font(.headline)
-                        
-                        Text("Your transaction history will appear here")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                            .multilineTextAlignment(.center)
-                            .padding()
-                    }
-                    .frame(maxHeight: .infinity)
-                } else {
-                    // Settings tab
-                    VStack {
-                        List {
-                            Section("Wallet") {
-                                settingRow(icon: "key", title: "Backup Keys")
-                                settingRow(icon: "arrow.clockwise", title: "Restore Wallet")
-                                settingRow(icon: "trash", title: "Delete Wallet")
-                            }
-                            
-                            Section("Preferences") {
-                                settingRow(icon: "bell", title: "Notifications")
-                                settingRow(icon: "lock", title: "Privacy")
-                            }
-                            
-                            Section("About") {
-                                settingRow(icon: "info.circle", title: "About Cashu")
-                                settingRow(icon: "questionmark.circle", title: "Help")
-                            }
-                        }
-                    }
-                }
-                
-                Spacer()
+        }
+    }
+    
+    // Main content container
+    private var walletMainContent: some View {
+        VStack(spacing: 12) {
+            balanceCard
+            tabSelector
+            tabContent
+            Spacer()
+        }
+    }
+    
+    // Balance card at the top
+    private var balanceCard: some View {
+        VStack {
+            Text("Cashu Wallet")
+                .font(.title2.bold())
+                .padding(.top)
+            
+            Text("Balance: 0 sats")
+                .font(.title3)
+                .padding(.vertical, 4)
+            
+            Text("≈ $0.00")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(Color.gray.opacity(0.1))
+        .cornerRadius(16)
+        .padding(.horizontal)
+    }
+    
+    // Tab selector
+    private var tabSelector: some View {
+        HStack {
+            ForEach(0..<3) { index in
+                tabButton(index: index)
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .semibold))
-                    }
-                }
+        }
+        .padding(.horizontal)
+    }
+    
+    // Individual tab button
+    private func tabButton(index: Int) -> some View {
+        let titles = ["Wallet", "Activity", "Settings"]
+        
+        return Button {
+            selectedTab = index
+        } label: {
+            VStack {
+                Image(systemName: tabIcon(for: index))
+                    .font(.system(size: 22))
+                Text(titles[index])
+                    .font(.caption)
+            }
+            .foregroundColor(selectedTab == index ? Color.purple : .gray)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+            .background(
+                selectedTab == index ? 
+                    Color.gray.opacity(0.1).cornerRadius(8) : 
+                    Color.clear
+            )
+        }
+    }
+    
+    // Tab content area
+    private var tabContent: some View {
+        Group {
+            if selectedTab == 0 {
+                walletTabContent
+            } else if selectedTab == 1 {
+                activityTabContent
+            } else {
+                settingsTabContent
+            }
+        }
+    }
+    
+    // Wallet tab content
+    private var walletTabContent: some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                createWalletButton
+                actionButtonsRow
+            }
+            .padding(.vertical)
+        }
+    }
+    
+    // Create wallet button
+    private var createWalletButton: some View {
+        Button {
+            // This would normally trigger wallet creation
+            print("Create wallet tapped")
+        } label: {
+            Text("Create Wallet")
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(
+                    LinearGradient(
+                        colors: [Color.blue, Color.purple],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .foregroundColor(.white)
+                .cornerRadius(12)
+        }
+        .padding(.horizontal)
+    }
+    
+    // Action buttons row
+    private var actionButtonsRow: some View {
+        HStack(spacing: 16) {
+            actionButton(title: "Send", icon: "arrow.up")
+            actionButton(title: "Receive", icon: "arrow.down")
+            actionButton(title: "Mint", icon: "plus")
+            actionButton(title: "Pay", icon: "bolt")
+        }
+        .padding(.horizontal)
+    }
+    
+    // Activity tab content
+    private var activityTabContent: some View {
+        VStack {
+            Image(systemName: "clock")
+                .font(.system(size: 40))
+                .foregroundColor(.gray)
+                .padding()
+            
+            Text("No activity yet")
+                .font(.headline)
+            
+            Text("Your transaction history will appear here")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
+                .padding()
+        }
+        .frame(maxHeight: .infinity)
+    }
+    
+    // Settings tab content
+    private var settingsTabContent: some View {
+        List {
+            Section("Wallet") {
+                settingRow(icon: "key", title: "Backup Keys")
+                settingRow(icon: "arrow.clockwise", title: "Restore Wallet")
+                settingRow(icon: "trash", title: "Delete Wallet")
+            }
+            
+            Section("Preferences") {
+                settingRow(icon: "bell", title: "Notifications")
+                settingRow(icon: "lock", title: "Privacy")
+            }
+            
+            Section("About") {
+                settingRow(icon: "info.circle", title: "About Cashu")
+                settingRow(icon: "questionmark.circle", title: "Help")
             }
         }
     }
