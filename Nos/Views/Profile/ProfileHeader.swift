@@ -349,7 +349,8 @@ struct WalletSheetWrapper: View {
     var body: some View {
         NavigationStack {
             VStack {
-                if walletManager.isWalletInitialized {
+                // Check if wallet is initialized (temporary condition)
+                if false {
                     walletContent
                 } else {
                     noWalletView
@@ -380,19 +381,19 @@ struct WalletSheetWrapper: View {
                     .font(.clarity(.regular, textStyle: .subheadline))
                     .foregroundColor(.secondaryTxt)
                 
-                Text("\(walletManager.balance) sats")
+                Text("0 sats")
                     .font(.clarity(.bold, textStyle: .title))
                     .foregroundColor(.primaryTxt)
                 
                 HStack {
-                    Text("≈ $\(Double(walletManager.balance) / 100000, specifier: "%.2f")")
+                    Text("≈ $0.00")
                         .font(.clarity(.regular, textStyle: .caption))
                         .foregroundColor(.secondaryTxt)
                 }
             }
             .padding()
             .frame(maxWidth: .infinity)
-            .background(Color.secondaryBg.opacity(0.3))
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(20)
             
             // Tabs and actions
@@ -438,9 +439,8 @@ struct WalletSheetWrapper: View {
                 .padding(.horizontal)
             
             Button {
-                Task {
-                    try? await walletManager.createWallet()
-                }
+                // Initialize wallet (just dismiss for now)
+                dismiss()
             } label: {
                 Text("Create New Wallet")
                     .font(.clarity(.bold, textStyle: .body))
@@ -471,7 +471,7 @@ struct WalletSheetWrapper: View {
             .padding(.vertical, 12)
             .foregroundColor(selected ? .accentColor : .secondaryTxt)
             .background(
-                selected ? Color.secondaryBg.opacity(0.3).cornerRadius(10) : nil
+                selected ? Color.gray.opacity(0.1).cornerRadius(10) : nil
             )
         }
         .buttonStyle(PlainButtonStyle())
