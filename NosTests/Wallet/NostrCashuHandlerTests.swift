@@ -2,16 +2,16 @@ import XCTest
 @testable import Nos
 
 final class NostrCashuHandlerTests: XCTestCase {
-    private var walletState: WalletState!
-    private var walletConnectHandler: NostrWalletConnectHandler!
-    private var cashuHandler: NostrCashuHandler!
+    private var walletState: Nos.Wallet.Models.WalletState!
+    private var walletConnectHandler: Nos.Wallet.NostrCashuBridge.NostrWalletConnectHandler!
+    private var cashuHandler: Nos.Wallet.NostrCashuBridge.NostrCashuHandler!
     
     override func setUp() async throws {
         try await super.setUp()
-        walletState = WalletState()
+        walletState = Nos.Wallet.Models.WalletState()
         try await walletState.createNewWallet()
-        walletConnectHandler = NostrWalletConnectHandler(walletState: walletState)
-        cashuHandler = NostrCashuHandler(walletState: walletState, walletConnectHandler: walletConnectHandler)
+        walletConnectHandler = Nos.Wallet.NostrCashuBridge.NostrWalletConnectHandler(walletState: walletState)
+        cashuHandler = Nos.Wallet.NostrCashuBridge.NostrCashuHandler(walletState: walletState, walletConnectHandler: walletConnectHandler)
     }
     
     override func tearDown() async throws {
@@ -29,7 +29,7 @@ final class NostrCashuHandlerTests: XCTestCase {
             ]
             _ = try await cashuHandler.handleCashuRequest(eventContent: eventContent)
             XCTFail("Should have thrown an error for missing method")
-        } catch let error as NostrCashuHandler.CashuError {
+        } catch let error as Nos.Wallet.NostrCashuBridge.NostrCashuHandler.CashuError {
             XCTAssertEqual(error.errorCode, -32600)
         }
         
@@ -40,7 +40,7 @@ final class NostrCashuHandlerTests: XCTestCase {
             ]
             _ = try await cashuHandler.handleCashuRequest(eventContent: eventContent)
             XCTFail("Should have thrown an error for missing id")
-        } catch let error as NostrCashuHandler.CashuError {
+        } catch let error as Nos.Wallet.NostrCashuBridge.NostrCashuHandler.CashuError {
             XCTAssertEqual(error.errorCode, -32600)
         }
     }
@@ -123,13 +123,13 @@ final class NostrCashuHandlerTests: XCTestCase {
     }
     
     func testWalletEventTypes_CreateCashuResponseEvent() {
-        let response = WalletEventTypes.createCashuResponseEvent(
+        let response = Nos.Wallet.NostrCashuBridge.WalletEventTypes.createCashuResponseEvent(
             requestId: "request-123",
             pubkey: "pubkey-abc",
             response: ["status": "success"]
         )
         
-        XCTAssertEqual(response["kind"] as? Int, WalletEventTypes.NIP61.cashuResponseKind)
+        XCTAssertEqual(response["kind"] as? Int, Nos.Wallet.NostrCashuBridge.WalletEventTypes.NIP61.cashuResponseKind)
         XCTAssertEqual(response["pubkey"] as? String, "pubkey-abc")
         XCTAssertNotNil(response["created_at"])
         
