@@ -298,13 +298,14 @@ struct ProfileHeader: View {
     .background(Color.previewBg)
 }
 
-// Wallet button that presents the full wallet functionality
+// Wallet button that directly presents the wallet via a sheet
 struct WalletButtonPlaceholder: View {
-    @EnvironmentObject private var router: Router
+    @Environment(\.colorScheme) private var colorScheme
+    @State private var showingWallet = false
     
     var body: some View {
         Button {
-            router.push(.wallet())
+            showingWallet = true
         } label: {
             ZStack {
                 Circle()
@@ -316,5 +317,136 @@ struct WalletButtonPlaceholder: View {
                     .foregroundColor(.accentColor)
             }
         }
+        .sheet(isPresented: $showingWallet) {
+            WalletPresentationView()
+                .preferredColorScheme(colorScheme)
+        }
+    }
+}
+
+// Wrapper view to handle the wallet presentation
+struct WalletPresentationView: View {
+    @Environment(\.dismiss) private var dismiss
+    @Dependency(\.walletManager) private var walletManager
+    
+    var body: some View {
+        NavigationStack {
+            VStack {
+                if walletManager.isWalletInitialized {
+                    walletContent
+                } else {
+                    noWalletView
+                }
+            }
+            .navigationTitle("Cashu Wallet")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.primaryTxt)
+                    }
+                }
+            }
+        }
+    }
+    
+    // Simplified wallet content view
+    private var walletContent: some View {
+        VStack(spacing: 8) {
+            // Balance card
+            VStack {
+                Text("Balance")
+                    .font(.clarity(.regular, textStyle: .subheadline))
+                    .foregroundColor(.secondaryTxt)
+                
+                Text("\(walletManager.balance) sats")
+                    .font(.clarity(.bold, textStyle: .title))
+                    .foregroundColor(.primaryTxt)
+                
+                HStack {
+                    Text("≈ $\(Double(walletManager.balance) / 100000, specifier: "%.2f")")
+                        .font(.clarity(.regular, textStyle: .caption))
+                        .foregroundColor(.secondaryTxt)
+                }
+            }
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(Color.secondaryBg.opacity(0.3))
+            .cornerRadius(20)
+            
+            Spacer()
+            
+            // Action buttons
+            HStack(spacing: 16) {
+                actionButton(title: "Send", icon: "arrow.up")
+                actionButton(title: "Receive", icon: "arrow.down")
+                actionButton(title: "Mint", icon: "plus")
+                actionButton(title: "Pay", icon: "bolt")
+            }
+            .padding(.vertical)
+        }
+        .padding()
+    }
+    
+    // Wallet creation view
+    private var noWalletView: some View {
+        VStack(spacing: 24) {
+            Image(systemName: "wallet.pass.fill")
+                .font(.system(size: 80))
+                .foregroundColor(.accentColor)
+                .padding(.bottom, 16)
+            
+            Text("No Cashu Wallet")
+                .font(.clarity(.bold, textStyle: .title2))
+                .foregroundColor(.primaryTxt)
+            
+            Text("Create or restore a Cashu wallet to start using Ecash in Nos")
+                .font(.clarity(.regular, textStyle: .body))
+                .multilineTextAlignment(.center)
+                .foregroundColor(.secondaryTxt)
+                .padding(.horizontal)
+            
+            Button {
+                Task {
+                    try? await walletManager.createWallet()
+                }
+            } label: {
+                Text("Create New Wallet")
+                    .font(.clarity(.bold, textStyle: .body))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.accentColor)
+                    .cornerRadius(12)
+            }
+            .padding(.horizontal)
+        }
+        .padding()
+    }
+    
+    // Helper for action buttons
+    private func actionButton(title: String, icon: String) -> some View {
+        Button {
+            // Action would be implemented here
+        } label: {
+            VStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.system(size: 18))
+                    .foregroundColor(.white)
+                    .frame(width: 36, height: 36)
+                    .background(Color.accentColor)
+                    .clipShape(Circle())
+                
+                Text(title)
+                    .font(.clarity(.medium, textStyle: .caption))
+                    .foregroundColor(.primaryTxt)
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 }
