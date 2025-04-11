@@ -1,6 +1,7 @@
 import SwiftUI
 import CoreData
 import Logger
+import Dependencies
 
 struct ProfileHeader: View {
     @ObservedObject var author: Author
@@ -194,24 +195,7 @@ struct ProfileHeader: View {
                                 }
                                 
                                 // Wallet Button
-                                Button {
-                                    // Open wallet here
-                                } label: {
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 20)
-                                            .fill(LinearGradient(
-                                                colors: [Color.accentColor, Color.accentColor.opacity(0.8)],
-                                                startPoint: .top,
-                                                endPoint: .bottom
-                                            ))
-                                            .frame(width: 44, height: 44)
-                                            .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 2)
-                                        
-                                        Image(systemName: "creditcard.fill")
-                                            .font(.system(size: 18, weight: .semibold))
-                                            .foregroundColor(.white)
-                                    }
-                                }
+                                WalletButtonPlaceholder()
                             }
                         }
                     }
@@ -312,4 +296,30 @@ struct ProfileHeader: View {
     .previewDevice("iPhone SE (2nd generation)")
     .padding()
     .background(Color.previewBg)
+}
+
+// Wallet button that presents the full wallet functionality
+struct WalletButtonPlaceholder: View {
+    @State private var showingWallet = false
+    @Environment(\.colorScheme) private var colorScheme
+    
+    var body: some View {
+        Button {
+            showingWallet = true
+        } label: {
+            ZStack {
+                Circle()
+                    .fill(Color.clear)
+                    .frame(width: 44, height: 44)
+                
+                Image(systemName: "creditcard.fill")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.accentColor)
+            }
+        }
+        .sheet(isPresented: $showingWallet) {
+            WalletView()
+                .preferredColorScheme(colorScheme)
+        }
+    }
 }
