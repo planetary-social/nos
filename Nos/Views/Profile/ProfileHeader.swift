@@ -196,7 +196,7 @@ struct ProfileHeader: View {
                                 }
                                 
                                 // Wallet Button
-                                WalletButton()
+                                MacadamiaWalletButton()
                             }
                         }
                     }
@@ -299,15 +299,13 @@ struct ProfileHeader: View {
     .background(Color.previewBg)
 }
 
-// Wallet button implementation with a direct link to the MacadamiaWalletView
-struct WalletButton: View {
-    @State private var showingWalletView = false
-    @Environment(\.colorScheme) private var colorScheme
-    @Dependency(\.walletManager) private var walletManager
+// Wallet button that directly launches the Macadamia wallet
+struct MacadamiaWalletButton: View {
+    @State private var showingWallet = false
     
     var body: some View {
         Button {
-            showingWalletView = true
+            showingWallet = true
         } label: {
             ZStack {
                 Circle()
@@ -319,392 +317,83 @@ struct WalletButton: View {
                     .foregroundColor(Color.purple) // Use a color from app's gradient
             }
         }
-        .sheet(isPresented: $showingWalletView) {
-            MacadamiaWalletView()
-                .preferredColorScheme(colorScheme)
+        .sheet(isPresented: $showingWallet) {
+            MacadamiaWalletLauncher()
         }
     }
 }
 
-// Direct integration with the wallet manager from Macadamia
-struct MacadamiaWalletView: View {
+// Launcher for the actual Macadamia wallet
+struct MacadamiaWalletLauncher: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.colorScheme) private var colorScheme
-    @Dependency(\.walletManager) private var walletManager
-    @State private var selectedTab = 0
     
     var body: some View {
         NavigationStack {
-            walletMainContent
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "xmark")
-                                .font(.system(size: 16, weight: .semibold))
-                        }
-                    }
-                }
-        }
-    }
-    
-    // Main content container
-    private var walletMainContent: some View {
-        VStack(spacing: 12) {
-            balanceCard
-            tabSelector
-            tabContent
-            Spacer()
-        }
-    }
-    
-    // Balance card at the top
-    private var balanceCard: some View {
-        VStack {
-            Text("Cashu Wallet")
-                .font(.title2.bold())
-                .padding(.top)
-            
-            Text("Balance: \(walletManager.balance) sats")
-                .font(.title3)
-                .padding(.vertical, 4)
-            
-            // Convert sats to dollars (approximate conversion)
-            let dollarValue = Double(walletManager.balance) / 100000.0 // 100,000 sats ≈ $1 (rough approximation)
-            Text("≈ $\(dollarValue, specifier: "%.2f")")
-                .font(.subheadline)
-                .foregroundColor(.gray)
-        }
-        .padding()
-        .frame(maxWidth: .infinity)
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(16)
-        .padding(.horizontal)
-    }
-    
-    // Tab selector
-    private var tabSelector: some View {
-        HStack {
-            ForEach(0..<3) { index in
-                tabButton(index: index)
-            }
-        }
-        .padding(.horizontal)
-    }
-    
-    // Individual tab button
-    private func tabButton(index: Int) -> some View {
-        let titles = ["Wallet", "Activity", "Settings"]
-        
-        return Button {
-            selectedTab = index
-        } label: {
             VStack {
-                Image(systemName: tabIcon(for: index))
-                    .font(.system(size: 22))
-                Text(titles[index])
-                    .font(.caption)
+                Text("Launching Macadamia Wallet...")
+                    .font(.headline)
+                    .padding()
+                
+                ProgressView()
+                    .padding()
             }
-            .foregroundColor(selectedTab == index ? Color.purple : .gray)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
-            .background(
-                Group {
-                    if selectedTab == index {
-                        RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.1))
-                    } else {
-                        Color.clear
+            .onAppear {
+                launchMacadamiaWallet()
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .semibold))
                     }
                 }
-            )
-        }
-    }
-    
-    // Tab content area
-    private var tabContent: some View {
-        Group {
-            if !walletManager.isWalletInitialized && selectedTab == 0 {
-                // Show wallet initialization view if no wallet exists
-                VStack {
-                    Text("Create a new wallet to get started")
-                        .font(.headline)
-                        .padding()
-                    
-                    createWalletButton
-                }
-                .padding()
-            } else if selectedTab == 0 {
-                walletTabContent
-            } else if selectedTab == 1 {
-                activityTabContent
-            } else {
-                settingsTabContent
             }
         }
     }
     
-    // Wallet tab content
-    private var walletTabContent: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                // Only show action buttons if wallet is initialized
-                if walletManager.isWalletInitialized {
-                    // Show mints if available
-                    if !walletManager.mints.isEmpty {
-                        VStack(alignment: .leading) {
-                            Text("Your Mints")
-                                .font(.headline)
-                                .padding(.horizontal)
+    private func launchMacadamiaWallet() {
+        // Delay to make the UI visible
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            // Launch Macadamia using FileManager to check if it exists
+            let macadamiaPath = "/Users/rabble/code/nostr/macadamia"
+            
+            if FileManager.default.fileExists(atPath: macadamiaPath) {
+                // Open the Macadamia app directly using a URL scheme
+                // This would typically be a specific URL scheme registered by the app
+                if let url = URL(string: "file:///Users/rabble/code/nostr/macadamia/macadamia.xcodeproj") {
+                    UIApplication.shared.open(url, options: [:]) { success in
+                        if success {
+                            print("Successfully opened Macadamia")
+                        } else {
+                            print("Failed to open Macadamia")
                             
-                            ForEach(walletManager.mints, id: \.id) { mint in
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text(mint.name)
-                                            .font(.subheadline.bold())
-                                        
-                                        Text(mint.url.host ?? mint.url.absoluteString)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    Text("\(mint.balance) sats")
-                                        .font(.callout.bold())
-                                }
-                                .padding()
-                                .background(Color.gray.opacity(0.05))
-                                .cornerRadius(8)
-                                .padding(.horizontal)
+                            // Alternative approach: use the shell to open the app
+                            let process = Process()
+                            process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
+                            process.arguments = [macadamiaPath]
+                            
+                            do {
+                                try process.run()
+                            } catch {
+                                print("Error launching Macadamia: \(error)")
                             }
                         }
-                        .padding(.bottom)
+                        
+                        // Close our sheet after a delay
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            dismiss()
+                        }
                     }
-                    
-                    actionButtonsRow
-                } else {
-                    createWalletButton
                 }
-            }
-            .padding(.vertical)
-        }
-    }
-    
-    // Create wallet button
-    private var createWalletButton: some View {
-        Button {
-            // Trigger actual wallet creation using the wallet manager
-            Task {
-                do {
-                    try await walletManager.createWallet()
-                    // Refresh the UI to show wallet is initialized
-                    await MainActor.run {
-                        // This is a hack to force the view to refresh since we're not using an ObservableObject
-                        selectedTab = 0
-                    }
-                } catch {
-                    print("Failed to create wallet: \(error)")
+            } else {
+                print("Macadamia wallet not found at \(macadamiaPath)")
+                
+                // Show an error message or fall back to our mock implementation
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    dismiss()
                 }
-            }
-        } label: {
-            Text("Create Wallet")
-                .font(.headline)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(
-                    LinearGradient(
-                        colors: [Color.blue, Color.purple],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .foregroundColor(.white)
-                .cornerRadius(12)
-        }
-        .padding(.horizontal)
-    }
-    
-    // Action buttons row
-    private var actionButtonsRow: some View {
-        HStack(spacing: 16) {
-            actionButton(title: "Send", icon: "arrow.up")
-            actionButton(title: "Receive", icon: "arrow.down")
-            actionButton(title: "Mint", icon: "plus")
-            actionButton(title: "Pay", icon: "bolt")
-        }
-        .padding(.horizontal)
-    }
-    
-    // Activity tab content
-    private var activityTabContent: some View {
-        VStack {
-            Image(systemName: "clock")
-                .font(.system(size: 40))
-                .foregroundColor(.gray)
-                .padding()
-            
-            Text("No activity yet")
-                .font(.headline)
-            
-            Text("Your transaction history will appear here")
-                .font(.subheadline)
-                .foregroundColor(.gray)
-                .multilineTextAlignment(.center)
-                .padding()
-        }
-        .frame(maxHeight: .infinity)
-    }
-    
-    // Settings tab content
-    private var settingsTabContent: some View {
-        List {
-            Section("Wallet") {
-                settingRow(icon: "key", title: "Backup Keys")
-                settingRow(icon: "arrow.clockwise", title: "Restore Wallet")
-                settingRow(icon: "trash", title: "Delete Wallet")
-            }
-            
-            Section("Preferences") {
-                settingRow(icon: "bell", title: "Notifications")
-                settingRow(icon: "lock", title: "Privacy")
-            }
-            
-            Section("About") {
-                settingRow(icon: "info.circle", title: "About Cashu")
-                settingRow(icon: "questionmark.circle", title: "Help")
-            }
-        }
-    }
-    
-    // Helper for tab icons
-    private func tabIcon(for index: Int) -> String {
-        switch index {
-        case 0: return "wallet.pass.fill"
-        case 1: return "clock"
-        case 2: return "gear"
-        default: return "questionmark"
-        }
-    }
-    
-    // Helper for action buttons
-    private func actionButton(title: String, icon: String) -> some View {
-        Button {
-            // Wire up the button to the appropriate wallet manager function
-            Task {
-                do {
-                    switch title {
-                    case "Send":
-                        // We would typically show a UI for entering amount and recipient
-                        // For now, we'll just log the attempt
-                        if let firstMint = walletManager.mints.first {
-                            let _ = try await walletManager.sendTokens(amount: 100, to: "recipient", mint: firstMint)
-                        } else {
-                            print("No mints available to send from")
-                        }
-                        
-                    case "Receive":
-                        // Would typically show a UI for receiving tokens
-                        // For demonstration, just log the attempt
-                        try await walletManager.receiveTokens(token: "sample_token")
-                        
-                    case "Mint":
-                        // Would show a UI for minting new tokens
-                        if walletManager.mints.isEmpty {
-                            // Add a default mint if none exists
-                            let mintURL = URL(string: "https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoL")!
-                            try await walletManager.addMint(url: mintURL)
-                        }
-                        
-                        // Simulate minting tokens
-                        if let firstMint = walletManager.mints.first {
-                            try await walletManager.mintTokens(amount: 1000, mint: firstMint)
-                        }
-                        
-                    case "Pay":
-                        // Would show a UI for paying a Lightning invoice
-                        // For demonstration, just log the attempt
-                        if let firstMint = walletManager.mints.first {
-                            try await walletManager.payInvoice(invoice: "sample_invoice", mint: firstMint)
-                        } else {
-                            print("No mints available to pay from")
-                        }
-                        
-                    default:
-                        print("\(title) action not implemented")
-                    }
-                } catch {
-                    print("Error performing \(title) action: \(error)")
-                }
-            }
-        } label: {
-            VStack(spacing: 8) {
-                Image(systemName: icon)
-                    .font(.system(size: 18))
-                    .foregroundColor(.white)
-                    .frame(width: 36, height: 36)
-                    .background(
-                        LinearGradient(
-                            colors: [Color.blue, Color.purple],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .clipShape(Circle())
-                
-                Text(title)
-                    .font(.caption)
-                    .foregroundColor(.primary)
-            }
-            .frame(maxWidth: .infinity)
-        }
-    }
-    
-    // Helper for settings rows with actions
-    private func settingRow(icon: String, title: String) -> some View {
-        Button {
-            handleSettingAction(title)
-        } label: {
-            HStack {
-                Image(systemName: icon)
-                    .foregroundColor(.purple)
-                    .frame(width: 24)
-                
-                Text(title)
-                    .foregroundColor(.primary)
-                
-                Spacer()
-                
-                Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundColor(.gray)
-            }
-        }
-    }
-    
-    // Handle settings row actions
-    private func handleSettingAction(_ title: String) {
-        Task {
-            do {
-                switch title {
-                case "Backup Keys":
-                    // In a real implementation, this would show the seed phrase for backup
-                    print("Backup Keys action")
-                    
-                case "Restore Wallet":
-                    // This would show a UI for entering a seed phrase
-                    let sampleMnemonic = "sample word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
-                    try await walletManager.restoreWallet(mnemonic: sampleMnemonic)
-                    
-                case "Delete Wallet":
-                    // This would delete the wallet after confirmation
-                    print("Delete Wallet action would happen here")
-                    
-                default:
-                    print("Action for \(title) not implemented")
-                }
-            } catch {
-                print("Error handling setting action \(title): \(error)")
             }
         }
     }
