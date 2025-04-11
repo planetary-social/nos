@@ -408,9 +408,13 @@ struct MacadamiaWalletView: View {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 8)
             .background(
-                selectedTab == index ? 
-                    RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.1)) : 
-                    Color.clear
+                Group {
+                    if selectedTab == index {
+                        RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.1))
+                    } else {
+                        Color.clear
+                    }
+                }
             )
         }
     }
