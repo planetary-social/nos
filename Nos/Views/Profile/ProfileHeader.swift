@@ -3,6 +3,7 @@ import CoreData
 import Logger
 import Dependencies
 import UIKit
+import Foundation
 
 struct ProfileHeader: View {
     @ObservedObject var author: Author
