@@ -182,14 +182,36 @@ struct ProfileHeader: View {
                                 shouldFillHorizontalSpace: true
                             )
                         } else {
-                            ActionButton(
-                                "editProfile",
-                                font: .clarity(.bold, textStyle: .subheadline),
-                                depthEffectColor: .actionSecondaryDepthEffect,
-                                backgroundGradient: LinearGradient.verticalAccentSecondary,
-                                shouldFillHorizontalSpace: true
-                            ) {
-                                router.push(EditProfileDestination(profile: author))
+                            HStack(spacing: 10) {
+                                ActionButton(
+                                    "editProfile",
+                                    font: .clarity(.bold, textStyle: .subheadline),
+                                    depthEffectColor: .actionSecondaryDepthEffect,
+                                    backgroundGradient: LinearGradient.verticalAccentSecondary,
+                                    shouldFillHorizontalSpace: true
+                                ) {
+                                    router.push(EditProfileDestination(profile: author))
+                                }
+                                
+                                // Wallet Button
+                                Button {
+                                    // Open wallet here
+                                } label: {
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .fill(LinearGradient(
+                                                colors: [Color.accentColor, Color.accentColor.opacity(0.8)],
+                                                startPoint: .top,
+                                                endPoint: .bottom
+                                            ))
+                                            .frame(width: 44, height: 44)
+                                            .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 2)
+                                        
+                                        Image(systemName: "creditcard.fill")
+                                            .font(.system(size: 18, weight: .semibold))
+                                            .foregroundColor(.white)
+                                    }
+                                }
                             }
                         }
                     }

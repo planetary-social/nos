@@ -1,5 +1,12 @@
 import Dependencies
 import Foundation
+import SwiftUI
+
+// Stub implementation for NosWalletManager to make the dependency system work
+// The real implementation is in Nos/NosWalletManager.swift
+class NosWalletManager {
+    init() {}
+}
 
 /// We use the Dependencies package to enable testability for our global variables. It is modeled after SwiftUI's
 /// @Environment.
@@ -93,6 +100,11 @@ extension DependencyValues {
     var previewEventRepository: PreviewEventRepository {
         get { self[PreviewEventRepositoryKey.self] }
         set { self[PreviewEventRepositoryKey.self] = newValue }
+    }
+    
+    var walletManager: NosWalletManager {
+        get { self[WalletManagerKey.self] }
+        set { self[WalletManagerKey.self] = newValue }
     }
 }
 
@@ -197,4 +209,10 @@ fileprivate enum OpenGraphServiceKey: DependencyKey {
 
 fileprivate enum PreviewEventRepositoryKey: DependencyKey {
     static let liveValue: any PreviewEventRepository = DefaultPreviewEventRepository()
+}
+
+fileprivate enum WalletManagerKey: DependencyKey {
+    static let liveValue = NosWalletManager()
+    static let testValue = NosWalletManager()
+    static let previewValue = NosWalletManager()
 }

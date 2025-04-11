@@ -70,6 +70,15 @@ public enum EventKind: Int64, CaseIterable, Hashable {
 
     /// Long-form Content
     case longFormContent = 30023
+    
+    /// Picture Post (NIP-68)
+    case picturePost = 20
+    
+    /// Video Post (NIP-71)
+    case video = 21
+    
+    /// Short Video Post (NIP-71)
+    case shortVideo = 22
 
     // swiftlint:enable number_separator
 }
