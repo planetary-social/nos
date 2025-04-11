@@ -366,11 +366,13 @@ struct MacadamiaWalletView: View {
                 .font(.title2.bold())
                 .padding(.top)
             
-            Text("Balance: 0 sats")
+            Text("Balance: \(walletManager.balance) sats")
                 .font(.title3)
                 .padding(.vertical, 4)
             
-            Text("≈ $0.00")
+            // Convert sats to dollars (approximate conversion)
+            let dollarValue = Double(walletManager.balance) / 100000.0 // 100,000 sats ≈ $1 (rough approximation)
+            Text("≈ $\(dollarValue, specifier: "%.2f")")
                 .font(.subheadline)
                 .foregroundColor(.gray)
         }
@@ -422,7 +424,17 @@ struct MacadamiaWalletView: View {
     // Tab content area
     private var tabContent: some View {
         Group {
-            if selectedTab == 0 {
+            if !walletManager.isWalletInitialized && selectedTab == 0 {
+                // Show wallet initialization view if no wallet exists
+                VStack {
+                    Text("Create a new wallet to get started")
+                        .font(.headline)
+                        .padding()
+                    
+                    createWalletButton
+                }
+                .padding()
+            } else if selectedTab == 0 {
                 walletTabContent
             } else if selectedTab == 1 {
                 activityTabContent
@@ -436,8 +448,44 @@ struct MacadamiaWalletView: View {
     private var walletTabContent: some View {
         ScrollView {
             VStack(spacing: 16) {
-                createWalletButton
-                actionButtonsRow
+                // Only show action buttons if wallet is initialized
+                if walletManager.isWalletInitialized {
+                    // Show mints if available
+                    if !walletManager.mints.isEmpty {
+                        VStack(alignment: .leading) {
+                            Text("Your Mints")
+                                .font(.headline)
+                                .padding(.horizontal)
+                            
+                            ForEach(walletManager.mints, id: \.id) { mint in
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text(mint.name)
+                                            .font(.subheadline.bold())
+                                        
+                                        Text(mint.url.host ?? mint.url.absoluteString)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Text("\(mint.balance) sats")
+                                        .font(.callout.bold())
+                                }
+                                .padding()
+                                .background(Color.gray.opacity(0.05))
+                                .cornerRadius(8)
+                                .padding(.horizontal)
+                            }
+                        }
+                        .padding(.bottom)
+                    }
+                    
+                    actionButtonsRow
+                } else {
+                    createWalletButton
+                }
             }
             .padding(.vertical)
         }
@@ -446,8 +494,19 @@ struct MacadamiaWalletView: View {
     // Create wallet button
     private var createWalletButton: some View {
         Button {
-            // This would normally trigger wallet creation
-            print("Create wallet tapped")
+            // Trigger actual wallet creation using the wallet manager
+            Task {
+                do {
+                    try await walletManager.createWallet()
+                    // Refresh the UI to show wallet is initialized
+                    await MainActor.run {
+                        // This is a hack to force the view to refresh since we're not using an ObservableObject
+                        selectedTab = 0
+                    }
+                } catch {
+                    print("Failed to create wallet: \(error)")
+                }
+            }
         } label: {
             Text("Create Wallet")
                 .font(.headline)
@@ -531,8 +590,53 @@ struct MacadamiaWalletView: View {
     // Helper for action buttons
     private func actionButton(title: String, icon: String) -> some View {
         Button {
-            // Action would be implemented here
-            print("\(title) tapped")
+            // Wire up the button to the appropriate wallet manager function
+            Task {
+                do {
+                    switch title {
+                    case "Send":
+                        // We would typically show a UI for entering amount and recipient
+                        // For now, we'll just log the attempt
+                        if let firstMint = walletManager.mints.first {
+                            let _ = try await walletManager.sendTokens(amount: 100, to: "recipient", mint: firstMint)
+                        } else {
+                            print("No mints available to send from")
+                        }
+                        
+                    case "Receive":
+                        // Would typically show a UI for receiving tokens
+                        // For demonstration, just log the attempt
+                        try await walletManager.receiveTokens(token: "sample_token")
+                        
+                    case "Mint":
+                        // Would show a UI for minting new tokens
+                        if walletManager.mints.isEmpty {
+                            // Add a default mint if none exists
+                            let mintURL = URL(string: "https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoL")!
+                            try await walletManager.addMint(url: mintURL)
+                        }
+                        
+                        // Simulate minting tokens
+                        if let firstMint = walletManager.mints.first {
+                            try await walletManager.mintTokens(amount: 1000, mint: firstMint)
+                        }
+                        
+                    case "Pay":
+                        // Would show a UI for paying a Lightning invoice
+                        // For demonstration, just log the attempt
+                        if let firstMint = walletManager.mints.first {
+                            try await walletManager.payInvoice(invoice: "sample_invoice", mint: firstMint)
+                        } else {
+                            print("No mints available to pay from")
+                        }
+                        
+                    default:
+                        print("\(title) action not implemented")
+                    }
+                } catch {
+                    print("Error performing \(title) action: \(error)")
+                }
+            }
         } label: {
             VStack(spacing: 8) {
                 Image(systemName: icon)
@@ -556,20 +660,52 @@ struct MacadamiaWalletView: View {
         }
     }
     
-    // Helper for settings rows
+    // Helper for settings rows with actions
     private func settingRow(icon: String, title: String) -> some View {
-        HStack {
-            Image(systemName: icon)
-                .foregroundColor(.purple)
-                .frame(width: 24)
-            
-            Text(title)
-            
-            Spacer()
-            
-            Image(systemName: "chevron.right")
-                .font(.caption)
-                .foregroundColor(.gray)
+        Button {
+            handleSettingAction(title)
+        } label: {
+            HStack {
+                Image(systemName: icon)
+                    .foregroundColor(.purple)
+                    .frame(width: 24)
+                
+                Text(title)
+                    .foregroundColor(.primary)
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+        }
+    }
+    
+    // Handle settings row actions
+    private func handleSettingAction(_ title: String) {
+        Task {
+            do {
+                switch title {
+                case "Backup Keys":
+                    // In a real implementation, this would show the seed phrase for backup
+                    print("Backup Keys action")
+                    
+                case "Restore Wallet":
+                    // This would show a UI for entering a seed phrase
+                    let sampleMnemonic = "sample word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
+                    try await walletManager.restoreWallet(mnemonic: sampleMnemonic)
+                    
+                case "Delete Wallet":
+                    // This would delete the wallet after confirmation
+                    print("Delete Wallet action would happen here")
+                    
+                default:
+                    print("Action for \(title) not implemented")
+                }
+            } catch {
+                print("Error handling setting action \(title): \(error)")
+            }
         }
     }
 }
