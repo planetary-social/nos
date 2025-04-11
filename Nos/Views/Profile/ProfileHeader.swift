@@ -2,6 +2,7 @@ import SwiftUI
 import CoreData
 import Logger
 import Dependencies
+import UIKit
 
 struct ProfileHeader: View {
     @ObservedObject var author: Author
@@ -195,7 +196,7 @@ struct ProfileHeader: View {
                                 }
                                 
                                 // Wallet Button
-                                WalletButtonPlaceholder()
+                                WalletButton()
                             }
                         }
                     }
@@ -298,15 +299,14 @@ struct ProfileHeader: View {
     .background(Color.previewBg)
 }
 
-// Wallet button that presents the wallet view
-struct WalletButtonPlaceholder: View {
-    @Environment(\.colorScheme) private var colorScheme
-    @State private var showingWallet = false
+// Custom wallet button implementation that uses deep linking
+struct WalletButton: View {
     @EnvironmentObject private var router: Router
     
     var body: some View {
         Button {
-            presentWallet()
+            // Open the wallet via router
+            router.openWallet()
         } label: {
             ZStack {
                 Circle()
@@ -318,196 +318,5 @@ struct WalletButtonPlaceholder: View {
                     .foregroundColor(Color.purple) // Use a color from app's gradient
             }
         }
-        .sheet(isPresented: $showingWallet) {
-            // Present the WalletView directly, creating a simple wrapper
-            WalletSheetWrapper()
-                .preferredColorScheme(colorScheme)
-        }
-        .onAppear {
-            // Listen for wallet open notifications
-            NotificationCenter.default.addObserver(
-                forName: Notification.Name("OpenWalletView"),
-                object: nil,
-                queue: .main
-            ) { _ in
-                showingWallet = true
-            }
-        }
-    }
-    
-    private func presentWallet() {
-        showingWallet = true
-    }
-}
-
-// Simple wrapper around the wallet view to handle presentation
-struct WalletSheetWrapper: View {
-    @Environment(\.dismiss) private var dismiss
-    @Environment(\.colorScheme) private var colorScheme
-    @Dependency(\.walletManager) private var walletManager
-    
-    var body: some View {
-        NavigationStack {
-            VStack {
-                // Check if wallet is initialized (temporary condition)
-                if false {
-                    walletContent
-                } else {
-                    noWalletView
-                }
-            }
-            .navigationTitle("Cashu Wallet")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.black)
-                    }
-                }
-            }
-        }
-    }
-    
-    // Main wallet content view
-    private var walletContent: some View {
-        VStack(spacing: 8) {
-            // Balance card
-            VStack {
-                Text("Balance")
-                    .font(.clarity(.regular, textStyle: .subheadline))
-                    .foregroundColor(.gray)
-                
-                Text("0 sats")
-                    .font(.clarity(.bold, textStyle: .title))
-                    .foregroundColor(.black)
-                
-                HStack {
-                    Text("≈ $0.00")
-                        .font(.clarity(.regular, textStyle: .caption))
-                        .foregroundColor(.gray)
-                }
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(20)
-            
-            // Tabs and actions
-            VStack {
-                HStack {
-                    tabButton(title: "Balance", icon: "wallet.pass.fill", selected: true)
-                    tabButton(title: "History", icon: "arrow.left.arrow.right", selected: false)
-                    tabButton(title: "Settings", icon: "gear", selected: false)
-                }
-                .padding(.vertical)
-                
-                Spacer()
-                
-                // Action buttons
-                HStack(spacing: 16) {
-                    actionButton(title: "Send", icon: "arrow.up")
-                    actionButton(title: "Receive", icon: "arrow.down")
-                    actionButton(title: "Mint", icon: "plus")
-                    actionButton(title: "Pay", icon: "bolt")
-                }
-                .padding(.vertical)
-            }
-        }
-        .padding()
-    }
-    
-    // Wallet creation view
-    private var noWalletView: some View {
-        VStack(spacing: 24) {
-            Image(systemName: "wallet.pass.fill")
-                .font(.system(size: 80))
-                .foregroundColor(.accentColor)
-                .padding(.bottom, 16)
-            
-            Text("No Cashu Wallet")
-                .font(.clarity(.bold, textStyle: .title2))
-                .foregroundColor(.primaryTxt)
-            
-            Text("Create or restore a Cashu wallet to start using Ecash in Nos")
-                .font(.clarity(.regular, textStyle: .body))
-                .multilineTextAlignment(.center)
-                .foregroundColor(.secondaryTxt)
-                .padding(.horizontal)
-            
-            Button {
-                // Initialize wallet (just dismiss for now)
-                dismiss()
-            } label: {
-                Text("Create New Wallet")
-                    .font(.clarity(.bold, textStyle: .body))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(
-                        LinearGradient(
-                            colors: [Color.blue, Color.purple],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .cornerRadius(12)
-            }
-            .padding(.horizontal)
-        }
-        .padding()
-    }
-    
-    // Helper for tab buttons
-    private func tabButton(title: String, icon: String, selected: Bool) -> some View {
-        Button {
-            // Tab selection would be implemented here
-        } label: {
-            VStack {
-                Image(systemName: icon)
-                    .font(.system(size: 22))
-                
-                Text(title)
-                    .font(.clarity(.medium, textStyle: .caption))
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
-            .foregroundColor(selected ? Color.purple : .gray)
-            .background(
-                selected ? Color.gray.opacity(0.1).cornerRadius(10) : nil
-            )
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
-    
-    // Helper for action buttons
-    private func actionButton(title: String, icon: String) -> some View {
-        Button {
-            // Action would be implemented here
-        } label: {
-            VStack(spacing: 8) {
-                Image(systemName: icon)
-                    .font(.system(size: 18))
-                    .foregroundColor(.white)
-                    .frame(width: 36, height: 36)
-                    .background(
-                        LinearGradient(
-                            colors: [Color.blue, Color.purple],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .clipShape(Circle())
-                
-                Text(title)
-                    .font(.clarity(.medium, textStyle: .caption))
-                    .foregroundColor(.black)
-            }
-            .frame(maxWidth: .infinity)
-        }
-        .buttonStyle(PlainButtonStyle())
     }
 }
