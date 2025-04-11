@@ -357,41 +357,40 @@ struct MacadamiaWalletLauncher: View {
     private func launchMacadamiaWallet() {
         // Delay to make the UI visible
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            // Launch Macadamia using FileManager to check if it exists
-            let macadamiaPath = "/Users/rabble/code/nostr/macadamia"
+            // In a production app, you'd register a custom URL scheme for the wallet
+            // We'll attempt to use different methods to open Macadamia
             
-            if FileManager.default.fileExists(atPath: macadamiaPath) {
-                // Open the Macadamia app directly using a URL scheme
-                // This would typically be a specific URL scheme registered by the app
-                if let url = URL(string: "file:///Users/rabble/code/nostr/macadamia/macadamia.xcodeproj") {
-                    UIApplication.shared.open(url, options: [:]) { success in
-                        if success {
-                            print("Successfully opened Macadamia")
-                        } else {
-                            print("Failed to open Macadamia")
-                            
-                            // Alternative approach: use the shell to open the app
-                            let process = Process()
-                            process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
-                            process.arguments = [macadamiaPath]
-                            
-                            do {
-                                try process.run()
-                            } catch {
-                                print("Error launching Macadamia: \(error)")
+            // Method 1: Try using a universal link or custom URL scheme for Macadamia
+            if let macadamiaURL = URL(string: "macadamia://wallet") {
+                UIApplication.shared.open(macadamiaURL, options: [:]) { success in
+                    if success {
+                        print("Successfully opened Macadamia via URL scheme")
+                    } else {
+                        // Method 2: Try to open it as a web link or PWA
+                        if let webURL = URL(string: "https://macadamia.nos.cash") {
+                            UIApplication.shared.open(webURL, options: [:]) { webSuccess in
+                                if webSuccess {
+                                    print("Successfully opened Macadamia web version")
+                                } else {
+                                    // Method 3: Show a dialog with instructions on how to install Macadamia
+                                    print("Could not launch Macadamia wallet")
+                                    
+                                    // In a real app, you'd show a dialog here with instructions
+                                    // For now, we'll just print to the console
+                                }
                             }
                         }
-                        
-                        // Close our sheet after a delay
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                            dismiss()
-                        }
+                    }
+                    
+                    // Close our sheet after a delay
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        dismiss()
                     }
                 }
             } else {
-                print("Macadamia wallet not found at \(macadamiaPath)")
+                // Show a dialog explaining that Macadamia is needed
+                print("Macadamia wallet URL could not be formed")
                 
-                // Show an error message or fall back to our mock implementation
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     dismiss()
                 }
