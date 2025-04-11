@@ -142,6 +142,18 @@ import Dependencies
     func showNoteComposer(contents: String?) {
         selectedTab = .noteComposer(contents)
     }
+    
+    func openWallet() {
+        // Present the wallet with a modal sheet
+        Task { @MainActor in
+            // Use presentWalletView if it exists, otherwise just push the wallet destination
+            if #available(iOS 16.0, *) {
+                NotificationCenter.default.post(name: Notification.Name("OpenWalletView"), object: nil)
+            } else {
+                push(.wallet())
+            }
+        }
+    }
 
     func consecutiveTaps(on tab: AppDestination) -> AnyPublisher<Void, Never> {
         $selectedTab

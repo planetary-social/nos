@@ -36,6 +36,9 @@ enum DeepLinkService {
                 .value
             
             router.showNoteComposer(contents: noteContents)
+        } else if components.host == "wallet" {
+            // Present the wallet using the router
+            router.openWallet()
         } else {
             // The destination (npub, note, nprofile, nevent, or naddr) may be in the host or the path.
             // If the URL looks like nos://npub1..., we want the host. If it's nostr:npub1..., the path is what we want.

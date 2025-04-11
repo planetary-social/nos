@@ -298,14 +298,15 @@ struct ProfileHeader: View {
     .background(Color.previewBg)
 }
 
-// Wallet button that directly presents the wallet via a sheet
+// Wallet button that presents the wallet view
 struct WalletButtonPlaceholder: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var showingWallet = false
+    @EnvironmentObject private var router: Router
     
     var body: some View {
         Button {
-            showingWallet = true
+            presentWallet()
         } label: {
             ZStack {
                 Circle()
@@ -318,15 +319,31 @@ struct WalletButtonPlaceholder: View {
             }
         }
         .sheet(isPresented: $showingWallet) {
-            WalletPresentationView()
+            // Present the WalletView directly, creating a simple wrapper
+            WalletSheetWrapper()
                 .preferredColorScheme(colorScheme)
         }
+        .onAppear {
+            // Listen for wallet open notifications
+            NotificationCenter.default.addObserver(
+                forName: Notification.Name("OpenWalletView"),
+                object: nil,
+                queue: .main
+            ) { _ in
+                showingWallet = true
+            }
+        }
+    }
+    
+    private func presentWallet() {
+        showingWallet = true
     }
 }
 
-// Wrapper view to handle the wallet presentation
-struct WalletPresentationView: View {
+// Simple wrapper around the wallet view to handle presentation
+struct WalletSheetWrapper: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
     @Dependency(\.walletManager) private var walletManager
     
     var body: some View {
@@ -354,7 +371,7 @@ struct WalletPresentationView: View {
         }
     }
     
-    // Simplified wallet content view
+    // Main wallet content view
     private var walletContent: some View {
         VStack(spacing: 8) {
             // Balance card
@@ -378,16 +395,26 @@ struct WalletPresentationView: View {
             .background(Color.secondaryBg.opacity(0.3))
             .cornerRadius(20)
             
-            Spacer()
-            
-            // Action buttons
-            HStack(spacing: 16) {
-                actionButton(title: "Send", icon: "arrow.up")
-                actionButton(title: "Receive", icon: "arrow.down")
-                actionButton(title: "Mint", icon: "plus")
-                actionButton(title: "Pay", icon: "bolt")
+            // Tabs and actions
+            VStack {
+                HStack {
+                    tabButton(title: "Balance", icon: "wallet.pass.fill", selected: true)
+                    tabButton(title: "History", icon: "arrow.left.arrow.right", selected: false)
+                    tabButton(title: "Settings", icon: "gear", selected: false)
+                }
+                .padding(.vertical)
+                
+                Spacer()
+                
+                // Action buttons
+                HStack(spacing: 16) {
+                    actionButton(title: "Send", icon: "arrow.up")
+                    actionButton(title: "Receive", icon: "arrow.down")
+                    actionButton(title: "Mint", icon: "plus")
+                    actionButton(title: "Pay", icon: "bolt")
+                }
+                .padding(.vertical)
             }
-            .padding(.vertical)
         }
         .padding()
     }
@@ -426,6 +453,28 @@ struct WalletPresentationView: View {
             .padding(.horizontal)
         }
         .padding()
+    }
+    
+    // Helper for tab buttons
+    private func tabButton(title: String, icon: String, selected: Bool) -> some View {
+        Button {
+            // Tab selection would be implemented here
+        } label: {
+            VStack {
+                Image(systemName: icon)
+                    .font(.system(size: 22))
+                
+                Text(title)
+                    .font(.clarity(.medium, textStyle: .caption))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .foregroundColor(selected ? .accentColor : .secondaryTxt)
+            .background(
+                selected ? Color.secondaryBg.opacity(0.3).cornerRadius(10) : nil
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
     }
     
     // Helper for action buttons
