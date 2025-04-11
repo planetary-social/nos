@@ -300,12 +300,11 @@ struct ProfileHeader: View {
 
 // Wallet button that presents the full wallet functionality
 struct WalletButtonPlaceholder: View {
-    @State private var showingWallet = false
-    @Environment(\.colorScheme) private var colorScheme
+    @EnvironmentObject private var router: Router
     
     var body: some View {
         Button {
-            showingWallet = true
+            router.push(.wallet())
         } label: {
             ZStack {
                 Circle()
@@ -316,10 +315,6 @@ struct WalletButtonPlaceholder: View {
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.accentColor)
             }
-        }
-        .sheet(isPresented: $showingWallet) {
-            WalletView()
-                .preferredColorScheme(colorScheme)
         }
     }
 }
