@@ -3,6 +3,7 @@ import Dependencies
 import Logger
 import SwiftUI
 import SwiftUINavigation
+import Foundation
 
 struct NoteComposer: View {
 
@@ -85,168 +86,220 @@ struct NoteComposer: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                VStack(spacing: 0) {
-                    GeometryReader { geometry in
-                        ScrollView {
-                            ScrollViewReader { proxy in
-                                VStack(spacing: 0) {
-                                    if let replyToNote {
-                                        ReplyPreview(note: replyToNote)
-                                    }
-                                    
-                                    // Show title field for media posts
-                                    if postKind != .textNote {
-                                        TextField("Title", text: $mediaTitle)
-                                            .font(.clarity(.medium, textStyle: .title3))
-                                            .padding()
-                                            .background(Color.secondaryBg.opacity(0.3))
-                                            .cornerRadius(8)
-                                            .padding(.horizontal, 10)
-                                            .padding(.top, 10)
-                                            .disabled(showNotePreview)
-                                    }
-                                    
-                                    NoteTextEditor(
-                                        controller: $editingController,
-                                        minHeight: minimumEditorHeight,
-                                        relatedAuthors: relatedAuthors
-                                    )
-                                    .padding(10)
-                                    .disabled(showNotePreview)
-                                    .background {
-                                        // This is a placeholder view that lets us scroll the editor just into view.
-                                        Color.clear
-                                            .frame(height: 1)
-                                            .offset(y: 100)
-                                            .id(0)
-                                    }
-                                    if let quotedNote {
-                                        NoteCard(
-                                            note: quotedNote,
-                                            hideOutOfNetwork: false,
-                                            rendersQuotedNotes: false,
-                                            showsActions: false
-                                        )
-                                        .withStyledBorder()
-                                        .padding(.horizontal, 16)
-                                        .padding(.bottom, 16)
-                                    }
-                                }
-                                .onAppear {
-                                    Task {
-                                        try await Task.sleep(for: .seconds(0.5))
-                                        withAnimation(.easeInOut(duration: 0.25)) {
-                                            proxy.scrollTo(0, anchor: nil)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        .onChange(of: geometry.size.height) { _, newValue in
-                            scrollViewHeight = newValue
-                        }
-                    }
-
-                    composerActionBar
+            contentView
+                .navigationTitle(navigationTitle)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarBackButtonHidden(true)
+                .navigationBarItems(
+                    leading: cancelButton,
+                    trailing: postButton
+                )
+                .onAppear(perform: onAppearSetup)
+                .task {
+                    loadQuotedNote()
                 }
-                .onChange(of: showNotePreview) { _, newValue in
-                    if newValue {
-                        do {
-                            let jsonEvent = try jsonEvent(attributedString: postText)
-                            let event = try previewEventRepository.createPreviewEvent(
-                                from: jsonEvent,
-                                in: viewContext
-                            )
-                            if let event {
-                                withAnimation {
-                                    self.previewEvent = event
-                                }
-                            } else {
-                                Log.error("Couldn't create preview event")
-                                showNotePreview = false
-                            }
-                        } catch {
-                            Log.error("Error creating preview: \(error.localizedDescription)")
-                            showNotePreview = false
-                        }
-                    } else {
-                        withAnimation {
-                            self.previewEvent = nil
-                        }
-                    }
-                }
-
-                if isUploadingImage {
-                    FullscreenProgressView(
-                        isPresented: .constant(true),
-                        text: String(localized: "uploading", table: "ImagePicker")
-                    )
-                }
-
-                if let previewEvent {
-                    notePreview(for: previewEvent)
-                        .onDisappear {
-                            do {
-                                try previewEventRepository.deletePreviewEvent(previewEvent, in: viewContext)
-                            } catch {
-                                Log.error("Couldn't delete preview event: \(error.localizedDescription)")
-                            }
-                        }
-                }
-
-                if showRelayPicker, let author = currentUser.author {
-                    RelayPicker(
-                        selectedRelay: $selectedRelay,
-                        defaultSelection: String(localized: "allMyRelays"),
-                        author: author,
-                        isPresented: $showRelayPicker
-                    )
-                    .onChange(of: selectedRelay) { _, _ in
-                        withAnimation {
-                            showRelayPicker = false
-                        }
-                    }
-                }
-            }
-            .background(Color.appBg)
-            .navigationBarTitle(navigationTitle, displayMode: .inline)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Color.cardBgBottom, for: .navigationBar)
-            .toolbar {
-                RelayPickerToolbarButton(
-                    selectedRelay: $selectedRelay,
-                    isPresenting: $showRelayPicker
-                ) {
-                    withAnimation {
-                        showRelayPicker.toggle()
-                    }
-                }
-            }
-            .navigationBarItems(
-                leading: Button {
-                    isPresented = false
-                }
-                label: {
-                    Text("cancel")
-                        .foregroundColor(.primaryTxt)
-                },
-                trailing: ActionButton("post", action: postAction)
-                    .frame(height: 22)
-                    .disabled(!isPostEnabled)
-                    .padding(.bottom, 3)
-            )
-            .onAppear {
-                if let initialContents, editingController.isEmpty {
-                    editingController.append(text: initialContents)
-                }
-                analytics.showedNoteComposer()
-            }
-            .task {
-                loadQuotedNote()
-            }
         }
         .alert(unwrapping: $alert)
+    }
+    
+    // Simple content view to reduce complexity
+    private var contentView: some View {
+        ZStack {
+            // Main editor area
+            VStack(spacing: 0) {
+                mainEditorArea
+                composerActionBar
+            }
+            .onChange(of: showNotePreview, perform: handlePreviewChange)
+            
+            // Overlays
+            if isUploadingImage {
+                uploadingIndicator
+            }
+            
+            if let previewEvent = previewEvent {
+                previewView(for: previewEvent)
+            }
+            
+            if showRelayPicker, let author = currentUser.author {
+                relayPickerView(author: author)
+            }
+        }
+        .background(Color.gray.opacity(0.1))
+    }
+    
+    // Editor area with simpler structure
+    private var mainEditorArea: some View {
+        GeometryReader { geometry in
+            ScrollView {
+                ScrollViewReader { proxy in
+                    VStack(spacing: 0) {
+                        // Reply preview if needed
+                        if let replyToNote = replyToNote {
+                            ReplyPreview(note: replyToNote)
+                        }
+                        
+                        // Media title field if needed
+                        if postKind != .textNote {
+                            titleTextField
+                        }
+                        
+                        // Note editor
+                        editor
+                        
+                        // Quoted note if needed
+                        if let quotedNote = quotedNote {
+                            quotedNoteView(note: quotedNote)
+                        }
+                    }
+                    .onAppear {
+                        Task {
+                            try? await Task.sleep(for: .seconds(0.5))
+                            withAnimation(.easeInOut(duration: 0.25)) {
+                                proxy.scrollTo(0, anchor: nil)
+                            }
+                        }
+                    }
+                }
+            }
+            .onChange(of: geometry.size.height) { _, newValue in
+                scrollViewHeight = newValue
+            }
+        }
+    }
+    
+    // Simple helper views
+    private var titleTextField: some View {
+        TextField("Title", text: $mediaTitle)
+            .font(.clarity(.medium, textStyle: .title3))
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(8)
+            .padding(.horizontal, 10)
+            .padding(.top, 10)
+            .disabled(showNotePreview)
+    }
+    
+    private var editor: some View {
+        NoteTextEditor(
+            controller: $editingController,
+            minHeight: minimumEditorHeight,
+            relatedAuthors: relatedAuthors
+        )
+        .padding(10)
+        .disabled(showNotePreview)
+        .background {
+            Color.clear
+                .frame(height: 1)
+                .offset(y: 100)
+                .id(0)
+        }
+    }
+    
+    private func quotedNoteView(note: Event) -> some View {
+        NoteCard(
+            note: note,
+            hideOutOfNetwork: false,
+            rendersQuotedNotes: false,
+            showsActions: false
+        )
+        .withStyledBorder()
+        .padding(.horizontal, 16)
+        .padding(.bottom, 16)
+    }
+    
+    private var uploadingIndicator: some View {
+        FullscreenProgressView(
+            isPresented: .constant(true),
+            text: String(localized: "uploading", table: "ImagePicker")
+        )
+    }
+    
+    private func previewView(for event: Event) -> some View {
+        notePreview(for: event)
+            .onDisappear {
+                cleanupPreviewEvent(event)
+            }
+    }
+    
+    private func relayPickerView(author: Author) -> some View {
+        RelayPicker(
+            selectedRelay: $selectedRelay,
+            defaultSelection: String(localized: "allMyRelays"),
+            author: author,
+            isPresented: $showRelayPicker
+        )
+        .onChange(of: selectedRelay) { _, _ in
+            withAnimation {
+                showRelayPicker = false
+            }
+        }
+    }
+    
+    private var cancelButton: some View {
+        Button(action: { isPresented = false }) {
+            Text("cancel")
+                .foregroundColor(.primary)
+        }
+    }
+    
+    private var postButton: some View {
+        Button(action: { 
+            Task { await postAction() }
+        }) {
+            Text("post")
+                .foregroundColor(.primary)
+                .bold()
+        }
+        .disabled(!isPostEnabled)
+    }
+    
+    // MARK: - Helper Methods
+    
+    private func onAppearSetup() {
+        if let initialContents, editingController.isEmpty {
+            editingController.append(text: initialContents)
+        }
+        analytics.showedNoteComposer()
+    }
+    
+    private func handlePreviewChange(_ newValue: Bool) {
+        if newValue {
+            createPreviewEvent()
+        } else {
+            withAnimation {
+                self.previewEvent = nil
+            }
+        }
+    }
+    
+    private func createPreviewEvent() {
+        do {
+            let jsonEvent = try jsonEvent(attributedString: postText)
+            let event = try previewEventRepository.createPreviewEvent(
+                from: jsonEvent,
+                in: viewContext
+            )
+            if let event {
+                withAnimation {
+                    self.previewEvent = event
+                }
+            } else {
+                Log.error("Couldn't create preview event")
+                showNotePreview = false
+            }
+        } catch {
+            Log.error("Error creating preview: \(error.localizedDescription)")
+            showNotePreview = false
+        }
+    }
+    
+    private func cleanupPreviewEvent(_ event: Event) {
+        do {
+            try previewEventRepository.deletePreviewEvent(event, in: viewContext)
+        } catch {
+            Log.error("Couldn't delete preview event: \(error.localizedDescription)")
+        }
     }
 
     /// Action Bar displayed below the editing controller.
@@ -287,47 +340,62 @@ struct NoteComposer: View {
     }
 
     @MainActor private func postAction() async {
-        guard currentUser.keyPair != nil, let author = currentUser.author else {
-            alert = AlertState(title: {
-                TextState(String(localized: "error"))
-            }, message: {
-                TextState(String(localized: "youNeedToEnterAPrivateKeyBeforePosting"))
-            })
+        // Validate user has a keypair
+        guard let _ = currentUser.keyPair, let author = currentUser.author else {
+            showErrorAlert(message: String(localized: "youNeedToEnterAPrivateKeyBeforePosting"))
             return
         }
+        
+        // Check if selected relay supports NIP-40 when using expiration time
         if let relay = selectedRelay {
-            guard expirationTime == nil || relay.supportedNIPs?.contains(40) == true else {
-                alert = AlertState(title: {
-                    TextState(String(localized: "error"))
-                }, message: {
-                    TextState(String(localized: "relayDoesNotSupportNIP40"))
-                })
+            if !validateRelaySupportsExpiration(relay) {
                 return
             }
         } else if expirationTime != nil {
-            do {
-                let relays = try await Relay.find(supporting: 40, for: author, context: viewContext)
-                if relays.isEmpty {
-                    alert = AlertState(title: {
-                        TextState(String(localized: "error"))
-                    }, message: {
-                        TextState(String(localized: "anyRelaysSupportingNIP40"))
-                    })
-                    return
-                }
-            } catch {
-                alert = AlertState(title: {
-                    TextState(String(localized: "error"))
-                }, message: {
-                    TextState(error.localizedDescription)
-                })
+            let relaysSupported = await validateAvailableRelaysForExpiration(author)
+            if !relaysSupported {
                 return
             }
         }
+        
+        // Publish the post and dismiss the composer
         Task {
             await publishPost()
         }
         isPresented = false
+    }
+    
+    // MARK: - Post Validation Helpers
+    
+    private func showErrorAlert(message: String) {
+        alert = AlertState(title: {
+            TextState(String(localized: "error"))
+        }, message: {
+            TextState(message)
+        })
+    }
+    
+    private func validateRelaySupportsExpiration(_ relay: Relay) -> Bool {
+        guard expirationTime == nil || relay.supportedNIPs?.contains(40) == true else {
+            showErrorAlert(message: String(localized: "relayDoesNotSupportNIP40"))
+            return false
+        }
+        return true
+    }
+    
+    @MainActor
+    private func validateAvailableRelaysForExpiration(_ author: Author) async -> Bool {
+        do {
+            let relays = try await Relay.find(supporting: 40, for: author, context: viewContext)
+            if relays.isEmpty {
+                showErrorAlert(message: String(localized: "anyRelaysSupportingNIP40"))
+                return false
+            }
+            return true
+        } catch {
+            showErrorAlert(message: error.localizedDescription)
+            return false
+        }
     }
 
     private func loadQuotedNote() {
@@ -383,42 +451,62 @@ struct NoteComposer: View {
         let (content, tags) = noteParser.parse(attributedText: attributedString)
         let mediaURLs = extractMediaURLs(from: content)
         
+        // Return the appropriate event type based on postKind
         switch postKind {
         case .textNote:
-            // Standard text note
-            return JSONEvent(
-                attributedText: attributedString,
-                noteParser: noteParser,
-                expirationTime: expirationTime,
-                replyToNote: replyToNote,
-                keyPair: keyPair
-            )
+            return createTextNoteEvent(attributedString: attributedString, keyPair: keyPair)
         case .picturePost:
-            // Picture post (Kind 20)
-            let imageMetadata = createImageMetadata(from: mediaURLs)
-            return JSONEvent.picturePost(
-                pubKey: keyPair.publicKeyHex,
-                title: mediaTitle.isEmpty ? "Untitled" : mediaTitle,
-                description: content,
-                imageMetadata: imageMetadata,
-                tags: tags
-            )
+            return createPicturePostEvent(content: content, tags: tags, mediaURLs: mediaURLs, keyPair: keyPair)
         case .videoPost, .shortVideo:
-            // Video post (Kind 21/22)
-            let videoMetadata = createVideoMetadata(from: mediaURLs)
-            return JSONEvent.videoPost(
-                pubKey: keyPair.publicKeyHex,
-                title: mediaTitle.isEmpty ? "Untitled" : mediaTitle,
-                description: content,
-                isShortForm: postKind == .shortVideo,
-                publishedAt: Int(Date.now.timeIntervalSince1970),
-                duration: nil, // We don't have access to video duration
-                videoMetadata: videoMetadata,
-                contentWarning: nil,
-                altText: nil,
-                tags: tags
-            )
+            return createVideoPostEvent(content: content, tags: tags, mediaURLs: mediaURLs, keyPair: keyPair)
         }
+    }
+    
+    // MARK: - Event Creation Helpers
+    
+    private func createTextNoteEvent(attributedString: AttributedString, keyPair: KeyPair) -> JSONEvent {
+        // Standard text note
+        return JSONEvent(
+            attributedText: attributedString,
+            noteParser: noteParser,
+            expirationTime: expirationTime,
+            replyToNote: replyToNote,
+            keyPair: keyPair
+        )
+    }
+    
+    private func createPicturePostEvent(content: String, tags: [[String]], mediaURLs: [URL], keyPair: KeyPair) -> JSONEvent {
+        // Picture post (Kind 20)
+        let imageMetadata = createImageMetadata(from: mediaURLs)
+        let finalTitle = mediaTitle.isEmpty ? "Untitled" : mediaTitle
+        
+        return JSONEvent.picturePost(
+            pubKey: keyPair.publicKeyHex,
+            title: finalTitle,
+            description: content,
+            imageMetadata: imageMetadata,
+            tags: tags
+        )
+    }
+    
+    private func createVideoPostEvent(content: String, tags: [[String]], mediaURLs: [URL], keyPair: KeyPair) -> JSONEvent {
+        // Video post (Kind 21/22)
+        let videoMetadata = createVideoMetadata(from: mediaURLs)
+        let finalTitle = mediaTitle.isEmpty ? "Untitled" : mediaTitle
+        let isShortForm = postKind == .shortVideo
+        
+        return JSONEvent.videoPost(
+            pubKey: keyPair.publicKeyHex,
+            title: finalTitle,
+            description: content,
+            isShortForm: isShortForm,
+            publishedAt: Int(Date.now.timeIntervalSince1970),
+            duration: nil, // We don't have access to video duration
+            videoMetadata: videoMetadata,
+            contentWarning: nil,
+            altText: nil,
+            tags: tags
+        )
     }
     
     /// Extracts media URLs from content text

@@ -39,6 +39,15 @@ struct NosNavigationStack<Content: View>: View {
                         EventObservationView(eventID: eventID) { event in
                             NoteView(note: event, showKeyboard: true)
                         }
+                    case .wallet:
+                        // Present wallet via sheet since it uses a navigation stack internally
+                        Text("Wallet")
+                            .onAppear {
+                                // Use a sheet presentation from the parent view instead
+                                DispatchQueue.main.async {
+                                    path.removeLast() // Remove wallet from navigation path
+                                }
+                            }
                     }
                 })
         }

@@ -1,0 +1,15 @@
+{
+  "nostrSDK": "0.3.0",
+  "cashuSwift": "0.1.0",
+  "wrapperVersion": "1.0.0",
+  "supported": {
+    "minibits": true,
+    "lnvoltz": true
+  },
+  "defaultMints": [
+    "https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoL",
+    "https://mint.bbqcashu.com",
+    "https://mint.minibits.cash/Bitcoin",
+    "https://mint.lnvoltz.com"
+  ]
+}

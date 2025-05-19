@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -163,6 +163,9 @@
 		04C9D7992CC29EDD00EAAD4D /* FeaturedAuthor+Cohort5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C9D7982CC29EDD00EAAD4D /* FeaturedAuthor+Cohort5.swift */; };
 		04F16AA72CBDBD91003AD693 /* DeleteConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F16AA62CBDBD91003AD693 /* DeleteConfirmationView.swift */; };
 		2D06BB9D2AE249D70085F509 /* ThreadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */; };
+		2D33A5802DA924CA00CBC643 /* PostKindSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D33A57F2DA924CA00CBC643 /* PostKindSelector.swift */; };
+		2D33A5812DA924CA00CBC643 /* PostKindSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D33A57F2DA924CA00CBC643 /* PostKindSelector.swift */; };
+		2D33A5822DA924CA00CBC643 /* PostKindSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D33A57F2DA924CA00CBC643 /* PostKindSelector.swift */; };
 		2D4010A22AD87DF300F93AD4 /* KnownFollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */; };
 		3A1C296F2B2A537C0020B753 /* Moderation.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */; };
 		3A67449C2B294712002B8DE0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3A67449B2B294712002B8DE0 /* Localizable.xcstrings */; };
@@ -754,6 +757,7 @@
 		04C9D7982CC29EDD00EAAD4D /* FeaturedAuthor+Cohort5.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeaturedAuthor+Cohort5.swift"; sourceTree = "<group>"; };
 		04F16AA62CBDBD91003AD693 /* DeleteConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteConfirmationView.swift; sourceTree = "<group>"; };
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
+		2D33A57F2DA924CA00CBC643 /* PostKindSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostKindSelector.swift; sourceTree = "<group>"; };
 		2D3C71A52CEE6F7100625BCB /* Nos 20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 20.xcdatamodel"; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
 		3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Moderation.xcstrings; sourceTree = "<group>"; };
@@ -2085,6 +2089,7 @@
 		C9EE3E652A053CF1008A7491 /* NoteComposer */ = {
 			isa = PBXGroup;
 			children = (
+				2D33A57F2DA924CA00CBC643 /* PostKindSelector.swift */,
 				C9F75AD12A02D41E005BBE45 /* ComposerActionBar.swift */,
 				C9EE3E5F2A0538B7008A7491 /* ExpirationTimeButton.swift */,
 				C9F75AD52A041FF7005BBE45 /* ExpirationTimePicker.swift */,
@@ -2268,11 +2273,13 @@
 				C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */,
 				C91565BF2B2368FA0068EECA /* XCRemoteSwiftPackageReference "ViewInspector" */,
 				3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */,
-				C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
+				C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */,
 				C9FD35112BCED5A6008F8D95 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
 				03C49ABE2C938A9C00502321 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				039389212CA4985C00698978 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
 				C98905A02CD3B8CF00C17EE0 /* XCRemoteSwiftPackageReference "Inject" */,
+				2DF999AF2DA93E5A00CFB607 /* XCLocalSwiftPackageReference "../../nostr/CashuSwift" */,
+				2DAA9F222DB091C500136A15 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -2422,6 +2429,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D33A5802DA924CA00CBC643 /* PostKindSelector.swift in Sources */,
 				C90862BE29E9804B00C35A71 /* NosPerformanceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2516,6 +2524,7 @@
 				037975EA2C0E695A00ADDF37 /* MockFeatureFlags.swift in Sources */,
 				030E571B2CC2ADDB00A4A51E /* SaveProfileError.swift in Sources */,
 				C94A5E182A72C84200B6EC5D /* ReportCategory.swift in Sources */,
+				2D33A5812DA924CA00CBC643 /* PostKindSelector.swift in Sources */,
 				C9A8015E2BD0177D006E29B2 /* ReportPublisher.swift in Sources */,
 				03FFCA7B2D07721100D6F0F1 /* AuthorListError.swift in Sources */,
 				C9F0BB6B29A503D6000547FC /* PublicKey.swift in Sources */,
@@ -2850,6 +2859,7 @@
 				035729B12BE4167E005FEE85 /* ReportCategoryTests.swift in Sources */,
 				C973AB602A323167002AED16 /* AuthorReference+CoreDataProperties.swift in Sources */,
 				508133DB2C7A003600DFBF75 /* AttributedString+QuotationsTests.swift in Sources */,
+				2D33A5822DA924CA00CBC643 /* PostKindSelector.swift in Sources */,
 				0383CD7B2C76798C007DB0E4 /* ImageButton.swift in Sources */,
 				C9F84C1A298DBB6300C6714D /* Data+Encoding.swift in Sources */,
 				0317263D2C7935220030EDCA /* AspectRatioContainer.swift in Sources */,
@@ -2937,11 +2947,11 @@
 /* Begin PBXTargetDependency section */
 		3AD3185D2B294E9000026B07 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 3AD3185C2B294E9000026B07 /* plugin:XCStringsToolPlugin */;
+			productRef = 3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */;
 		};
 		3AEABEF32B2BF806001BC933 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 3AEABEF22B2BF806001BC933 /* plugin:XCStringsToolPlugin */;
+			productRef = 3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */;
 		};
 		C90862C229E9804B00C35A71 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2950,11 +2960,11 @@
 		};
 		C9A6C7442AD83F7A001F9500 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = C9A6C7432AD83F7A001F9500 /* plugin:SwiftGenPlugin */;
+			productRef = C9A6C7432AD83F7A001F9500 /* SwiftGenPlugin */;
 		};
 		C9D573402AB24A3700E06BB4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = C9D5733F2AB24A3700E06BB4 /* plugin:SwiftGenPlugin */;
+			productRef = C9D5733F2AB24A3700E06BB4 /* SwiftGenPlugin */;
 		};
 		C9DEBFE6298941020078B43A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3695,6 +3705,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		2DF999AF2DA93E5A00CFB607 /* XCLocalSwiftPackageReference "../../nostr/CashuSwift" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../nostr/CashuSwift;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		039389212CA4985C00698978 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -3710,6 +3727,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.7.5;
+			};
+		};
+		2DAA9F222DB091C500136A15 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
 			};
 		};
 		3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */ = {
@@ -3824,7 +3849,7 @@
 				minimumVersion = 4.0.0;
 			};
 		};
-		C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */ = {
+		C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift";
 			requirement = {
@@ -3863,12 +3888,12 @@
 			package = 03C49ABE2C938A9C00502321 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
 		};
-		3AD3185C2B294E9000026B07 /* plugin:XCStringsToolPlugin */ = {
+		3AD3185C2B294E9000026B07 /* XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
 			productName = "plugin:XCStringsToolPlugin";
 		};
-		3AEABEF22B2BF806001BC933 /* plugin:XCStringsToolPlugin */ = {
+		3AEABEF22B2BF806001BC933 /* XCStringsToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3AD3185B2B294E6200026B07 /* XCRemoteSwiftPackageReference "xcstrings-tool-plugin" */;
 			productName = "plugin:XCStringsToolPlugin";
@@ -3947,7 +3972,7 @@
 			package = C99DBF7C2A9E81CF00F7068F /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
 		};
-		C9A6C7432AD83F7A001F9500 /* plugin:SwiftGenPlugin */ = {
+		C9A6C7432AD83F7A001F9500 /* SwiftGenPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9B737702AB24D5F00398BE7 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */;
 			productName = "plugin:SwiftGenPlugin";
@@ -3967,7 +3992,7 @@
 			package = C9B71DBC2A8E9BAD0031ED9F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
 		};
-		C9D5733F2AB24A3700E06BB4 /* plugin:SwiftGenPlugin */ = {
+		C9D5733F2AB24A3700E06BB4 /* SwiftGenPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9C8450C2AB249DB00654BC1 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */;
 			productName = "plugin:SwiftGenPlugin";
@@ -3979,12 +4004,12 @@
 		};
 		C9FD34F52BCEC89C008F8D95 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
+			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */;
 			productName = secp256k1;
 		};
 		C9FD34F72BCEC8B5008F8D95 /* secp256k1 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
+			package = C9FD34F42BCEC89C008F8D95 /* XCRemoteSwiftPackageReference "secp256k1" */;
 			productName = secp256k1;
 		};
 		C9FD35122BCED5A6008F8D95 /* NostrSDK */ = {

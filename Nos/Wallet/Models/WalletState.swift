@@ -30,6 +30,9 @@ import Logger
     /// Errors encountered during wallet operations
     @ObservationIgnored private(set) var lastError: Error?
     
+    /// Wallet proofs (for Macadamia integration)
+    @ObservationIgnored private var proofs: [ProofModel] = []
+    
     // MARK: - Initialization
     
     init() {
@@ -42,22 +45,13 @@ import Logger
     /// Creates a new wallet with a randomly generated seed
     func createNewWallet() async throws {
         Log.debug("Creating new wallet...")
-        // TODO: Implement wallet creation using Macadamia code
         
-        // For now, create a placeholder wallet
-        let newWallet = WalletModel(
-            id: UUID(),
-            seed: "random_seed_placeholder",
-            mnemonic: "twelve random words that would be a proper mnemonic phrase",
-            createdAt: Date()
-        )
+        // Use MacadamiaWalletBridge to create the wallet with CashuSwift
+        let bridge = MacadamiaWalletBridge(walletState: self)
+        try await bridge.createWallet()
         
-        await MainActor.run {
-            self.activeWallet = newWallet
-            self.walletInitialized = true
-        }
-        
-        try await loadDefaultMints()
+        // Wallet is now initialized through the MacadamiaWalletBridge
+        // No need to call loadDefaultMints as the bridge handles this
         await calculateBalance()
     }
     
@@ -75,22 +69,12 @@ import Logger
             }
         }
         
-        // TODO: Implement wallet restoration using Macadamia code
+        // Use MacadamiaWalletBridge to restore the wallet with CashuSwift
+        let bridge = MacadamiaWalletBridge(walletState: self)
+        try await bridge.restoreWallet(mnemonic: mnemonic)
         
-        // For now, create a placeholder wallet
-        let restoredWallet = WalletModel(
-            id: UUID(),
-            seed: "restored_seed_placeholder",
-            mnemonic: mnemonic,
-            createdAt: Date()
-        )
-        
-        await MainActor.run {
-            self.activeWallet = restoredWallet
-            self.walletInitialized = true
-        }
-        
-        try await loadDefaultMints()
+        // Wallet is now initialized through the MacadamiaWalletBridge
+        // No need to call loadDefaultMints as the bridge handles this
         await calculateBalance()
     }
     
@@ -98,19 +82,9 @@ import Logger
     func addMint(url: URL) async throws {
         Log.debug("Adding mint: \(url.absoluteString)")
         
-        // TODO: Implement mint loading using Macadamia code
-        
-        // For now, create a placeholder mint
-        let newMint = MintModel(
-            id: UUID(),
-            url: url,
-            name: url.host ?? url.absoluteString,
-            addedAt: Date()
-        )
-        
-        await MainActor.run {
-            self.mints.append(newMint)
-        }
+        // Use MacadamiaWalletBridge to add the mint with CashuSwift
+        let bridge = MacadamiaWalletBridge(walletState: self)
+        try await bridge.addMint(url: url)
         
         await calculateBalance()
     }
@@ -119,105 +93,36 @@ import Logger
     func send(amount: Int, to: String, mint: MintModel) async throws -> String {
         Log.debug("Sending \(amount) sats to \(to) using mint \(mint.url.absoluteString)")
         
-        // TODO: Implement sending using Macadamia code
-        
-        // For now, create a placeholder transaction
-        let transaction = TransactionModel(
-            id: UUID(),
-            type: .send,
-            amount: amount,
-            timestamp: Date(),
-            memo: "Sent to \(to)",
-            status: .completed
-        )
-        
-        await MainActor.run {
-            self.transactions.append(transaction)
-            self.balance -= amount
-        }
-        
-        return "token_placeholder"
+        // Use MacadamiaWalletBridge to send tokens with CashuSwift
+        let bridge = MacadamiaWalletBridge(walletState: self)
+        return try await bridge.send(amount: amount, to: to, mint: mint)
     }
     
     /// Receives tokens from a token string
     func receive(token: String) async throws {
         Log.debug("Receiving token: \(token)")
         
-        // TODO: Implement receiving using Macadamia code
-        
-        // For demonstration, assume the token contains 1000 sats
-        let receivedAmount = 1000
-        
-        // For now, create a placeholder transaction
-        let transaction = TransactionModel(
-            id: UUID(),
-            type: .receive,
-            amount: receivedAmount,
-            timestamp: Date(),
-            memo: "Received token",
-            status: .completed
-        )
-        
-        await MainActor.run {
-            self.transactions.append(transaction)
-            self.balance += receivedAmount
-        }
+        // Use MacadamiaWalletBridge to receive tokens with CashuSwift
+        let bridge = MacadamiaWalletBridge(walletState: self)
+        try await bridge.receive(token: token)
     }
     
     /// Creates a Lightning invoice and melts tokens to pay it
     func melt(invoice: String, mint: MintModel) async throws {
         Log.debug("Melting tokens for invoice: \(invoice)")
         
-        // TODO: Implement melting using Macadamia code
-        
-        // For demonstration, assume the invoice is for 500 sats
-        let invoiceAmount = 500
-        
-        // For now, create a placeholder transaction
-        let transaction = TransactionModel(
-            id: UUID(),
-            type: .melt,
-            amount: invoiceAmount,
-            timestamp: Date(),
-            memo: "Paid Lightning invoice",
-            status: .completed
-        )
-        
-        await MainActor.run {
-            self.transactions.append(transaction)
-            self.balance -= invoiceAmount
-        }
+        // Use MacadamiaWalletBridge to melt tokens with CashuSwift
+        let bridge = MacadamiaWalletBridge(walletState: self)
+        try await bridge.melt(invoice: invoice, mint: mint)
     }
     
     /// Mints new tokens by paying a Lightning invoice
     func mint(amount: Int, mint: MintModel) async throws {
         Log.debug("Minting \(amount) sats using mint \(mint.url.absoluteString)")
         
-        // TODO: Implement minting using Macadamia code
-        
-        // For now, create a placeholder transaction and fake invoice
-        let transaction = TransactionModel(
-            id: UUID(),
-            type: .mint,
-            amount: amount,
-            timestamp: Date(),
-            memo: "Minted tokens",
-            status: .pending
-        )
-        
-        await MainActor.run {
-            self.transactions.append(transaction)
-        }
-        
-        // Simulate a delay for invoice payment
-        try await Task.sleep(for: .seconds(2))
-        
-        await MainActor.run {
-            if let index = self.transactions.firstIndex(where: { $0.id == transaction.id }) {
-                self.transactions[index].status = .completed
-                self.balance += amount
-            }
-        }
+        // Use MacadamiaWalletBridge to mint tokens with CashuSwift
+        let bridge = MacadamiaWalletBridge(walletState: self)
+        try await bridge.mint(amount: amount, mint: mint)
     }
     
     // MARK: - NIP-60/61 Methods
@@ -242,14 +147,129 @@ import Logger
         return ["status": "success", "message": "Not yet implemented"]
     }
     
+    // MARK: - Macadamia Integration Methods
+    
+    /// Add a new proof to the wallet
+    func addProofs(_ newProofs: [ProofModel]) {
+        self.proofs.append(contentsOf: newProofs)
+        saveWalletState()
+    }
+    
+    /// Mark proofs as spent
+    func markProofsAsSpent(_ spentProofs: [ProofModel]) {
+        for spentProof in spentProofs {
+            if let index = proofs.firstIndex(where: { $0.id == spentProof.id }) {
+                proofs[index].state = .spent
+            }
+        }
+        saveWalletState()
+    }
+    
+    /// Get valid proofs for a specific mint
+    func getValidProofsForMint(_ mint: MintModel) -> [ProofModel] {
+        return proofs.filter { $0.state == .valid && $0.mintURL == mint.url }
+    }
+    
+    /// Get all valid proofs across all mints
+    func getAllValidProofs() -> [ProofModel] {
+        return proofs.filter { $0.state == .valid }
+    }
+    
+    /// Add a transaction to the wallet
+    func addTransaction(_ transaction: TransactionModel) {
+        self.transactions.append(transaction)
+        saveWalletState()
+    }
+    
+    /// Get transaction index by ID
+    func getTransactionIndex(id: UUID) -> Int? {
+        return transactions.firstIndex(where: { $0.id == id })
+    }
+    
+    /// Update transaction status
+    func updateTransactionStatus(at index: Int, status: TransactionModel.TransactionStatus) {
+        if index >= 0 && index < transactions.count {
+            transactions[index].status = status
+            saveWalletState()
+        }
+    }
+    
+    /// Get mint by URL
+    func getMintByURL(_ url: URL) -> MintModel? {
+        return mints.first(where: { $0.url == url })
+    }
+    
+    /// Recalculate the wallet balance based on proofs and transactions
+    func recalculateBalance() async {
+        await calculateBalance()
+        saveWalletState()
+    }
+    
     // MARK: - Private Methods
     
     /// Loads an existing wallet if available
     private func loadExistingWallet() {
-        // TODO: Implement persistent wallet loading
-        
         Log.debug("Checking for existing wallet...")
-        walletInitialized = false
+        
+        // Load wallet data from UserDefaults for now (in production this should use Keychain)
+        let defaults = UserDefaults.standard
+        
+        if let walletData = defaults.data(forKey: "nos_wallet_data"),
+           let wallet = try? JSONDecoder().decode(WalletModel.self, from: walletData) {
+            self.activeWallet = wallet
+            self.walletInitialized = true
+            
+            // Load mints
+            if let mintsData = defaults.data(forKey: "nos_wallet_mints"),
+               let mints = try? JSONDecoder().decode([MintModel].self, from: mintsData) {
+                self.mints = mints
+            }
+            
+            // Load transactions
+            if let transactionsData = defaults.data(forKey: "nos_wallet_transactions"),
+               let transactions = try? JSONDecoder().decode([TransactionModel].self, from: transactionsData) {
+                self.transactions = transactions
+            }
+            
+            // Load proofs
+            if let proofsData = defaults.data(forKey: "nos_wallet_proofs"),
+               let proofs = try? JSONDecoder().decode([ProofModel].self, from: proofsData) {
+                self.proofs = proofs
+            }
+            
+            Log.info("Successfully loaded existing wallet with \(self.mints.count) mints and \(self.proofs.count) proofs")
+        } else {
+            walletInitialized = false
+            Log.info("No existing wallet found")
+        }
+    }
+    
+    /// Saves the current wallet state
+    private func saveWalletState() {
+        // Save wallet data to UserDefaults for now (in production this should use Keychain)
+        let defaults = UserDefaults.standard
+        
+        if let wallet = activeWallet,
+           let walletData = try? JSONEncoder().encode(wallet) {
+            defaults.set(walletData, forKey: "nos_wallet_data")
+        }
+        
+        // Save mints
+        if let mintsData = try? JSONEncoder().encode(mints) {
+            defaults.set(mintsData, forKey: "nos_wallet_mints")
+        }
+        
+        // Save transactions
+        if let transactionsData = try? JSONEncoder().encode(transactions) {
+            defaults.set(transactionsData, forKey: "nos_wallet_transactions")
+        }
+        
+        // Save proofs
+        if let proofsData = try? JSONEncoder().encode(proofs) {
+            defaults.set(proofsData, forKey: "nos_wallet_proofs")
+        }
+        
+        Log.debug("Wallet state saved")
     }
     
     /// Loads default mints
@@ -270,9 +290,18 @@ import Logger
     private func calculateBalance() async {
         Log.debug("Calculating wallet balance...")
         
-        // TODO: Implement proper balance calculation from proofs
+        // First attempt to calculate from valid proofs
+        let proofsBalance = proofs.filter { $0.state == .valid }.reduce(0) { $0 + $1.amount }
         
-        // For now, just use the balance we're tracking in the transactions
+        // If we have proofs, use their sum as the balance
+        if proofsBalance > 0 {
+            await MainActor.run {
+                self.balance = proofsBalance
+            }
+            return
+        }
+        
+        // Fall back to calculating from transactions
         let calculatedBalance = transactions.reduce(0) { balance, transaction in
             switch transaction.type {
             case .mint, .receive:

@@ -1,13 +1,14 @@
 import SwiftUI
+import Foundation
 
-/// Enum representing different types of posts a user can create
-enum PostKind: Int, CaseIterable, Identifiable {
-    case textNote = 1      // Regular text note (Kind 1)
-    case picturePost = 20  // NIP-68 picture post (Kind 20)
-    case videoPost = 21    // NIP-71 video post (Kind 21)
-    case shortVideo = 22   // NIP-71 short-form video (Kind 22)
+/// Simplified version of PostKind for UI purposes
+enum PostKind: String, CaseIterable, Identifiable {
+    case textNote      // Kind 1
+    case picturePost   // Kind 20
+    case videoPost     // Kind 21
+    case shortVideo    // Kind 22
     
-    var id: Int { rawValue }
+    var id: String { rawValue }
     
     var title: String {
         switch self {
@@ -48,16 +49,25 @@ enum PostKind: Int, CaseIterable, Identifiable {
         }
     }
     
-    var eventKind: EventKind {
+    var nostrKind: Int {
         switch self {
         case .textNote:
-            return .text
+            return 1
         case .picturePost:
-            return .picturePost
+            return 20
         case .videoPost:
-            return .video
+            return 21
         case .shortVideo:
-            return .shortVideo
+            return 22
+        }
+    }
+    
+    var requiresTitle: Bool {
+        switch self {
+        case .textNote:
+            return false
+        case .picturePost, .videoPost, .shortVideo:
+            return true
         }
     }
 }
@@ -75,24 +85,28 @@ struct PostKindSelector: View {
         } label: {
             HStack(spacing: 4) {
                 Image(systemName: selectedKind.icon)
-                    .foregroundColor(.secondaryTxt)
+                    .foregroundColor(.gray)
                 Text(selectedKind.title)
-                    .font(.clarity(.regular, textStyle: .caption))
-                    .foregroundColor(.secondaryTxt)
+                    .font(.system(.caption))
+                    .foregroundColor(.gray)
                 Image(systemName: "chevron.down")
-                    .font(.clarity(.regular, textStyle: .caption))
-                    .foregroundColor(.secondaryTxt)
+                    .font(.system(.caption))
+                    .foregroundColor(.gray)
                     .rotationEffect(.degrees(showSelector ? 180 : 0))
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 6)
             .background(
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(Color.secondaryBg)
+                    .fill(Color.gray.opacity(0.2))
             )
         }
         .overlay(
-            showSelector ? selectorOverlay : nil
+            Group {
+                if showSelector {
+                    selectorOverlay
+                }
+            }
         )
         .padding(.vertical, 8)
     }
@@ -110,15 +124,15 @@ struct PostKindSelector: View {
                     } label: {
                         HStack {
                             Image(systemName: kind.icon)
-                                .foregroundColor(selectedKind == kind ? .accentColor : .primaryTxt)
+                                .foregroundColor(selectedKind == kind ? .accentColor : .primary)
                                 .frame(width: 24)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(kind.title)
-                                    .font(.clarity(.medium, textStyle: .subheadline))
-                                    .foregroundColor(.primaryTxt)
+                                    .font(.system(.subheadline, weight: .medium))
+                                    .foregroundColor(.primary)
                                 Text(kind.description)
-                                    .font(.clarity(.regular, textStyle: .caption))
-                                    .foregroundColor(.secondaryTxt)
+                                    .font(.system(.caption))
+                                    .foregroundColor(.gray)
                             }
                             Spacer()
                             if selectedKind == kind {
@@ -129,7 +143,9 @@ struct PostKindSelector: View {
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
                         .background(
-                            selectedKind == kind ? Color.secondaryBg.opacity(0.5) : Color.clear
+                            selectedKind == kind ? 
+                                Color.gray.opacity(0.1) : 
+                                Color.clear
                         )
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -140,12 +156,12 @@ struct PostKindSelector: View {
                     }
                 }
             }
-            .background(Color.cardBgTop)
+            .background(Color(.systemBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.cardDividerTop, lineWidth: 1)
+                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
             )
         }
         .padding(.horizontal, 10)
@@ -164,5 +180,5 @@ struct PostKindSelector: View {
         Spacer()
     }
     .padding()
-    .background(Color.appBg)
+    .background(Color(.systemBackground))
 }

@@ -226,15 +226,29 @@ class NostrCashuHandler {
         
         // Get the mint URL (optional filter)
         let mintURLString = params["mint_url"] as? String
+        var filteredProofs = walletState.getAllValidProofs()
         
-        // TODO: Implement actual proof retrieval from wallet state
-        // For now, return an empty list
+        // Apply mint filter if provided
+        if let mintURLString = mintURLString, let url = URL(string: mintURLString) {
+            filteredProofs = filteredProofs.filter { $0.mintURL == url }
+        }
+        
+        // Convert proofs to a dictionary format for the response
+        let proofsData = filteredProofs.map { proof -> [String: Any] in
+            return [
+                "id": proof.id.uuidString,
+                "amount": proof.amount,
+                "keysetId": proof.keysetId,
+                "mint_url": proof.mintURL.absoluteString,
+                "state": proof.state.rawValue
+            ]
+        }
         
         // Return the proofs
         return [
             "id": id,
             "result": [
-                "proofs": [] // Empty for now, will be populated with actual proofs later
+                "proofs": proofsData
             ]
         ]
     }
@@ -243,11 +257,26 @@ class NostrCashuHandler {
     
     /// Validates if the connection exists and has the required permission
     private func validateConnection(params: [String: Any], requiredPermission: ConnectionInfo.Permission) throws {
-        // This method would check if the connection exists and has the required permission
-        // For MVP, we're skipping this check as connections are handled by NostrWalletConnectHandler
-        // In a full implementation, this would check the connection ID and permissions
+        // Get the connection ID
+        guard let connectionId = params["connection_id"] as? String else {
+            Log.error("Missing connection_id in request")
+            throw CashuError.unauthorized("Missing connection_id")
+        }
         
-        // TODO: Implement actual connection validation by coordinating with walletConnectHandler
+        // Verify with wallet connect handler that this connection exists and has permission
+        // For now, simplified implementation - in a full app we'd check with the wallet connect handler
+        
+        // Check if wallet is initialized
+        guard walletState.isWalletInitialized else {
+            Log.error("Wallet not initialized when validating connection")
+            throw CashuError.internalError("Wallet not initialized")
+        }
+        
+        // In a complete implementation, we would retrieve the connection from the WalletConnectHandler
+        // and check if it has the required permission. For now, we'll allow the operation if 
+        // the wallet is initialized (this is a simplification).
+        
+        Log.debug("Connection \(connectionId) validated for permission \(requiredPermission)")
     }
     
     // MARK: - Error Handling

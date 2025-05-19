@@ -3,7 +3,7 @@ import Foundation
 // MARK: - Wallet Models
 
 /// Represents a Cashu wallet
-struct WalletModel: Identifiable, Equatable {
+struct WalletModel: Identifiable, Equatable, Codable {
     let id: UUID
     let seed: String
     let mnemonic: String
@@ -12,7 +12,7 @@ struct WalletModel: Identifiable, Equatable {
 }
 
 /// Represents a Cashu mint
-struct MintModel: Identifiable, Equatable {
+struct MintModel: Identifiable, Equatable, Codable {
     let id: UUID
     let url: URL
     let name: String
@@ -23,7 +23,7 @@ struct MintModel: Identifiable, Equatable {
 }
 
 /// Represents a Cashu keyset
-struct KeysetModel: Identifiable, Equatable {
+struct KeysetModel: Identifiable, Equatable, Codable {
     let id: UUID
     let keysetId: String
     let mint: MintModel
@@ -32,7 +32,7 @@ struct KeysetModel: Identifiable, Equatable {
 }
 
 /// Represents a proof of ecash
-struct ProofModel: Identifiable, Equatable {
+struct ProofModel: Identifiable, Equatable, Codable {
     let id: UUID
     let keysetId: String
     let C: String
@@ -40,17 +40,26 @@ struct ProofModel: Identifiable, Equatable {
     let amount: Int
     let mintURL: URL
     
-    enum State: String {
+    enum State: String, Codable, Comparable {
         case valid
         case pending
         case spent
+        
+        static func < (lhs: Self, rhs: Self) -> Bool {
+            switch (lhs, rhs) {
+            case (.pending, .valid): return true
+            case (.pending, .spent): return true
+            case (.valid, .spent): return true
+            default: return false
+            }
+        }
     }
     
     var state: State = .valid
 }
 
 /// Represents a transaction
-struct TransactionModel: Identifiable {
+struct TransactionModel: Identifiable, Codable {
     let id: UUID
     let type: TransactionType
     let amount: Int
@@ -59,7 +68,7 @@ struct TransactionModel: Identifiable {
     var status: TransactionStatus = .pending
     var tokenData: String?
     
-    enum TransactionType: String, Identifiable, CaseIterable {
+    enum TransactionType: String, Identifiable, CaseIterable, Codable {
         case mint
         case melt
         case send
@@ -86,7 +95,7 @@ struct TransactionModel: Identifiable {
         }
     }
     
-    enum TransactionStatus: String {
+    enum TransactionStatus: String, Codable {
         case pending
         case completed
         case failed
@@ -102,7 +111,7 @@ struct TransactionModel: Identifiable {
 }
 
 /// Represents a token that can be sent or received
-struct TokenModel: Identifiable {
+struct TokenModel: Identifiable, Codable {
     let id: UUID
     let token: String
     let amount: Int

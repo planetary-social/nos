@@ -13,6 +13,7 @@ struct WalletView: View {
     @State private var showingMeltView = false
     @State private var showingAddMintView = false
     @State private var restorationMnemonic = ""
+    @State private var showingTestResults = false
     
     enum WalletTab {
         case balance
@@ -56,6 +57,17 @@ struct WalletView: View {
             .sheet(isPresented: $showingAddMintView) {
                 Text("Add Mint View")
                     .padding()
+            }
+            .sheet(isPresented: $showingTestResults) {
+                TestCashuSwift.displayResults()
+                    .navigationTitle("CashuSwift Test Results")
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button("Close") {
+                                showingTestResults = false
+                            }
+                        }
+                    }
             }
         }
     }
@@ -297,6 +309,18 @@ struct WalletView: View {
                 SettingItem(title: "What is Cashu?", icon: "info.circle.fill", action: {}),
                 SettingItem(title: "Privacy Policy", icon: "eye.slash.fill", action: {})
             ])
+            
+            // Test section for Macadamia integration
+            #if DEBUG
+            settingsSection(title: "Developer", items: [
+                SettingItem(title: "Test CashuSwift Integration", icon: "gear", action: {
+                    Task {
+                        await TestCashuSwift.runTests()
+                        showingTestResults = true
+                    }
+                })
+            ])
+            #endif
         }
         .frame(maxHeight: .infinity, alignment: .top)
     }

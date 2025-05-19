@@ -211,7 +211,7 @@ struct ComposerActionBar: View {
         do {
             startUploadingImage()
             let url = try await fileStorageAPIClient.upload(fileAt: imageURL, isProfilePhoto: false)
-            await editingController.append(url)
+            editingController.append(url) // Removed await since it's not an async operation
             endUploadingImage()
         } catch {
             endUploadingImage()

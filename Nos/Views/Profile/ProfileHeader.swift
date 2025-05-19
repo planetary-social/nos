@@ -197,7 +197,7 @@ struct ProfileHeader: View {
                                 }
                                 
                                 // Wallet Button
-                                MacadamiaWalletButton()
+                                EmbeddedWalletButton()
                             }
                         }
                     }
@@ -300,8 +300,40 @@ struct ProfileHeader: View {
     .background(Color.previewBg)
 }
 
-// Wallet button that directly launches the Macadamia wallet
-struct MacadamiaWalletButton: View {
+// MARK: - Embedded Wallet Implementation
+
+// A mint represents a Cashu mint server
+struct Mint: Identifiable {
+    let id = UUID()
+    let name: String
+    let url: URL
+    var balance: Int = 0
+}
+
+// A wallet transaction
+struct WalletTransaction: Identifiable {
+    let id = UUID()
+    let date: Date
+    let amount: Int
+    let type: TransactionType
+    let memo: String?
+    
+    enum TransactionType: String {
+        case send, receive, mint, melt
+        
+        var iconName: String {
+            switch self {
+            case .send: return "arrow.up"
+            case .receive: return "arrow.down"
+            case .mint: return "plus"
+            case .melt: return "bolt"
+            }
+        }
+    }
+}
+
+// Wallet button that opens the embedded wallet
+struct EmbeddedWalletButton: View {
     @State private var showingWallet = false
     
     var body: some View {
@@ -315,83 +347,827 @@ struct MacadamiaWalletButton: View {
                 
                 Image(systemName: "creditcard.fill")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(Color.purple) // Use a color from app's gradient
+                    .foregroundColor(Color.purple)
             }
         }
         .sheet(isPresented: $showingWallet) {
-            MacadamiaWalletLauncher()
+            NavigationStack {
+                EmbeddedWalletView()
+                    .navigationTitle("Cashu Wallet")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button {
+                                showingWallet = false
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 16, weight: .semibold))
+                            }
+                        }
+                    }
+            }
         }
     }
 }
 
-// Launcher for the actual Macadamia wallet
-struct MacadamiaWalletLauncher: View {
-    @Environment(\.dismiss) private var dismiss
+// Main wallet view with embedded functionality
+struct EmbeddedWalletView: View {
+    // Wallet state
+    @State private var walletInitialized = false
+    @State private var balance = 0
+    @State private var mints: [Mint] = []
+    @State private var transactions: [WalletTransaction] = []
+    @State private var selectedTab = 0
+    
+    // Sheet states
+    @State private var showingCreateWallet = false
+    @State private var showingSendView = false
+    @State private var showingReceiveView = false
+    @State private var showingMintView = false
+    @State private var showingMeltView = false
+    @State private var showingAddMintView = false
     
     var body: some View {
-        NavigationStack {
-            VStack {
-                Text("Launching Macadamia Wallet...")
-                    .font(.headline)
-                    .padding()
-                
-                ProgressView()
-                    .padding()
+        VStack(spacing: 0) {
+            // Balance card
+            balanceCard
+            
+            // Tab selector
+            HStack {
+                ForEach(0..<3) { index in
+                    tabButton(index: index)
+                }
             }
-            .onAppear {
-                launchMacadamiaWallet()
+            .padding()
+            
+            // Content based on selected tab
+            if selectedTab == 0 {
+                walletTab
+            } else if selectedTab == 1 {
+                transactionsTab
+            } else {
+                settingsTab
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .semibold))
+        }
+        .alert("Create Wallet", isPresented: $showingCreateWallet) {
+            Button("Create", action: createWallet)
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Create a new wallet to store and spend Bitcoin using Cashu?")
+        }
+        .sheet(isPresented: $showingSendView) {
+            NavigationStack {
+                SendTokensView()
+            }
+        }
+        .sheet(isPresented: $showingReceiveView) {
+            NavigationStack {
+                ReceiveTokensView()
+            }
+        }
+        .sheet(isPresented: $showingMintView) {
+            NavigationStack {
+                MintTokensView()
+            }
+        }
+        .sheet(isPresented: $showingMeltView) {
+            NavigationStack {
+                MeltTokensView()
+            }
+        }
+        .sheet(isPresented: $showingAddMintView) {
+            NavigationStack {
+                AddMintView(onAdd: addMint)
+            }
+        }
+        .onAppear {
+            // Check for wallet
+            checkForWallet()
+        }
+    }
+    
+    // Balance display at the top
+    private var balanceCard: some View {
+        VStack(spacing: 4) {
+            Text("Balance")
+                .font(.footnote)
+                .foregroundColor(.gray)
+            
+            Text("\(balance) sats")
+                .font(.title)
+                .bold()
+            
+            Text("≈ $\(Double(balance) / 100000, specifier: "%.2f")")
+                .font(.caption)
+                .foregroundColor(.gray)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Color.gray.opacity(0.1))
+    }
+    
+    // Tab button
+    private func tabButton(index: Int) -> some View {
+        let titles = ["Wallet", "Transactions", "Settings"]
+        let icons = ["wallet.pass.fill", "arrow.left.arrow.right", "gear"]
+        
+        return Button {
+            selectedTab = index
+        } label: {
+            VStack(spacing: 4) {
+                Image(systemName: icons[index])
+                    .font(.system(size: 18))
+                Text(titles[index])
+                    .font(.caption)
+            }
+            .foregroundColor(selectedTab == index ? .purple : .gray)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+            .background(
+                Group {
+                    if selectedTab == index {
+                        RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.1))
+                    } else {
+                        Color.clear
                     }
+                }
+            )
+        }
+    }
+    
+    // Wallet tab content
+    private var walletTab: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                if !walletInitialized {
+                    // Create wallet prompt
+                    VStack(spacing: 16) {
+                        Image(systemName: "wallet.pass.fill")
+                            .font(.system(size: 60))
+                            .foregroundColor(.purple)
+                            .padding()
+                        
+                        Text("No Wallet Found")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        
+                        Text("Create a wallet to start using Cashu")
+                            .font(.body)
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.gray)
+                            .padding(.horizontal)
+                        
+                        Button {
+                            showingCreateWallet = true
+                        } label: {
+                            Text("Create Wallet")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(
+                                    LinearGradient(
+                                        colors: [.blue, .purple],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .cornerRadius(12)
+                        }
+                        .padding(.horizontal)
+                        .padding(.top)
+                    }
+                    .padding()
+                } else {
+                    // Mints section
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Text("Your Mints")
+                                .font(.headline)
+                            
+                            Spacer()
+                            
+                            Button {
+                                showingAddMintView = true
+                            } label: {
+                                Label("Add", systemImage: "plus")
+                                    .font(.caption)
+                                    .foregroundColor(.purple)
+                            }
+                        }
+                        
+                        if mints.isEmpty {
+                            VStack(spacing: 8) {
+                                Image(systemName: "server.rack")
+                                    .font(.system(size: 30))
+                                    .foregroundColor(.gray)
+                                
+                                Text("No mints added")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                
+                                Button {
+                                    showingAddMintView = true
+                                } label: {
+                                    Text("Add Mint")
+                                        .font(.caption)
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 6)
+                                        .background(Color.purple)
+                                        .cornerRadius(8)
+                                }
+                                .padding(.top, 4)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray.opacity(0.05))
+                            .cornerRadius(12)
+                        } else {
+                            ForEach(mints) { mint in
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(mint.name)
+                                            .font(.subheadline)
+                                            .fontWeight(.medium)
+                                        
+                                        Text(mint.url.host ?? mint.url.absoluteString)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Text("\(mint.balance) sats")
+                                        .font(.callout)
+                                        .fontWeight(.semibold)
+                                }
+                                .padding()
+                                .background(Color.gray.opacity(0.05))
+                                .cornerRadius(12)
+                            }
+                        }
+                    }
+                    .padding()
+                    
+                    // Action buttons
+                    HStack(spacing: 16) {
+                        actionButton(title: "Send", icon: "arrow.up") {
+                            showingSendView = true
+                        }
+                        
+                        actionButton(title: "Receive", icon: "arrow.down") {
+                            showingReceiveView = true
+                        }
+                        
+                        actionButton(title: "Mint", icon: "plus") {
+                            showingMintView = true
+                        }
+                        
+                        actionButton(title: "Pay", icon: "bolt") {
+                            showingMeltView = true
+                        }
+                    }
+                    .padding()
                 }
             }
         }
     }
     
-    private func launchMacadamiaWallet() {
-        // Delay to make the UI visible
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            // In a production app, you'd register a custom URL scheme for the wallet
-            // We'll attempt to use different methods to open Macadamia
-            
-            // Method 1: Try using a universal link or custom URL scheme for Macadamia
-            if let macadamiaURL = URL(string: "macadamia://wallet") {
-                UIApplication.shared.open(macadamiaURL, options: [:]) { success in
-                    if success {
-                        print("Successfully opened Macadamia via URL scheme")
-                    } else {
-                        // Method 2: Try to open it as a web link or PWA
-                        if let webURL = URL(string: "https://macadamia.nos.cash") {
-                            UIApplication.shared.open(webURL, options: [:]) { webSuccess in
-                                if webSuccess {
-                                    print("Successfully opened Macadamia web version")
-                                } else {
-                                    // Method 3: Show a dialog with instructions on how to install Macadamia
-                                    print("Could not launch Macadamia wallet")
-                                    
-                                    // In a real app, you'd show a dialog here with instructions
-                                    // For now, we'll just print to the console
-                                }
-                            }
-                        }
+    // Transactions tab content
+    private var transactionsTab: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Transaction History")
+                    .font(.headline)
+                    .padding(.horizontal)
+                
+                if transactions.isEmpty {
+                    VStack(spacing: 12) {
+                        Image(systemName: "tray")
+                            .font(.system(size: 40))
+                            .foregroundColor(.gray)
+                            .padding()
+                        
+                        Text("No transactions yet")
+                            .font(.headline)
+                        
+                        Text("Your transaction history will appear here")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                            .multilineTextAlignment(.center)
                     }
-                    
-                    // Close our sheet after a delay
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        dismiss()
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 30)
+                } else {
+                    ForEach(transactions) { transaction in
+                        transactionRow(transaction)
                     }
                 }
-            } else {
-                // Show a dialog explaining that Macadamia is needed
-                print("Macadamia wallet URL could not be formed")
+            }
+            .padding(.top)
+        }
+    }
+    
+    // Settings tab content
+    private var settingsTab: some View {
+        List {
+            Section("Wallet") {
+                Button {
+                    // Backup wallet
+                } label: {
+                    settingRow(icon: "key", title: "Backup Keys")
+                }
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                Button {
+                    // Restore wallet
+                } label: {
+                    settingRow(icon: "arrow.clockwise", title: "Restore Wallet")
+                }
+                
+                Button {
+                    // Delete wallet
+                } label: {
+                    settingRow(icon: "trash", title: "Delete Wallet")
+                }
+            }
+            
+            Section("Preferences") {
+                Button {
+                    // Currency settings
+                } label: {
+                    settingRow(icon: "dollarsign.circle", title: "Currency Display")
+                }
+                
+                Button {
+                    // Default mint
+                } label: {
+                    settingRow(icon: "server.rack", title: "Default Mint")
+                }
+            }
+            
+            Section("About") {
+                Button {
+                    // About Cashu
+                } label: {
+                    settingRow(icon: "info.circle", title: "What is Cashu?")
+                }
+                
+                Button {
+                    // Privacy policy
+                } label: {
+                    settingRow(icon: "eye.slash", title: "Privacy Policy")
+                }
+            }
+        }
+    }
+    
+    // Transaction row view
+    private func transactionRow(_ transaction: WalletTransaction) -> some View {
+        HStack(spacing: 16) {
+            Image(systemName: transaction.type.iconName)
+                .font(.system(size: 20))
+                .foregroundColor(transactionColor(for: transaction.type))
+                .frame(width: 40, height: 40)
+                .background(transactionColor(for: transaction.type).opacity(0.1))
+                .clipShape(Circle())
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(transaction.type.rawValue.capitalized)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                
+                Text(transaction.date, style: .date)
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                
+                if let memo = transaction.memo {
+                    Text(memo)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .lineLimit(1)
+                }
+            }
+            
+            Spacer()
+            
+            Text(transactionAmountText(for: transaction))
+                .font(.callout)
+                .fontWeight(.semibold)
+                .foregroundColor(transactionAmountColor(for: transaction.type))
+        }
+        .padding()
+        .background(Color.gray.opacity(0.05))
+        .cornerRadius(12)
+        .padding(.horizontal)
+    }
+    
+    // Helper for setting rows
+    private func settingRow(icon: String, title: String) -> some View {
+        HStack {
+            Image(systemName: icon)
+                .foregroundColor(.purple)
+                .frame(width: 24)
+            
+            Text(title)
+                .foregroundColor(.primary)
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundColor(.gray)
+        }
+    }
+    
+    // Helper for action buttons
+    private func actionButton(title: String, icon: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.system(size: 18))
+                    .foregroundColor(.white)
+                    .frame(width: 36, height: 36)
+                    .background(
+                        LinearGradient(
+                            colors: [.blue, .purple],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .clipShape(Circle())
+                
+                Text(title)
+                    .font(.caption)
+                    .foregroundColor(.primary)
+            }
+            .frame(maxWidth: .infinity)
+        }
+    }
+    
+    // Helper for transaction colors
+    private func transactionColor(for type: WalletTransaction.TransactionType) -> Color {
+        switch type {
+        case .send: return .orange
+        case .receive: return .green
+        case .mint: return .purple
+        case .melt: return .blue
+        }
+    }
+    
+    // Helper for transaction amount text
+    private func transactionAmountText(for transaction: WalletTransaction) -> String {
+        let prefix = transaction.type == .receive || transaction.type == .mint ? "+" : "-"
+        return "\(prefix)\(transaction.amount) sats"
+    }
+    
+    // Helper for transaction amount color
+    private func transactionAmountColor(for type: WalletTransaction.TransactionType) -> Color {
+        switch type {
+        case .receive, .mint: return .green
+        default: return .primary
+        }
+    }
+    
+    // MARK: - Wallet Logic Functions
+    
+    private func checkForWallet() {
+        // In a real implementation, we'd check for an existing wallet
+        // For demo purposes, we'll set initialized to false initially
+        walletInitialized = false
+    }
+    
+    private func createWallet() {
+        // Simulate wallet creation
+        walletInitialized = true
+        
+        // Add a default mint
+        if let url = URL(string: "https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoL") {
+            let mint = Mint(name: "Legend", url: url, balance: 0)
+            mints.append(mint)
+        }
+        
+        // Simulate a welcome transaction
+        let transaction = WalletTransaction(
+            date: Date(),
+            amount: 0,
+            type: .mint,
+            memo: "Wallet created"
+        )
+        transactions.append(transaction)
+    }
+    
+    private func addMint(_ mint: Mint) {
+        mints.append(mint)
+    }
+}
+
+// MARK: - Transaction View Screens
+
+struct SendTokensView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var amount = ""
+    @State private var recipient = ""
+    @State private var memo = ""
+    
+    var body: some View {
+        VStack {
+            Text("Send Cashu Tokens")
+                .font(.title2)
+                .fontWeight(.bold)
+                .padding()
+            
+            Form {
+                Section("Amount") {
+                    TextField("Amount (sats)", text: $amount)
+                        .keyboardType(.numberPad)
+                }
+                
+                Section("Recipient") {
+                    TextField("Paste token or scan QR", text: $recipient)
+                }
+                
+                Section("Memo (optional)") {
+                    TextField("Add a note", text: $memo)
+                }
+            }
+            
+            Button {
+                // Send tokens logic would go here
+                dismiss()
+            } label: {
+                Text("Send")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        LinearGradient(
+                            colors: [.blue, .purple],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(12)
+            }
+            .padding()
+            .disabled(amount.isEmpty || recipient.isEmpty)
+        }
+        .navigationTitle("Send")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button("Cancel") {
+                    dismiss()
+                }
+            }
+        }
+    }
+}
+
+struct ReceiveTokensView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var tokenText = "Example Cashu Token"
+    
+    var body: some View {
+        VStack {
+            Text("Receive Cashu Tokens")
+                .font(.title2)
+                .fontWeight(.bold)
+                .padding()
+            
+            // QR code placeholder
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.white)
+                    .shadow(radius: 2)
+                    .frame(width: 200, height: 200)
+                
+                Image(systemName: "qrcode")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 120, height: 120)
+                    .foregroundColor(.black)
+            }
+            .padding()
+            
+            VStack {
+                Text("Token")
+                    .font(.headline)
+                
+                Text(tokenText)
+                    .font(.subheadline)
+                    .padding()
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(8)
+            }
+            .padding()
+            
+            HStack {
+                Button {
+                    // Copy to clipboard logic
+                } label: {
+                    Label("Copy", systemImage: "doc.on.doc")
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(12)
+                }
+                
+                Button {
+                    // Share token logic
+                } label: {
+                    Label("Share", systemImage: "square.and.arrow.up")
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(12)
+                }
+            }
+            .padding()
+            
+            Spacer()
+        }
+        .navigationTitle("Receive")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button("Done") {
+                    dismiss()
+                }
+            }
+        }
+    }
+}
+
+struct MintTokensView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var amount = ""
+    @State private var selectedMint: UUID?
+    
+    var body: some View {
+        VStack {
+            Text("Mint New Tokens")
+                .font(.title2)
+                .fontWeight(.bold)
+                .padding()
+            
+            Form {
+                Section("Amount") {
+                    TextField("Amount (sats)", text: $amount)
+                        .keyboardType(.numberPad)
+                }
+                
+                Section("Mint") {
+                    Text("Legend Mint")
+                        .font(.subheadline)
+                }
+            }
+            
+            VStack(spacing: 16) {
+                Button {
+                    // Generate invoice logic
+                } label: {
+                    Text("Generate Lightning Invoice")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(
+                            LinearGradient(
+                                colors: [.blue, .purple],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .cornerRadius(12)
+                }
+                
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Cancel")
+                        .font(.headline)
+                        .foregroundColor(.purple)
+                }
+            }
+            .padding()
+        }
+        .navigationTitle("Mint")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+struct MeltTokensView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var invoice = ""
+    
+    var body: some View {
+        VStack {
+            Text("Pay Lightning Invoice")
+                .font(.title2)
+                .fontWeight(.bold)
+                .padding()
+            
+            Form {
+                Section("Lightning Invoice") {
+                    TextField("Paste invoice or scan QR", text: $invoice)
+                }
+                
+                Section("Amount") {
+                    Text("Amount will be detected from invoice")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                }
+            }
+            
+            Button {
+                // Pay invoice logic
+                dismiss()
+            } label: {
+                Text("Pay Invoice")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        LinearGradient(
+                            colors: [.blue, .purple],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(12)
+            }
+            .padding()
+            .disabled(invoice.isEmpty)
+        }
+        .navigationTitle("Pay")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button("Cancel") {
+                    dismiss()
+                }
+            }
+        }
+    }
+}
+
+struct AddMintView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var name = ""
+    @State private var url = ""
+    var onAdd: (Mint) -> Void
+    
+    var body: some View {
+        VStack {
+            Text("Add Mint")
+                .font(.title2)
+                .fontWeight(.bold)
+                .padding()
+            
+            Form {
+                Section("Mint Name") {
+                    TextField("Name", text: $name)
+                }
+                
+                Section("Mint URL") {
+                    TextField("https://...", text: $url)
+                        .keyboardType(.URL)
+                        .autocapitalization(.none)
+                }
+            }
+            
+            Button {
+                if let mintURL = URL(string: url) {
+                    let mint = Mint(name: name.isEmpty ? "New Mint" : name, url: mintURL)
+                    onAdd(mint)
+                }
+                dismiss()
+            } label: {
+                Text("Add Mint")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        LinearGradient(
+                            colors: [.blue, .purple],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(12)
+            }
+            .padding()
+            .disabled(url.isEmpty)
+        }
+        .navigationTitle("Add Mint")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button("Cancel") {
                     dismiss()
                 }
             }

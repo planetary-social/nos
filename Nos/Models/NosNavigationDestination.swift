@@ -7,7 +7,18 @@ enum NosNavigationDestination: Hashable {
     case list(AuthorList)
     case url(URL)
     case replyTo(RawEventID?)
+    case wallet
 }
+
+/// Convenience for wallet destinations.
+extension NosNavigationDestination {
+    static func wallet() -> Self {
+        return .wallet
+    }
+}
+
+/// Extension to help with creating wallet destinations.
+typealias WalletDestination = NosNavigationDestination
 
 enum NoteIdentifiable: Hashable {
     case identifier(RawEventID?)

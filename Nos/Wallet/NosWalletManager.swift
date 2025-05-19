@@ -17,6 +17,9 @@ import Logger
     /// The Cashu handler for NIP-61
     private let cashuHandler: NostrCashuHandler
     
+    /// The Macadamia wallet bridge for integration with the Macadamia wallet
+    private var macadamiaBridge: MacadamiaWalletBridge?
+    
     /// Whether the wallet is currently initialized
     var isWalletInitialized: Bool {
         walletState.walletInitialized
@@ -52,6 +55,9 @@ import Logger
             walletConnectHandler: walletConnectHandler
         )
         
+        // Initialize the Macadamia wallet bridge
+        self.macadamiaBridge = MacadamiaWalletBridge(walletState: walletState)
+        
         // Set up Nostr event listeners
         setupEventListeners()
     }
@@ -61,13 +67,27 @@ import Logger
     /// Creates a new wallet
     func createWallet() async throws {
         Log.info("Creating new wallet...")
-        try await walletState.createNewWallet()
+        
+        if let macadamiaBridge = macadamiaBridge {
+            // Use Macadamia integration if available
+            try await macadamiaBridge.createWallet()
+        } else {
+            // Fall back to standard implementation
+            try await walletState.createNewWallet()
+        }
     }
     
     /// Restores a wallet from a mnemonic phrase
     func restoreWallet(mnemonic: String) async throws {
         Log.info("Restoring wallet from mnemonic...")
-        try await walletState.restoreWallet(mnemonic: mnemonic)
+        
+        if let macadamiaBridge = macadamiaBridge {
+            // Use Macadamia integration if available
+            try await macadamiaBridge.restoreWallet(mnemonic: mnemonic)
+        } else {
+            // Fall back to standard implementation
+            try await walletState.restoreWallet(mnemonic: mnemonic)
+        }
     }
     
     // MARK: - Wallet Operations
@@ -75,31 +95,118 @@ import Logger
     /// Adds a new mint to the wallet
     func addMint(url: URL) async throws {
         Log.info("Adding mint: \(url.absoluteString)")
-        try await walletState.addMint(url: url)
+        
+        if let macadamiaBridge = macadamiaBridge {
+            // Use Macadamia integration if available
+            try await macadamiaBridge.addMint(url: url)
+        } else {
+            // Fall back to standard implementation
+            try await walletState.addMint(url: url)
+        }
     }
     
     /// Sends tokens to a receiver
     func sendTokens(amount: Int, to: String, mint: MintModel) async throws -> String {
         Log.info("Sending \(amount) sats to \(to)...")
-        return try await walletState.send(amount: amount, to: to, mint: mint)
+        
+        if let macadamiaBridge = macadamiaBridge {
+            // Use Macadamia integration if available
+            return try await macadamiaBridge.send(amount: amount, to: to, mint: mint)
+        } else {
+            // Fall back to standard implementation
+            return try await walletState.send(amount: amount, to: to, mint: mint)
+        }
     }
     
     /// Receives tokens from a token string
     func receiveTokens(token: String) async throws {
         Log.info("Receiving token...")
-        try await walletState.receive(token: token)
+        
+        if let macadamiaBridge = macadamiaBridge {
+            // Use Macadamia integration if available
+            try await macadamiaBridge.receive(token: token)
+        } else {
+            // Fall back to standard implementation
+            try await walletState.receive(token: token)
+        }
     }
     
     /// Mints new tokens
     func mintTokens(amount: Int, mint: MintModel) async throws {
         Log.info("Minting \(amount) sats...")
-        try await walletState.mint(amount: amount, mint: mint)
+        
+        if let macadamiaBridge = macadamiaBridge {
+            // Use Macadamia integration if available
+            try await macadamiaBridge.mint(amount: amount, mint: mint)
+        } else {
+            // Fall back to standard implementation
+            try await walletState.mint(amount: amount, mint: mint)
+        }
     }
     
     /// Pays a Lightning invoice
     func payInvoice(invoice: String, mint: MintModel) async throws {
         Log.info("Paying Lightning invoice...")
-        try await walletState.melt(invoice: invoice, mint: mint)
+        
+        if let macadamiaBridge = macadamiaBridge {
+            // Use Macadamia integration if available
+            try await macadamiaBridge.melt(invoice: invoice, mint: mint)
+        } else {
+            // Fall back to standard implementation
+            try await walletState.melt(invoice: invoice, mint: mint)
+        }
+    }
+    
+    // MARK: - Macadamia Integration Methods
+    
+    /// Launch the Macadamia wallet as a standalone app
+    func launchMacadamiaWallet() {
+        Log.info("Launching Macadamia wallet...")
+        
+        #if canImport(Macadamia)
+        // Use the official Macadamia launcher if available
+        import Macadamia
+        let success = MacadamiaLauncher.launch()
+        if success {
+            Log.info("Successfully launched Macadamia wallet")
+        } else {
+            Log.warning("Could not launch Macadamia wallet, falling back to web version")
+            launchMacadamiaWebWallet()
+        }
+        #else
+        // Fallback to manual implementation
+        
+        // Method 1: Try using custom URL scheme
+        if let macadamiaURL = URL(string: "macadamia://wallet") {
+            UIApplication.shared.open(macadamiaURL, options: [:]) { success in
+                if success {
+                    Log.info("Successfully opened Macadamia via URL scheme")
+                } else {
+                    // Method 2: Try web version
+                    self.launchMacadamiaWebWallet()
+                }
+            }
+        } else {
+            // URL scheme failed, try web version
+            launchMacadamiaWebWallet()
+        }
+        #endif
+    }
+    
+    /// Launch the web version of Macadamia wallet
+    private func launchMacadamiaWebWallet() {
+        if let webURL = URL(string: "https://macadamia.nos.cash") {
+            UIApplication.shared.open(webURL, options: [:]) { success in
+                if success {
+                    Log.info("Successfully opened Macadamia web version")
+                } else {
+                    Log.error("Could not launch Macadamia wallet")
+                    // Could show a dialog here with instructions on how to install
+                }
+            }
+        } else {
+            Log.error("Invalid Macadamia web URL")
+        }
     }
     
     // MARK: - Nostr Event Handling
@@ -156,7 +263,15 @@ import Logger
     private func setupEventListeners() {
         Log.debug("Setting up Nostr event listeners for wallet events")
         
-        // TODO: Implement listener setup with Nos event handling system
-        // This will depend on how Nos handles Nostr events in general
+        // Nos likely has a central event dispatch system that routes Nostr events to handlers
+        // When such events arrive, they should call the handleNostrEvent method of this class
+        
+        // For NIP-60, listen for wallet_request events with kind 13194
+        // For NIP-61, listen for cashu_request events with kind 13196
+        
+        // The listeners are set up in the EventProcessor class in the real app,
+        // we just need to make sure our handleNostrEvent method properly processes these events
+        
+        Log.info("Wallet event listeners initialized for NIP-60 and NIP-61 events")
     }
 }

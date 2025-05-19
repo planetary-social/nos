@@ -200,16 +200,39 @@ class NostrWalletConnectHandler {
         // Update last used timestamp
         activeConnections[connectionId]?.lastUsed = Date()
         
-        // TODO: Implement the actual payment using the walletState
+        // Get the mint to use (optional, use default if not specified)
+        let mintURL = params["mint_url"] as? String
+        var mintToUse: MintModel?
         
-        // For now, return a mock response
-        return [
-            "id": id,
-            "result": [
-                "paid": true,
-                "preimage": "0000000000000000000000000000000000000000000000000000000000000000"
+        if let mintURL = mintURL, let url = URL(string: mintURL) {
+            mintToUse = walletState.mints.first(where: { $0.url == url })
+        } else {
+            // Use the first active mint
+            mintToUse = walletState.mints.first(where: { $0.isActive })
+        }
+        
+        guard let mint = mintToUse else {
+            Log.error("No valid mint available for pay operation")
+            throw WalletConnectError.internalError("No valid mint available")
+        }
+        
+        do {
+            // Process the payment
+            try await walletState.melt(invoice: invoice, mint: mint)
+            
+            // Return successful response
+            return [
+                "id": id,
+                "result": [
+                    "paid": true,
+                    "invoice": invoice
+                    // Note: preimage is not returned by Cashu protocol, only valid/invalid status
+                ]
             ]
-        ]
+        } catch {
+            Log.error("Failed to pay invoice: \(error.localizedDescription)")
+            return createErrorResponse(id: id, code: -32603, message: "Failed to pay invoice: \(error.localizedDescription)")
+        }
     }
     
     // MARK: - Error Handling

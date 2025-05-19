@@ -8,6 +8,11 @@ enum FeatureFlag {
     /// - Note: See [Figma](https://www.figma.com/design/6MeujQUXzC1AuviHEHCs0J/Nos---In-Progress?node-id=9221-8504)
     ///         for the new flow.
     case newOnboardingFlow
+    
+    /// Whether to use the Macadamia wallet integration.
+    /// When enabled, the wallet button will launch the Macadamia external wallet.
+    /// When disabled, it will use the built-in wallet UI.
+    case useMacadamiaWallet
 }
 
 /// The set of feature flags used by the app.
@@ -31,7 +36,8 @@ protocol FeatureFlags {
 
     /// Feature flags and their values.
     private var featureFlags: [FeatureFlag: Bool] = [
-        .newOnboardingFlow: true
+        .newOnboardingFlow: true,
+        .useMacadamiaWallet: true // Enabled - using the real Macadamia wallet integration
     ]
 
     /// Returns true if the feature is enabled.

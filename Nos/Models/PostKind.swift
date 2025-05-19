@@ -13,13 +13,13 @@ enum PostKind: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .textNote:
-            return String(localized: "textNote")
+            return String(localized: "Text Note")
         case .picturePost:
-            return String(localized: "picturePost")
+            return String(localized: "Picture Post")
         case .videoPost:
-            return String(localized: "videoPost")
+            return String(localized: "Video Post")
         case .shortVideo:
-            return String(localized: "shortVideo")
+            return String(localized: "Short Video")
         }
     }
     
@@ -39,13 +39,13 @@ enum PostKind: String, CaseIterable, Identifiable {
     var description: String {
         switch self {
         case .textNote:
-            return String(localized: "textNoteDescription")
+            return String(localized: "Standard text note")
         case .picturePost:
-            return String(localized: "picturePostDescription")
+            return String(localized: "Image-first post with title")
         case .videoPost:
-            return String(localized: "videoPostDescription")
+            return String(localized: "Video post with title")
         case .shortVideo:
-            return String(localized: "shortVideoDescription")
+            return String(localized: "Short-form video")
         }
     }
     
@@ -68,6 +68,19 @@ enum PostKind: String, CaseIterable, Identifiable {
             return false
         case .picturePost, .videoPost, .shortVideo:
             return true
+        }
+    }
+    
+    var eventKind: EventKind {
+        switch self {
+        case .textNote:
+            return .text
+        case .picturePost:
+            return .picturePost
+        case .videoPost:
+            return .video
+        case .shortVideo:
+            return .shortVideo
         }
     }
 }
