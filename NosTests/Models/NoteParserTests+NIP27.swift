@@ -180,6 +180,7 @@ extension NoteParserTests {
     
     @MainActor func testEventLinkHasNostrPrefix() throws {
         // Arrange
+        // swiftlint:disable:next line_length
         let noteEvent = "nevent1qqst8cujky046negxgwwm5ynqwn53t8aqjr6afd8g59nfqwxpdhylpcpzamhxue69uhhyetvv9ujuetcv9khqmr99e3k7mg8arnc9"
         let hexEventID = "b3e392b11f5d4f28321cedd09303a748acfd0487aea5a7450b3481c60b6e4f87"
         let content = "check this \(noteEvent) from somewhere else"
@@ -200,6 +201,7 @@ extension NoteParserTests {
     
     @MainActor func testEventLinkWithNestedNostrPrefix() throws {
         // Arrange - add nested nostr: prefix
+        // swiftlint:disable:next line_length
         let noteEvent = "nostr:nevent1qqst8cujky046negxgwwm5ynqwn53t8aqjr6afd8g59nfqwxpdhylpcpzamhxue69uhhyetvv9ujuetcv9khqmr99e3k7mg8arnc9"
         let hexEventID = "b3e392b11f5d4f28321cedd09303a748acfd0487aea5a7450b3481c60b6e4f87"
         let content = "check this \(noteEvent) from somewhere else"
