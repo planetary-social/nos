@@ -136,15 +136,17 @@ struct NoteParser {
     // swiftlint:enable function_body_length
 
     /// Replaces Nostr entities embedded in the note (without a proper tag) with markdown links and
-    /// optionally extracts the first quoted note id.
+    /// optionally extracts the first quoted note id. This function ensures all nevent identifiers get the 
+    /// "nostr:" prefix in the markdown URL, according to NIP-01 standards.
     ///
     /// - Parameters:
     ///   - content: The note content in which to replace entities.
     ///   - capturesFirstNote: If true, this function will extract the first quoted note id, if it exists.
     ///                        Defaults to `false`.
     /// - Returns: A tuple of the edited content and the first quoted note id, if it was requested and it exists.
-    private func replaceNostrEntities(in content: String, capturesFirstNote: Bool = false) -> (String, RawEventID?) {
+    func replaceNostrEntities(in content: String, capturesFirstNote: Bool = false) -> (String, RawEventID?) {
         // Note: This pattern contains a lookbehind, which is not currently supported by the newer Swift regex syntax.
+        // The pattern matches Nostr entities with or without the "nostr:" prefix 
         let pattern = "(?<=^|\\s|[^:\\/])@?(?:nostr:)?((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,})"
         let regex = try! NSRegularExpression(pattern: pattern, options: []) // swiftlint:disable:this force_try
         
@@ -179,7 +181,8 @@ struct NoteParser {
                         firstNoteID = rawEventID
                         return ""
                     } else {
-                        return "\(prefix)[\(String(localized: .localizable.linkToNote))](%\(rawEventID))"
+                        // Always ensure we have exactly one "nostr:" prefix
+                        return "\(prefix)[\(String(localized: .localizable.linkToNote))](nostr:%\(rawEventID))"
                     }
                 case .naddr(let replaceableID, _, let authorID, let kind):
                     return "\(prefix)[\(String(localized: .localizable.linkToNote))]" +
