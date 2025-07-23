@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Release Notes
 - Fixed: crash in Event.trackDelete(on:context:).
 - Added: "nostr:" prefix to event links following NIP-01 standard.
+- Added: master branch because some tools needed it.
 
 ### Internal Changes
 - Fixed: Contact Support event fires too often.
