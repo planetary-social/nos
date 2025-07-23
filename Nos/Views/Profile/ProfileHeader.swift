@@ -130,6 +130,10 @@ struct ProfileHeader: View {
                                     .padding(.top, 5)
                             }
                         }
+                        
+                        // Nutzaps
+                        NutzapBadgeView(author: author)
+                            .padding(.top, author.hasMostrNIP05 ? 3 : 5)
 
                         Spacer(minLength: 0)
                     }
