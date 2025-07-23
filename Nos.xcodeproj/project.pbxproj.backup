@@ -2176,7 +2176,6 @@
 				03C49ABF2C938A9C00502321 /* SwiftSoup */,
 				039389222CA4985C00698978 /* SDWebImageWebPCoder */,
 				C98905A12CD3B8CF00C17EE0 /* Inject */,
-				C9BF90152E323CCA1FEE24A2 /* CashuSwift */,
 			);
 			productName = Nos;
 			productReference = C9DEBFCE298941000078B43A /* Nos.app */;
@@ -2274,7 +2273,6 @@
 				03C49ABE2C938A9C00502321 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				039389212CA4985C00698978 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
 				C98905A02CD3B8CF00C17EE0 /* XCRemoteSwiftPackageReference "Inject" */,
-				C9BF90152E323CCA1FEE24A1 /* XCRemoteSwiftPackageReference "CashuSwift" */,
 			);
 			productRefGroup = C9DEBFCF298941000078B43A /* Products */;
 			projectDirPath = "";
@@ -3842,14 +3840,6 @@
 				revision = 8968ec00caa51d03d48bd2e91e70f121950fa05d;
 			};
 		};
-		C9BF90152E323CCA1FEE24A1 /* XCRemoteSwiftPackageReference "CashuSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/zeugmaster/CashuSwift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -4011,11 +4001,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C94D855D29914D2300749478 /* XCRemoteSwiftPackageReference "swiftui-navigation" */;
 			productName = SwiftUINavigation;
-		};
-		C9BF90152E323CCA1FEE24A2 /* CashuSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9BF90152E323CCA1FEE24A1 /* XCRemoteSwiftPackageReference "CashuSwift" */;
-			productName = CashuSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 
