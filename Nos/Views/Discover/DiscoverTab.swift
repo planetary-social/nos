@@ -65,6 +65,7 @@ struct DiscoverTab: View {
             // This makes the white line change to the background color instead
             .padding(.top, 1)
         }
+        .walletWidget()
     }
 }
 

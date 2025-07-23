@@ -137,6 +137,8 @@ public class CashuWalletService {
         // Extract wallet data from tags
         var name = "Unnamed Wallet"
         var mintURL = ""
+        var lightningAddress: String?
+        var lightningGateway: String?
         
         for tag in tags {
             if tag.count >= 2 {
@@ -147,6 +149,10 @@ public class CashuWalletService {
                     if mintURL.isEmpty {
                         mintURL = tag[1]
                     }
+                case "lud16":
+                    lightningAddress = tag[1]
+                case "gateway":
+                    lightningGateway = tag[1]
                 default:
                     break
                 }
@@ -159,7 +165,18 @@ public class CashuWalletService {
         
         // For now, create a new wallet instance
         // In production, would decrypt the private key from content
-        return CashuWallet(name: name, mintURL: mintURL)
+        let wallet = CashuWallet(name: name, mintURL: mintURL)
+        wallet.lightningAddress = lightningAddress
+        wallet.lightningGateway = lightningGateway
+        
+        // Add all mints from tags
+        for tag in tags {
+            if tag.count >= 2 && tag[0] == "mint" {
+                wallet.addMint(tag[1])
+            }
+        }
+        
+        return wallet
     }
     
     /// Parses proofs from a token event

@@ -206,13 +206,42 @@ struct WalletManagementView: View {
     
     private var walletActionsSection: some View {
         VStack(spacing: 12) {
+            NavigationLink(destination: LightningAddressView(wallet: wallet, walletService: walletService)) {
+                HStack {
+                    Image(systemName: "bolt.fill")
+                        .foregroundColor(.orange)
+                    Text("Lightning Integration")
+                    Spacer()
+                    if wallet.lightningAddress != nil {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                    }
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.secondaryTxt)
+                }
+                .padding()
+                .background(Color.backgroundSurface)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
+            
             SecondaryActionButton("Backup Wallet", image: Image(systemName: "square.and.arrow.up")) {
                 showBackupSheet = true
             }
             
-            SecondaryActionButton("View Transaction History", image: Image(systemName: "clock")) {
-                // TODO: Navigate to transaction history
+            NavigationLink(destination: TransactionHistoryView(wallet: wallet)) {
+                HStack {
+                    Image(systemName: "clock")
+                    Text("View Transaction History")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.secondaryTxt)
+                }
+                .padding()
+                .background(Color.backgroundSurface)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
             }
+            .buttonStyle(.plain)
             
             if wallet.trustedMints.count > 1 {
                 SecondaryActionButton("Consolidate Funds", image: Image(systemName: "arrow.triangle.merge")) {

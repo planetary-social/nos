@@ -95,6 +95,7 @@ struct HomeTab: View {
                 .transition(.opacity)
             }
         }
+        .walletWidget()
         .onAppear {
             if !feedTip.hasShown {
                 timer = Timer.scheduledTimer(withTimeInterval: FeedSelectorTip.maximumDelay, repeats: false) { _ in

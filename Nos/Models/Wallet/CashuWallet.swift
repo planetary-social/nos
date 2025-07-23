@@ -34,6 +34,12 @@ public class CashuWallet {
     /// Set of all trusted mint URLs
     public private(set) var trustedMints: Set<String>
     
+    /// Lightning address for receiving zaps as ecash
+    public var lightningAddress: String?
+    
+    /// Selected Lightning gateway URL for conversions
+    public var lightningGateway: String?
+    
     /// Underlying CashuSwift wallet instance
     private var cashuWallet: Wallet?
     
@@ -79,6 +85,16 @@ public class CashuWallet {
         
         // Add P2PK pubkey tag
         tags.append(["pubkey", walletPublicKey])
+        
+        // Add Lightning address tag if configured
+        if let lightningAddress = lightningAddress {
+            tags.append(["lud16", lightningAddress])
+        }
+        
+        // Add Lightning gateway tag if configured
+        if let lightningGateway = lightningGateway {
+            tags.append(["gateway", lightningGateway])
+        }
         
         // Set tags on event
         event.allTags = tags as NSObject
