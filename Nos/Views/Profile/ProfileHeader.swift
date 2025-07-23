@@ -176,6 +176,12 @@ struct ProfileHeader: View {
                     .padding(.top, 5)
                 }
 
+                // Wallet display for current user
+                if let currentUser = currentUser.author, author == currentUser {
+                    ProfileWalletView(author: author)
+                        .padding(.top, 12)
+                }
+
                 HStack(spacing: 0) {
                     if let currentUser = currentUser.author {
                         if author != currentUser {

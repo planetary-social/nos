@@ -2,11 +2,13 @@ import SwiftUI
 import MessageUI
 import Dependencies
 import Inject
+import CoreData
 
 struct SideMenuContent: View {
     
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) private var currentUser
+    @Environment(\.managedObjectContext) private var viewContext
     @Dependency(\.analytics) private var analytics
     @ObserveInjection var inject
     
@@ -16,6 +18,54 @@ struct SideMenuContent: View {
     @State private var result: Result<MFMailComposeResult, Error>?
     
     let closeMenu: @MainActor () -> Void
+    
+    private func loadWalletSync() -> CashuWallet? {
+        guard let author = currentUser.author else { return nil }
+        
+        let walletService = CashuWalletService(context: viewContext)
+        let request = NSFetchRequest<Event>(entityName: "Event")
+        request.predicate = NSPredicate(
+            format: "author == %@ AND kind == %d",
+            author,
+            EventKind.cashuWallet.rawValue
+        )
+        request.sortDescriptors = [NSSortDescriptor(key: "createdAt", ascending: false)]
+        request.fetchLimit = 1
+        
+        do {
+            let walletEvents = try viewContext.fetch(request)
+            if let event = walletEvents.first,
+               let tags = event.allTags as? [[String]] {
+                
+                // Extract wallet data from tags
+                var name = "My Wallet"
+                var mintURL = ""
+                
+                for tag in tags {
+                    if tag.count >= 2 {
+                        switch tag[0] {
+                        case "name":
+                            name = tag[1]
+                        case "mint":
+                            if mintURL.isEmpty {
+                                mintURL = tag[1]
+                            }
+                        default:
+                            break
+                        }
+                    }
+                }
+                
+                if !mintURL.isEmpty {
+                    return CashuWallet(name: name, mintURL: mintURL)
+                }
+            }
+        } catch {
+            print("Failed to load wallet: \(error)")
+        }
+        
+        return nil
+    }
     
     @MainActor private var profileHeader: some View {
         Group {
@@ -67,6 +117,11 @@ struct SideMenuContent: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     profileHeader
+                    
+                    // Wallet Balance
+                    WalletBalanceRow()
+                        .padding(.bottom, 8)
+                    
                     SideMenuRow(
                         "yourProfile",
                         image: Image(systemName: "person.crop.circle"),
@@ -121,6 +176,16 @@ struct SideMenuContent: View {
                     ProfileView(author: currentUser.author!)
                 case .about:
                     AboutView()
+                case .wallet:
+                    if let wallet = loadWalletSync() {
+                        WalletManagementView(wallet: wallet)
+                    } else {
+                        // Show onboarding if no wallet
+                        WalletOnboardingView { _ in
+                            // After creating wallet, pop back
+                            router.sideMenuPath.removeLast()
+                        }
+                    }
                 }
             }
             .navigationDestination(for: EditProfileDestination.self) { destination in

@@ -14,7 +14,7 @@ struct WalletOnboardingView: View {
     
     @State private var currentStep: OnboardingStep = .welcome
     @State private var walletName = ""
-    @State private var selectedMint = "https://mint.minibits.cash/Bitcoin"
+    @State private var selectedMint = DefaultMints.defaultMint.url
     @State private var customMintURL = ""
     @State private var enableNutzaps = true
     @State private var selectedRelays: Set<String> = ["wss://relay.damus.io", "wss://nos.social"]
@@ -34,12 +34,9 @@ struct WalletOnboardingView: View {
         case complete = 4
     }
     
-    private let popularMints = [
-        ("Minibits", "https://mint.minibits.cash/Bitcoin"),
-        ("LNbits Legend", "https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC"),
-        ("8333.space", "https://8333.space:3338"),
-        ("Custom", "custom")
-    ]
+    private var popularMints: [(String, String)] {
+        DefaultMints.recommended.map { ($0.name, $0.url) } + [("Custom", "custom")]
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -162,15 +159,29 @@ struct WalletOnboardingView: View {
                 .foregroundColor(.secondaryTxt)
             
             VStack(spacing: 12) {
-                ForEach(popularMints, id: \.1) { name, url in
+                ForEach(DefaultMints.recommended, id: \.url) { mint in
                     MintSelectionRow(
-                        name: name,
-                        url: url == "custom" ? customMintURL : url,
-                        isSelected: selectedMint == url,
-                        isCustom: url == "custom"
+                        name: mint.name,
+                        url: mint.url,
+                        description: mint.description,
+                        isSelected: selectedMint == mint.url,
+                        isCustom: false,
+                        hasLightning: mint.lightningGateway != nil
                     ) {
-                        selectedMint = url
+                        selectedMint = mint.url
                     }
+                }
+                
+                // Custom mint option
+                MintSelectionRow(
+                    name: "Custom",
+                    url: customMintURL,
+                    description: "Add your own mint URL",
+                    isSelected: selectedMint == "custom",
+                    isCustom: true,
+                    hasLightning: false
+                ) {
+                    selectedMint = "custom"
                 }
             }
             
@@ -416,24 +427,40 @@ struct FeatureRow: View {
 struct MintSelectionRow: View {
     let name: String
     let url: String
+    let description: String
     let isSelected: Bool
     let isCustom: Bool
+    let hasLightning: Bool
     let action: () -> Void
     
     var body: some View {
-        HStack {
+        HStack(alignment: .top) {
             Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                 .foregroundColor(isSelected ? .accent : .secondaryTxt)
+                .padding(.top, 2)
             
             VStack(alignment: .leading, spacing: 2) {
-                Text(name)
-                    .font(.clarity(.medium, textStyle: .body))
-                    .foregroundColor(.primaryTxt)
+                HStack {
+                    Text(name)
+                        .font(.clarity(.medium, textStyle: .body))
+                        .foregroundColor(.primaryTxt)
+                    
+                    if hasLightning {
+                        Image(systemName: "bolt.fill")
+                            .font(.system(size: 10))
+                            .foregroundColor(.orange)
+                    }
+                }
+                
+                Text(description)
+                    .font(.clarity(.regular, textStyle: .caption))
+                    .foregroundColor(.secondaryTxt)
+                    .lineLimit(2)
                 
                 if !isCustom {
                     Text(URL(string: url)?.host ?? url)
-                        .font(.clarity(.regular, textStyle: .caption))
-                        .foregroundColor(.secondaryTxt)
+                        .font(.clarity(.regular, textStyle: .caption2))
+                        .foregroundColor(.secondaryTxt.opacity(0.7))
                 }
             }
             
