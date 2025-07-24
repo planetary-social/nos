@@ -65,8 +65,8 @@ public class CashuWalletService {
     // MARK: - Token Management
     
     /// Saves Cashu tokens as a token event
-    public func saveTokens(_ proofs: [CashuProof], for wallet: CashuWallet, mint: String, author: Author) async throws {
-        let tokenEvent = try wallet.createTokenEvent(proofs: proofs, mint: mint, author: author)
+    public func saveTokens(_ tokens: [Token], for wallet: CashuWallet, mint: String, author: Author) async throws {
+        let tokenEvent = try wallet.createTokenEvent(tokens: tokens, mint: mint, author: author)
         tokenEvent.createdAt = Date()
         
         try context.save()
@@ -180,31 +180,26 @@ public class CashuWalletService {
     }
     
     /// Parses proofs from a token event
-    private func parseProofsFromTokenEvent(_ event: Event) throws -> [CashuProof] {
+    private func parseTokensFromTokenEvent(_ event: Event) throws -> [Token] {
         guard let content = event.content else {
             throw CashuWalletError.missingContent
         }
         
-        // Decrypt content (for now, just base64 decode)
-        guard let decodedData = Data(base64Encoded: content),
-              let jsonString = String(data: decodedData, encoding: .utf8),
-              let jsonData = jsonString.data(using: .utf8),
+        // Decrypt content using NIP-44
+        guard let author = event.author,
+              let keypair = author.keypair else {
+            throw CashuWalletError.missingKeypair
+        }
+        
+        let decryptedContent = try CashuNIP44Encryption.decryptTokens(content, authorKeyPair: keypair)
+        
+        guard let jsonData = decryptedContent.data(using: .utf8),
               let proofsArray = try? JSONSerialization.jsonObject(with: jsonData) as? [[String: Any]] else {
             throw CashuWalletError.decryptionFailed
         }
         
-        return proofsArray.compactMap { dict in
-            guard let amount = dict["amount"] as? Int,
-                  let secret = dict["secret"] as? String else {
-                return nil
-            }
-            return CashuProof(
-                amount: amount,
-                id: dict["id"] as? String ?? "",
-                secret: secret,
-                C: dict["C"] as? String ?? ""
-            )
-        }
+        // Convert JSON to Token objects using CashuSwiftConverter
+        return try CashuSwiftConverter.jsonToTokens(proofsArray)
     }
     
     /// Fetches IDs of deleted token events
@@ -239,6 +234,8 @@ public enum CashuWalletError: LocalizedError {
     case missingMintURL
     case missingContent
     case decryptionFailed
+    case missingKeypair
+    case encryptionFailed
     
     public var errorDescription: String? {
         switch self {
@@ -250,6 +247,10 @@ public enum CashuWalletError: LocalizedError {
             return "Missing content in event"
         case .decryptionFailed:
             return "Failed to decrypt event content"
+        case .missingKeypair:
+            return "Missing author keypair for encryption"
+        case .encryptionFailed:
+            return "Failed to encrypt wallet data"
         }
     }
 }

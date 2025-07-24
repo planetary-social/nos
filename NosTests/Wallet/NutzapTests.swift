@@ -39,7 +39,7 @@ final class NutzapTests: CoreDataTestCase {
         XCTAssertEqual(pubkeyTags.first?.value, "02" + wallet.walletPublicKey) // P2PK prefix
     }
     
-    func testCreateNutzapEvent() throws {
+    func testCreateNutzapEvent() async throws {
         // Given
         let senderWallet = CashuWallet(name: "Sender", mintURL: "https://mint.minibits.cash/Bitcoin")
         let recipientPubkey = "02" + KeyFixture.pubKeyHex // P2PK format
@@ -48,7 +48,7 @@ final class NutzapTests: CoreDataTestCase {
         let author = try Author.findOrCreate(by: KeyFixture.pubKeyHex, context: testContext)
         
         // When
-        let nutzap = try senderWallet.createNutzap(
+        let nutzap = try await senderWallet.createNutzap(
             amount: amount,
             recipientPubkey: recipientPubkey,
             mint: senderWallet.mintURL,

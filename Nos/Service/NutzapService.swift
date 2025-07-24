@@ -37,7 +37,7 @@ public class NutzapService {
         let recipientP2PKPubkey = try await getRecipientP2PKPubkey(recipientPubkey, mint: wallet.mintURL)
         
         // Create nutzap event with P2PK-locked tokens
-        let nutzap = try wallet.createNutzap(
+        let nutzap = try await wallet.createNutzap(
             amount: amount,
             recipientPubkey: recipientP2PKPubkey,
             mint: wallet.mintURL,
@@ -98,7 +98,7 @@ public class NutzapService {
         }
         
         // Extract and validate proofs from nutzap content
-        guard let proofs = try? extractProofsFromNutzap(nutzapEvent) else {
+        guard let tokens = try? extractTokensFromNutzap(nutzapEvent) else {
             throw NutzapError.invalidProofs
         }
         
@@ -108,7 +108,7 @@ public class NutzapService {
         // 3. Store the new unlocked tokens
         
         // For now, simulate by saving tokens
-        try await walletService.saveTokens(proofs, for: wallet, mint: wallet.mintURL, author: author)
+        try await walletService.saveTokens(tokens, for: wallet, mint: wallet.mintURL, author: author)
         
         // Create redemption event
         try await createRedemptionEvent(for: nutzapEvent, author: author)
@@ -215,7 +215,7 @@ public class NutzapService {
     }
     
     /// Extracts proofs from nutzap content
-    private func extractProofsFromNutzap(_ nutzap: Event) throws -> [CashuProof] {
+    private func extractTokensFromNutzap(_ nutzap: Event) throws -> [Token] {
         guard let content = nutzap.content,
               let data = content.data(using: .utf8),
               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
@@ -223,20 +223,8 @@ public class NutzapService {
             throw NutzapError.invalidProofs
         }
         
-        return proofsArray.compactMap { dict in
-            guard let amount = dict["amount"] as? Int,
-                  let secret = dict["secret"] as? String,
-                  let C = dict["C"] as? String else {
-                return nil
-            }
-            
-            return CashuProof(
-                amount: amount,
-                id: dict["id"] as? String ?? "",
-                secret: secret,
-                C: C
-            )
-        }
+        // Convert JSON to Token objects using CashuSwiftConverter
+        return try CashuSwiftConverter.jsonToTokens(proofsArray)
     }
     
     /// Extracts amount from nutzap tags
