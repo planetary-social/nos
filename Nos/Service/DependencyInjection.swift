@@ -94,6 +94,21 @@ extension DependencyValues {
         get { self[PreviewEventRepositoryKey.self] }
         set { self[PreviewEventRepositoryKey.self] = newValue }
     }
+    
+    var cashuWalletService: CashuWalletService {
+        get { self[CashuWalletServiceKey.self] }
+        set { self[CashuWalletServiceKey.self] = newValue }
+    }
+    
+    var nutzapService: NutzapService {
+        get { self[NutzapServiceKey.self] }
+        set { self[NutzapServiceKey.self] = newValue }
+    }
+    
+    var cashuCacheService: CashuCacheService {
+        get { self[CashuCacheServiceKey.self] }
+        set { self[CashuCacheServiceKey.self] = newValue }
+    }
 }
 
 fileprivate enum AnalyticsKey: DependencyKey {
@@ -197,4 +212,55 @@ fileprivate enum OpenGraphServiceKey: DependencyKey {
 
 fileprivate enum PreviewEventRepositoryKey: DependencyKey {
     static let liveValue: any PreviewEventRepository = DefaultPreviewEventRepository()
+}
+
+fileprivate enum CashuWalletServiceKey: DependencyKey {
+    static let liveValue: CashuWalletService = {
+        @Dependency(\.persistenceController) var persistenceController
+        return CashuWalletService(context: persistenceController.viewContext)
+    }()
+    static let testValue: CashuWalletService = {
+        @Dependency(\.persistenceController) var persistenceController
+        return CashuWalletService(context: persistenceController.viewContext)
+    }()
+    static let previewValue: CashuWalletService = {
+        @Dependency(\.persistenceController) var persistenceController
+        return CashuWalletService(context: persistenceController.viewContext)
+    }()
+}
+
+fileprivate enum NutzapServiceKey: DependencyKey {
+    static let liveValue: NutzapService = {
+        @Dependency(\.persistenceController) var persistenceController
+        @Dependency(\.cashuWalletService) var walletService
+        return NutzapService(context: persistenceController.viewContext, walletService: walletService)
+    }()
+    static let testValue: NutzapService = {
+        @Dependency(\.persistenceController) var persistenceController
+        @Dependency(\.cashuWalletService) var walletService
+        return NutzapService(context: persistenceController.viewContext, walletService: walletService)
+    }()
+    static let previewValue: NutzapService = {
+        @Dependency(\.persistenceController) var persistenceController
+        @Dependency(\.cashuWalletService) var walletService
+        return NutzapService(context: persistenceController.viewContext, walletService: walletService)
+    }()
+}
+
+fileprivate enum CashuCacheServiceKey: DependencyKey {
+    static let liveValue: CashuCacheService = {
+        @Dependency(\.persistenceController) var persistenceController
+        @Dependency(\.cashuWalletService) var walletService
+        return CashuCacheService(context: persistenceController.viewContext, walletService: walletService)
+    }()
+    static let testValue: CashuCacheService = {
+        @Dependency(\.persistenceController) var persistenceController
+        @Dependency(\.cashuWalletService) var walletService
+        return CashuCacheService(context: persistenceController.viewContext, walletService: walletService)
+    }()
+    static let previewValue: CashuCacheService = {
+        @Dependency(\.persistenceController) var persistenceController
+        @Dependency(\.cashuWalletService) var walletService
+        return CashuCacheService(context: persistenceController.viewContext, walletService: walletService)
+    }()
 }

@@ -99,10 +99,12 @@ extension CashuWallet {
         
         let mint = try await CashuSwift.loadMint(url: url)
         
-        // Get available tokens/proofs from wallet
-        // For now, assume we have proofs available
-        // In production, would fetch from storage
-        let availableProofs: [Proof] = [] // TODO: Get from wallet storage
+        // Get available proofs from wallet storage
+        guard let context = getManagedObjectContext() else {
+            throw CashuSwiftError.walletNotInitialized
+        }
+        
+        let availableProofs = try await getAvailableProofs(amount: amount, context: context)
         
         // Ensure recipient pubkey is in correct format (remove "02" prefix if present)
         let cleanPubkey = recipientPubkey.hasPrefix("02") ? String(recipientPubkey.dropFirst(2)) : recipientPubkey
@@ -121,7 +123,10 @@ extension CashuWallet {
         
         // Store change tokens back to wallet if any
         if !change.isEmpty {
-            // TODO: Store change tokens
+            // Get author from context to store change
+            if let author = try? context.fetch(Author.fetchRequest()).first {
+                try await storeChangeTokens([change], author: author, context: context)
+            }
         }
         
         return [lockedToken]

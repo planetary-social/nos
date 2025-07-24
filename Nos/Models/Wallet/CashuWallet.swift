@@ -4,6 +4,7 @@
 import Foundation
 import CashuSwift
 import secp256k1
+import Dependencies
 
 /// Represents a Cashu wallet that can send and receive ecash tokens
 public class CashuWallet {
@@ -187,6 +188,13 @@ public class CashuWallet {
         }
         
         return event
+    }
+    
+    /// Gets the managed object context from current app state
+    func getManagedObjectContext() -> NSManagedObjectContext? {
+        // Try to get context from persistence controller
+        @Dependency(\.persistenceController) var persistenceController
+        return persistenceController.viewContext
     }
     
     /// Validates if this wallet can receive a nutzap

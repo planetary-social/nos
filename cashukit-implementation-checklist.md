@@ -1,6 +1,6 @@
 # CashuKit Implementation Checklist
 
-## Current Status Summary (Updated: 2025-07-23)
+## Current Status Summary (Updated: 2025-07-24)
 
 ### ✅ Completed Features
 - **Event System**: All 5 Cashu event kinds added and integrated
@@ -9,20 +9,32 @@
 - **UI Components**: Complete wallet UI, nutzap integration, profile integration
 - **Service Layer**: CashuWalletService and NutzapService fully functional
 - **Testing**: Unit and integration tests for core functionality
+- **CashuSwift Integration**: Replaced mock types with real CashuSwift implementation
+- **Core Data Entities**: Created persistence layer with cache service
+- **NIP-44 Encryption**: Implemented proper encryption for wallet and token events
+- **Async/Await**: Updated all methods to handle async operations
 
-### 🚧 In Progress / High Priority
-1. **Replace Mock Implementation**: Current implementation uses mock CashuProof - need to integrate real CashuSwift
-2. **Core Data Integration**: Add persistent storage entities for wallets and tokens
-3. **NIP-44 Encryption**: Implement proper encryption for wallet event content
-4. **Dependency Injection**: Wire up services into the app's DI container
+### 🚨 Critical Release Blockers (MUST DO)
+1. **Verify CashuSwift Compilation**: Build project and fix any type mismatches
+2. **Wire Dependency Injection**: Add services to app's DI container
+3. **Core Data Migration**: Add entities to Xcode model and test migration
+4. **Token Storage/Retrieval**: Implement actual token management
+5. **Test with Real Mint**: Verify operations with testnut.cashu.space
 
-### 📋 Remaining Work
+### 🎯 Minimum Viable Release Features
+- **Wallet Creation**: Users can create a wallet with single mint
+- **View Balance**: Display token balance from cache
+- **Receive Nutzaps**: Accept incoming P2PK-locked tokens
+- **Send Nutzaps**: Send tokens to other NIP-61 compatible users
+- **Basic Error Handling**: Show user-friendly error messages
+
+### 📋 Post-MVP Features
 - Biometric authentication for wallet access
-- Keychain storage for sensitive data
-- Lightning gateway selection UI
+- Lightning to Cashu conversion UI
+- Multi-mint support
 - Background sync and monitoring
-- Performance optimizations
-- Error recovery flows
+- Advanced analytics
+- Backup/restore improvements
 
 ## Quick Reference Implementation Tracker
 
@@ -42,12 +54,12 @@
 - [x] Write unit tests for event parsing
 
 #### Core Data (Day 3-4)
-- [ ] Create `Nos.xcdatamodeld` updates
-- [ ] Add `CashuWallet` entity
-- [ ] Add `CashuToken` entity
-- [ ] Add `CashuMint` entity
-- [ ] Add `CashuTransaction` entity
-- [ ] Create Core Data migration
+- [x] Create `Nos.xcdatamodeld` updates (Entity definitions created)
+- [x] Add `CashuWalletCache` entity
+- [x] Add `CashuTokenCache` entity
+- [x] Add `CashuTransaction` entity
+- [x] Create CashuCacheService for sync
+- [ ] Add entities to Xcode model (Manual step required)
 - [ ] Test migration on existing database
 
 #### Service Layer (Day 5)
