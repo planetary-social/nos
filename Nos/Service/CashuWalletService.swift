@@ -1,5 +1,4 @@
-// ABOUTME: Service layer for managing Cashu wallet operations and persistence
-// ABOUTME: Handles wallet CRUD operations, token management, and Nostr event integration
+// ABOUTME: Service layer for managing Cashu wallet operations, persistence, and Nostr event integration
 
 import Foundation
 import CoreData

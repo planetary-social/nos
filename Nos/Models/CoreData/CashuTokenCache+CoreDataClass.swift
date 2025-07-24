@@ -1,6 +1,3 @@
-// ABOUTME: Core Data entity for caching individual Cashu tokens
-// ABOUTME: Tracks token state and provides efficient querying
-
 import Foundation
 import CoreData
 import CashuSwift

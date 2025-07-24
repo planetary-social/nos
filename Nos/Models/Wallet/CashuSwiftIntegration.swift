@@ -1,6 +1,3 @@
-// ABOUTME: Bridge between CashuSwift library types and Nos wallet implementation
-// ABOUTME: Provides type conversions and real Cashu protocol operations
-
 import Foundation
 import CashuSwift
 

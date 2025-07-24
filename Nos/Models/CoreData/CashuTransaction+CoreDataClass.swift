@@ -1,6 +1,3 @@
-// ABOUTME: Core Data entity for tracking Cashu wallet transactions
-// ABOUTME: Provides transaction history and analytics capabilities
-
 import Foundation
 import CoreData
 

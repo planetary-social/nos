@@ -1,6 +1,3 @@
-// ABOUTME: NIP-44 encryption helper for Cashu wallet events
-// ABOUTME: Provides encryption/decryption for sensitive wallet data in Nostr events
-
 import Foundation
 import NostrSDK
 

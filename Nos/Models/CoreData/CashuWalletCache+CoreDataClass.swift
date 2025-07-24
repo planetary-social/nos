@@ -1,6 +1,3 @@
-// ABOUTME: Core Data entity for caching Cashu wallet data locally
-// ABOUTME: Provides fast access to wallet information and balance calculations
-
 import Foundation
 import CoreData
 

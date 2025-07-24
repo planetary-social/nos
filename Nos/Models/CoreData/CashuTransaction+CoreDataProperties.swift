@@ -1,6 +1,3 @@
-// ABOUTME: Core Data generated properties for CashuTransaction entity
-// ABOUTME: Defines attributes and relationships for transaction tracking
-
 import Foundation
 import CoreData
 

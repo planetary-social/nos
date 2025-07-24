@@ -1,6 +1,3 @@
-// ABOUTME: Core Data generated properties for CashuTokenCache entity
-// ABOUTME: Defines attributes and relationships for token caching
-
 import Foundation
 import CoreData
 

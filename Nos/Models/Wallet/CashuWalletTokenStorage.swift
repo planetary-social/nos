@@ -1,6 +1,3 @@
-// ABOUTME: Token storage and retrieval methods for CashuWallet
-// ABOUTME: Manages fetching and storing tokens using Core Data cache
-
 import Foundation
 import CoreData
 import CashuSwift

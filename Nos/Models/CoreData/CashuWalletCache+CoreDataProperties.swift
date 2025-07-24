@@ -1,6 +1,3 @@
-// ABOUTME: Core Data generated properties for CashuWalletCache entity
-// ABOUTME: Defines all attributes and relationships for wallet caching
-
 import Foundation
 import CoreData
 

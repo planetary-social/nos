@@ -1,6 +1,3 @@
-// ABOUTME: Service for managing Core Data cache of Cashu wallet data
-// ABOUTME: Handles synchronization between Nostr events and local cache
-
 import Foundation
 import CoreData
 import CashuSwift

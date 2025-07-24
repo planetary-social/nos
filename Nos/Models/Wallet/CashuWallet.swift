@@ -1,5 +1,4 @@
-// ABOUTME: Core CashuWallet model for managing Cashu ecash wallets
-// ABOUTME: Implements NIP-60 wallet data storage and NIP-61 nutzap support
+// ABOUTME: Core CashuWallet model for managing Cashu ecash wallets and implements NIP-60/NIP-61 support
 
 import Foundation
 import CashuSwift
