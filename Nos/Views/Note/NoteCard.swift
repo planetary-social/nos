@@ -146,6 +146,7 @@ struct NoteCard: View {
                             if showsActions {
                                 RepostButton(note: note, showsCount: showsRepostCount)
                                 LikeButton(note: note, showsCount: showsLikeCount)
+                                NutzapButton(note: note, showsCount: showsLikeCount)
                                 ReplyButton(note: note, replyAction: replyAction)
                             }
                         }

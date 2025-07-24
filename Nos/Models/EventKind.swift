@@ -72,4 +72,23 @@ public enum EventKind: Int64, CaseIterable, Hashable {
     case longFormContent = 30023
 
     // swiftlint:enable number_separator
+    
+    // MARK: - Cashu Wallet Events (NIP-60)
+    
+    /// Cashu Token Event - stores unspent Cashu proofs
+    case cashuToken = 7375
+    
+    /// Cashu Spending History Event - tracks transaction history
+    case cashuHistory = 7376
+    
+    /// Cashu Wallet Event - contains wallet configuration and mint URLs
+    case cashuWallet = 17375
+    
+    // MARK: - Nutzap Events (NIP-61)
+    
+    /// Nutzap Event - contains P2PK-locked Cashu tokens
+    case nutzap = 9321
+    
+    /// Nutzap Info Event - advertises user's preferred mints and P2PK pubkey
+    case nutzapInfo = 10019
 }

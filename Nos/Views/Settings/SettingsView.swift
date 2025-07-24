@@ -38,6 +38,9 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
+            // Wallet Section
+            WalletSettingsSection()
+            
             Section {
                 HStack {
                     Text(String(repeating: "•", count: 63))

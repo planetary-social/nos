@@ -130,6 +130,10 @@ struct ProfileHeader: View {
                                     .padding(.top, 5)
                             }
                         }
+                        
+                        // Nutzaps
+                        NutzapBadgeView(author: author)
+                            .padding(.top, author.hasMostrNIP05 ? 3 : 5)
 
                         Spacer(minLength: 0)
                     }
@@ -170,6 +174,12 @@ struct ProfileHeader: View {
                         )
                     }
                     .padding(.top, 5)
+                }
+
+                // Wallet display for current user
+                if let currentUser = currentUser.author, author == currentUser {
+                    ProfileWalletView(author: author)
+                        .padding(.top, 12)
                 }
 
                 HStack(spacing: 0) {

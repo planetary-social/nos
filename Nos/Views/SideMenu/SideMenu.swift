@@ -10,6 +10,7 @@ struct SideMenu: View {
         case lists
         case profile
         case about
+        case wallet
     }
     
     let menuWidth: CGFloat

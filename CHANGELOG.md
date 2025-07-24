@@ -13,10 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Release Notes
 - Fixed: crash in Event.trackDelete(on:context:).
 - Added: "nostr:" prefix to event links following NIP-01 standard.
+- Added: Cashu wallet support for sending and receiving ecash via NIP-60 and NIP-61.
+- Added: Nutzaps - a new way to send value using P2PK-locked Cashu tokens.
+- Added: Wallet balance display with offline viewing capability.
+- Added: Wallet onboarding flow with mnemonic backup.
+- Added: Transaction history view for tracking ecash movements.
 
 ### Internal Changes
 - Fixed: Contact Support event fires too often.
 - Performance improvements for RepliesLabel, AuthorLabel, NoteCardHeader, Date+Elapsed
+- Added: CashuSwift package dependency for Cashu protocol support.
+- Added: Core Data entities for local wallet caching (CashuWalletCache, CashuTokenCache, CashuTransaction).
+- Added: NIP-44 encryption for wallet and token events.
+- Added: Dependency injection for CashuWalletService, NutzapService, and CashuCacheService.
+- Added: Support for new event kinds - 7375 (cashuToken), 7376 (cashuHistory), 17375 (cashuWallet), 9321 (nutzap), 10019 (nutzapInfo).
 
 ## [1.2.1] - 2025-02-19Z
 
