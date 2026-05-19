@@ -118,10 +118,23 @@ final class NamesAPI {
 
     /// Verifies that a given NIP-05 username is properly connected to the
     /// public key.
+    ///
+    /// Recognises three forms:
+    ///   - `name@example.com` — standard NIP-05 HTTPS lookup.
+    ///   - `name@example.bit` / `example.bit` / `d/foo` / `id/foo` — Namecoin
+    ///     (.bit) lookup via ElectrumX. See `NamecoinService`.
     func verify(
         username: String,
         publicKey: PublicKey
     ) async throws -> Bool {
+        // Namecoin (.bit) branch — resolved over ElectrumX, not HTTPS.
+        if NamecoinResolver.isNamecoinIdentifier(username) {
+            guard let result = await NamecoinService.shared.resolve(username) else {
+                return false
+            }
+            return result.pubkey.lowercased() == publicKey.hex.lowercased()
+        }
+
         let components = username.components(separatedBy: "@")
 
         guard components.count == 2 else {
