@@ -113,9 +113,10 @@ public final class NamecoinResolver: @unchecked Sendable {
         )
         guard let result = result else { return nil }
         guard let json = Self.tryParseJSON(result.value) else { return nil }
+        let merged = await expandImportsIfPresent(json)
         switch parsed.namespace {
-        case .domain:   return Self.extractFromDomainValue(json: json, parsed: parsed)
-        case .identity: return Self.extractFromIdentityValue(json: json, parsed: parsed)
+        case .domain:   return Self.extractFromDomainValue(json: merged, parsed: parsed)
+        case .identity: return Self.extractFromIdentityValue(json: merged, parsed: parsed)
         }
     }
 
@@ -138,16 +139,42 @@ public final class NamecoinResolver: @unchecked Sendable {
 
         guard let result = result else { return .nameNotFound(name: parsed.namecoinName) }
         guard let json = Self.tryParseJSON(result.value) else { return .noNostrField(name: parsed.namecoinName) }
+        let merged = await expandImportsIfPresent(json)
         let nostr: NamecoinNostrResult?
         switch parsed.namespace {
-        case .domain:   nostr = Self.extractFromDomainValue(json: json, parsed: parsed)
-        case .identity: nostr = Self.extractFromIdentityValue(json: json, parsed: parsed)
+        case .domain:   nostr = Self.extractFromDomainValue(json: merged, parsed: parsed)
+        case .identity: nostr = Self.extractFromIdentityValue(json: merged, parsed: parsed)
         }
         if let nostr = nostr { return .success(nostr) }
         return .noNostrField(name: parsed.namecoinName)
     }
 
     // MARK: - Value extraction
+
+    // MARK: - ifa-0001 import-chain expansion
+
+    /// Expand the ifa-0001 `import` chain on `json` if (and only if) it
+    /// declares an `import` key. Records without `import` skip this
+    /// path entirely and pay zero extra ElectrumX cost.
+    private func expandImportsIfPresent(_ json: [String: Any]) async -> [String: Any] {
+        guard json["import"] != nil else { return json }
+        let client = self.client
+        let servers = self.serverListProvider()
+        let fetcher: NamecoinValueFetcher = { name in
+            do {
+                let res = try await client.nameShowWithFallback(
+                    identifier: name,
+                    servers: servers
+                )
+                return res?.value
+            } catch {
+                // Lenient: transient ElectrumX hiccups must not nuke
+                // the importing record. Treated as empty object upstream.
+                return nil
+            }
+        }
+        return await NamecoinImportResolver.expandImports(root: json, fetcher: fetcher)
+    }
 
     private static let hexRegex: NSRegularExpression = {
         // swiftlint:disable:next force_try

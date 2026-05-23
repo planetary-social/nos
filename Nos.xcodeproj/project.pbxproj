@@ -307,6 +307,7 @@
 		A3B943D5299D514800A15A08 /* Follow+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */; };
 		A3B943D7299D6DB700A15A08 /* Follow+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943D4299D514800A15A08 /* Follow+CoreDataClass.swift */; };
 		A3B943D8299D758F00A15A08 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B943CE299AE00100A15A08 /* Keychain.swift */; };
+		A5D8A3DFBC72C3516FAB9039 /* NamecoinImportResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3012545368A3E56B5F181AAE /* NamecoinImportResolver.swift */; };
 		C9032C2E2BAE31ED001F4EC6 /* ProfileFeedType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9032C2D2BAE31ED001F4EC6 /* ProfileFeedType.swift */; };
 		C90352BA2C1235CD000A5993 /* NosNavigationDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90352B92C1235CD000A5993 /* NosNavigationDestination.swift */; };
 		C90352BB2C1235CD000A5993 /* NosNavigationDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90352B92C1235CD000A5993 /* NosNavigationDestination.swift */; };
@@ -615,6 +616,7 @@
 		CD76865029B6503500085358 /* NoteOptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD76864F29B6503500085358 /* NoteOptionsButton.swift */; };
 		CDDA1F7B29A527650047ACD8 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7A29A527650047ACD8 /* Starscream */; };
 		CDDA1F7D29A527650047ACD8 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = CDDA1F7C29A527650047ACD8 /* SwiftUINavigation */; };
+		D2107251076105152F2ADEB1 /* NamecoinImportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCA6185BAE6C31A12F42C18 /* NamecoinImportTests.swift */; };
 		DC08FF812A7969C5009F87D1 /* UIDevice+Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */; };
 		DC2E54C82A700F1400C2CAAB /* UIDevice+Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2E54C72A700F1400C2CAAB /* UIDevice+Simulator.swift */; };
 		DC4AB2F62A4475B800D1478A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AB2F52A4475B800D1478A /* AppDelegate.swift */; };
@@ -767,6 +769,7 @@
 		2D06BB9C2AE249D70085F509 /* ThreadRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadRootView.swift; sourceTree = "<group>"; };
 		2D3C71A52CEE6F7100625BCB /* Nos 20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Nos 20.xcdatamodel"; sourceTree = "<group>"; };
 		2D4010A12AD87DF300F93AD4 /* KnownFollowersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KnownFollowersView.swift; sourceTree = "<group>"; };
+		3012545368A3E56B5F181AAE /* NamecoinImportResolver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NamecoinImportResolver.swift; sourceTree = "<group>"; };
 		3A1C296E2B2A537C0020B753 /* Moderation.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Moderation.xcstrings; sourceTree = "<group>"; };
 		3A67449B2B294712002B8DE0 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		3AAB61B42B24CD0000717A07 /* Date+ElapsedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+ElapsedTests.swift"; sourceTree = "<group>"; };
@@ -879,6 +882,7 @@
 		65D066982BD558690011C5CD /* DirectMessageWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectMessageWrapper.swift; sourceTree = "<group>"; };
 		6F9F2DB55D34B8A4C60C17F5 /* NamecoinCache.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NamecoinCache.swift; sourceTree = "<group>"; };
 		844F0626281519A21D172A41 /* NamecoinCertPinning.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NamecoinCertPinning.swift; sourceTree = "<group>"; };
+		9CCA6185BAE6C31A12F42C18 /* NamecoinImportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NamecoinImportTests.swift; sourceTree = "<group>"; };
 		9DF077732C63BEA200F6B14E /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		A303AF8229A9153A005DC8FC /* FollowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowButton.swift; sourceTree = "<group>"; };
 		A32B6C7229A6BE9B00653FF5 /* AuthorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorsView.swift; sourceTree = "<group>"; };
@@ -1298,6 +1302,7 @@
 				0376DF602C3DBAD500C80786 /* NostrIdentifier */,
 				0320C0F92BFE439000C4C080 /* Relay */,
 				20EED6B0C62EBB93B25E8F1E /* NamecoinResolverTests.swift */,
+				9CCA6185BAE6C31A12F42C18 /* NamecoinImportTests.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -1732,6 +1737,7 @@
 				1FBCA9692A1D0FF952F32482 /* NamecoinResolver.swift */,
 				D6211B84334B025BBDDD9CD9 /* NamecoinService.swift */,
 				1B7364D62E12DF4B4611F423 /* ElectrumXClient.swift */,
+				3012545368A3E56B5F181AAE /* NamecoinImportResolver.swift */,
 			);
 			name = Namecoin;
 			path = Namecoin;
@@ -2774,6 +2780,7 @@
 				FF93FAE5ADFB3A5B495A1676 /* NamecoinResolver.swift in Sources */,
 				8A1C071B381B58D8BAA51E56 /* NamecoinService.swift in Sources */,
 				431D935ADA5BD3ED3098A788 /* ElectrumXClient.swift in Sources */,
+				A5D8A3DFBC72C3516FAB9039 /* NamecoinImportResolver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2966,6 +2973,7 @@
 				0383CD842C76799D007DB0E4 /* LinkView.swift in Sources */,
 				C9A6C7452AD83FB0001F9500 /* NotificationViewModel.swift in Sources */,
 				53C8D1D9FB09949DC79486EC /* NamecoinResolverTests.swift in Sources */,
+				D2107251076105152F2ADEB1 /* NamecoinImportTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
